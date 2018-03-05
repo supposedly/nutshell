@@ -1,16 +1,17 @@
 import re
 
-import napkins
+import napkin
+import utils
 
 rCARDINALS = re.compile(' (NE|SE|SW|NW|N|E|S|W)')
 
-class Transition:
+class TransitionBase:
     def __init__(self, tr):
         if isinstance(tr, str):
             tr = tr.split(',')
         tr = [i.strip() for i in tr]
         self.init, self.final = tr.pop(0), tr.pop(-1)
-        self.napkin = napkins.guess(tr)
+        self.napkin = napkin.guess(tr)
     
     def __iter__(self):
         return iter([self.init, *self.napkin, self.final])
@@ -24,36 +25,24 @@ class Transition:
     def __str__(self):
         return ','.join(self)
 
-class OldTransition(Transition):
+class Transition(TransitionBase):
     """
-    A traditional transition, pastable directly into a Golly ruletable.
+    Given a new-style transition, return an abstract representation
+    of a traditional statement.
     """
-    def __init__(self, tr):
-        super().__init__(tr)
-        self.napkin = napkins.guess(self._tr)
-        self.vars = {i: v for i, v in enumerate(self) if not v.isdigit()}
-    
-    @classmethod
-    def from_new(cls, new):
-        """
-        A single new-style transition can hold multiple old-style ones,
-        so this returns a list of the latter.
-        """
-        pass
-
-class NewTransition(Transition):
     def __init__(self, tr):
         tstring, *self.post = rCARDINALS.split(tr)
-        self.post = {k: v.strip('[]') for k, v in zip(self.post[::2], self.post[1::2])}
+        # zip(*[iter(s)]*n) is straight from Python's docs!
+        self.post = {k: v.strip('[]') for k, v in zip(*[iter(self.post)]*2)}
         super().__init__(self._bound_vars(tstring.split(',')))
     
     @staticmethod
     def _bound_vars(tr: (list, tuple)):
         """
         Given a new-style unbound transition like the following:
-            'a,1,2,[0],a,a,6,7,8,[4]'.split(',')
+            a,1,2,[0],a,a,6,7,8,[4]
         Unbind its variables to work with the old style:
-            'a,1,2,a,a1,a2,6,7,8,a1'.split(',')
+            a1,1,2,a1,a2,a3,6,7,8,a2
         """
         built = []
         suffix = 0
@@ -70,8 +59,23 @@ class NewTransition(Transition):
                 suffix += 1
                 built.append(f'{v}{suffix}')
         return built
-    
-    @property
-    def old(self):
-        return OldTransition.from_new(self)
+
+def conv_permute(tr, total):
+    """
+    Given a new-style permutationally-symmetric transition:
+        total=8 (Moore)
+        -------
+        1,0
+        1:4,0:4
+        1:4,0
+        1:3,1,0,0
+    Return its old-style representation:
+        1,1,1,1,0,0,0,0
+    """
+    if isinstance(tr, str):
+        tr = tr.split(',')
+    # Balance the values first
+    seq = [i.partition(':')[::2] for i in map(str.strip, tr)]
+    #?????
+    return ','.join(utils.AdditiveDict(seq).expand())
 

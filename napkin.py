@@ -1,8 +1,7 @@
-__all__ = 'Moore', 'VonNeumann'
-
+__all__ = 'Moore', 'VonNeumann', 'guess'
 
 class Napkin:
-    def __init__(self, nap: (list, tuple)):
+    def __init__(self, nap):
         if isinstance(nap, str):
             nap = nap.split(',')
         self._flags = dict(zip(self._nhood, map(str.strip, nap)))
@@ -39,5 +38,8 @@ class VonNeumann(Napkin):
 
 
 def guess(tr):
+    """
+    Return a napkin object based on the transition's length
+    """
     counts = {4: VonNeumann, 8: Moore}
     return counts[len(tr)](tr)
