@@ -15,7 +15,6 @@ class Napkin:
         return setattr(self, item, value)
     
     def __iter__(self):
-        # Dicts are ordered in 3.6
         return iter(self._flags.values())
     
     def __repr__(self):
