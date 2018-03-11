@@ -1,0 +1,61 @@
+@RULE bml
+The Biham–Middleton–Levine traffic model.
+
+0: Road
+1: Downward-bound car, moving
+2: Rightward-bound car, moving
+3: Downward-bound car, waiting
+4: Rightward-bound car, waiting
+
+Generation 0 will consist only of states 0, 2, 3
+
+@TABLE
+n_states:5
+neighborhood:vonNeumann
+symmetries:none
+
+####
+
+var _all_ = {0, 1, 2, 3, 4}
+var _all_1 = _all_
+var _all_2 = _all_
+var _all_3 = _all_
+
+# FIXME: I think a programmatic parser would need to refer to _all_ when expanding the PTCDs?
+# (It's coincidence that the user here chose to define `any`)
+
+####
+
+var any = {0, 1, 2, 3, 4}
+var any1 = any
+var any2 = any
+var any3 = any
+
+var car = {1, 2, 3, 4}
+
+var move = {1, 2}
+var wait = {3, 4}
+
+
+# wait, N..W any, [0: move]
+3, any, any1, any2, any3, 1
+4, any, any1, any2, any3, 2
+
+# 1, N..W any, [S: (0, 3, ...)]
+1, any, any1, 0, any2, 0
+1, any, any1, car, any2, 3
+# From the above: -> S[S: (3, _, ...)]
+0, 1, any, any1, any2, 3
+
+# 2, N..W any, [E: (0, 4, ...)]
+2, any, 0, any1, any2, 0
+2, any, car, any1, any2, 4
+# From the above: -> E[E: (4, _, ...)]
+0, any, any1, any2, 2, 4
+
+@COLORS
+0 255 255 255
+2 255 0 0
+1 0 0 255
+3 0 0 255
+4 255 0 0

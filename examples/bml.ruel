@@ -1,0 +1,31 @@
+@RUEL bml
+The Biham–Middleton–Levine traffic model.
+
+0: Road
+1: Downward-bound car, moving
+2: Rightward-bound car, moving
+3: Downward-bound car, waiting
+4: Rightward-bound car, waiting
+
+Generation 0 will consist only of states 0, 2, 3
+
+@TABEL
+n_states: 5
+neighborhood: vonNeumann
+symmetries: none
+
+
+any = (0..4)
+move = (1, 2)
+wait = (3, 4)
+
+
+wait, N..W any, [0: move] # a waiting car starts moving on the next tick
+
+1, N..W any, [S: (0, 3, ...)] -> S[3, _, ...] # A downward-bound car moves down if the cell below it is 0, else stays put and becomes a 'waiting'
+2, N..W any, [E: (0, 4, ...)] -> E[4, _, ...] # A rightward-bound car moves right if it can, else ditto ^
+
+@COLORS
+  0: FFF
+1 2: FF0000
+2 3: 0000FF
