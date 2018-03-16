@@ -4,19 +4,19 @@ Compilation will occur in five passes total.
 
 ## Pass 0
 
-1. Raise an error if two differently-named variables have the same value. (This could change if I end up changing how variables are stored during compiling)
 2. Enumerate all variables and store them in a `{(state1, state2, ...): Variable(name=str, reps=int)}` dictionary.  
    - Raise an error if:
      - A nonexistent variable is referred to.
-     - A variable is duplicated. (There should be no reason to do this thanks to their unbindedness, correct?)
+     - A value is assigned to more than one variable. (There should be no reason to do so thanks to variables being by default unbinded,
+       though I still might change this behavior in the future)
      - A variable other than `__all__` is declared with a name beginning with an underscore/period or containing a digit.
      - A variable is declared with the (reserved) name of a cardinal direction: any of `N`, `NE`, `E`, `SE`, `S`, `SW`, `W`, `NW`
 
-   - The reason for the "no underscores" rule is that (1) the name `_` holds a special meaning in PTCDs -- see spec -- and (2) the parser will compile anonymous 'on-the-spot'
-   literals into variables prefixed with an underscore so they can be told apart from 'normal' variables (should the need to reverse-compile
-   ever arise).
-   - The reason for "no digits" rule is that (1) the compiler will suffix unbound variable names with numbers to make them "unbound" in the Golly ruletable format, and
-   (2) variables are unbound regardless so there should be less of a need to group similar variables by placing a number at their end.
+   - The reason for the "no underscores" rule is twofold: (1) the name `_` holds a special meaning in PTCDs -- see spec -- and (2) the parser will compile anonymous
+     'on-the-spot' literals into variables prefixed with an underscore so they can be told apart from 'normal' variables (should the need to reverse-compile
+     ever arise), which could conflict with user-defined variables.
+   - The reason for "no digits" rule is twofold as well: (1) the compiler will suffix unbound variable names with numbers to make them "unbound" in the Golly ruletable
+     format, and (2) variables are unbound by default so there should be less of a need to group similar variables by placing a number at their end.
 
    - The special variable `__all__` is where the user can define the states the PTCDs refer to when expanded. (By default, it is declared with every state in the rule.)
 
