@@ -14,11 +14,9 @@ n_states: 5
 neighborhood: vonNeumann
 symmetries: none
 
-
 any = (0..4)
 move = (1, 2)
 wait = (3, 4)
-
 
 wait, N..W any, [0: move] # a waiting car starts moving on the next tick
 

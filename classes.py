@@ -33,7 +33,6 @@ class Transition(TransitionBase):
     """
     def __init__(self, tr):
         tstring, *self.post = rCARDINALS.split(tr)
-        # zip(*[iter(s)]*n) is straight from Python's docs!
         self.post = {k: v.strip('[]') for k, v in zip(*[iter(self.post)]*2)}
         super().__init__(self._bound_vars(tstring.split(',')))
     

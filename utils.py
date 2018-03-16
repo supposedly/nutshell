@@ -1,4 +1,5 @@
 from itertools import chain
+from math import ceil
 
 class AdditiveDict(dict):
     def __init__(self, it):
@@ -7,6 +8,9 @@ class AdditiveDict(dict):
     
     def expand(self):
         return chain(*(k*v for k, v in self.items()))
+
+class VariablesDict(dict):
+    
 
 class Variable:
     __slots__ = 'name', 'reps'
@@ -39,5 +43,5 @@ def conv_permute(tr, total):
     # https://math.stackexchange.com/a/1081084
     filler = (ceil((tally-k+1)/empties) for k in range(1, 1+empties))
     gen = ((st, num if num else str(next(filler))) for st, num in seq)
-    return ','.join(utils.AdditiveDict(gen).expand())
+    return ','.join(AdditiveDict(gen).expand())
 
