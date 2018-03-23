@@ -4,40 +4,47 @@ from collections import defaultdict
 
 from common import classes, utils
 
+rTRANSITION = re.compile('[^,]+?(?:,[^,]+)+')
 rASSIGNMENT = re.compile(r'.+? *?= *?[({][\w,]+?[})]')
 rRANGE = re.compile(r'\d+? *?\.\. *?\d+?')
 
 
 def initial_vars(tbl):
     vars_ = {}
-    for decl in (statement.strip() for line in tbl for statement in line.split('#')[0].split(';')):
+    for lno, decl in ((idx, stmt.strip()) for idx, line in enumerate(tbl) for stmt in line.split('#')[0].split(';')):
         if not decl or not rASSIGNMENT.match(decl):
             continue
+        if rTRANSITION.match(decl):
+            break
+        
         name, value = map(str.strip, decl.split('='))
         value = [i.strip() for i in value[1:-1].split(',')]
-        
         if name.startswith('_'):
             raise ValueError(f"Variable name '{name}' starts with an underscore")
         if any(i.isdigit() for i in name):
             raise ValueError(f"Variable name '{name}' contains a digit")
         
-        for index, cellstate in enumerate(value):
+        for idx, cellstate in enumerate(value):
             if cellstate.isdigit():
-                value[index] = int(cellstate)
+                value[idx] = int(cellstate)
             elif rRANGE.match(cellstate):
                 cellstate = [i+int(v.strip()) for i, v in enumerate(cellstate.split('..'))]
-                value[index:1+index] = range(*cellstate)
+                value[idx:1+idx] = range(*cellstate)
             try:
-                value[index:1+index] = vars_[cellstate]
+                value[idx:1+idx] = vars_[cellstate]
             except KeyError:
-                raise NameError(f"Declaration of variable '{name}' contains reference to undefined variable '{cellstate}'") from None
+                raise NameError(f"Declaration of variable '{name}' references undefined variable '{cellstate}'") from None
         vars_[name] = value
-    return vars_
+    return lno, vars_
 
 
 def tabelparse(tbl):
-    vars_ = initial_vars(tbl)
-    
+    start, vars_ = initial_vars(tbl)
+    for line in (i.split('#')[0].strip() for i in tbl[start:]):
+        if not line:
+            continue
+        # TODO: parse transitions and whatever else
+        
 
 
 def parse(fp):
