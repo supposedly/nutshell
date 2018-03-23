@@ -98,4 +98,4 @@ foo, N..NW bar, baz -> S:2 E[2, 3] SE[wutz] N[NE: (2, 3)] NE[E]
 ## To do
 - Support switching symmetries partway through via the `symmetries:` directive. (When parsing, this will result in all transitions being expanded to the 'lowest'
 symmetry type specified overall).
-- Do something(???) to attempt to simplify permutationally-symmetric transitions as in TripleLife.
+- Do something (???) to attempt to simplify permutationally-symmetric transitions such as in TripleLife.

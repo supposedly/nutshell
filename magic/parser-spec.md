@@ -4,7 +4,7 @@ Compilation will occur in five passes total.
 
 ## Pass 0
 
-2. Enumerate all variables and store them in a `{(state1, state2, ...): Variable(name=str, reps=int)}` dictionary.  
+1. Enumerate all variables and store them in a `{(state1, state2, ...): Variable(name=str, reps=int)}` dictionary.  
    - Raise an error if:
      - A nonexistent variable is referred to.
      - A value is assigned to more than one variable. (There should be no reason to do so thanks to variables being by default unbinded,
@@ -20,8 +20,8 @@ Compilation will occur in five passes total.
 
    - The special variable `__all__` is where the user can define the states the PTCDs refer to when expanded. (By default, it is declared with every state in the rule.)
 
-3. If under permutational symmetry, expand each statement (which might use the shorthand syntax) using `conv_permute()`.
-4. Take note of the declared neighborhood (Moore, vonNeumann, hexagonal) and then replace any instances of cardinal directions with their appropriate number.
+2. If under permutational symmetry, expand each statement (which might use the shorthand syntax) using `conv_permute()`.
+3. Take note of the declared neighborhood (Moore, vonNeumann, hexagonal) and then replace any instances of cardinal directions with their appropriate number.
    Raise an error if an unsupported direction is used (e.g. `NW` in a von-Neumann neighborhood)
 
 ## Pass 1
