@@ -9,14 +9,22 @@ rASSIGNMENT = re.compile(r'.+? *?= *?[({][\w,]+?[})]')
 rRANGE = re.compile(r'\d+? *?\.\. *?\d+?')
 
 
-def initial_vars(tbl):
-    vars_ = {}
+def _conflict_handler(self, key, value):
+    """
+    Replaces default ConflictHandlingDict conflict_handler.
+    Instead of raising exception, turns value into a list.
+    """
+    new = self[key] if isinstance(self[key], list) else [self[key]]
+    return key, new + [value]
+
+
+def extract_initial_vars(tbl):
+    vars_ = classes.ConflictHandlingDict()
     for lno, decl in ((idx, stmt.strip()) for idx, line in enumerate(tbl) for stmt in line.split('#')[0].split(';')):
         if not decl or not rASSIGNMENT.match(decl):
             continue
         if rTRANSITION.match(decl):
             break
-        
         name, value = map(str.strip, decl.split('='))
         value = [i.strip() for i in value[1:-1].split(',')]
         if name.startswith('_'):
@@ -24,27 +32,40 @@ def initial_vars(tbl):
         if any(i.isdigit() for i in name):
             raise ValueError(f"Variable name '{name}' contains a digit")
         
-        for idx, cellstate in enumerate(value):
-            if cellstate.isdigit():
-                value[idx] = int(cellstate)
-            elif rRANGE.match(cellstate):
-                cellstate = [i+int(v.strip()) for i, v in enumerate(cellstate.split('..'))]
-                value[idx:1+idx] = range(*cellstate)
-            try:
-                value[idx:1+idx] = vars_[cellstate]
-            except KeyError:
-                raise NameError(f"Declaration of variable '{name}' references undefined variable '{cellstate}'") from None
-        vars_[name] = value
-    return lno, vars_
+        for idx, state in enumerate(value):
+            if state.isdigit():
+                value[idx] = int(state)
+            elif rRANGE.match(state):
+                # There will only ever be two numbers in the range; `i`
+                # will be 0 on first pass and 1 on second, so adding
+                # it to the given integer will account for python's
+                # ranges being exclusive of the end value
+                value[idx:1+idx] = range(*(i+int(v.strip()) for i, v in enumerate(state.split('..'))))
+            else:
+                try:
+                    value[idx:1+idx] = vars_[state]
+                except KeyError:
+                    raise NameError(f"Declaration of variable '{name}' references undefined variable '{state}'") from None  # noqa
+        try:
+            vars_[value] = name
+        except classes.KeyConflict:
+            raise ValueError(f"Value {value} is already assigned to variable {vars_[value]}")
+    vars_.conflict_handler = _conflict_handler
+    return tbl[lno:], vars_, lno
+
+
+def colorparse(colors):
+    pass
 
 
 def tabelparse(tbl):
-    start, vars_ = initial_vars(tbl)
-    for line in (i.split('#')[0].strip() for i in tbl[start:]):
+    tbl, vars_, start = extract_initial_vars(tbl)
+    for lno, line in enumerate((i.split('#')[0].strip() for i in tbl), start):
         if not line:
             continue
+        if rASSIGNMENT.match(line):
+            raise ValueError(f"Variable declaration on line {lno} does not precede transitions")
         # TODO: parse transitions and whatever else
-        
 
 
 def parse(fp):

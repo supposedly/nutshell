@@ -35,7 +35,7 @@ def bind_vars(tr: (list, tuple)):
     """
     Given an unbound ruel transition like the following:
         a,1,2,[0],a,a,6,7,8,[4]
-    Bind its variables as in Golly style:
+    Bind its variables in Golly style:
         a_0,1,2,a_0,a_1,a_2,6,7,8,a_1
     """
     built = []

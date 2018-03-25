@@ -11,7 +11,8 @@ class Transition(list):
     """
     def __init__(self, seq, to):
         self.to = to
-    
+
+
 class AdditiveDict(dict):
     def __init__(self, it):
         for key, val in it:
@@ -20,16 +21,34 @@ class AdditiveDict(dict):
     def expand(self):
         return chain(*(k*v for k, v in self.items()))
 
-class VarDict(dict):
+
+class KeyConflict(ValueError):
+    pass
+
+class ConflictHandlingDict(dict):
     """
-    A dict that forbids value overwriting.
+    A dict allowing for key-conflict handling.
     """
+    @staticmethod
+    def __conflict_handler(self, key, value):
+        """
+        Meant to be overwritten.
+        A function replacing this needs to have a type signature of:
+        
+        self, key, value
+        
+        It also needs to return a (key, value) tuple or if not then
+        raise some fatal exception.
+        """
+        raise KeyConflict(f"Key '{key}' already has a value of {value!r}")
+    
     def __init__(self, seq=None, **kwargs):
+        self.conflict_handler = self.__conflict_handler
         self.update(seq, **kwargs)
     
     def __setitem__(self, key, value):
         if key in self:
-            raise ValueError(f'Key {key} already has a value')
+            key, value = self.conflict_handler(self, key, value)
         super().__setitem__(key, value)
     
     def update(self, seq=None, **kwargs):
@@ -43,7 +62,11 @@ class VarDict(dict):
         if key not in self:
             self[key] = default
         return self[key]
+    
+    def reset_handler(self):
+        self.conflict_handler = self.__conflict_handler
 
+    
 class Variable:
     __slots__ = 'name', 'reps'
     def __init__(self, name):

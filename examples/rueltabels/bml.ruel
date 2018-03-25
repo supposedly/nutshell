@@ -18,10 +18,13 @@ any = (0..4)
 move = (1, 2)
 wait = (3, 4)
 
-wait, N..W any, [0: move] # a waiting car starts moving on the next tick
+# A waiting car starts moving on the next tick
+wait, N..W any, [0: move]
 
-1, N..W any, [S: (0, 3, ...)] -> S[3, _, ...] # A downward-bound car moves down if the cell below it is 0, else stays put and becomes a 'waiting'
-2, N..W any, [E: (0, 4, ...)] -> E[4, _, ...] # A rightward-bound car moves right if it can, else ditto ^
+# A downward-bound car moves down if the cell below it is 0, else stays put and becomes a 'waiting'
+1, N..W any, [S: (0, 3, ...)] -> S[3, _, ...]
+# A rightward-bound car moves right if it can, else ditto stays put and becomes a 'waiting'
+2, N..W any, [E: (0, 4, ...)] -> E[4, _, ...]
 
 @COLORS
   0: FFF
