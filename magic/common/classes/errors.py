@@ -1,0 +1,3 @@
+class KeyConflict(ValueError):
+    pass
+

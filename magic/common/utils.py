@@ -1,7 +1,7 @@
 from itertools import chain
 from math import ceil
 
-import classes
+from . import classes
 
 
 def conv_permute(tr: str, total: int):
@@ -48,10 +48,11 @@ def bind_vars(tr: (list, tuple)):
             try:
                 built.append(built[int(v.strip('[]'))])
             except IndexError:
-                raise ValueError(f"Variable binding '{v}' does not refer to a previous index")
+                raise ValueError(f"Variable binding '{v}' does not refer to a previous index") from None
             except ValueError:
-                raise ValueError(f"Invalid attempted variable binding '{v}'")
+                raise SyntaxError(f"Invalid attempted variable binding '{v}'") from None
         else:
             built.append(f'{v}_{suffix}')
             suffix += 1
     return built
+

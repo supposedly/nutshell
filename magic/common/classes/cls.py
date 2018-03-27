@@ -1,16 +1,9 @@
 import re
 
-import utils
+import bidict
 
-rCARDINALS = re.compile(' (NE|SE|SW|NW|N|E|S|W)')
-
-class Transition(list):
-    """
-    A list with a "to" string as attr
-    (for PTCDs)
-    """
-    def __init__(self, seq, to):
-        self.to = to
+from .. import utils
+from . import errors
 
 
 class AdditiveDict(dict):
@@ -19,13 +12,10 @@ class AdditiveDict(dict):
             self[str(key)] = self.get(key, 0) + int(val or 1)
     
     def expand(self):
-        return chain(*(k*v for k, v in self.items()))
+        return (i for k, v in self.items() for i in k*v)
 
 
-class KeyConflict(ValueError):
-    pass
-
-class ConflictHandlingDict(dict):
+class ConflictHandlingBiDict(bidict.bidict):
     """
     A dict allowing for key-conflict handling.
     """
@@ -33,17 +23,18 @@ class ConflictHandlingDict(dict):
     def __conflict_handler(self, key, value):
         """
         Meant to be overwritten.
-        A function replacing this needs to have a type signature of:
+        A function replacing this needs to have a type signature of
         
         self, key, value
         
         It also needs to return a (key, value) tuple or if not then
         raise some fatal exception.
         """
-        raise KeyConflict(f"Key '{key}' already has a value of {value!r}")
+        raise errors.KeyConflict(f"Key '{key}' already has a value of {value!r}")
     
     def __init__(self, seq=None, **kwargs):
-        self.conflict_handler = self.__conflict_handler
+        super().__init__()
+        self.reset_handler()
         self.update(seq, **kwargs)
     
     def __setitem__(self, key, value):
@@ -63,12 +54,19 @@ class ConflictHandlingDict(dict):
             self[key] = default
         return self[key]
     
+    def flip(self):
+        self, self.inv = self.inv, self
+
     def reset_handler(self):
-        self.conflict_handler = self.__conflict_handler
+        self.conflict_handler = self.inv.conflict_handler = self.__conflict_handler    
+
+    def set_handler(self, handler: callable):
+        self.conflict_handler = self.inv.conflict_handler = handler
 
     
 class Variable:
     __slots__ = 'name', 'reps'
-    def __init__(self, name):
+    def __init__(self, name, reps=0):
         self.name = name
-        self.reps = 0
+        self.reps = reps
+
