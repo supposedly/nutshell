@@ -42,7 +42,7 @@ The original file will not be referred to after step 5.
 ## Pass 3
 
 Looking at variables in transitions:
-1. Variables in transitions (of the transition list) are represented as `(literal values)` from step 1-1. Replace these literals again with their `name` from the dict.
+1. Variables in transitions (of the transition list) are represented as `(literal values)` from step 1.1. Replace these literals again with their `name` from the dict.
 2. After completing the above step for a single transition, cycle through it again and affix sequential numbers to repeated names (which stops them from becoming bound).
    If a variable appears more times in the transition than its `reps` value in the dict, increment its `reps`.
 3. Now that variables are properly disambiguated, replace `[bound references]` with the now-bound name of the variable at the index they refer to.
