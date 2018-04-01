@@ -36,18 +36,18 @@ The original file will not be referred to after step 5.
 
 ## Pass 2
 
-1. Expand single-transition `[mappings: (to, variables)]` into separate transition statements, which are inserted into the above transition list.
-2. Raise an error if a map-from is larger than its map-to, suggesting the user add a `...` to fill it out.
-
-## Pass 3
-
 Looking at variables in transitions:
 1. Variables in transitions (of the transition list) are represented as `(literal values)` from step 1.1. Replace these literals again with their `name` from the dict.
 2. After completing the above step for a single transition, cycle through it again and affix sequential numbers to repeated names (which stops them from becoming bound).
    If a variable appears more times in the transition than its `reps` value in the dict, increment its `reps`.
-3. Now that variables are properly disambiguated, replace `[bound references]` with the now-bound name of the variable at the index they refer to.
+3. Now that variables are properly disambiguated from 2.2, replace `[bound references]` with the now-bound name of the variable at the index they refer to.
 
-(`reps` is used to keep track of how many times this variable should be defined in the compiled Golly ruletable)
+(`reps` is used to keep track of how many times over a variable should be defined in the compiled Golly ruletable)
+
+## Pass 3
+
+1. Expand single-transition `[mappings: (to, variables)]` into separate transition statements, which are inserted into the above transition list.
+2. Raise an error if a map-from is larger than its map-to, suggesting the user add a `...` to fill it out.
 
 ## Pass 4
 

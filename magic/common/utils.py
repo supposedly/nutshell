@@ -28,7 +28,7 @@ def conv_permute(tr: str, total: int):
     # filler algo courtesy of Thomas Russell on math.stackexchange
     # https://math.stackexchange.com/a/1081084
     filler = (ceil((tally-k+1)/empties) for k in range(1, 1+empties))
-    gen = ((st, num if num else str(next(filler))) for st, num in seq)
+    gen = ((st, num or str(next(filler))) for st, num in seq)
     return ','.join(classes.AdditiveDict(gen).expand())
 
 def bind_vars(tr: (list, tuple)):
@@ -39,20 +39,24 @@ def bind_vars(tr: (list, tuple)):
         a_0,1,2,a_0,a_1,a_2,6,7,8,a_1
     """
     built = []
-    suffix = 0
-    for i, v in enumerate(tr):
+    seen = {}
+    for v in tr:
         if v.isdigit():
             built.append(v)
-            continue
-        if v.startswith('[') and v.endswith(']'):
+        elif v.startswith('['):
+            v = v[1:-1]  # strip brackets
+            ref = v.split(':')[0].strip()
             try:
-                built.append(built[int(v.strip('[]'))])
+                built.append(
+                  (built[int(ref)], v[1+v.find(':'):].strip())
+                  if ':' in v else
+                  built[int(ref)]
+                  )
             except IndexError:
                 raise ValueError(f"Variable binding '{v}' does not refer to a previous index") from None
             except ValueError:
                 raise SyntaxError(f"Invalid attempted variable binding '{v}'") from None
         else:
-            built.append(f'{v}_{suffix}')
-            suffix += 1
+            seen[v] = 1 + seen.get(v, -1)
+            built.append(f'{v}_{seen[v]}')
     return built
-

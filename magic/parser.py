@@ -29,6 +29,12 @@ def rep_adding_handler(self, key, value):
 
 
 def parse_variable(var, variables):
+    """
+    var: string, formatted like a variable literal
+    variables: the global dict of tabel's variables
+
+    return: var, but as a list with any references substituted for their literal values
+    """
     var = [i.strip() for i in var[1:-1].split(',')]  # var[1:-1] cuts out (parens)/{braces}
     for idx, state in enumerate(var):
         if state.isdigit():
@@ -49,6 +55,16 @@ def parse_variable(var, variables):
     
 
 def extract_initial_vars(start, tbl, variables=None):
+    """
+    start: line number to start from
+    tbl: the tabel to parse
+    variables: the global dict of tabel's variables
+
+    Iterates through the table and gathers all explicit variable declarations.
+
+    return: a bidict of said variables
+    {Variable(name, reps): (state1, state2, ..., staten)}
+    """
     if variables is None:
         variables = classes.ConflictHandlingBiDict()
     tblines = ((idx, stmt.strip()) for idx, line in enumerate(tbl, start) for stmt in line.split('#')[0].split(';'))
@@ -57,15 +73,13 @@ def extract_initial_vars(start, tbl, variables=None):
             break
         if not decl or not rASSIGNMENT.match(decl):
             continue
-        name, value = map(str.strip, decl.split('='))
         
+        name, value = map(str.strip, decl.split('='))
         if name == '__all__':  # a special var
             variables['__all__'] = parse_variable(value, variables)
             continue
-        if name.startswith(('_', '.')):
-            raise ValueError(f"Variable name '{name}' beings with '{name[0]}'")
-        if any(map(str.isdigit, name)):
-            raise ValueError(f"Variable name '{name}' contains a digit")
+        if not name.isalpha():
+            raise ValueError(f"Variable name '{name}' contains nonalphabetical characters")
         
         try:
             variables[name] = parse_variable(value, variables)
@@ -75,10 +89,17 @@ def extract_initial_vars(start, tbl, variables=None):
             raise ValueError(f"Value {value} is already assigned to variable {variables.inv[value]}") from None
     
     variables.set_handler(rep_adding_handler)
-    return tbl[lno:], variables, lno
+    return tbl[lno:], lno, variables
 
 
 def extract_directives(tbl, variables=None):
+    """
+    tbl: the tabel to parse
+    variables: the global dict of tabel's variables
+
+    return: a list of all directives (symmetries, nhood, n_states, ...)
+    declared at the top of a tabel.
+    """
     directives = {}
     for lno, line in enumerate(i.split('#')[0].strip() for i in tbl):
         if not line:
@@ -91,6 +112,13 @@ def extract_directives(tbl, variables=None):
 
 
 def tabelparse(tbl):
+    """
+    tbl: tabel to parse
+
+    The main func. Parses everything in the @TABEL section.
+
+    return: abstract representation of tbl
+    """
     transitions = []
     variables = classes.ConflictHandlingBiDict()
     start_assn, tbl, directives = extract_directives(tbl)
@@ -103,7 +131,7 @@ def tabelparse(tbl):
             raise KeyError("'symmetries'")
     except KeyError as e:
         var = str(e).split("'")[1]
-        raise NameError(f'{var} was never declared') from None
+        raise NameError(f'{var} directive was never declared') from None
     
     def cardinal_sub(m):
         try:
@@ -121,7 +149,9 @@ def tabelparse(tbl):
         try:
             napkin = [rCARDINAL.sub(cardinal_sub, i.strip()) for i in napkin.split(',')]
         except KeyError as e:
-            raise ValueError(f"Invalid cardinal direction for {directives['symmetries']} on line {lno}: '{e}''")
+            raise ValueError(
+              f"Invalid cardinal direction for {directives['symmetries']} on line {lno}: '{e}''"
+              ) from None
         # Parse napkin into proper range of ints
         for idx, elem in enumerate(napkin):
             if elem.isdigit():
@@ -130,15 +160,15 @@ def tabelparse(tbl):
                 var = parse_variable(elem, variables)
                 if var in variables.inv:  # conflict handler can't be relied upon; bidict on_dup_val interferes
                     variables.inv[var].reps += 1
-                else:
+                else:  # it's an anonymous (on-the-spot) variable
                     variables[f'_{random.randrange(10**15)}'] = var
-            elif not rBINDMAP.match(elem):  # leave these untouched i guess
+            elif not rBINDMAP.match(elem):  # leave mappings and bindings untouched for now
                 try:
                     napkin[idx] = variables[elem]
                 except KeyError:
                     raise NameError(f"Invalid or undefined name '{elem}' at line {lno}")
         transitions.append(Transition(napkin, to))
-    # TODO: step 0.2 + 0.3 err, step 1.4, step 2.1
+    # TODO: step 0.2, step 1.4, step 2.1
 
 
 def colorparse(colors):
@@ -146,6 +176,12 @@ def colorparse(colors):
 
 
 def parse(fp):
+    """
+    fp: file pointer to a full .ruel file
+
+    return: file, sectioned into dict with tabel
+            and colors converted to convertable representations
+    """
     parts = {}
     segment = None
     for line in map(str.strip, fp):
