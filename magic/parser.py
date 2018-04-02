@@ -1,6 +1,5 @@
 import random
 import re
-from collections import namedtuple
 
 from .common import classes, utils
 from .common.classes import Variable
@@ -16,7 +15,6 @@ CARDINALS = {
   'Moore': {'N': 1, 'NE': 2, 'E': 3, 'SE': 4, 'S': 5, 'SW': 6, 'W': 7, 'NW': 8},
   'vonNeumann': {'N': 1, 'E': 2, 'S': 3, 'W': 4}
   }
-Transition = namedtuple('Transition', ('napkin', 'to'))
 
 
 def rep_adding_handler(self, key, value):
@@ -36,23 +34,28 @@ def parse_variable(var, variables):
     return: var, but as a list with any references substituted for their literal values
     """
     var = [i.strip() for i in var[1:-1].split(',')]  # var[1:-1] cuts out (parens)/{braces}
-    for idx, state in enumerate(var):
+    cop = []
+    for state in var:
         if state.isdigit():
-            var[idx] = int(state)
+            cop.append(int(state))
         elif rRANGE.match(state):
             # There will only ever be two numbers in the range; `i`
             # will be 0 on first pass and 1 on second, so adding
             # it to the given integer will account for python's
             # ranges being exclusive of the end value (it adds
             # 1 on the second pass)
-            var[idx:1+idx] = range(*(i+int(v.strip()) for i, v in enumerate(state.split('..'))))
+            cop.extend(range(*(off+int(v.strip()) for off, v in enumerate(state.split('..')))))
         else:
             try:
-                var[idx:1+idx] = variables[state]
+                cop.extend(variables[state])
             except KeyError:
-                raise NameError(state)
-    return var
+                raise NameError(state) from None
+    return cop
     
+
+def parse_ptcd(tr, ptcd):
+    pass
+
 
 def extract_initial_vars(start, tbl, variables=None):
     """
@@ -73,14 +76,12 @@ def extract_initial_vars(start, tbl, variables=None):
             break
         if not decl or not rASSIGNMENT.match(decl):
             continue
-        
         name, value = map(str.strip, decl.split('='))
         if name == '__all__':  # a special var
             variables['__all__'] = parse_variable(value, variables)
             continue
         if not name.isalpha():
-            raise ValueError(f"Variable name '{name}' contains nonalphabetical characters")
-        
+            raise ValueError(f"Variable name '{name}' contains invalid character '{next(i for i in name if not i.isalpha())}'")
         try:
             variables[name] = parse_variable(value, variables)
         except NameError as e:
@@ -146,6 +147,7 @@ def tabelparse(tbl):
         if rASSIGNMENT.match(line):
             raise SyntaxError(f"Variable declaration on line {lno} after transitions")
         napkin, to = map(str.strip, line.split('->'))
+
         try:
             napkin = [rCARDINAL.sub(cardinal_sub, i.strip()) for i in napkin.split(',')]
         except KeyError as e:
@@ -167,9 +169,10 @@ def tabelparse(tbl):
                     napkin[idx] = variables[elem]
                 except KeyError:
                     raise NameError(f"Invalid or undefined name '{elem}' at line {lno}")
-        transitions.append(Transition(napkin, to))
+        transitions.append(napkin)
+        to = parse_ptcd(napkin, to)
     # TODO: step 0.2, step 1.4, step 2.1
-
+    
 
 def colorparse(colors):
     pass
@@ -179,8 +182,8 @@ def parse(fp):
     """
     fp: file pointer to a full .ruel file
 
-    return: file, sectioned into dict with tabel
-            and colors converted to convertable representations
+    return: file, sectioned into dict with tabel and
+    colors as convertable representations
     """
     parts = {}
     segment = None
@@ -196,4 +199,3 @@ def parse(fp):
     parts['@TABEL'] = tabelparse(parts['@TABEL'])
     parts['@COLORS'] = colorparse(parts['@COLORS'])
     return parts
-

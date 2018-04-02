@@ -1,7 +1,9 @@
-from itertools import chain
+import re
 from math import ceil
 
 from . import classes
+
+rSHORTHAND = re.compile(r'(\d+\s*\.\.\s*\d+)\s+(.+)')
 
 
 def conv_permute(tr: str, total: int):
@@ -30,6 +32,7 @@ def conv_permute(tr: str, total: int):
     filler = (ceil((tally-k+1)/empties) for k in range(1, 1+empties))
     gen = ((st, num or str(next(filler))) for st, num in seq)
     return ','.join(classes.AdditiveDict(gen).expand())
+
 
 def bind_vars(tr: (list, tuple)):
     """
@@ -60,3 +63,34 @@ def bind_vars(tr: (list, tuple)):
             seen[v] = 1 + seen.get(v, -1)
             built.append(f'{v}_{seen[v]}')
     return built
+
+
+def expand_tr(tr: (list, ..., tuple)):
+    """
+    Given a transition like
+      foo, 1..3 bar, baz, 5..8 wutz, kieu
+    Expand into this.
+      foo, bar, bar, bar, baz, wutz, wutz, wutz, kieu
+    
+    Also expand
+      0, 1..4 [a], 1
+    Into this.
+      0, a, [1], [1], [1], 1
+    """
+    cop = {}
+    for state in map(str.strip, tr):
+        match = rSHORTHAND.match(state)
+        if not match:
+            continue
+        shand, val = match[1], match[2]
+        # same as used in parser.py
+        span = range(*(off+int(v.strip()) for off, v in enumerate(shand.split('..'))))
+        if val.startswith('['):
+            start, *rest = span
+            cop[start] = val
+            for i in span:
+                cop[i] = f'[{start}]'
+        else:
+            for i in span:
+                cop[i] = val
+

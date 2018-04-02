@@ -3,8 +3,10 @@ import sys
 
 from magic import parser, compiler
 
+
 def transpile(fp):
     return compiler.compile(parser.parse(fp))
+
 
 if __name__ == '__main__':
     infile, outdir, *_ = sys.argv[1:]
