@@ -3,6 +3,7 @@ import re
 
 from .common import classes, utils
 from .common.classes import Variable
+from .common.classes.errors import TabelNameError, TabelSyntaxError, TabelValueError
 
 
 def rep_adding_handler(self, key, value):
@@ -38,7 +39,7 @@ class AbstractTabel:
     def __init__(self, tbl):
         self._tbl = tbl
         
-        self.variables = classes.ConflictHandlingBiDict()
+        self.vars = classes.ConflictHandlingBiDict()
         self.directives = {}
         self.transitions = []
         
@@ -46,7 +47,6 @@ class AbstractTabel:
         _start_transitions = self.extract_initial_vars(_start_assign)
         
         self.cardinals = self.parse_directives()
-        
         self.parse_transitions(_start_transitions)
     
     def __iter__(self):
@@ -77,7 +77,7 @@ class AbstractTabel:
                 cop.update(range(*(offset+int(v.strip()) for offset, v in enumerate(state.split('..')))))
             else:
                 try:
-                    cop.update(self.variables[state])
+                    cop.update(self.vars[state])
                 except KeyError:
                     raise NameError(state) from None
         return tuple(cop)
@@ -102,15 +102,15 @@ class AbstractTabel:
         Parses extracted directives to understand their values.
         """
         try:
-            self.variables['__all__'] = tuple(range(1+int(self.directives['n_states'])))
+            self.vars['__all__'] = tuple(range(1+int(self.directives['n_states'])))
             cardinals = self.CARDINALS.get(self.directives['nhood'])
             if cardinals is None:
-                raise ValueError(f"Invalid neighborhood '{self.directives['nhood']}' declared")
+                raise TabelValueError(None, f"Invalid neighborhood '{self.directives['nhood']}' declared")
             if 'symmetries' not in self.directives:
                 raise KeyError("'symmetries'")
         except KeyError as e:
             name = str(e).split("'")[1]
-            raise NameError(f"'{name}' directive not declared") from None
+            raise TabelNameError(None, f"'{name}' directive not declared") from None
         return cardinals
     
     def extract_initial_vars(self, start):
@@ -129,34 +129,55 @@ class AbstractTabel:
                 continue
             name, value = map(str.strip, decl.split('='))
             if name == '__all__':  # the special var
-                self.variables['__all__'] = self._parse_variable(value)
+                self.vars['__all__'] = self._parse_variable(value)
                 continue
             if not name.isalpha():
-                raise ValueError(f"Line {lno}: Variable name '{name}' contains nonalphabetical character '{next(i for i in name if not i.isalpha())}'")
+                raise TabelSyntaxError(lno, "Variable name '{name}' contains nonalphabetical character '{next(i for i in name if not i.isalpha())}'")
             try:
-                self.variables[name] = self._parse_variable(value)
+                self.vars[name] = self._parse_variable(value)
             except NameError as e:
-                raise NameError(f"Line {lno}: Declaration of variable '{name}' references undefined name '{e}'") from None
+                raise TabelNameError(lno, "Declaration of variable '{name}' references undefined name '{e}'") from None
             except classes.errors.KeyConflict:
-                raise ValueError(f"Line {lno}: Value {value} is already assigned to variable {self.variables.inv[value]}") from None
+                raise TabelValueError(lno, "Value {value} is already assigned to variable {self.vars.inv[value]}") from None
         
-        self.variables.set_handler(rep_adding_handler)
+        self.vars.set_handler(rep_adding_handler)
         return lno
-
+    
+    def parse_ptcd(tr, ptcd):
+        """
+        tr: a fully-parsed transition statement
+        ptcd: a PTCD
+        variables: global dict of variables
+        
+        PTCDs can be
+            CD[(var_literal)]
+            CD[variable]
+        Or
+            CD[CD: (var_literal)]
+            CD[CD: variable]
+        
+        return: ptcd parsed into something abstract
+        """
+        _ = rPTCD.match(ptcd)
+        copy_to, copy_from, var = self.cardinals[_[1]], self.cardinals.get(_[2]), _[3]
+        var = self._parse_variable(var)
+        if copy_from is not None:
+            raise NotImplementedError('PTCDs that copy neighbor states are not yet supported')
+        
     
     def parse_transitions(self, start):
         for lno, line in enumerate((i.split('#')[0].strip() for i in self[start:]), start):
             if not line:
                 continue
             if self.rASSIGNMENT.match(line):
-                raise SyntaxError(f"Line {lno}: Variable declaration after transitions")
+                raise TabelSyntaxError(lno, 'Variable declaration after transitions')
             napkin, ptcd = map(str.strip, line.split('->'))
             
             try:
                 napkin = [self.rCARDINAL.sub(self._cardinal_sub, i.strip()) for i in napkin.split(',')]
             except KeyError as e:
-                raise ValueError(
-                  f"Line {lno}: Invalid cardinal direction '{e}' for {self.directives['symmetries']} symmetry"
+                raise TabelValueError(
+                  lno, "Invalid cardinal direction '{e}' for {self.directives['symmetries']} symmetry"
                   ) from None
             # Parse napkin into proper range of ints
             for idx, elem in enumerate(napkin):
@@ -164,17 +185,16 @@ class AbstractTabel:
                     napkin[idx] = int(elem)
                 elif self.rVAR.match(elem):
                     var = self._parse_variable(elem)
-                    if var in self.variables.inv:  # conflict handler can't be relied upon; bidict on_dup_val interferes
-                        self.variables.inv[var].reps += 1
+                    if var in self.vars.inv:  # conflict handler can't be relied upon; bidict on_dup_val interferes
+                        self.vars.inv[var].reps += 1
                     else:  # it's an anonymous (on-the-spot) variable
-                        self.variables[f'_{random.randrange(10**15)}'] = var
+                        self.vars[f'_{random.randrange(10**15)}'] = var
                 elif not self.rBINDMAP.match(elem):  # leave mappings and bindings untouched for now
                     try:
-                        napkin[idx] = self.variables[elem]
+                        napkin[idx] = self.vars[elem]
                     except KeyError:
-                        raise NameError(f"Line {lno}: Undefined name '{elem}'")
-            self.transitions.append(napkin)
-            # aaaa???
+                        raise TabelNameError(lno, "Undefined name '{elem}'")
+            self.transitions.extend([napkin, [ptcd]])
         # TODO: step 0.2, step 1.4, step 2.1
 
 
