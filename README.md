@@ -58,13 +58,11 @@ or (b) using the `...` operator to say *"fill the rest out with whatever value p
   be given to those that appear earlier; `2,1,0`, for instance, will also expand into `2,2,2,1,1,1,0,0`, but `0,1,2` will expand into `0,0,0,1,1,1,2,2`.
 - Treat live cells as moving objects: allow a cardinal direction to travel in and resultant cell state to be specified post transition.
 ```py
-foo, N..NW bar, baz -> S:2 E[2, 3] SE[wutz] N[NE: (2, 3)] NE[E]
+foo, N..NW bar, baz -> S:2 E[(2, 3)] SE[wutz] N[NE: (2, 3)] NE[E]
 
 # S:2 says "spawn a state-2 cell to my south"
 
-# E[2, 3] and SE[wutz] say "map this cell (E or SE) to this variable"
-# Parentheses/braces aren't really needed for the variable literal in E[2, 3], but
-# it *could* if desired be written E[{2,3}] or E[(2,3)].
+# E[(2, 3)] and SE[wutz] say "map this cell (E or SE) to this variable"
 
 # N[NE: (2, 3)] is a TENTATIVE syntax that, if implemented, would spawn a cell to the north
 # that maps the *northeastern* state variable to the (2, 3) literal.

@@ -77,20 +77,5 @@ def expand_tr(tr: (list, ..., tuple)):
     Into this.
       0, a, [1], [1], [1], 1
     """
-    cop = {}
-    for state in map(str.strip, tr):
-        match = rSHORTHAND.match(state)
-        if not match:
-            continue
-        shand, val = match[1], match[2]
-        # same as used in parser.py
-        span = range(*(off+int(v.strip()) for off, v in enumerate(shand.split('..'))))
-        if val.startswith('['):
-            start, *rest = span
-            cop[start] = val
-            for i in span:
-                cop[i] = f'[{start}]'
-        else:
-            for i in span:
-                cop[i] = val
-
+    cop = []
+    
