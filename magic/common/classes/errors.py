@@ -1,3 +1,7 @@
+class KeyConflict(ValueError):
+    pass
+
+
 class ExceptionMeta(type):
     def __new__(cls, name, bases, attrs):
         # Hide module name (don't need user seeing `magic.common.classes.errors` on every error output)
@@ -29,8 +33,4 @@ class TabelValueError(TabelException):
 
 
 class TabelFeatureUnsupported(TabelException):
-    pass
-
-
-class KeyConflict(ValueError):
     pass

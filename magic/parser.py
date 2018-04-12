@@ -2,7 +2,7 @@ import random
 import re
 
 from .common import classes, utils
-from .common.classes import Variable
+from .common.classes import Variable, TabelRange
 from .common.classes.errors import TabelNameError, TabelSyntaxError, TabelValueError, TabelFeatureUnsupported
 
 
@@ -43,11 +43,11 @@ class AbstractTabel:
         self.directives = {}
         self.transitions = []
         
-        _start_assign = self.extract_directives()
-        _start_transitions = self.extract_initial_vars(_start_assign)
+        _assignment_start = self.extract_directives()
+        _transition_start = self.extract_initial_vars(_assignment_start)
         
         self.cardinals = self.parse_directives()
-        self.parse_transitions(_start_transitions)
+        self.parse_transitions(_transition_start)
     
     def __iter__(self):
         return iter(self._tbl)
@@ -63,7 +63,7 @@ class AbstractTabel:
 
     def _parse_variable(self, var, *, ptcd=False):
         """
-        var str: formatted like a variable literal
+        var :str: a variable literal
         
         return: var, but as a tuple with any references substituted for their literal values
         """
@@ -72,12 +72,7 @@ class AbstractTabel:
             if state.isdigit():
                 cop.add(int(state))
             elif self.rRANGE.match(state):
-                # There will only ever be two numbers in the range; `i`
-                # will be 0 on first pass and 1 on second, so adding
-                # it to the given integer will account for python's
-                # ranges being exclusive of the end value (it adds
-                # 1 on the second pass)
-                cop.update(range(*(offset+int(v.strip()) for offset, v in enumerate(state.split('..')))))
+                cop.update(TabelRange(state))
             elif state == '...' or ptcd and state == '_':
                 cop.update(state)
             else:
@@ -89,8 +84,6 @@ class AbstractTabel:
 
     def extract_directives(self):
         """
-        The first step.
-        
         return: the line number at which var assignment starts.
         """
         for lno, line in enumerate(i.split('#')[0].strip() for i in self):
@@ -172,16 +165,15 @@ class AbstractTabel:
             if state == '_':  # Leave as is (to be indicated by a None value)
                 state = None
             if state == '...':  # Fill out with preceding element (this should be generalized to all mapping actually)
-                # TODO: Allow placement of ... in the middle of an expression (so it'll be filled in from both sides)
+                # TODO: Allow placement of ... in the middle of an expression (it'll be filled in from both sides)
                 back = '_' == map_to[idx-1]
                 _map_to.append(range(len(map_from)-idx))  # Check isinstance(range) to determine whether to generate anonymous variable
                 break
             _map_to.append(state)
         if len(map_from) > len(map_to):
-            raise TabelValueError(lno, f"Variable '{copy_to}' being mapped to larger variable. Maybe add a '...' to the latter?")
+            raise TabelValueError(lno, f"Variable '{copy_to}' (direction {_[1]}) in PTCD mapped to larger variable. Maybe add a '...' to the latter?")
         # Start transition expansion
         transitions = []
-        # TODO: Take into account cardinal direction and work from there
         for state in map_to:
             if state is None:
                 continue

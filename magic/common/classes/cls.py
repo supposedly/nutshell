@@ -82,3 +82,25 @@ class Variable:
         Method of random generation liable to change.
         """
         return f'_{random.randrange(10**15)}'
+
+
+class TabelRange:
+    """
+    Proxy for a range object.
+    TODO: Make this into a proper range copy whose objects have self.bounds()
+    """
+    def __new__(self, span, *, shift=0):
+        """
+        Returns a workable range object from a tabel's range notation.
+        Has to use __new__ like this because range in Python is not an
+        acceptable base type.
+        """
+        # There will only ever be two numbers in the range; offset
+        # will be 0 on first pass and 1 on second, so adding it to
+        # the given integer will account for python's ranges being
+        # exclusive of the end value (it adds one on the 2nd pass)
+        return range(*(offset+int(bound.strip()) for offset, bound in enumerate(span.split('..'), shift)))
+    
+    @staticmethod
+    def bounds(span, *, shift=0):
+        return [offset+int(bound.strip()) for offset, bound in enumerate(span.split('..'), shift)]

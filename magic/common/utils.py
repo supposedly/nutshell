@@ -77,5 +77,22 @@ def expand_tr(tr: (list, ..., tuple)):
     Into this.
       0, a, [1], [1], [1], 1
     """
-    cop = []
-    
+    cop, idx = [], 0
+    for val in tr:
+        if not rRANGE.match(val):
+            idx += 1
+            cop.append(val)
+            continue
+        group, state = val.split()
+        lower, upper = classes.TabelRange.bounds(group)
+        if lower != idx:
+            raise ValueError({'lower': lower, 'idx': idx})
+        span = upper - lower
+        if state.startswith('['):
+            group = [state[1:-1]]
+            group.extend(f'[{idx}]' for _ in range(span))
+        else:
+            group = [state] * span
+        idx += span
+        cop.extend(group)
+    return cop
