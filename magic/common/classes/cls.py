@@ -1,3 +1,4 @@
+import random
 import re
 
 import bidict
@@ -65,8 +66,19 @@ class ConflictHandlingBiDict(bidict.bidict):
 
     
 class Variable:
+    """
+    Represents a variable and how many times it should be
+    redefined (to avoid binding) in a Golly table.
+    """
     __slots__ = 'name', 'reps'
     def __init__(self, name, reps=0):
         self.name = name
         self.reps = reps
-
+    
+    @staticmethod
+    def random_name():
+        """
+        Generates a random variable name.
+        Method of random generation liable to change.
+        """
+        return f'_{random.randrange(10**15)}'

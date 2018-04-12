@@ -3,7 +3,7 @@ import re
 
 from .common import classes, utils
 from .common.classes import Variable
-from .common.classes.errors import TabelNameError, TabelSyntaxError, TabelValueError
+from .common.classes.errors import TabelNameError, TabelSyntaxError, TabelValueError, TabelFeatureUnsupported
 
 
 def rep_adding_handler(self, key, value):
@@ -17,7 +17,7 @@ def rep_adding_handler(self, key, value):
 
 class AbstractTabel:
     """
-    Creates an abstract, Golly-transferrable representation of a rueltabel.
+    Creates an abstract, Golly-transferable representation of a rueltabel.
     """
     __rCARDINALS = 'N|NE|E|SE|S|SW|W|NW'
     __rVAR = r'[({](?:\w+,\s*)+\w+[})]'
@@ -52,13 +52,16 @@ class AbstractTabel:
     def __iter__(self):
         return iter(self._tbl)
     
+    def __getitem__(self, item):
+        return self._tbl[item]
+    
     def _cardinal_sub(self, match):
         try:
             return f"{match[1] or ''}{self.cardinals[match[2]]}{match[3]}"
         except KeyError:
             raise KeyError(match[2])
 
-    def _parse_variable(self, var):
+    def _parse_variable(self, var, *, ptcd=False):
         """
         var str: formatted like a variable literal
         
@@ -75,6 +78,8 @@ class AbstractTabel:
                 # ranges being exclusive of the end value (it adds
                 # 1 on the second pass)
                 cop.update(range(*(offset+int(v.strip()) for offset, v in enumerate(state.split('..')))))
+            elif state == '...' or ptcd and state == '_':
+                cop.update(state)
             else:
                 try:
                     cop.update(self.vars[state])
@@ -139,11 +144,10 @@ class AbstractTabel:
                 raise TabelNameError(lno, "Declaration of variable '{name}' references undefined name '{e}'") from None
             except classes.errors.KeyConflict:
                 raise TabelValueError(lno, "Value {value} is already assigned to variable {self.vars.inv[value]}") from None
-        
         self.vars.set_handler(rep_adding_handler)
         return lno
     
-    def parse_ptcd(tr, ptcd):
+    def parse_ptcd(tr, ptcd, *, lno):
         """
         tr: a fully-parsed transition statement
         ptcd: a PTCD
@@ -156,14 +160,35 @@ class AbstractTabel:
             CD[CD: (var_literal)]
             CD[CD: variable]
         
-        return: ptcd parsed into something abstract
+        return: PTCD expanded into its full transition(s)
         """
-        _ = rPTCD.match(ptcd)
-        copy_to, copy_from, var = self.cardinals[_[1]], self.cardinals.get(_[2]), _[3]
-        var = self._parse_variable(var)
+        _ = self.rPTCD.match(ptcd)
+        copy_to, copy_from = self.cardinals[_[1]], self.cardinals.get(_[2])
         if copy_from is not None:
-            raise NotImplementedError('PTCDs that copy neighbor states are not yet supported')
-        
+            raise TabelFeatureUnsupported(lno, 'PTCDs that copy neighbor states are not yet supported')
+        map_from = self.vars.inv[tr[copy_to]]  # Catch this IndexError/KeyError
+        _map_to, map_to = [], self._parse_variable(_[3], ptcd=True)
+        for idx, state in enumerate(map_to):
+            if state == '_':  # Leave as is (to be indicated by a None value)
+                state = None
+            if state == '...':  # Fill out with preceding element (this should be generalized to all mapping actually)
+                # TODO: Allow placement of ... in the middle of an expression (so it'll be filled in from both sides)
+                back = '_' == map_to[idx-1]
+                _map_to.append(range(len(map_from)-idx))  # Check isinstance(range) to determine whether to generate anonymous variable
+                break
+            _map_to.append(state)
+        if len(map_from) > len(map_to):
+            raise TabelValueError(lno, f"Variable '{copy_to}' being mapped to larger variable. Maybe add a '...' to the latter?")
+        # Start transition expansion
+        transitions = []
+        # TODO: Take into account cardinal direction and work from there
+        for state in map_to:
+            if state is None:
+                continue
+            if isinstance(state, range):
+                ...
+            transitions.append(...)
+        return transitions
     
     def parse_transitions(self, start):
         for lno, line in enumerate((i.split('#')[0].strip() for i in self[start:]), start):
@@ -172,7 +197,6 @@ class AbstractTabel:
             if self.rASSIGNMENT.match(line):
                 raise TabelSyntaxError(lno, 'Variable declaration after transitions')
             napkin, ptcd = map(str.strip, line.split('->'))
-            
             try:
                 napkin = [self.rCARDINAL.sub(self._cardinal_sub, i.strip()) for i in napkin.split(',')]
             except KeyError as e:
@@ -188,7 +212,7 @@ class AbstractTabel:
                     if var in self.vars.inv:  # conflict handler can't be relied upon; bidict on_dup_val interferes
                         self.vars.inv[var].reps += 1
                     else:  # it's an anonymous (on-the-spot) variable
-                        self.vars[f'_{random.randrange(10**15)}'] = var
+                        self.vars[Variable.random_name()] = var
                 elif not self.rBINDMAP.match(elem):  # leave mappings and bindings untouched for now
                     try:
                         napkin[idx] = self.vars[elem]

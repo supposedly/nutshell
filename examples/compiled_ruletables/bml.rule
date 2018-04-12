@@ -23,25 +23,30 @@ var __all__1 = __all__0
 var __all__2 = __all__0
 var __all__3 = __all__0
 
+var any_0 = {0, 1, 2, 3, 4}
+var any_1 = any_0
+var any_2 = any_0
+var any_3 = any_0
+
 var move = {1, 2}
 var wait = {3, 4}
 
-var _203154097658965 = {1, 2, 3, 4}
+var _203154097658965 = {1, 2, 3, 4}  # Anonymous variable generated for mapping
 
 
 # wait, N..W any, [0: move]
-3, __all__0, __all__1, __all__2, __all__3, 1
-4, __all__0, __all__1, __all__2, __all__3, 2
+3, any_0, any_1, any_2, any_3, 1
+4, any_0, any_1, any_2, any_3, 2
 
 # 1, N..W any, [S: (0, 3, ...)]
-1, __all__0, __all__1, 0, __all__2, 0
-1, __all__0, __all__1, _203154097658965, __all__2, 3
+1, any_0, any_1, 0, any_2, 0
+1, any_0, any_1, _203154097658965, any_2, 3
 # Above: -> S[(3, _, ...)]
 0, 1, __all__0, __all__1, __all__2, 3
 
 # 2, N..W any, [E: (0, 4, ...)]
-2, __all__0, 0, __all__1, __all__2, 0
-2, __all__0, _203154097658965, __all__1, __all__2, 4
+2, any_0, 0, any_1, any_2, 0
+2, any_0, _203154097658965, any_1, any_2, 4
 # Above: -> E[(4, _, ...)]
 0, __all__0, __all__1, __all__2, 2, 4
 
