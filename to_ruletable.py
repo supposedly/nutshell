@@ -5,7 +5,10 @@ from magic import parser, compiler
 
 
 def transpile(fp):
-    return compiler.compile(parser.parse(fp))
+    print('Parsing...', end='\n\n')
+    parsed = parser.parse(fp)
+    print('Complete!\nCompiling...', end='\n\n')
+    return compiler.compile(parsed)
 
 
 if __name__ == '__main__':
@@ -14,3 +17,4 @@ if __name__ == '__main__':
     
     with open(infile) as infp, open(f'{os.path.join(outdir, fname)}.rule') as outfp:
         outfp.write(transpile(infp))
+    print('Complete!')
