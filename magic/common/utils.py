@@ -4,7 +4,7 @@ from math import ceil
 from . import classes
 
 rSHORTHAND = re.compile(r'(\d+\s*\.\.\s*\d+)\s+(.+)')
-
+rRANGE = re.compile(r'\d+? *?\.\. *?\d+?')
 
 def conv_permute(tr: str, total: int):
     """
@@ -96,3 +96,23 @@ def expand_tr(tr: (list, ..., tuple)):
         idx += span
         cop.extend(group)
     return cop
+
+def globalmatch(regex: re.compile, string: str, start: int = 0) -> bool:
+    """
+    regex: a regex object
+    string: a string to match
+    start: starting position for regex
+    
+    Determines whether regex, when applied *globally*, covers *every*
+    character in string.
+    Differs from re.fullmatch in that it checks for more than one
+    recursively-applied iteration of the regex.
+    
+    return: whether every character in string is covered by regex
+    """
+    match = regex.search(string, pos=start)
+    try:
+        end = match.end()
+    except AttributeError:  # match == None
+        return False
+    return end == len(string) or start == match.start() and globalmatch(regex, string, end)

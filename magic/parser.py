@@ -3,7 +3,7 @@ import re
 
 from .common import classes, utils
 from .common.classes import Variable, TabelRange
-from .common.classes.errors import TabelNameError, TabelSyntaxError, TabelValueError, TabelFeatureUnsupported
+from .common.classes.errors import TabelNameError, TabelSyntaxError, TabelValueError, TabelFeatureUnsupported, TabelException
 
 
 def rep_adding_handler(self, key, value):
@@ -20,15 +20,15 @@ class AbstractTabel:
     Creates an abstract, Golly-transferable representation of a rueltabel.
     """
     __rCARDINALS = 'N|NE|E|SE|S|SW|W|NW'
-    __rVAR = r'[({](?:\w+,\s*)+\w+[})]'
+    __rVAR = r'[({](?:\w+\s*(?:,|\.\.)\s*)+(?:\w|(?:\.\.\.)?)+[})]'
     
-    rASSIGNMENT = re.compile(r'.+? *?= *?')
-    rBINDMAP = re.compile(rf'\[[0-8](?::\s*?(?:{__rVAR}|[^_]\w+?))?\]')
-    rCARDINAL = re.compile(rf'\b(\[)?({__rCARDINALS})((?(1)\]))\b')
-    rPTCD = re.compile(rf'((?:{__rCARDINALS})+)\[((?:{__rCARDINALS})+:)?\s*(\w+|{__rVAR})')
-    rRANGE = re.compile(r'\d+? *?\.\. *?\d+?')
-    rTRANSITION = re.compile('[^,]+?(?:,[^,]+)+')
-    rVAR = re.compile(__rVAR)
+    _rASSIGNMENT = re.compile(rf'\w+?\s*=\s*{__rVAR}')
+    _rBINDMAP = re.compile(rf'\[[0-8](?::\s*?(?:{__rVAR}|[^_]\w+?))?\]')
+    _rCARDINAL = re.compile(rf'\b(\[)?({__rCARDINALS})((?(1)\]))\b')
+    _rPTCD = re.compile(rf'((?:{__rCARDINALS})+)\[((?:{__rCARDINALS})+:)?\s*(\w+|{__rVAR})')
+    _rRANGE = re.compile(r'\d+? *?\.\. *?\d+?')
+    _rTRANSITION = re.compile(rf'(?:\s*((?:[A-Z]\s*\.\.[A-Z])?\s*(?:[\w\s]+|\[(?:(?:\d|{__rCARDINALS})\s*:\s*)?(?:{__rVAR}|[A-Za-z]+)\])),?)+?\s*')
+    _rVAR = re.compile(__rVAR)
     
     CARDINALS = {
       'Moore': {'N': 1, 'NE': 2, 'E': 3, 'SE': 4, 'S': 5, 'SW': 6, 'W': 7, 'NW': 8},
@@ -36,14 +36,14 @@ class AbstractTabel:
       'hexagonal': {'N': 1, 'E': 2, 'SE': 3, 'S': 4, 'W': 5, 'NW': 6}
       }
     
-    def __init__(self, tbl):
+    def __init__(self, tbl, start=0):
         self._tbl = tbl
         
         self.vars = classes.ConflictHandlingBiDict()
         self.directives = {}
         self.transitions = []
         
-        _assignment_start = self.extract_directives()
+        _assignment_start = self.extract_directives(start)
         _transition_start = self.extract_initial_vars(_assignment_start)
         
         self.cardinals = self.parse_directives()
@@ -71,7 +71,7 @@ class AbstractTabel:
         for state in map(str.strip, var[1:-1].split(',')): # var[1:-1] cuts out (parens)/{braces}
             if state.isdigit():
                 cop.add(int(state))
-            elif self.rRANGE.match(state):
+            elif self._rRANGE.match(state):
                 cop.update(TabelRange(state))
             elif state == '...' or ptcd and state == '_':
                 cop.update(state)
@@ -82,27 +82,27 @@ class AbstractTabel:
                     raise NameError(state) from None
         return tuple(cop)
     
-    def extract_directives(self):
+    def extract_directives(self, start):
         """
         Gets directives from top of ruelfile.
 
         return: the line number at which var assignment starts.
         """
-        for lno, line in enumerate(i.split('#')[0].strip() for i in self):
+        for lno, line in enumerate((i.split('#')[0].strip() for i in self), start):
             if not line:
                 continue
-            if self.rASSIGNMENT.match(line):
+            if self._rASSIGNMENT.fullmatch(line):
                 break
             directive, value = map(str.strip, line.split(':'))
             self.directives[directive] = value
-        return 1 + lno
+        return lno
     
     def parse_directives(self):
         """
         Parses extracted directives to understand their values.
         """
         try:
-            self.vars['__all__'] = tuple(range(1+int(self.directives['n_states'])))
+            self.vars['__all__'] = tuple(range(int(self.directives['n_states'])))
             cardinals = self.CARDINALS.get(self.directives['neighborhood'])
             if cardinals is None:
                 raise TabelValueError(None, f"Invalid neighborhood '{self.directives['neighborhood']}' declared")
@@ -123,9 +123,9 @@ class AbstractTabel:
         """
         tblines = ((idx, stmt.strip()) for idx, line in enumerate(self[start:], start) for stmt in line.split('#')[0].split(';'))
         for lno, decl in tblines:
-            if self.rTRANSITION.match(decl):
+            if utils.globalmatch(self._rTRANSITION, decl):
                 break
-            if not decl or not self.rASSIGNMENT.match(decl):
+            if not decl or not self._rASSIGNMENT.match(decl):
                 continue
             name, value = map(str.strip, decl.split('='))
             if name == '__all__':  # the special var
@@ -134,17 +134,16 @@ class AbstractTabel:
             if not name.isalpha():
                 raise TabelSyntaxError(
                   lno,
-                  self._tbl,
                   f"Variable name '{name}' contains nonalphabetical character '{next(i for i in name if not i.isalpha())}'",
                   )
             try:
                 self.vars[name] = self._parse_variable(value)
             except NameError as e:
-                raise TabelNameError(lno, self._tbl, f"Declaration of variable '{name}' references undefined name '{e}'")
+                raise TabelNameError(lno, f"Declaration of variable '{name}' references undefined name '{e}'")
             except classes.errors.KeyConflict:
-                raise TabelValueError(lno, self._tbl, f"Value {value} is already assigned to variable {self.vars.inv[value]}")
+                raise TabelValueError(lno, f"Value {value} is already assigned to variable {self.vars.inv[value]}")
         self.vars.set_handler(rep_adding_handler)
-        return 1 + lno
+        return lno
     
     def parse_ptcd(tr, ptcd, *, lno):
         """
@@ -161,12 +160,12 @@ class AbstractTabel:
         
         return: PTCD expanded into its full transition(s)
         """
-        _ = self.rPTCD.match(ptcd)
-        copy_to, copy_from = self.cardinals[_[1]], self.cardinals.get(_[2])
+        match = self._rPTCD.match(ptcd)
+        copy_to, copy_from = self.cardinals[match[1]], self.cardinals.get(match[2])
         if copy_from is not None:
-            raise TabelFeatureUnsupported(lno, self._tbl, 'PTCDs that copy neighbor states are not yet supported')
+            raise TabelFeatureUnsupported(lno, 'PTCDs that copy neighbor states are not yet supported')
         map_from = self.vars.inv[tr[copy_to]]  # Catch this IndexError/KeyError
-        _map_to, map_to = [], self._parse_variable(_[3], ptcd=True)
+        _map_to, map_to = [], self._parse_variable(match[3], ptcd=True)
         for idx, state in enumerate(map_to):
             if state == '_':  # Leave as is (to be indicated by a None value)
                 state = None
@@ -179,8 +178,7 @@ class AbstractTabel:
         if len(map_from) > len(map_to):
             raise TabelValueError(
                 lno,
-                self._tbl,
-                f"Variable '{copy_to}' (direction {_[1]}) in PTCD mapped to larger variable. Maybe add a '...' to the latter?"
+                f"Variable '{copy_to}' (direction {match[1]}) in PTCD mapped to smaller variable. Maybe add a '...' to the latter?"
                 )
         # Start transition expansion
         transitions = []
@@ -196,38 +194,40 @@ class AbstractTabel:
         for lno, line in enumerate((i.split('#')[0].strip() for i in self[start:]), start):
             if not line:
                 continue
-            if self.rASSIGNMENT.match(line):
-                raise TabelSyntaxError(lno, self._tbl, 'Variable declaration after transitions')
-            napkin, ptcd = map(str.strip, line.split('->'))
+            if self._rASSIGNMENT.match(line):
+                raise TabelSyntaxError(lno, 'Variable declaration after transitions')
+            napkin, ptcd = map(str.strip, line.partition('->')[::2])
             try:
-                napkin = [self.rCARDINAL.sub(self._cardinal_sub, i.strip()) for i in napkin.split(',')]
+                napkin = [self._rCARDINAL.sub(self._cardinal_sub, i.strip()) for i in self._rTRANSITION.findall(napkin)]
             except KeyError as e:
                 raise TabelValueError(
                   lno,
-                  self._tbl,
                   f"Invalid cardinal direction '{e}' for {self.directives['symmetries']} symmetry"
                   ) from None
+            napkin = utils.expand_tr(napkin)
             # Parse napkin into proper range of ints
             for idx, elem in enumerate(napkin):
                 if elem.isdigit():
                     napkin[idx] = int(elem)
-                elif self.rVAR.match(elem):
+                elif self._rVAR.match(elem):
                     var = self._parse_variable(elem)
                     if var in self.vars.inv:  # conflict handler can't be relied upon; bidict on_dup_val interferes
                         self.vars.inv[var].reps += 1
                     else:  # it's an anonymous (on-the-spot) variable
                         self.vars[Variable.random_name()] = var
-                elif not self.rBINDMAP.match(elem):  # leave mappings and bindings untouched for now
+                elif not self._rBINDMAP.match(elem):  # leave mappings and bindings untouched for now
                     try:
                         napkin[idx] = self.vars[elem]
                     except KeyError:
-                        raise TabelNameError(lno, self._tbl, f"Undefined name '{elem}'")
+                        raise TabelNameError(lno, f"Undefined name '{elem}'")
             self.transitions.extend([napkin, [ptcd]])
         # TODO: step 0.2, step 1.4, step 2.1
 
 
 class AbstractColors:
-    pass
+    def __init__(self, *args, **kwargs):
+        pass
+    ...
 
 
 def parse(fp):
@@ -237,17 +237,28 @@ def parse(fp):
     return: file, sectioned into dict with tabel and
     colors as convertable representations
     """
-    parts = {}
+    parts, lines = {}, {}
     segment = None
-    for line in map(str.strip, fp):
-        if not line or line.startswith('#'):
-            continue
+    
+    for lno, line in enumerate(map(str.strip, fp), 1):
         if line.startswith('@'):
             # @RUEL, @TABEL, @COLORS, ...
             segment, *name = line.split(None, 1)
-            parts[segment] = name
+            parts[segment], lines[segment] = name, lno
             continue
         parts[segment].append(line)
-    parts['@TABEL'] = AbstractTabel(parts['@TABEL'])
-    parts['@COLORS'] = AbstractColors(parts['@COLORS'])
+    
+    try:
+        parts['@TABEL'] = AbstractTabel(parts['@TABEL'])
+    except KeyError:
+        raise TabelNameError(None, "No '@TABEL' segment found")
+    except TabelException as exc:
+        raise exc.__class__(exc.lno, exc.msg, parts['@TABEL'], lines['@TABEL'])
+    
+    try:
+        parts['@COLORS'] = AbstractColors(parts['@COLORS'])
+    except KeyError:
+        pass
+    except TabelException as exc:
+        raise exc.__class__(exc.lno, exc.msg, parts['@COLORS'], lines['@COLORS'])
     return parts

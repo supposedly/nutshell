@@ -43,8 +43,8 @@ foo, N..E bar, [N], S..NW bar, baz # could also be "..., SE [N], ..."
 - A Golly-ruletable transition such as von-Neumann `0,a,a,a,a,1` might be inefficiently compacted to `0, a, [N], [N], [N], 1`, or worse
   `0, a, E..W [N], 1`. In such cases, where successive variables need all to be bound to the first, the shorthand `direction..direction [var]` can be used.
   Here it would look like `0, N..W [a], 1`, expanding during compilation to `0, a, [1], [1], [1], 1`.
-- With this indexing, we can introduce "mapping" one variable to another. For instance, `foo, N..NW (0,1,2), [E: (1,3,4)]`
-(meaning *map the eastern cell, being any of `(0,1,2)`, to the states `(1,3,4)`: if it's 0 return 1, if 1 return 3, if 2 return 4*) can
+- With this indexing, we can introduce "mapping" one variable to another. For instance, `foo, N..NW (0, 1, 2), [E: (1, 3, 4)]`
+(meaning *map the eastern cell, being any of `(0, 1, 2)`, to the states `(1, 3, 4)`: if it's 0 return 1, if 1 return 3, if 2 return 4*) can
 replace what would otherwise require a separate transition for each of `0`...`1`, `1`...`3`, and `2`...`4`.  
   Mapping of course works with named variables as well.
 - If a variable literal is too small to map to, an error will be raised that can be rectified by either (a) filling it out with explicit transitions,
