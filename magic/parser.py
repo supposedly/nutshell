@@ -1,4 +1,4 @@
-import random
+"""Facilitates parsing of a rueltabel file into an abstract, computer-readable format."""
 import re
 
 from .common import classes, utils
@@ -6,9 +6,9 @@ from .common.classes import Variable, TabelRange
 from .common.classes.errors import TabelNameError, TabelSyntaxError, TabelValueError, TabelFeatureUnsupported, TabelException
 
 
-def rep_adding_handler(self, key, value):
+def rep_adding_handler(_, key, value):
     """
-    Replaces default ConflictHandlingBiDict conflict_handler.
+    Replaces default ConflictHandlingBiDict's conflict_handler.
     Instead of raising exception, appends to var's reps
     """
     (key if isinstance(key, Variable) else value).reps += 1
@@ -17,7 +17,7 @@ def rep_adding_handler(self, key, value):
 
 class AbstractTabel:
     """
-    Creates an abstract, Golly-transferable representation of a rueltabel.
+    Creates an abstract, Golly-transferable representation of a ruelfile's @TABEL section.
     """
     __rCARDINALS = 'N|NE|E|SE|S|SW|W|NW'
     __rVAR = r'[({](?:\w+\s*(?:,|\.\.)\s*)+(?:\w|(?:\.\.\.)?)+[})]'
@@ -27,7 +27,9 @@ class AbstractTabel:
     _rCARDINAL = re.compile(rf'\b(\[)?({__rCARDINALS})((?(1)\]))\b')
     _rPTCD = re.compile(rf'((?:{__rCARDINALS})+)\[((?:{__rCARDINALS})+:)?\s*(\w+|{__rVAR})')
     _rRANGE = re.compile(r'\d+? *?\.\. *?\d+?')
-    _rTRANSITION = re.compile(rf'(?:\s*((?:[A-Z]\s*\.\.[A-Z])?\s*(?:[\w\s]+|\[(?:(?:\d|{__rCARDINALS})\s*:\s*)?(?:{__rVAR}|[A-Za-z]+)\])),?)+?\s*')
+    _rTRANSITION = re.compile(
+        rf'(?:\s*((?:[A-Z]\s*\.\.[A-Z])?\s*(?:[\w\s]+|\[(?:(?:\d|{__rCARDINALS})\s*:\s*)?(?:{__rVAR}|[A-Za-z]+)\])),?)+?\s*'
+        )
     _rVAR = re.compile(__rVAR)
     
     CARDINALS = {
@@ -68,7 +70,7 @@ class AbstractTabel:
         return: var, but as a tuple with any references substituted for their literal values
         """
         cop = set()
-        for state in map(str.strip, var[1:-1].split(',')): # var[1:-1] cuts out (parens)/{braces}
+        for state in map(str.strip, var[1:-1].split(',')):  # var[1:-1] cuts out (parens)/{braces}
             if state.isdigit():
                 cop.add(int(state))
             elif self._rRANGE.match(state):
@@ -137,7 +139,7 @@ class AbstractTabel:
                   f"Variable name '{name}' contains nonalphabetical character '{next(i for i in name if not i.isalpha())}'",
                   )
             try:
-                self.vars[name] = self._parse_variable(value)
+                self.vars[Variable(name)] = self._parse_variable(value)
             except NameError as e:
                 raise TabelNameError(lno, f"Declaration of variable '{name}' references undefined name '{e}'")
             except classes.errors.KeyConflict:
@@ -145,7 +147,7 @@ class AbstractTabel:
         self.vars.set_handler(rep_adding_handler)
         return lno
     
-    def parse_ptcd(tr, ptcd, *, lno):
+    def parse_ptcd(self, tr, ptcd, *, lno):
         """
         tr: a fully-parsed transition statement
         ptcd: a PTCD
@@ -166,31 +168,36 @@ class AbstractTabel:
             raise TabelFeatureUnsupported(lno, 'PTCDs that copy neighbor states are not yet supported')
         map_from = self.vars.inv[tr[copy_to]]  # Catch this IndexError/KeyError
         _map_to, map_to = [], self._parse_variable(match[3], ptcd=True)
-        for idx, state in enumerate(map_to):
-            if state == '_':  # Leave as is (to be indicated by a None value)
-                state = None
-            if state == '...':  # Fill out with preceding element (this should be generalized to all mapping actually)
-                # TODO: Allow placement of ... in the middle of an expression (it'll be filled in from both sides)
-                back = '_' == map_to[idx-1]
-                _map_to.append(range(len(map_from)-idx))  # Check isinstance(range) to determine whether to generate anonymous variable
-                break
-            _map_to.append(state)
         if len(map_from) > len(map_to):
             raise TabelValueError(
                 lno,
                 f"Variable '{copy_to}' (direction {match[1]}) in PTCD mapped to smaller variable. Maybe add a '...' to the latter?"
                 )
-        # Start transition expansion
+        for idx, state in enumerate(map_to):
+            if state == '_':  # Leave as is (to be indicated by a None value)
+                state = None
+            if state == '...':  # Fill out with preceding element (this should be generalized to all mappings actually)
+                # TODO: Allow placement of ... in the middle of an expression (it'll be filled in from both sides)
+                back = (map_to[idx-1] == '_')
+                _map_to.append(range(len(map_from)-idx))  # Check isinstance(range) to determine whether to generate anonymous variable
+                break
+            _map_to.append(state)
+        # Start expansion to transitions
         transitions = []
         for state in map_to:
             if state is None:
                 continue
             if isinstance(state, range):
-                ...
+                pass
             transitions.append(...)
         return transitions
     
     def parse_transitions(self, start):
+        """
+        start: line number to start on
+
+        Parses all the ruel's transitions into a list in self.transitions.
+        """
         for lno, line in enumerate((i.split('#')[0].strip() for i in self[start:]), start):
             if not line:
                 continue
@@ -220,14 +227,17 @@ class AbstractTabel:
                         napkin[idx] = self.vars[elem]
                     except KeyError:
                         raise TabelNameError(lno, f"Undefined name '{elem}'")
-            self.transitions.extend([napkin, [ptcd]])
+            self.transitions.extend([napkin])
         # TODO: step 0.2, step 1.4, step 2.1
 
 
 class AbstractColors:
+    """
+    Parses a ruelfile's color format into something abstract &
+    transferable into Golly.
+    """
     def __init__(self, *args, **kwargs):
         pass
-    ...
 
 
 def parse(fp):

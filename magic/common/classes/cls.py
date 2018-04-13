@@ -1,3 +1,4 @@
+"""Utility classes for use in rueltabel parsing."""
 import random
 import re
 
@@ -75,13 +76,13 @@ class Variable:
         self.name = name
         self.reps = reps
     
-    @staticmethod
-    def random_name():
+    @classmethod
+    def random_name(cls):
         """
-        Generates a random variable name.
+        Generates a Variable with a random name.
         Method of random generation liable to change.
         """
-        return f'_{random.randrange(10**15)}'
+        return cls(f'_{random.randrange(10**15)}')
 
 
 class TabelRange:

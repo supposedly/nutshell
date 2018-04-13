@@ -1,3 +1,4 @@
+"""Utility functions to be used during rueltabel parsing."""
 import re
 from math import ceil
 

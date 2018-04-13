@@ -1,3 +1,5 @@
+"""Errors to be raised during rueltabel parsing."""
+
 class KeyConflict(ValueError):
     pass
 
