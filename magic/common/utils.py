@@ -104,7 +104,7 @@ def globalmatch(regex: re.compile, string: str, start: int = 0) -> bool:
     string: a string to match
     start: starting position for regex
     
-    Determines whether regex, when applied *globally*, covers *every*
+    Determines whether regex, when applied globally, covers *every*
     character in string.
     Differs from re.fullmatch in that it checks for more than one
     recursively-applied iteration of the regex.

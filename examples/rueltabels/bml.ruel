@@ -9,9 +9,10 @@ The Biham–Middleton–Levine traffic model.
 
 Generation 0 will consist only of states 0, 2, 3
 
+
 @TABEL
 n_states: 5
-neighborhood: vonNeumann
+neighborhood: von Neumann
 symmetries: none
 
 any = (0..4)
@@ -23,8 +24,9 @@ wait, N..W any, [0: move]
 
 # A downward-bound car moves down if the cell below it is 0, else stays put and becomes a 'waiting'
 1, N..W any, [S: (0, 3, ...)] -> S[(3, _, ...)]
-# A rightward-bound car moves right if it can, else ditto stays put and becomes a 'waiting'
+# A rightward-bound car moves right if clear, else ditto
 2, N..W any, [E: (0, 4, ...)] -> E[(4, _, ...)]
+
 
 @COLORS
   0: FFF

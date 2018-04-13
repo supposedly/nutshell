@@ -1,10 +1,8 @@
 """Utility classes for use in rueltabel parsing."""
 import random
-import re
 
 import bidict
 
-from .. import utils
 from . import errors
 
 
@@ -22,15 +20,15 @@ class ConflictHandlingBiDict(bidict.bidict):
     A dict allowing for key-conflict handling.
     """
     @staticmethod
-    def __conflict_handler(self, key, value):
+    def __conflict_handler(_, key, value):
         """
         Meant to be overwritten.
         A function replacing this needs to have a type signature of
         
         self, key, value
         
-        It also needs to return a (key, value) tuple or if not then
-        raise some fatal exception.
+        It also needs to return a (key, value) tuple or raise some
+        fatal exception.
         """
         raise errors.KeyConflict(f"Key '{key}' already has a value of {value!r}")
     
@@ -40,7 +38,7 @@ class ConflictHandlingBiDict(bidict.bidict):
         self.update(seq, **kwargs)
     
     def __setitem__(self, key, value):
-        if key in self:
+        if key in self or value in self.inv:
             key, value = self.conflict_handler(self, key, value)
         super().__setitem__(key, value)
     
@@ -73,7 +71,7 @@ class Variable:
     """
     __slots__ = 'name', 'reps'
     def __init__(self, name, reps=0):
-        self.name = name
+        self.name = str(name)
         self.reps = reps
     
     @classmethod
@@ -83,6 +81,9 @@ class Variable:
         Method of random generation liable to change.
         """
         return cls(f'_{random.randrange(10**15)}')
+    
+    def __str__(self):
+        return self.name
 
 
 class TabelRange:
@@ -90,7 +91,7 @@ class TabelRange:
     Proxy for a range object.
     TODO: Make this into a proper range copy whose objects have self.bounds()
     """
-    def __new__(self, span, *, shift=0):
+    def __new__(cls, span, *, shift=0):
         """
         Returns a workable range object from a tabel's range notation.
         Has to use __new__ like this because range in Python is not an
