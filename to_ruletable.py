@@ -3,6 +3,9 @@ import os
 import sys
 
 from magic import parser, compiler
+from magic.common import utils
+
+utils.VERBOSITY = sys.argv.count('-v') + sys.argv.count('--verbose')
 
 
 def transpile(fp):

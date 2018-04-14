@@ -1,11 +1,16 @@
 """Utility functions to be used during rueltabel parsing."""
 import re
+import json
+import pprint
 from math import ceil
 
 from . import classes
 
 rSHORTHAND = re.compile(r'(\d+\s*\.\.\s*\d+)\s+(.+)')
 rRANGE = re.compile(r'\d+? *?\.\. *?\d+?')
+
+VERBOSITY = 0
+
 
 def conv_permute(tr: str, total: int):
     """
@@ -117,3 +122,15 @@ def globalmatch(regex: re.compile, string: str, start: int = 0) -> bool:
     except AttributeError:  # match == None
         return False
     return end == len(string) or start == match.start() and globalmatch(regex, string, end)
+
+def _vprint(val, *, pre='  ', sep=None, **kwargs):
+    if val is not None:
+        val = [f'{pre}{i}' for i in (val if type(val) is list else [val])]
+        print(*val, **kwargs)
+
+def verbose(*args, start='\n', end=None, accum=True, **kwargs):
+    print(start, end='')
+    if accum:
+        for val in args[:VERBOSITY-1]:
+            _vprint(val, **kwargs)
+    _vprint(args[VERBOSITY-1], end=end, **kwargs)

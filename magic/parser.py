@@ -1,9 +1,8 @@
 """Facilitates parsing of a rueltabel file into an abstract, computer-readable format."""
 import re
 
-from bidict import bidict
-
 from .common import classes, utils
+from .common.utils import verbose
 from .common.classes import Coord, TabelRange, Variable
 from .common.classes.errors import TabelNameError, TabelSyntaxError, TabelValueError, TabelFeatureUnsupported, TabelException
 
@@ -63,8 +62,19 @@ class AbstractTabel:
         _transition_start = self._extract_initial_vars(_assignment_start)
         
         self.cardinals = self._parse_directives()
+        verbose(
+          '\b\bParsed directives & var assignments',
+          ['\b\bdirectives:', self.directives, '\b\bvars:', self.vars],
+          pre='    ', sep='\n', end='\n'
+          )
+        
         self._parse_transitions(_transition_start)
-
+        verbose(
+          '\b\bParsed transitions & PTCDs',
+          ['\b\btransitions (before binding):', self.transitions],
+          pre='    ', sep='\n', end='\n\n'
+          )
+    
     def __iter__(self):
         return iter(self._tbl)
     
@@ -103,7 +113,7 @@ class AbstractTabel:
     def _extract_directives(self, start):
         """
         Gets directives from top of ruelfile.
-
+        
         return: the line number at which var assignment starts.
         """
         lno = start
@@ -251,14 +261,13 @@ class AbstractTabel:
         for idx, (initial, result) in enumerate(zip(copy_to, map_to)):
             if result is None:
                 continue
-            # If the destination is a "..."
+            # If the result is a "..." fillout
             if isinstance(result, range):
-                if map_to[idx-1] is None:
-                    # Nothing more to add
+                if map_to[idx-1] is None:  # Nothing more to add
                     break
-                new = copy_to[result[0]:result[-1]]
-                self.vars[Variable.random_name()] = new
-                transitions.append(self._make_transition(tr, cd_idx, new, result))
+                new_initial = copy_to[result[0]:]
+                transitions.append(self._make_transition(tr, cd_idx, new_initial, map_to[idx-1]))
+                self.vars[Variable.random_name()] = new_initial
                 break
             transitions.append(self._make_transition(tr, cd_idx, initial, result))
         return transitions
@@ -312,7 +321,7 @@ class AbstractColors:
 def parse(fp):
     """
     fp: file pointer to a full .ruel file
-
+    
     return: file, sectioned into dict with tabel and
     colors as convertable representations
     """
