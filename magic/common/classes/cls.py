@@ -189,12 +189,19 @@ class Coord(tuple):
 
 
 class MaybeCallableCW(Coord):
+    """
+    Allows Coord.cw.cw.cw.cw to be replaced by Coord.cw(4), and so on.
+    (The former will still work, however.)
+    """
     def __call__(self, num):
         new = self.cw(num-1) if num > 1 else self
         return Coord(new)
 
 
 class MaybeCallableCCW(Coord):
+    """
+    Ditto above, but counterclockwise.
+    """
     def __call__(self, num):
         new = self.ccw(num-1) if num > 1 else self
         return Coord(new)

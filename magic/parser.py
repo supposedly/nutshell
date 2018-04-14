@@ -159,7 +159,7 @@ class AbstractTabel:
                 self.vars[Variable(name)] = self._parse_variable(value)
             except NameError as e:
                 raise TabelNameError(lno, f"Declaration of variable '{name}' references undefined name '{e}'")
-            except classes.errors.KeyConflict:
+            except classes.errors.KeyConflict:  # FIXME: This is not raised/caught properly
                 raise TabelValueError(lno, f"Value {value} is already assigned to variable {self.vars.inv[value]}")
         self.vars.set_handler(rep_adding_handler)
         return lno
@@ -188,9 +188,8 @@ class AbstractTabel:
         if len(copy_to) > sum(len(i) if isinstance(i, range) else 1 for i in _map_to):
             raise TabelValueError(
               lno,
-              f"Variable '{copy_to}' "
-              f"(direction {cdir}, index {self.cardinals[cdir]})"
-              " in PTCD mapped to smaller variable. Maybe add a '...' to the latter?"
+              f"Variable at index {self.cardinals[cdir]} in PTCD (direction {cdir})"
+              " mapped to a smaller variable. Maybe add a '...' to the latter?"
               )
         return match[1], copy_to, _map_to
     
@@ -275,7 +274,7 @@ class AbstractTabel:
             except KeyError as e:
                 raise TabelValueError(
                   lno,
-                  f"Invalid cardinal direction '{e}' for {self.directives['symmetries']} symmetry"
+                  f"Invalid cardinal direction {e} for {self.directives['symmetries']!r} symmetry"
                   ) from None
             napkin = utils.expand_tr(napkin)
             # Parse napkin into proper range of ints
@@ -328,6 +327,8 @@ def parse(fp):
     except KeyError:
         raise TabelNameError(None, "No '@TABEL' segment found")
     except TabelException as exc:
+        if exc.lno is None:
+            raise exc.__class__(exc.lno, exc.msg)
         raise exc.__class__(exc.lno, exc.msg, parts['@TABEL'], lines['@TABEL'])
     
     try:

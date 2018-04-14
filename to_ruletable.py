@@ -9,9 +9,9 @@ def transpile(fp):
     """
     Parses and compiles the given ruelfile into an equivalent .rule.
     """
-    print('Parsing...', end='\n\n')
+    print('\nParsing...')
     parsed = parser.parse(fp)
-    print('Complete!\nCompiling...', end='\n\n')
+    print('Complete!\n\nCompiling...')
     return compiler.compile(parsed)
 
 
