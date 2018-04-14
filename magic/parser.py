@@ -1,20 +1,21 @@
 """Facilitates parsing of a rueltabel file into an abstract, computer-readable format."""
 import re
 
+from bidict import bidict
+
 from .common import classes, utils
-from .common.classes import Variable, TabelRange
+from .common.classes import Coord, TabelRange, Variable
 from .common.classes.errors import TabelNameError, TabelSyntaxError, TabelValueError, TabelFeatureUnsupported, TabelException
 
 
-def rep_adding_handler(var_dict):
+def rep_adding_handler(_, key, value):
     """
     Replaces default ConflictHandlingBiDict's conflict_handler.
     Instead of raising exception, appends to var's reps.
     """
-    def handler(_, key, value):
-        var_dict[key if isinstance(value, Variable) else value].reps += 1
-        return key, value
-    return handler
+    # XXX: I actually need to do this per appearance per transition, not per appearance in general
+    (key if isinstance(key, Variable) else value).reps += 1
+    return key, value
 
 
 class AbstractTabel:
@@ -39,13 +40,22 @@ class AbstractTabel:
       'vonNeumann': {'N': 1, 'E': 2, 'S': 3, 'W': 4},
       'hexagonal': {'N': 1, 'E': 2, 'SE': 3, 'S': 4, 'W': 5, 'NW': 6}
       }
-    INVS = {'N': 'S', 'NE': 'SW', 'E': 'W', 'SE': 'NW', 'S': 'N', 'SW': 'NE', 'W': 'E', 'NW': 'SE'}
+    POSITIONS = bidict({
+      'E': Coord((1, 0)),
+      'N': Coord((0, 1)),
+      'NE': Coord((1, 1)),
+      'NW': Coord((-1, 1)),
+      'S': Coord((0, -1)),
+      'SE': Coord((1, -1)),
+      'SW': Coord((-1, -1)),
+      'W': Coord((-1, 0))
+       })
     
     def __init__(self, tbl, start=0):
         self._tbl = tbl
         
-        self.vars = classes.ConflictHandlingBiDict()  # {str(name) :: tuple(value)}
-        self._vars = {}  # {tuple(value): Variable(name)}
+        self.vars = classes.ConflictHandlingBiDict()  # {Variable(name) | str(name) :: tuple(value)}
+        self.var_all = ()  # replaces self.vars['__all__']
         self.directives = {}
         self.transitions = []
         
@@ -53,10 +63,8 @@ class AbstractTabel:
         _transition_start = self._extract_initial_vars(_assignment_start)
         
         self.cardinals = self._parse_directives()
-        self._invs = {self.cardinals[k]: self.cardinals[v] for k, v in self.INVS.items() if k in self.cardinals}
-        
         self._parse_transitions(_transition_start)
-    
+
     def __iter__(self):
         return iter(self._tbl)
     
@@ -69,23 +77,25 @@ class AbstractTabel:
         except KeyError:
             raise KeyError(match[2])
     
-    def _parse_variable(self, var, *, ptcd=False):
+    def _parse_variable(self, var: str, *, ptcd=False):
         """
-        var :str: a variable literal
+        var: a variable literal
         
         return: var, but as a tuple with any references substituted for their literal values
         """
-        cop = set()
+        if var.isalpha():
+            return self.vars[var]
+        cop = []
         for state in map(str.strip, var[1:-1].split(',')):  # var[1:-1] cuts out (parens)/{braces}
             if state.isdigit():
-                cop.add(int(state))
+                cop.append(int(state))
             elif self._rRANGE.match(state):
-                cop.update(TabelRange(state))
+                cop.extend(TabelRange(state))
             elif state == '...' or ptcd and state == '_':
-                cop.update(state)
+                cop.append(state)
             else:
                 try:
-                    cop.update(self.vars[state])
+                    cop.extend(self.vars[state])
                 except KeyError:
                     raise NameError(state) from None
         return tuple(cop)
@@ -111,7 +121,7 @@ class AbstractTabel:
         Parses extracted directives to understand their values.
         """
         try:
-            self.vars['__all__'] = tuple(range(int(self.directives['n_states'])))
+            self.var_all = tuple(range(int(self.directives['n_states'])))
             cardinals = self.CARDINALS.get(self.directives['neighborhood'])
             if cardinals is None:
                 raise TabelValueError(None, f"Invalid neighborhood '{self.directives['neighborhood']}' declared")
@@ -139,64 +149,79 @@ class AbstractTabel:
                 continue
             name, value = map(str.strip, decl.split('='))
             if name == '__all__':  # the special var
-                self.vars['__all__'] = self._parse_variable(value)
-                continue
-            if not name.isalpha():
+                self.var_all = self._parse_variable(value)
+            elif not name.isalpha():
                 raise TabelSyntaxError(
                   lno,
                   f"Variable name '{name}' contains nonalphabetical character '{next(i for i in name if not i.isalpha())}'",
                   )
             try:
-                self.vars[name] = self._parse_variable(value)
+                self.vars[Variable(name)] = self._parse_variable(value)
             except NameError as e:
                 raise TabelNameError(lno, f"Declaration of variable '{name}' references undefined name '{e}'")
             except classes.errors.KeyConflict:
                 raise TabelValueError(lno, f"Value {value} is already assigned to variable {self.vars.inv[value]}")
-        self.vars.set_handler(rep_adding_handler(self._vars))
+        self.vars.set_handler(rep_adding_handler)
         return lno
     
     def _extract_ptcd_var(self, tr, match, lno):
         """
         tr: a transition
-        match: SRE match object of a PTCD
+        match: matched PTCD (regex match object)
         lno: current line number
         
         Parses the 'variable' segment of a PTCD.
         
         return: PTCD's variable in variable format
         """
-        copy_to = self.cardinals[match[1]]
-        try:
-            map_from = self.vars.inv[tr[copy_to]]
-        except IndexError:
-            raise TabelValueError(
-              lno,
-              f"Invalid cardinal direction '{match[1]}' for {self.directives['symmetries']} symmetry specified in PTCD"
-              )
-        except KeyError:
-            raise TabelValueError(
-              lno,
-              f"Undefined variable '{tr[copy_to]}' referred to in PTCD"  # XXX: Will this ever run...?
-              )
-        if self._rVAR.match(match[3]):
-            _map_to, map_to = [], self._parse_variable(match[3], ptcd=True)
-        else:
-            _map_to = self.vars[...]
-        if len(map_from) > len(map_to):
-            raise TabelValueError(
-              lno,
-              f"Variable '{copy_to}' (direction {match[1]}) in PTCD mapped to smaller variable. Maybe add a '...' to the latter?"
-              )
+        cdir = match[1]
+        copy_to = tr[self.cardinals[cdir]]
+        _map_to, map_to = [], self._parse_variable(match[3], ptcd=True)
         for idx, state in enumerate(map_to):
             if state == '_':  # Leave as is (indicated by a None value)
                 state = None
             if state == '...':  # Fill out with preceding element (this should be generalized to all mappings actually)
                 # TODO: Allow placement of ... in the middle of an expression (it'll be filled in from both sides)
-                _map_to.append(range(len(map_from)-idx))  # Check isinstance(range) to determine whether to generate anonymous variable
+                _map_to.append(range(idx, len(copy_to)))  # Check isinstance(range) to determine whether to generate anonymous variable
                 break
             _map_to.append(state)
-        return _map_to
+        if len(copy_to) > sum(len(i) if isinstance(i, range) else 1 for i in _map_to):
+            raise TabelValueError(
+              lno,
+              f"Variable '{copy_to}' "
+              f"(direction {cdir}, index {self.cardinals[cdir]})"
+              " in PTCD mapped to smaller variable. Maybe add a '...' to the latter?"
+              )
+        return match[1], copy_to, _map_to
     
+    def _make_transition(self, tr, source_cd, initial, result):
+        curtr = ['__all__'] * len(tr)
+        curtr[0] = initial
+        curtr[-1] = result
+        orig = Coord(self.POSITIONS[source_cd]).opp  # creates S -> N, E -> W, etc.
+        try:
+            curtr[self.cardinals[orig.name]] = tr[0]
+        except KeyError:
+            pass
+        try:
+            curtr[self.cardinals[orig.cw.name]] = tr[self.cardinals[orig.cw.move(source_cd).name]]
+        except KeyError:
+            pass
+        try:
+            curtr[self.cardinals[orig.ccw.name]] = tr[self.cardinals[orig.ccw.move(source_cd).name]]
+        except KeyError:
+            pass
+        if not all(orig):  # will execute if the PTCD is orthogonal & not diagonal
+            try:
+                curtr[self.cardinals[orig.cw(2).name]] = tr[self.cardinals[orig.cw(3).name]]
+            except KeyError:
+                pass
+            try:
+                curtr[self.cardinals[orig.ccw(2).name]] = tr[self.cardinals[orig.ccw(3).name]]
+            except KeyError:
+                pass
+        return curtr
+        
     def _parse_ptcd(self, tr, ptcd, lno):
         """
         tr: a fully-parsed transition statement
@@ -215,22 +240,22 @@ class AbstractTabel:
         match = self._rPTCD.match(ptcd)
         if match[2] is not None:
             raise TabelFeatureUnsupported(lno, 'PTCDs that copy neighbor states are not yet supported')
+        cd_idx, copy_to, map_to = self._extract_ptcd_var(tr, match, lno)
         # Start expansion to transitions
-        transitions, map_to = [], self._extract_ptcd_var(tr, match, lno)
-        for idx, state in enumerate(map_to):
-            if state is None:
+        transitions = []
+        for idx, (initial, result) in enumerate(zip(copy_to, map_to)):
+            if result is None:
                 continue
-            if isinstance(state, range):
+            # If the destination is a "..."
+            if isinstance(result, range):
                 if map_to[idx-1] is None:
+                    # Nothing more to add
                     break
-                new = map_from[state[0]:state[-1]]
-                if new in self.vars.inv:  # same bs with on_dup_val :/
-                    self.vars.inv[new].reps += 1
-                else:
-                    self.vars[Variable.random_name()] = new
-                transitions.append(f'{tr[copy_to]}, ')
+                new = copy_to[result[0]:result[-1]]
+                self.vars[Variable.random_name()] = new
+                transitions.append(self._make_transition(tr, cd_idx, new, result))
                 break
-            transitions.append()
+            transitions.append(self._make_transition(tr, cd_idx, initial, result))
         return transitions
     
     def _parse_transitions(self, start):
@@ -259,15 +284,13 @@ class AbstractTabel:
                     napkin[idx] = int(elem)
                 elif self._rVAR.match(elem):
                     var = self._parse_variable(elem)
-                    if var in self.vars.inv:  # conflict handler can't be relied upon; bidict on_dup_val interferes
-                        self.vars.inv[var].reps += 1
-                    else:  # it's an anonymous (on-the-spot) variable
-                        self.vars[Variable.random_name()] = var
+                    self.vars[Variable.random_name()] = var
                 elif not self._rBINDMAP.match(elem):  # leave mappings and bindings untouched for now
                     try:
                         napkin[idx] = self.vars[elem]
                     except KeyError:
-                        raise TabelNameError(lno, f"Undefined name '{elem}'")
+                        raise TabelNameError(lno, f"Invalid or undefined name '{elem}'")
+            if ptcd:
                 ptcd = self._parse_ptcd(napkin, ptcd, lno=lno)
             self.transitions.extend([napkin, *ptcd])
         # TODO: step 0.2, step 1.4, step 2.1
