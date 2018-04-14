@@ -40,7 +40,7 @@ class AbstractTabel:
       'vonNeumann': {'N': 1, 'E': 2, 'S': 3, 'W': 4},
       'hexagonal': {'N': 1, 'E': 2, 'SE': 3, 'S': 4, 'W': 5, 'NW': 6}
       }
-    POSITIONS = bidict({
+    POSITIONS = {
       'E': Coord((1, 0)),
       'N': Coord((0, 1)),
       'NE': Coord((1, 1)),
@@ -49,7 +49,7 @@ class AbstractTabel:
       'SE': Coord((1, -1)),
       'SW': Coord((-1, -1)),
       'W': Coord((-1, 0))
-       })
+      }
     
     def __init__(self, tbl, start=0):
         self._tbl = tbl
@@ -121,15 +121,15 @@ class AbstractTabel:
         Parses extracted directives to understand their values.
         """
         try:
-            self.var_all = tuple(range(int(self.directives['n_states'])))
+            self.var_all = tuple(range(int(self.directives['states'])))
             cardinals = self.CARDINALS.get(self.directives['neighborhood'])
             if cardinals is None:
-                raise TabelValueError(None, f"Invalid neighborhood '{self.directives['neighborhood']}' declared")
+                raise TabelValueError(None, f"Invalid neighborhood {self.directives['neighborhood']!r} declared")
             if 'symmetries' not in self.directives:
                 raise KeyError("'symmetries'")
         except KeyError as e:
             name = str(e).split("'")[1]
-            raise TabelNameError(None, f"'{name}' directive not declared") from None
+            raise TabelNameError(None, f'{name!r} directive not declared')
         return cardinals
     
     def _extract_initial_vars(self, start):
@@ -148,19 +148,22 @@ class AbstractTabel:
             if not decl or not self._rASSIGNMENT.match(decl):
                 continue
             name, value = map(str.strip, decl.split('='))
+            try:
+                var = self._parse_variable(value)
+            except NameError as e:
+                raise TabelNameError(lno, f'Declaration of variable {name!r} references undefined name {e!r}')
             if name == '__all__':  # the special var
-                self.var_all = self._parse_variable(value)
-            elif not name.isalpha():
+                self.var_all = var
+                continue
+            if not name.isalpha():
                 raise TabelSyntaxError(
                   lno,
-                  f"Variable name '{name}' contains nonalphabetical character '{next(i for i in name if not i.isalpha())}'",
+                  f'Variable name {name!r} contains nonalphabetical character {next(i for i in name if not i.isalpha())!r}',
                   )
             try:
-                self.vars[Variable(name)] = self._parse_variable(value)
-            except NameError as e:
-                raise TabelNameError(lno, f"Declaration of variable '{name}' references undefined name '{e}'")
-            except classes.errors.KeyConflict:  # FIXME: This is not raised/caught properly
-                raise TabelValueError(lno, f"Value {value} is already assigned to variable {self.vars.inv[value]}")
+                self.vars[Variable(name)] = var
+            except classes.errors.KeyConflict:
+                raise TabelValueError(lno, f'Value {value} is already assigned to variable {self.vars.inv[var]!r}')
         self.vars.set_handler(rep_adding_handler)
         return lno
     
@@ -176,7 +179,10 @@ class AbstractTabel:
         """
         cdir = match[1]
         copy_to = tr[self.cardinals[cdir]]
-        _map_to, map_to = [], self._parse_variable(match[3], ptcd=True)
+        try:
+            _map_to, map_to = [], self._parse_variable(match[3], ptcd=True)
+        except NameError as e:
+            raise TabelNameError(lno, f'PTCD references undefined name {e!r}')
         for idx, state in enumerate(map_to):
             if state == '_':  # Leave as is (indicated by a None value)
                 state = None
@@ -282,13 +288,12 @@ class AbstractTabel:
                 if elem.isdigit():
                     napkin[idx] = int(elem)
                 elif self._rVAR.match(elem):
-                    var = self._parse_variable(elem)
-                    self.vars[Variable.random_name()] = var
+                    self.vars[Variable.random_name()] = self._parse_variable(elem)
                 elif not self._rBINDMAP.match(elem):  # leave mappings and bindings untouched for now
                     try:
                         napkin[idx] = self.vars[elem]
                     except KeyError:
-                        raise TabelNameError(lno, f"Invalid or undefined name '{elem}'")
+                        raise TabelNameError(lno, f'Transition references undefined name {elem!r}')
             if ptcd:
                 ptcd = self._parse_ptcd(napkin, ptcd, lno=lno)
             self.transitions.extend([napkin, *ptcd])
