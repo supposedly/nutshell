@@ -103,6 +103,7 @@ def expand_tr(tr: (list, ..., tuple)):
         cop.extend(group)
     return cop
 
+
 def globalmatch(regex: re.compile, string: str, start: int = 0) -> bool:
     """
     regex: a regex object
@@ -123,12 +124,25 @@ def globalmatch(regex: re.compile, string: str, start: int = 0) -> bool:
         return False
     return end == len(string) or start == match.start() and globalmatch(regex, string, end)
 
-def _vprint(val, *, pre='  ', sep=None, **kwargs):
+
+def _vprint(val, *, pre='  ', **kwargs):
+    """
+    val: Thing to print.
+    pre: What to prepend to val on print.
+    **kwargs: Passed to print()
+    """
     if val is not None:
         val = [f'{pre}{i}' for i in (val if type(val) is list else [val])]
         print(*val, **kwargs)
 
-def verbose(*args, start='\n', end=None, accum=True, **kwargs):
+
+def print_verbose(*args, start='\n', end=None, accum=True, **kwargs):
+    """
+    *args: Things to print, ordered by level of verbosity. Group items using a list.
+    start: What to print before anything else.
+    accum: Whether to print everything up to VERBOSITY or just the thing at VERBOSITY
+    **kwargs: Passed to _vprint()
+    """
     print(start, end='')
     if accum:
         for val in args[:VERBOSITY-1]:

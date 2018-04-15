@@ -78,13 +78,13 @@ class Variable:
     def __init__(self, name, reps=1):
         self.name = str(name)
         self.reps = reps
-
+    
     def __hash__(self):
         return hash(self.name)
     
     def __eq__(self, other):
         return self.name == other
-
+    
     def __str__(self):
         return self.name
     
@@ -137,30 +137,28 @@ class Coord(tuple):
       (-1, 1): 'NW'
       })
     _DIRS = ('N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW')
-
+    
     def __repr__(self):
         return f'Coord({tuple(self)})'
-
+    def diagonal(self):
+        return all(self)
     def move(self, cd):
         return getattr(self, cd.lower())
     
     @property
     def name(self):
         return self._NAMES[self]
-    
+    @property
+    def opp(self):
+        return Coord(-i for i in self)
     @property
     def cw(self):
         idx = (1 + self._DIRS.index(self.name)) % 8
         return MaybeCallableCW(self._NAMES.inv[self._DIRS[idx]])
-    
     @property
     def ccw(self):
         idx = self._DIRS.index(self.name) - 1
         return MaybeCallableCCW(self._NAMES.inv[self._DIRS[idx]])
-    
-    @property
-    def opp(self):
-        return Coord(-i for i in self)
     
     @property
     def n(self):

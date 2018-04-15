@@ -1,20 +1,12 @@
 """Facilitates parsing of a rueltabel file into an abstract, computer-readable format."""
 import re
 
+import bidict
+
 from .common import classes, utils
-from .common.utils import verbose
+from .common.utils import print_verbose
 from .common.classes import Coord, TabelRange, Variable
 from .common.classes.errors import TabelNameError, TabelSyntaxError, TabelValueError, TabelFeatureUnsupported, TabelException
-
-
-def rep_adding_handler(_, key, value):
-    """
-    Replaces default ConflictHandlingBiDict's conflict_handler.
-    Instead of raising exception, appends to var's reps.
-    """
-    # XXX: I actually need to do this per appearance per transition, not per appearance in general
-    (key if isinstance(key, Variable) else value).reps += 1
-    return key, value
 
 
 class AbstractTabel:
@@ -22,7 +14,7 @@ class AbstractTabel:
     Creates an abstract, Golly-transferrable representation of a ruelfile's @TABEL section.
     """
     __rCARDINALS = 'N|NE|E|SE|S|SW|W|NW'
-    __rVAR = r'[({](?:\w+\s*(?:,|\.\.)\s*)+(?:\w|(?:\.\.\.)?)+[})]'
+    __rVAR = r'[({](?:\w*\s*(?:,|\.\.)\s*)*(?:\w|(?:\.\.\.)?)*[})]'
     
     _rASSIGNMENT = re.compile(rf'\w+?\s*=\s*{__rVAR}')
     _rBINDMAP = re.compile(rf'\[[0-8](?::\s*?(?:{__rVAR}|[^_]\w+?))?\]')
@@ -53,7 +45,7 @@ class AbstractTabel:
     def __init__(self, tbl, start=0):
         self._tbl = tbl
         
-        self.vars = classes.ConflictHandlingBiDict()  # {Variable(name) | str(name) :: tuple(value)}
+        self.vars = bidict.bidict()  # {Variable(name) | str(name) :: tuple(value)}
         self.var_all = ()  # replaces self.vars['__all__']
         self.directives = {}
         self.transitions = []
@@ -62,16 +54,16 @@ class AbstractTabel:
         _transition_start = self._extract_initial_vars(_assignment_start)
         
         self.cardinals = self._parse_directives()
-        verbose(
+        print_verbose(
           '\b\bParsed directives & var assignments',
           ['\b\bdirectives:', self.directives, '\b\bvars:', self.vars],
           pre='    ', sep='\n', end='\n'
           )
         
         self._parse_transitions(_transition_start)
-        verbose(
+        print_verbose(
           '\b\bParsed transitions & PTCDs',
-          ['\b\btransitions (before binding):', self.transitions],
+          ['\b\btransitions (before binding):', self.transitions, '\b\bvars:', self.vars],
           pre='    ', sep='\n', end='\n\n'
           )
     
@@ -87,7 +79,7 @@ class AbstractTabel:
         except KeyError:
             raise KeyError(match[2])
     
-    def _parse_variable(self, var: str, *, ptcd=False):
+    def _parse_variable(self, var: str, *, mapping=False, ptcd=False):
         """
         var: a variable literal
         
@@ -100,8 +92,11 @@ class AbstractTabel:
             if state.isdigit():
                 cop.append(int(state))
             elif self._rRANGE.match(state):
-                cop.extend(TabelRange(state))
-            elif state == '...' or ptcd and state == '_':
+                try:
+                    cop.extend(TabelRange(state))
+                except ValueError as e:
+                    raise SyntaxError((str(e).split("'")[1], state)) from None
+            elif mapping and state == '...' or ptcd and state in ('...', '_'):
                 cop.append(state)
             else:
                 try:
@@ -155,13 +150,23 @@ class AbstractTabel:
         for lno, decl in tblines:
             if utils.globalmatch(self._rTRANSITION, decl):
                 break
-            if not decl or not self._rASSIGNMENT.match(decl):
+            if not decl:
                 continue
+            if not self._rASSIGNMENT.fullmatch(decl):
+                raise TabelSyntaxError(lno, f'Invalid syntax in variable declaration (please let Wright know ASAP if this is incorrect)')
             name, value = map(str.strip, decl.split('='))
+
             try:
                 var = self._parse_variable(value)
             except NameError as e:
-                raise TabelNameError(lno, f'Declaration of variable {name!r} references undefined name {e!r}')
+                if not str(e):  # Means two consecutive commas, or a comma at the end of a literal
+                    raise TabelSyntaxError(lno, 'Invalid comma placement in variable declaration')
+                adj = 'undefined' if str(e).isalpha() else 'invalid'
+                raise TabelNameError(lno, f"Declaration of variable {name!r} references {adj} name '{e}'")
+            except SyntaxError as e:
+                bound, range_ = e.msg
+                raise TabelSyntaxError(lno, f"Bound '{bound}' of range {range_} is not an integer")
+            
             if name == '__all__':  # the special var
                 self.var_all = var
                 continue
@@ -172,9 +177,9 @@ class AbstractTabel:
                   )
             try:
                 self.vars[Variable(name)] = var
-            except classes.errors.KeyConflict:
-                raise TabelValueError(lno, f'Value {value} is already assigned to variable {self.vars.inv[var]!r}')
-        self.vars.set_handler(rep_adding_handler)
+            except bidict.ValueDuplicationError:
+                raise TabelValueError(lno, f"Value {value} is already assigned to variable '{self.vars.inv[var]}'")
+        self.vars.on_dup_val = bidict.IGNORE
         return lno
     
     def _extract_ptcd_var(self, tr, match, lno):
@@ -185,19 +190,22 @@ class AbstractTabel:
         
         Parses the 'variable' segment of a PTCD.
         
-        return: PTCD's variable in variable format
+        return: PTCD's variables
         """
         cdir = match[1]
         copy_to = tr[self.cardinals[cdir]]
         try:
             _map_to, map_to = [], self._parse_variable(match[3], ptcd=True)
         except NameError as e:
-            raise TabelNameError(lno, f'PTCD references undefined name {e!r}')
+            raise TabelNameError(lno, f"PTCD references undefined name '{e}'")
+        except SyntaxError as e:
+                bound, range_ = e.msg
+                raise TabelSyntaxError(lno, f"Bound '{bound}' of range {range_} is not an integer")
         for idx, state in enumerate(map_to):
             if state == '_':  # Leave as is (indicated by a None value)
                 state = None
             if state == '...':  # Fill out with preceding element (this should be generalized to all mappings actually)
-                # TODO: Allow placement of ... in the middle of an expression (it'll be filled in from both sides)
+                # TODO: Allow placement of ... in the middle of an expression (to be filled in from both sides)
                 _map_to.append(range(idx, len(copy_to)))  # Check isinstance(range) to determine whether to generate anonymous variable
                 break
             _map_to.append(state)
@@ -209,33 +217,38 @@ class AbstractTabel:
               )
         return match[1], copy_to, _map_to
     
-    def _make_transition(self, tr, source_cd, initial, result):
-        curtr = ['__all__'] * len(tr)
-        curtr[0] = initial
-        curtr[-1] = result
+    def _make_transition(self, tr: list, source_cd: str, initial, result):
+        """
+        tr: Original transition
+        source_cd: Cardinal direction as a letter or pair thereof. (N, S, SW, etc)
+        initial: What to 
+        
+        Builds a transition from segments of a PTCD.
+        """
+        new_tr = [initial, *['__all__']*len(self.cardinals), result]
         orig = Coord(self.POSITIONS[source_cd]).opp  # creates S -> N, E -> W, etc.
         try:
-            curtr[self.cardinals[orig.name]] = tr[0]
+            new_tr[self.cardinals[orig.name]] = tr[0]
         except KeyError:
             pass
         try:
-            curtr[self.cardinals[orig.cw.name]] = tr[self.cardinals[orig.cw.move(source_cd).name]]
+            new_tr[self.cardinals[orig.cw.name]] = tr[self.cardinals[orig.cw.move(source_cd).name]]
         except KeyError:
             pass
         try:
-            curtr[self.cardinals[orig.ccw.name]] = tr[self.cardinals[orig.ccw.move(source_cd).name]]
+            new_tr[self.cardinals[orig.ccw.name]] = tr[self.cardinals[orig.ccw.move(source_cd).name]]
         except KeyError:
             pass
-        if not all(orig):  # will execute if the PTCD is orthogonal & not diagonal
+        if not orig.diagonal():  # will execute if the PTCD is orthogonal & not diagonal
             try:
-                curtr[self.cardinals[orig.cw(2).name]] = tr[self.cardinals[orig.cw(3).name]]
+                new_tr[self.cardinals[orig.cw(2).name]] = tr[self.cardinals[orig.cw(3).name]]
             except KeyError:
                 pass
             try:
-                curtr[self.cardinals[orig.ccw(2).name]] = tr[self.cardinals[orig.ccw(3).name]]
+                new_tr[self.cardinals[orig.ccw(2).name]] = tr[self.cardinals[orig.ccw(3).name]]
             except KeyError:
                 pass
-        return curtr
+        return new_tr
         
     def _parse_ptcd(self, tr, ptcd, lno):
         """
@@ -306,7 +319,6 @@ class AbstractTabel:
             if ptcd:
                 ptcd = self._parse_ptcd(napkin, ptcd, lno=lno)
             self.transitions.extend([napkin, *ptcd])
-        # TODO: step 0.2, step 1.4, step 2.1
 
 
 class AbstractColors:
