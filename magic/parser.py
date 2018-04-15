@@ -11,7 +11,7 @@ from .common.classes.errors import TabelNameError, TabelSyntaxError, TabelValueE
 
 class AbstractTabel:
     """
-    Creates an abstract, Golly-transferrable representation of a ruelfile's @TABEL section.
+    An abstract, Golly-transferrable representation of a ruelfile's @TABEL section.
     """
     __rCARDINALS = 'NE|NW|SE|SW|N|E|S|W'
     __rVAR = r'[({](?:\w*\s*(?:,|\.\.)\s*)*(?:\w|(?:\.\.\.)?)*[})]'
@@ -53,7 +53,7 @@ class AbstractTabel:
         self._tbl = tbl
         
         self.vars = bidict.bidict()  # {Variable(name) | str(name) :: tuple(value)}
-        self.var_all = ()  # replaces self.vars['__all__']
+        self.var_all, self.var_all_rep = (), 0  # replaces self.vars['__all__']
         self.directives = {}
         self.transitions = []
         
@@ -63,15 +63,22 @@ class AbstractTabel:
         
         self.cardinals = self._parse_directives()
         print_verbose(
-          '\b'*4 + 'PARSED: directives & var assignments',
+          '\b'*4 + 'PARSED directives & var assignments',
           ['\b\bdirectives:', self.directives, '\b\bvars:', self.vars],
           pre='    ', sep='\n', end='\n'
           )
         
         self._parse_transitions(_transition_start)
         print_verbose(
-          '\b'*4 + 'PARSED: transitions & PTCDs',
+          '\b'*4 + 'PARSED transitions & PTCDs',
           ['\b\btransitions (before binding):', self.transitions, '\b\bvars:', self.vars],
+          pre='    ', sep='\n', end='\n'
+          )
+        
+        self._disambiguate()
+        print_verbose(
+          '\b'*4 + 'DISAMBIGUATED variables',
+          ['\b\btransitions (post binding):', self.transitions, '\b\bvars:', self.vars],
           pre='    ', sep='\n', end='\n\n'
           )
     
@@ -115,7 +122,7 @@ class AbstractTabel:
     
     def _extract_directives(self, start):
         """
-        Gets directives from top of ruelfile.
+        Get directives from top of ruelfile.
         
         return: the line number at which var assignment starts.
         """
@@ -131,7 +138,7 @@ class AbstractTabel:
     
     def _parse_directives(self):
         """
-        Parses extracted directives to understand their values.
+        Parse extracted directives to understand their values.
         """
         try:
             self.var_all = tuple(range(int(self.directives['states'])))
@@ -149,7 +156,7 @@ class AbstractTabel:
         """
         start: line number to start from
         
-        Iterates through tabel and gathers all explicit variable declarations.
+        Iterate through tabel and gather all explicit variable declarations.
         
         return: line number at which transition declaration starts
         """
@@ -196,7 +203,7 @@ class AbstractTabel:
         match: matched PTCD (regex match object)
         lno: current line number
         
-        Parses the 'variable' segment of a PTCD.
+        Parse the 'variable' segment of a PTCD.
         
         return: PTCD's variables
         """
@@ -233,7 +240,7 @@ class AbstractTabel:
         source_cd: Cardinal direction as a letter or pair thereof. (N, S, SW, etc)
         initial: What to 
         
-        Builds a transition from segments of a PTCD.
+        Build a transition from segments of a PTCD.
         """
         new_tr = [initial, *['__all__']*len(self.cardinals), result]
         orig = Coord(self.POSITIONS[source_cd]).opp  # creates S -> N, E -> W, etc.
@@ -297,7 +304,8 @@ class AbstractTabel:
     def _parse_transitions(self, start):
         """
         start: line number to start on
-        Parses all the ruel's transitions into a list in self.transitions.
+        
+        Parse all the ruel's transitions into a list in self.transitions.
         """
         lno = start
         for lno, line in enumerate((i.split('#')[0].strip() for i in self[start:]), start):
@@ -327,11 +335,40 @@ class AbstractTabel:
                         raise TabelNameError(lno, f'Transition references undefined name {elem!r}')
             ptcds = [tr for ptcd in self._rPTCD.finditer(ptcds) for tr in self._parse_ptcd(napkin, ptcd, lno=lno)]
             self.transitions.extend([napkin, *ptcds])
+    
+    def _disambiguate(self):
+        """
+        Properly disambiguate variables in transitions, then resolve
+        [bracketed bindings] and convert mappings to Python tuples.
+        """
+        print_verbose(None, None, '...disambiguating variables...', pre='')
+        for idx, tr in enumerate(self.transitions):
+            print_verbose(*[None]*3, [tr, '->'], start='', sep='', end='')
+            reps, tr = utils.bind_vars(
+              self.vars.inv[val].name
+              if val in self.vars.inv
+              else val
+              for val in tr
+              )
+            self.transitions[idx] = [
+              (val[0], val[1], self._parse_variable(val[2], mapping=True))
+              if isinstance(val, tuple)
+                else val
+              for val in tr
+              ]
+            print_verbose(*[None]*3, [tr, '->', self.transitions[idx], '\n  reps:', reps], sep='', end='\n\n')
+            for name, rep in reps.items():
+                if name == '__all__':
+                    self.var_all_rep = max(rep, self.var_all_rep)
+                    continue
+                var = self.vars[name]
+                if rep > self.vars.inv[var].rep:  # lol yikes
+                    self.vars.inv[var].rep = rep
 
 
 class AbstractColors:
     """
-    Parses a ruelfile's color format into something abstract &
+    Parse a ruelfile's color format into something abstract &
     transferrable into Golly syntax.
     """
     def __init__(self, *args, **kwargs):
@@ -359,7 +396,7 @@ def parse(fp):
     try:
         parts['@TABLE'] = AbstractTabel(parts['@TABEL'])
     except KeyError:
-        raise TabelNameError(None, "No '@TABEL' segment found")
+        raise #TabelNameError(None, "No '@TABEL' segment found")
     except TabelException as exc:
         if exc.lno is None:
             raise exc.__class__(exc.lno, exc.msg)

@@ -46,20 +46,22 @@ def bind_vars(tr: (list, tuple)):
         a,1,2,[0],a,a,6,7,8,[4]
     Bind its variables in Golly style:
         a_0,1,2,a_0,a_1,a_2,6,7,8,a_1
+    Also resolve mappings into python tuples.
     """
-    built = []
-    seen = {}
+    built, seen = [], {}
     for v in tr:
+        if not isinstance(v, str):
+            continue
         if v.isdigit():
             built.append(v)
         elif v.startswith('['):
             v = v[1:-1]  # strip brackets
-            ref = v.split(':')[0].strip()
+            ref = int(v.split(':')[0].strip())
             try:
                 built.append(
-                  (built[int(ref)], v[1+v.find(':'):].strip())
+                  (ref, built[ref], v[1+v.find(':'):].strip())
                   if ':' in v else
-                  built[int(ref)]
+                  built[ref]
                   )
             except IndexError:
                 raise ValueError(f"Variable binding '{v}' does not refer to a previous index") from None
@@ -67,11 +69,11 @@ def bind_vars(tr: (list, tuple)):
                 raise SyntaxError(f"Invalid attempted variable binding '{v}'") from None
         else:
             seen[v] = 1 + seen.get(v, -1)
-            built.append(f'{v}_{seen[v]}')
-    return built
+            built.append(f"{v}{'' if v.endswith('_') else '_'}{seen[v]}")
+    return seen, built
 
 
-def expand_tr(tr: (list, ..., tuple)):
+def expand_tr(tr: (list, tuple)):
     """
     Given a transition like
       foo, 1..3 bar, baz, 5..8 wutz, kieu
@@ -142,9 +144,14 @@ def print_verbose(*args, start='\n', end=None, accum=True, **kwargs):
     accum: Whether to print everything up to VERBOSITY or just the item at VERBOSITY
     **kwargs: Passed to _vprint()
     """
-    if VERBOSITY:
+    if not VERBOSITY:
+        return
+    if any(args[:VERBOSITY]):
         print(start, end='')
-        if accum:
-            for val in args[:VERBOSITY-1]:
-                _vprint(val, **kwargs)
+    if accum:
+        for val in args[:VERBOSITY-1]:
+            _vprint(val, **kwargs)
+    try:
         _vprint(args[VERBOSITY-1], end=end, **kwargs)
+    except IndexError:
+        pass
