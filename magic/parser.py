@@ -13,16 +13,23 @@ class AbstractTabel:
     """
     Creates an abstract, Golly-transferrable representation of a ruelfile's @TABEL section.
     """
-    __rCARDINALS = 'N|NE|E|SE|S|SW|W|NW'
+    __rCARDINALS = 'NE|NW|SE|SW|N|E|S|W'
     __rVAR = r'[({](?:\w*\s*(?:,|\.\.)\s*)*(?:\w|(?:\.\.\.)?)*[})]'
     
     _rASSIGNMENT = re.compile(rf'\w+?\s*=\s*{__rVAR}')
     _rBINDMAP = re.compile(rf'\[[0-8](?::\s*?(?:{__rVAR}|[^_]\w+?))?\]')
     _rCARDINAL = re.compile(rf'\b(\[)?({__rCARDINALS})((?(1)\]))\b')
-    _rPTCD = re.compile(rf'((?:{__rCARDINALS})+)\[((?:{__rCARDINALS})+:)?\s*(\w+|{__rVAR})')
+    _rPTCD = re.compile(rf'\b({__rCARDINALS})(?::(\d+)\b|\[((?:{__rCARDINALS})\s*:)?\s*(\w+|{__rVAR})]\B)')
     _rRANGE = re.compile(r'\d+? *?\.\. *?\d+?')
     _rTRANSITION = re.compile(
-      rf'(?:\s*((?:[A-Z]\s*\.\.[A-Z])?\s*(?:[\w\s]+|\[(?:(?:\d|{__rCARDINALS})\s*:\s*)?(?:{__rVAR}|[A-Za-z]+)\])),?)+?\s*'
+      rf'((?:(?:\d|{__rCARDINALS})'                  # Meaningless cardinal direction before state (like ", NW 2,")
+      rf'(?:\s*\.\.\s*(?:\d|{__rCARDINALS}))?\s+)?'  # Range of cardinal directions (like ", N..NW 2,")
+       r'(?:\d+|'                                    # Normal state (like ", 2,")
+       r'(?:[({](?:\w*\s*(?:,|\.\.)\s*)*\w+[})]'     # Variable literal (like ", (1, 2..2, 3),") w/o "..." at end
+       r'|[A-Za-z]+)'                                # Variable name (like ", aaaa,")
+      rf'|\[(?:(?:\d|{__rCARDINALS})\s*:\s*)?'       # Or a mapping, which starts with either a number or the equivalent cardinal direction
+      rf'(?:{__rVAR}|[A-Za-z]+)\]))'                 # ...and then has either a variable name or literal (like ", [S: (1, 2, ...)],")
+       r'(,)?(?(2)\s*)'                              # Finally, an optional comma and whitespace after it. Last term has no comma.
       )
     _rVAR = re.compile(__rVAR)
     
@@ -53,16 +60,17 @@ class AbstractTabel:
         _assignment_start = self._extract_directives(start)
         _transition_start = self._extract_initial_vars(_assignment_start)
         
+        
         self.cardinals = self._parse_directives()
         print_verbose(
-          '\b\bParsed directives & var assignments',
+          '\b'*4 + 'PARSED: directives & var assignments',
           ['\b\bdirectives:', self.directives, '\b\bvars:', self.vars],
           pre='    ', sep='\n', end='\n'
           )
         
         self._parse_transitions(_transition_start)
         print_verbose(
-          '\b\bParsed transitions & PTCDs',
+          '\b'*4 + 'PARSED: transitions & PTCDs',
           ['\b\btransitions (before binding):', self.transitions, '\b\bvars:', self.vars],
           pre='    ', sep='\n', end='\n\n'
           )
@@ -194,8 +202,10 @@ class AbstractTabel:
         """
         cdir = match[1]
         copy_to = tr[self.cardinals[cdir]]
+        if match[2] is not None:  # Means it's a simple "CD:state" instead of a "CD[variable]"
+            return match[1], copy_to, map(int, match[2])
         try:
-            _map_to, map_to = [], self._parse_variable(match[3], ptcd=True)
+            _map_to, map_to = [], self._parse_variable(match[4], ptcd=True)
         except NameError as e:
             raise TabelNameError(lno, f"PTCD references undefined name '{e}'")
         except SyntaxError as e:
@@ -250,7 +260,7 @@ class AbstractTabel:
                 pass
         return new_tr
         
-    def _parse_ptcd(self, tr, ptcd, lno):
+    def _parse_ptcd(self, tr, match, lno):
         """
         tr: a fully-parsed transition statement
         ptcd: a PTCD
@@ -265,8 +275,7 @@ class AbstractTabel:
         
         return: PTCD expanded into its full transition(s)
         """
-        match = self._rPTCD.match(ptcd)
-        if match[2] is not None:
+        if match[3] is not None:
             raise TabelFeatureUnsupported(lno, 'PTCDs that copy neighbor states are not yet supported')
         cd_idx, copy_to, map_to = self._extract_ptcd_var(tr, match, lno)
         # Start expansion to transitions
@@ -296,14 +305,14 @@ class AbstractTabel:
                 continue
             if self._rASSIGNMENT.match(line):
                 raise TabelSyntaxError(lno, 'Variable declaration after transitions')
-            napkin, ptcd = map(str.strip, line.partition('->')[::2])
+            napkin, ptcds = map(str.strip, line.partition('->')[::2])
             try:
-                napkin = [self._rCARDINAL.sub(self._cardinal_sub, i.strip()) for i in self._rTRANSITION.findall(napkin)]
+                napkin = [self._rCARDINAL.sub(self._cardinal_sub, i.strip()) for i, _ in self._rTRANSITION.findall(napkin)]
             except KeyError as e:
                 raise TabelValueError(
                   lno,
                   f"Invalid cardinal direction {e} for {self.directives['symmetries']!r} symmetry"
-                  ) from None
+                  )
             napkin = utils.expand_tr(napkin)
             # Parse napkin into proper range of ints
             for idx, elem in enumerate(napkin):
@@ -316,9 +325,8 @@ class AbstractTabel:
                         napkin[idx] = self.vars[elem]
                     except KeyError:
                         raise TabelNameError(lno, f'Transition references undefined name {elem!r}')
-            if ptcd:
-                ptcd = self._parse_ptcd(napkin, ptcd, lno=lno)
-            self.transitions.extend([napkin, *ptcd])
+            ptcds = [tr for ptcd in self._rPTCD.finditer(ptcds) for tr in self._parse_ptcd(napkin, ptcd, lno=lno)]
+            self.transitions.extend([napkin, *ptcds])
 
 
 class AbstractColors:

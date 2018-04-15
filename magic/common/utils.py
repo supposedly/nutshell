@@ -122,7 +122,7 @@ def globalmatch(regex: re.compile, string: str, start: int = 0) -> bool:
         end = match.end()
     except AttributeError:  # match == None
         return False
-    return end == len(string) or start == match.start() and globalmatch(regex, string, end)
+    return start >= match.start() and (end == len(string) or globalmatch(regex, string, end))
 
 
 def _vprint(val, *, pre='  ', **kwargs):
@@ -132,19 +132,19 @@ def _vprint(val, *, pre='  ', **kwargs):
     **kwargs: Passed to print()
     """
     if val is not None:
-        val = [f'{pre}{i}' for i in (val if type(val) is list else [val])]
-        print(*val, **kwargs)
+        print(*(f'{pre}{i}' for i in (val if type(val) is list else [val])), **kwargs)
 
 
 def print_verbose(*args, start='\n', end=None, accum=True, **kwargs):
     """
     *args: Things to print, ordered by level of verbosity. Group items using a list.
     start: What to print before anything else.
-    accum: Whether to print everything up to VERBOSITY or just the thing at VERBOSITY
+    accum: Whether to print everything up to VERBOSITY or just the item at VERBOSITY
     **kwargs: Passed to _vprint()
     """
-    print(start, end='')
-    if accum:
-        for val in args[:VERBOSITY-1]:
-            _vprint(val, **kwargs)
-    _vprint(args[VERBOSITY-1], end=end, **kwargs)
+    if VERBOSITY:
+        print(start, end='')
+        if accum:
+            for val in args[:VERBOSITY-1]:
+                _vprint(val, **kwargs)
+        _vprint(args[VERBOSITY-1], end=end, **kwargs)
