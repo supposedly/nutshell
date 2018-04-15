@@ -7,7 +7,15 @@ from math import ceil
 from . import classes
 
 rSHORTHAND = re.compile(r'(\d+\s*\.\.\s*\d+)\s+(.+)')
-rRANGE = re.compile(r'\d+? *?\.\. *?\d+?')
+rRANGE = re.compile(r'\d\s*\.\.\s*\d?')
+rSEGMENT = re.compile(
+  r'(?:((?:\d|NE|NW|SE|SW|N|E|S|W)'
+  r'(?:\s*\.\.\s*(?:\d|NE|NW|SE|SW|N|E|S|W))?)\s+)?'
+  r'(\[(?:\d|NE|NW|SE|SW|N|E|S|W)]'
+  r'|\[?[A-Za-z]+]?'  # This really should be stricter, but I don't want to add another capture group for conditional :(
+  r'|[({](?:\w*\s*(?:,|\.\.)\s*)*\w+[})])'
+  )
+rBINDING = re.compile(r'\[(\d+)')
 
 VERBOSITY = 0
 
@@ -40,36 +48,42 @@ def conv_permute(tr: str, total: int):
     return ','.join(classes.AdditiveDict(gen).expand())
 
 
+def _unbind(name):
+    """
+    Quick & dirty. 'foo_342' -> 'foo', and '__all__0' -> '__all__'
+    """
+    return '__all__' if name.startswith('__all__') else name.rsplit('_', 1)[0]
+
+
 def bind_vars(tr: (list, tuple)):
     """
     Given an unbound ruel transition like the following:
         a,1,2,[0],a,a,6,7,8,[4]
     Bind its variables in Golly style:
         a_0,1,2,a_0,a_1,a_2,6,7,8,a_1
-    Also resolve mappings into python tuples.
+    Also resolve mappings into Python tuples.
     """
-    built, seen = [], {}
-    for v in tr:
-        if not isinstance(v, str):
-            continue
-        if v.isdigit():
-            built.append(v)
-        elif v.startswith('['):
-            v = v[1:-1]  # strip brackets
-            ref = int(v.split(':')[0].strip())
+    seen, built = {}, []
+    for state in tr:
+        if not isinstance(state, str) or state.isdigit():
+            built.append(state)
+        elif state.startswith('['):
+            val = state[1:-1]  # strip brackets
+            try:
+                ref = int(val.split(':')[0].strip())
+            except ValueError:
+                raise SyntaxError(f"Invalid attempted variable binding '{val}'")
             try:
                 built.append(
-                  (ref, built[ref], v[1+v.find(':'):].strip())
-                  if ':' in v else
+                  (ref, _unbind(built[ref]), val[1+val.find(':'):].strip())
+                  if ':' in val else
                   built[ref]
                   )
             except IndexError:
-                raise ValueError(f"Variable binding '{v}' does not refer to a previous index") from None
-            except ValueError:
-                raise SyntaxError(f"Invalid attempted variable binding '{v}'") from None
+                raise ValueError(f"Binding in '{val}' does not refer to a previous index")
         else:
-            seen[v] = 1 + seen.get(v, -1)
-            built.append(f"{v}{'' if v.endswith('_') else '_'}{seen[v]}")
+            seen[state] = 1 + seen.get(state, -1)
+            built.append(f"{state}{'' if state.endswith('_') else '_'}{seen[state]}")
     return seen, built
 
 
@@ -87,11 +101,16 @@ def expand_tr(tr: (list, tuple)):
     """
     cop, idx = [], 0
     for val in tr:
-        if not rRANGE.match(val):
+        match = rSEGMENT.fullmatch(val)
+        if match is None:
             idx += 1
             cop.append(val)
             continue
-        group, state = val.split()
+        group, state = match[1], match[2]
+        if group is None or not rRANGE.fullmatch(group):
+            idx += 1
+            cop.append(state)
+            continue
         lower, upper = classes.TabelRange.bounds(group)
         if lower != idx:
             raise ValueError({'lower': lower, 'idx': idx})
@@ -105,6 +124,20 @@ def expand_tr(tr: (list, tuple)):
         cop.extend(group)
     return cop
 
+
+def of(tr, idx):
+    """
+    Acts like doing tr[idx], but accounts for that the item
+    at that index might be a binding reference to a previous
+    index.
+    XXX: Maybe put this in parser.py or something who knows
+    """
+    val = tr[idx]
+    if not isinstance(val, str):
+        return val
+    while isinstance(val, str) and val.startswith('['):
+        val = tr[int(rBINDING.match(val)[1])]
+    return val
 
 def globalmatch(regex: re.compile, string: str, start: int = 0) -> bool:
     """

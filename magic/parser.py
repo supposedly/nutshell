@@ -3,7 +3,7 @@ import re
 
 import bidict
 
-from .common import classes, utils
+from .common import utils
 from .common.utils import print_verbose
 from .common.classes import Coord, TabelRange, Variable
 from .common.classes.errors import TabelNameError, TabelSyntaxError, TabelValueError, TabelFeatureUnsupported, TabelException
@@ -30,6 +30,9 @@ class AbstractTabel:
       rf'|\[(?:(?:\d|{__rCARDINALS})\s*:\s*)?'       # Or a mapping, which starts with either a number or the equivalent cardinal direction
       rf'(?:{__rVAR}|[A-Za-z]+)\]))'                 # ...and then has either a variable name or literal (like ", [S: (1, 2, ...)],")
        r'(,)?(?(2)\s*)'                              # Finally, an optional comma and whitespace after it. Last term has no comma.
+      )
+    _rSEGMENT = re.compile(
+      r'(?:((?:\d|{__rCARDINALS})(?:\s*\.\.\s*(?:\d|{__rCARDINALS}))?)\s+)?([A-Za-z]+|[({](?:\w*\s*(?:,|\.\.)\s*)*\w+[})])'
       )
     _rVAR = re.compile(__rVAR)
     
@@ -60,7 +63,6 @@ class AbstractTabel:
         _assignment_start = self._extract_directives(start)
         _transition_start = self._extract_initial_vars(_assignment_start)
         
-        
         self.cardinals = self._parse_directives()
         print_verbose(
           '\b'*4 + 'PARSED directives & var assignments',
@@ -71,14 +73,21 @@ class AbstractTabel:
         self._parse_transitions(_transition_start)
         print_verbose(
           '\b'*4 + 'PARSED transitions & PTCDs',
-          ['\b\btransitions (before binding):', self.transitions, '\b\bvars:', self.vars],
+          ['\b\btransitions (before binding):', *self.transitions, '\b\bvars:', self.vars],
           pre='    ', sep='\n', end='\n'
           )
         
         self._disambiguate()
         print_verbose(
           '\b'*4 + 'DISAMBIGUATED variables',
-          ['\b\btransitions (post binding):', self.transitions, '\b\bvars:', self.vars],
+          ['\b\btransitions (after binding):', *self.transitions, '\b\bvars:', self.vars],
+          pre='    ', sep='\n', end='\n\n'
+          )
+        
+        self._expand_mappings()
+        print_verbose(
+          '\b'*4 + 'EXPANDED mappings (probably suboptimally - rip!)',
+          ['\b\btransitions (after expanding):', *self.transitions],
           pre='    ', sep='\n', end='\n\n'
           )
     
@@ -216,8 +225,8 @@ class AbstractTabel:
         except NameError as e:
             raise TabelNameError(lno, f"PTCD references undefined name '{e}'")
         except SyntaxError as e:
-                bound, range_ = e.msg
-                raise TabelSyntaxError(lno, f"Bound '{bound}' of range {range_} is not an integer")
+            bound, range_ = e.msg
+            raise TabelSyntaxError(lno, f"Bound '{bound}' of range {range_} is not an integer")
         for idx, state in enumerate(map_to):
             if state == '_':  # Leave as is (indicated by a None value)
                 state = None
@@ -230,7 +239,7 @@ class AbstractTabel:
             raise TabelValueError(
               lno,
               f"Variable at index {self.cardinals[cdir]} in PTCD (direction {cdir})"
-              " mapped to a smaller variable. Maybe add a '...' to the latter?"
+              " mapped to a smaller variable. Maybe add a '...' to fill the latter out?"
               )
         return match[1], copy_to, _map_to
     
@@ -238,31 +247,33 @@ class AbstractTabel:
         """
         tr: Original transition
         source_cd: Cardinal direction as a letter or pair thereof. (N, S, SW, etc)
-        initial: What to 
+        initial: hmph
         
         Build a transition from segments of a PTCD.
         """
         new_tr = [initial, *['__all__']*len(self.cardinals), result]
-        orig = Coord(self.POSITIONS[source_cd]).opp  # creates S -> N, E -> W, etc.
+        orig = Coord(self.POSITIONS[source_cd]).inv  # gets position of orig cell relative to current
+        # Get adjacent cells to original cell (diagonal to us)
         try:
             new_tr[self.cardinals[orig.name]] = tr[0]
         except KeyError:
             pass
         try:
-            new_tr[self.cardinals[orig.cw.name]] = tr[self.cardinals[orig.cw.move(source_cd).name]]
+            new_tr[self.cardinals[orig.cw.name]] = utils.of(tr, self.cardinals[orig.cw.move(source_cd).name])
         except KeyError:
             pass
         try:
-            new_tr[self.cardinals[orig.ccw.name]] = tr[self.cardinals[orig.ccw.move(source_cd).name]]
+            new_tr[self.cardinals[orig.ccw.name]] = utils.of(tr, self.cardinals[orig.ccw.move(source_cd).name])
         except KeyError:
             pass
-        if not orig.diagonal():  # will execute if the PTCD is orthogonal & not diagonal
+        # If we're orthogonal to orig, we have to count for the cells adjacent to us too
+        if not orig.diagonal():
             try:
-                new_tr[self.cardinals[orig.cw(2).name]] = tr[self.cardinals[orig.cw(3).name]]
+                new_tr[self.cardinals[orig.cw(2).name]] = utils.of(tr, self.cardinals[orig.cw(3).name])
             except KeyError:
                 pass
             try:
-                new_tr[self.cardinals[orig.ccw(2).name]] = tr[self.cardinals[orig.ccw(3).name]]
+                new_tr[self.cardinals[orig.ccw(2).name]] = utils.of(tr, self.cardinals[orig.ccw(3).name])
             except KeyError:
                 pass
         return new_tr
@@ -285,12 +296,15 @@ class AbstractTabel:
         if match[3] is not None:
             raise TabelFeatureUnsupported(lno, 'PTCDs that copy neighbor states are not yet supported')
         cd_idx, copy_to, map_to = self._extract_ptcd_var(tr, match, lno)
-        # Start expansion to transitions
+        # Start expanding to transitions
         transitions = []
+        while isinstance(copy_to, str) and copy_to.startswith('['):
+            # XXX: UGLY. Good gracious.
+            copy_to = tr[int(utils.rBINDING.match(copy_to)[1])]
         for idx, (initial, result) in enumerate(zip(copy_to, map_to)):
             if result is None:
                 continue
-            # If the result is a "..." fillout
+            # If the result is an ellipsis, fill out
             if isinstance(result, range):
                 if map_to[idx-1] is None:  # Nothing more to add
                     break
@@ -327,14 +341,14 @@ class AbstractTabel:
                 if elem.isdigit():
                     napkin[idx] = int(elem)
                 elif self._rVAR.match(elem):
-                    self.vars[Variable.random_name()] = self._parse_variable(elem)
+                    self.vars[Variable.random_name()] = napkin[idx] = self._parse_variable(elem)
                 elif not self._rBINDMAP.match(elem):  # leave mappings and bindings untouched for now
                     try:
                         napkin[idx] = self.vars[elem]
                     except KeyError:
                         raise TabelNameError(lno, f'Transition references undefined name {elem!r}')
-            ptcds = [tr for ptcd in self._rPTCD.finditer(ptcds) for tr in self._parse_ptcd(napkin, ptcd, lno=lno)]
-            self.transitions.extend([napkin, *ptcds])
+            ptcds = [(lno, tr) for ptcd in self._rPTCD.finditer(ptcds) for tr in self._parse_ptcd(napkin, ptcd, lno=lno)]
+            self.transitions.extend([(lno, napkin), *ptcds])
     
     def _disambiguate(self):
         """
@@ -342,20 +356,40 @@ class AbstractTabel:
         [bracketed bindings] and convert mappings to Python tuples.
         """
         print_verbose(None, None, '...disambiguating variables...', pre='')
-        for idx, tr in enumerate(self.transitions):
+        for idx, (lno, tr) in enumerate(self.transitions):
             print_verbose(*[None]*3, [tr, '->'], start='', sep='', end='')
-            reps, tr = utils.bind_vars(
-              self.vars.inv[val].name
-              if val in self.vars.inv
-              else val
-              for val in tr
-              )
+            try:
+                reps, tr = utils.bind_vars(
+                  self.vars.inv[val].name
+                  if val in self.vars.inv
+                    else val
+                  for val in tr
+                  )
+            except SyntaxError as e:
+                raise TabelSyntaxError(lno, e.msg)
+            except ValueError as e:
+                raise TabelValueError(lno, e.args[0])
+            
             self.transitions[idx] = [
-              (val[0], val[1], self._parse_variable(val[2], mapping=True))
+              # list() because we're need to mutate it if it has an ellipsis
+              (val[0], self._parse_variable(val[1]), list(self._parse_variable(val[2], mapping=True)))
               if isinstance(val, tuple)
                 else val
               for val in tr
               ]
+            
+            # filter out everything except mappings, so we can expand their ellipses if applicable
+            for i, (tr_idx, map_from, map_to) in ((j, t) for j, t in enumerate(self.transitions[idx]) if isinstance(t, tuple)):
+                if map_to[-1] == '...':
+                    map_to[-1:] = [map_to[-2]] * (len(map_from) - len(map_to) + 1)
+                if len(map_from) > len(map_to):
+                    raise TabelValueError(
+                      lno,
+                      f"Variable with value {map_from} mapped to a smaller variable with "
+                      f"value {tuple(map_to)}. Maybe add a '...' to fill the latter out?"
+                      )
+                self.transitions[idx][i] = (tr_idx, map_from, tuple(map_to))
+            
             print_verbose(*[None]*3, [tr, '->', self.transitions[idx], '\n  reps:', reps], sep='', end='\n\n')
             for name, rep in reps.items():
                 if name == '__all__':
@@ -364,6 +398,32 @@ class AbstractTabel:
                 var = self.vars[name]
                 if rep > self.vars.inv[var].rep:  # lol yikes
                     self.vars.inv[var].rep = rep
+    
+    def _expand_mappings(self):
+        """
+        Iteratively expand mappings in self.transitions, starting from
+        earlier ones and going down the branches.
+        
+        TODO: Figure out how to get ranges compressed in order to
+        avoid redundancy w/ variable
+        """
+        print_verbose(None, None, '...expanding mappings...', pre='')
+        for tr_idx, tr in enumerate(self.transitions):
+            try:
+                # The only tuples left are mappings because we replaced var values w their names
+                # ...that also happens to be why it's hard for me (at this stage) to collapse
+                # redundant ellipsis mappings into their own anonymous variables -- because
+                # we've already disambiguated and hmmmm
+                sub_idx, (idx, froms, tos) = next((i, t) for i, t in enumerate(tr) if isinstance(t, tuple))
+            except StopIteration:
+                continue
+            print_verbose(*[None]*3, [tr, '\n', ' ->'], start='', sep='', end='\n')
+            new = [
+              [map_from if i == idx else map_to if i == sub_idx else v for i, v in enumerate(tr)]
+              for map_from, map_to in zip(froms, tos)
+              ]
+            print_verbose(*[None]*3, new, start='', sep='\n', end='\n\n')
+            self.transitions[tr_idx:1+tr_idx] = new
 
 
 class AbstractColors:
@@ -371,9 +431,26 @@ class AbstractColors:
     Parse a ruelfile's color format into something abstract &
     transferrable into Golly syntax.
     """
-    def __init__(self, *args, **kwargs):
-        pass
-
+    def __init__(self, colors):
+        self._src = colors
+        self.colors = [k.split(':') for k in self._src]
+    
+    @staticmethod
+    def _unpack(color):
+        if color.count(' ') == 2:  # then it's in Golly format
+            return color
+        if len(color) % 2:  # three-char shorthand
+            color *= 2
+        return struct.unpack('BBB', bytes.fromhex(color))
+    
+    @property
+    def states(self):
+        return [{int(j.strip()): self._unpack(color.strip())} for state, color in self.colors for j in state.split()]
+    
+    @property
+    def formatted(self):
+        return '\n'.join(f'{state} {r} {g} {b}' for d in self.states for state, (r, g, b) in d.items())
+    
 
 def parse(fp):
     """
@@ -396,7 +473,7 @@ def parse(fp):
     try:
         parts['@TABLE'] = AbstractTabel(parts['@TABEL'])
     except KeyError:
-        raise #TabelNameError(None, "No '@TABEL' segment found")
+        raise TabelValueError(None, "No '@TABEL' segment found")
     except TabelException as exc:
         if exc.lno is None:
             raise exc.__class__(exc.lno, exc.msg)

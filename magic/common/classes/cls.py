@@ -98,7 +98,7 @@ class Coord(tuple):
     def name(self):
         return self._NAMES[self]
     @property
-    def opp(self):
+    def inv(self):
         return Coord(-i for i in self)
     @property
     def cw(self):

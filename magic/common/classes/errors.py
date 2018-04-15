@@ -1,9 +1,4 @@
 """Errors to be raised during rueltabel parsing."""
-
-class KeyConflict(Exception):
-    pass
-
-
 class TabelException(SystemExit):
     def __init__(self, lno: int, msg: str, seg: list = None, shift: int = 0):
         """
