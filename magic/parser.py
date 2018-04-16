@@ -29,7 +29,7 @@ class AbstractTabel:
        r'(?:[({](?:\w*\s*(?:,|\.\.)\s*)*\w+[})]'     # Variable literal (like ", (1, 2..2, 3),") w/o "..." at end
        r'|[A-Za-z]+)'                                # Variable name (like ", aaaa,")
       rf'|\[(?:(?:\d|{__rCARDINALS})\s*:\s*)?'       # Or a mapping, which starts with either a number or the equivalent cardinal direction
-      rf'(?:{__rVAR}|[A-Za-z]+)\]))'                 # ...and then has either a variable name or literal (like ", [S: (1, 2, ...)],")
+      rf'(?:{__rVAR}|[A-Za-z]+)]))'                  # ...and then has either a variable name or literal (like ", [S: (1, 2, ...)],")
        r'(,)?(?(2)\s*)'                              # Finally, an optional comma and whitespace after it. Last term has no comma.
       )
     _rSEGMENT = re.compile(
@@ -424,7 +424,7 @@ class AbstractTabel:
             new = []
             for map_from, map_to in zip(froms, tos):
                 reps, built = utils.bind_vars(
-                  [map_from if i == idx else map_to if i == sub_idx else v for i, v in enumerate(tr)],
+                  [map_from if v == tr[idx] else map_to if v == (idx, froms, tos) else v for i, v in enumerate(tr)],
                   second_pass=True
                   )
                 new.append(built)
@@ -434,7 +434,11 @@ class AbstractTabel:
                         self.vars.inv[var].rep = rep
             
             print_verbose(*[None]*3, new, start='', sep='\n', end='\n\n')
-            self.transitions[tr_idx:1+tr_idx] = new
+            # We need to add this None in order for the loop to catch the next "new"
+            # because we're mutating the list while we iterate over it
+            # ( awful, I know :s )
+            self.transitions[tr_idx:1+tr_idx] = [None, *new]
+        self.transitions = list(filter(None, self.transitions))
 
 
 class AbstractColors:
@@ -495,4 +499,6 @@ def parse(fp):
         pass
     except TabelException as exc:
         raise exc.__class__(exc.lno, exc.msg, parts['@COLORS'], lines['@COLORS'])
+    
+    del parts['@TABEL']
     return parts

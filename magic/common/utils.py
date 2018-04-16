@@ -12,7 +12,9 @@ rSEGMENT = re.compile(
   r'(?:((?:\d|NE|NW|SE|SW|N|E|S|W)'
   r'(?:\s*\.\.\s*(?:\d|NE|NW|SE|SW|N|E|S|W))?)\s+)?'
   r'(\[(?:\d|NE|NW|SE|SW|N|E|S|W)]'
-  r'|\[?[A-Za-z]+]?'  # This really should be stricter, but I don't want to add another capture group for conditional :(
+  r'|\[(?:(?:\d|NE|NW|SE|SW|N|E|S|W)\s*:\s*)?'  # mapping
+  r'(?:[({](?:\w*\s*(?:,|\.\.)\s*)*(?:\w|(?:\.\.\.)?)*[})]|[A-Za-z]+)\]'  # mapping pt 2
+  r'|\[?[A-Za-z]+]?'  # This really should be stricter about brackets matching, but I don't want to add another capture group for conditional :(
   r'|[({](?:\w*\s*(?:,|\.\.)\s*)*\w+[})])'
   )
 rBINDING = re.compile(r'\[(\d+)')
@@ -124,9 +126,9 @@ def expand_tr(tr: (list, tuple)):
         if lower != idx:
             raise ValueError({'lower': lower, 'idx': idx})
         span = upper - lower
-        if state.startswith('['):
+        if all((state.startswith('['), ':' not in state, state[1:-1].isalpha())):  # if it's a binding with a var name inside
             group = [state[1:-1]]
-            group.extend(f'[{idx}]' for _ in range(span))
+            group.extend(f'[{idx}]' for _ in range(1, span))
         else:
             group = [state] * span
         idx += span
