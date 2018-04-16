@@ -28,5 +28,5 @@ wait, N..W any, [0: move]
 
 @COLORS
   0: FFF
-1 2: FF0000
-3 4: 0000FF
+1 3: 0000FF
+2 4: FF0000

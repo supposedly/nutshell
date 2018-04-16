@@ -1,5 +1,6 @@
 """Facilitates parsing of a rueltabel file into an abstract, computer-readable format."""
 import re
+import struct
 
 import bidict
 
@@ -159,6 +160,7 @@ class AbstractTabel:
         except KeyError as e:
             name = str(e).split("'")[1]
             raise TabelNameError(None, f'{name!r} directive not declared')
+        self.directives['n_states'] = self.directives.pop('states')
         return cardinals
     
     def _extract_initial_vars(self, start):
@@ -456,9 +458,8 @@ class AbstractColors:
     def states(self):
         return [{int(j.strip()): self._unpack(color.strip())} for state, color in self.colors for j in state.split()]
     
-    @property
-    def formatted(self):
-        return '\n'.join(f'{state} {r} {g} {b}' for d in self.states for state, (r, g, b) in d.items())
+    def format(self):
+        return [f'{state} {r} {g} {b}' for d in self.states for state, (r, g, b) in d.items()]
     
 
 def parse(fp):
@@ -480,7 +481,7 @@ def parse(fp):
         parts[segment].append(line)
     
     try:
-        parts['@TABLE'] = AbstractTabel(parts['@TABEL'])
+        parts['@TABLE'] = AbstractTabel(parts.pop('@TABEL'))
     except KeyError:
         raise TabelValueError(None, "No '@TABEL' segment found")
     except TabelException as exc:
@@ -489,7 +490,7 @@ def parse(fp):
         raise exc.__class__(exc.lno, exc.msg, parts['@TABEL'], lines['@TABEL'])
     
     try:
-        parts['@COLORS'] = AbstractColors(parts['@COLORS'])
+        parts['@COLORS'] = AbstractColors(parts['@COLORS']).format()
     except KeyError:
         pass
     except TabelException as exc:
