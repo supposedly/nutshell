@@ -481,7 +481,7 @@ def parse(fp):
         parts[segment].append(line)
     
     try:
-        parts['@TABLE'] = AbstractTabel(parts.pop('@TABEL'))
+        parts['@TABLE'] = AbstractTabel(parts['@TABEL'])
     except KeyError:
         raise TabelValueError(None, "No '@TABEL' segment found")
     except TabelException as exc:
