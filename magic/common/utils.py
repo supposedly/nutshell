@@ -16,6 +16,7 @@ rSEGMENT = re.compile(
   r'|[({](?:\w*\s*(?:,|\.\.)\s*)*\w+[})])'
   )
 rBINDING = re.compile(r'\[(\d+)')
+rALREADY = re.compile(r'(.+)_(\d+)$')
 
 VERBOSITY = 0
 
@@ -55,7 +56,7 @@ def _unbind(name):
     return '__all__' if name.startswith('__all__') else name.rsplit('_', 1)[0]
 
 
-def bind_vars(tr: (list, tuple)):
+def bind_vars(tr: (list, tuple), *, second_pass=False):
     """
     Given an unbound ruel transition like the following:
         a,1,2,[0],a,a,6,7,8,[4]
@@ -64,8 +65,16 @@ def bind_vars(tr: (list, tuple)):
     Also resolve mappings into Python tuples.
     """
     seen, built = {}, []
+    if second_pass:  # Find current numbers before adding more
+        for state in tr:
+            try:
+                m = rALREADY.match(state)
+                seen[m[1]] = int(m[2])
+            except TypeError:
+                continue
+    
     for state in tr:
-        if not isinstance(state, str) or state.isdigit():
+        if not isinstance(state, str) or state.isdigit() or rALREADY.match(state):
             built.append(state)
         elif state.startswith('['):
             val = state[1:-1]  # strip brackets
@@ -127,7 +136,7 @@ def expand_tr(tr: (list, tuple)):
 
 def of(tr, idx):
     """
-    Acts like doing tr[idx], but accounts for that the item
+    Acts like tr[idx], but accounts for that the item
     at that index might be a binding reference to a previous
     index.
     XXX: Maybe put this in parser.py or something who knows

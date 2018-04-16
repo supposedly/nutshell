@@ -86,8 +86,8 @@ class AbstractTabel:
         
         self._expand_mappings()
         print_verbose(
-          '\b'*4 + 'EXPANDED mappings (probably suboptimally - rip!)',
-          ['\b\btransitions (after expanding):', *self.transitions],
+          '\b'*4 + 'EXPANDED mappings',
+          ['\b\btransitions (after expanding):', *self.transitions, '\b\bvars:', self.vars],
           pre='    ', sep='\n', end='\n\n'
           )
     
@@ -372,7 +372,7 @@ class AbstractTabel:
             
             self.transitions[idx] = [
               # list() because we're need to mutate it if it has an ellipsis
-              (val[0], self._parse_variable(val[1]), list(self._parse_variable(val[2], mapping=True)))
+              (val[0], list(self._parse_variable(val[1])), list(self._parse_variable(val[2], mapping=True)))
               if isinstance(val, tuple)
                 else val
               for val in tr
@@ -381,14 +381,18 @@ class AbstractTabel:
             # filter out everything except mappings, so we can expand their ellipses if applicable
             for i, (tr_idx, map_from, map_to) in ((j, t) for j, t in enumerate(self.transitions[idx]) if isinstance(t, tuple)):
                 if map_to[-1] == '...':
-                    map_to[-1:] = [map_to[-2]] * (len(map_from) - len(map_to) + 1)
+                    map_to[-1] = map_to[-2]
+                    # Replace the extra states in map_to with a variable name
+                    # Could be a new variable or it could be one with same value
+                    self.vars[Variable.random_name()] = new = tuple(map_from[len(map_to)-1:])
+                    map_from[len(map_to)-1:] = [self.vars.inv[new].name]
                 if len(map_from) > len(map_to):
                     raise TabelValueError(
                       lno,
                       f"Variable with value {map_from} mapped to a smaller variable with "
                       f"value {tuple(map_to)}. Maybe add a '...' to fill the latter out?"
                       )
-                self.transitions[idx][i] = (tr_idx, map_from, tuple(map_to))
+                self.transitions[idx][i] = (tr_idx, tuple(map_from), tuple(map_to))
             
             print_verbose(*[None]*3, [tr, '->', self.transitions[idx], '\n  reps:', reps], sep='', end='\n\n')
             for name, rep in reps.items():
@@ -396,16 +400,13 @@ class AbstractTabel:
                     self.var_all_rep = max(rep, self.var_all_rep)
                     continue
                 var = self.vars[name]
-                if rep > self.vars.inv[var].rep:  # lol yikes
+                if rep > self.vars.inv[var].rep:
                     self.vars.inv[var].rep = rep
     
     def _expand_mappings(self):
         """
         Iteratively expand mappings in self.transitions, starting from
         earlier ones and going down the branches.
-        
-        TODO: Figure out how to get ranges compressed in order to
-        avoid redundancy w/ variable
         """
         print_verbose(None, None, '...expanding mappings...', pre='')
         for tr_idx, tr in enumerate(self.transitions):
@@ -417,11 +418,19 @@ class AbstractTabel:
                 sub_idx, (idx, froms, tos) = next((i, t) for i, t in enumerate(tr) if isinstance(t, tuple))
             except StopIteration:
                 continue
-            print_verbose(*[None]*3, [tr, '\n', ' ->'], start='', sep='', end='\n')
-            new = [
-              [map_from if i == idx else map_to if i == sub_idx else v for i, v in enumerate(tr)]
-              for map_from, map_to in zip(froms, tos)
-              ]
+            print_verbose(*[None]*3, [tr, '\n', '->'], start='', sep='', end='\n')
+            new = []
+            for map_from, map_to in zip(froms, tos):
+                reps, built = utils.bind_vars(
+                  [map_from if i == idx else map_to if i == sub_idx else v for i, v in enumerate(tr)],
+                  second_pass=True
+                  )
+                new.append(built)
+                for name, rep in reps.items():  # Update self.vars with new info
+                    var = self.vars[name]
+                    if rep > self.vars.inv[var].rep:
+                        self.vars.inv[var].rep = rep
+            
             print_verbose(*[None]*3, new, start='', sep='\n', end='\n\n')
             self.transitions[tr_idx:1+tr_idx] = new
 
