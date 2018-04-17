@@ -23,10 +23,10 @@ def _handle_table(comp, tbl):
     for var, value in tbl.vars.items():
         comp.append('')
         value = set(value)  # Removes duplicates and also gives it braces
-        for suf in range(1+var.rep):
-            comp.append(f'var {var.name}_{suf} = {value}')
+        comp.append(f'var {var.name}_0 = {value}')
+        for suf in range(1, 1+var.rep):
+            comp.append(f'var {var.name}_{suf} = {var.name}_0')
     comp.append('')
-
     comp.extend(', '.join(map(str, tr)) for tr in tbl.transitions)
 
 

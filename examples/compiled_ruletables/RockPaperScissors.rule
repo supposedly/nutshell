@@ -1,0 +1,68 @@
+@RULE RockPaperScissors
+*********************************
+**** COMPILED FROM RUELTABEL ****
+*********************************
+
+
+@TABLE
+neighborhood: Moore
+symmetries: permute
+n_states: 4
+
+var __all__0 = {0, 1, 2, 3}
+
+var any_0 = {0, 1, 2, 3}
+var any_1 = any_0
+var any_2 = any_0
+var any_3 = any_0
+var any_4 = any_0
+var any_5 = any_0
+var any_6 = any_0
+var any_7 = any_0
+var any_8 = any_0
+
+var live_0 = {1, 2, 3}
+
+var deadA_0 = {0, 2, 3}
+var deadA_1 = deadA_0
+var deadA_2 = deadA_0
+var deadA_3 = deadA_0
+var deadA_4 = deadA_0
+var deadA_5 = deadA_0
+
+var deadB_0 = {0, 1, 3}
+var deadB_1 = deadB_0
+var deadB_2 = deadB_0
+var deadB_3 = deadB_0
+var deadB_4 = deadB_0
+var deadB_5 = deadB_0
+
+var deadC_0 = {0, 1, 2}
+var deadC_1 = deadC_0
+var deadC_2 = deadC_0
+var deadC_3 = deadC_0
+var deadC_4 = deadC_0
+var deadC_5 = deadC_0
+
+var _640191036847485_0 = {0, 2}
+
+var _394060277127896_0 = {0, 3}
+
+var _242922760381557_0 = {0, 1}
+
+any_0, 1, 1, 1, 3, 3, 3, deadC_0, deadC_1, 3
+any_0, 2, 2, 2, 1, 1, 1, deadC_0, deadC_1, 1
+any_0, 3, 3, 3, 2, 2, 2, deadC_0, deadC_1, 2
+_640191036847485_0, 1, 1, 1, deadA_0, deadA_1, deadA_2, deadA_3, deadA_4, 1
+_394060277127896_0, 2, 2, 2, deadB_0, deadB_1, deadB_2, deadB_3, deadB_4, 2
+_242922760381557_0, 3, 3, 3, deadC_0, deadC_1, deadC_2, deadC_3, deadC_4, 3
+1, 3, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 0
+2, 1, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 0
+3, 2, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 0
+1, 1, 1, 1, deadA_0, deadA_1, deadA_2, deadA_3, deadA_4, 1
+2, 2, 2, 2, deadB_0, deadB_1, deadB_2, deadB_3, deadB_4, 2
+3, 3, 3, 3, deadC_0, deadC_1, deadC_2, deadC_3, deadC_4, 3
+1, 1, 1, deadA_0, deadA_1, deadA_2, deadA_3, deadA_4, deadA_5, 1
+2, 2, 2, deadB_0, deadB_1, deadB_2, deadB_3, deadB_4, deadB_5, 2
+3, 3, 3, deadC_0, deadC_1, deadC_2, deadC_3, deadC_4, deadC_5, 3
+any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, any_8, 0

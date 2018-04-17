@@ -15,6 +15,7 @@ rSEGMENT = re.compile(
   r'|\[(?:(?:\d|NE|NW|SE|SW|N|E|S|W)\s*:\s*)?'  # mapping
   r'(?:[({](?:\w*\s*(?:,|\.\.)\s*)*(?:\w|(?:\.\.\.)?)*[})]|[A-Za-z]+)\]'  # mapping pt 2
   r'|\[?[A-Za-z]+]?'  # This really should be stricter about brackets matching, but I don't want to add another capture group for conditional :(
+  r'|\d+'
   r'|[({](?:\w*\s*(?:,|\.\.)\s*)*\w+[})])'
   )
 rBINDING = re.compile(r'\[(\d+)')

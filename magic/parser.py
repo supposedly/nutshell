@@ -140,7 +140,7 @@ class AbstractTabel:
         for lno, line in enumerate((i.split('#')[0].strip() for i in self), start):
             if not line:
                 continue
-            if self._rASSIGNMENT.fullmatch(line):
+            if self._rASSIGNMENT.fullmatch(line.split(';')[0]):
                 break
             directive, value = map(str.strip, line.split(':'))
             self.directives[directive] = value.replace(' ', '')
