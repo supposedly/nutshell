@@ -110,7 +110,7 @@ class AbstractTabel:
         
         return: var, but as a tuple with any references substituted for their literal values
         """
-        if var.isalpha():
+        if var.isalpha() or var.startswith('_'):
             return self.vars[var]
         cop = []
         for state in map(str.strip, var[1:-1].split(',')):  # var[1:-1] cuts out (parens)/{braces}

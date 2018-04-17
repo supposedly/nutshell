@@ -21,8 +21,6 @@ var any_6 = any_0
 var any_7 = any_0
 var any_8 = any_0
 
-var live_0 = {1, 2, 3}
-
 var deadA_0 = {0, 2, 3}
 var deadA_1 = deadA_0
 var deadA_2 = deadA_0
@@ -44,18 +42,20 @@ var deadC_3 = deadC_0
 var deadC_4 = deadC_0
 var deadC_5 = deadC_0
 
-var _640191036847485_0 = {0, 2}
+var _512911288326613_0 = {0, 1}
 
-var _394060277127896_0 = {0, 3}
+var _130538740523371_0 = {0, 2}
 
-var _242922760381557_0 = {0, 1}
+var _362059419098906_0 = {0, 3}
 
-any_0, 1, 1, 1, 3, 3, 3, deadC_0, deadC_1, 3
-any_0, 2, 2, 2, 1, 1, 1, deadC_0, deadC_1, 1
-any_0, 3, 3, 3, 2, 2, 2, deadC_0, deadC_1, 2
-_640191036847485_0, 1, 1, 1, deadA_0, deadA_1, deadA_2, deadA_3, deadA_4, 1
-_394060277127896_0, 2, 2, 2, deadB_0, deadB_1, deadB_2, deadB_3, deadB_4, 2
-_242922760381557_0, 3, 3, 3, deadC_0, deadC_1, deadC_2, deadC_3, deadC_4, 3
+var _377470662408549_0 = {1, 2, 3}
+
+_512911288326613_0, 1, 1, 1, 3, 3, 3, deadC_0, deadC_1, 3
+_130538740523371_0, 2, 2, 2, 1, 1, 1, deadA_0, deadA_1, 1
+_362059419098906_0, 3, 3, 3, 2, 2, 2, deadB_0, deadB_1, 2
+_512911288326613_0, 3, 3, 3, deadC_0, deadC_1, deadC_2, deadC_3, deadC_4, 3
+_130538740523371_0, 1, 1, 1, deadA_0, deadA_1, deadA_2, deadA_3, deadA_4, 1
+_362059419098906_0, 2, 2, 2, deadB_0, deadB_1, deadB_2, deadB_3, deadB_4, 2
 1, 3, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 0
 2, 1, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 0
 3, 2, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 0

@@ -5,7 +5,7 @@ states: 4
 neighborhood: Moore
 symmetries: permute
 
-any = {0..3}; live = {1..3}
+any = {0..3}
 # Dead cells for State 1
 deadA = {0, 2, 3}
 # Dead cells for State 2
@@ -14,15 +14,17 @@ deadB = {0, 1, 3}
 deadC = {0, 1, 2}
 
 # Birth in competitive circumstances
-any, N..E [live], SE..SW [N: {3, 1, 2}], W..NW deadC, [SW]
+{0, 1}, N..E 1, SE..SW 3, deadC, deadC, 3
+{0, 2}, N..E 2, SE..SW 1, deadA, deadA, 1
+{0, 3}, N..E 3, SE..SW 2, deadB, deadB, 2
 
 # Birth
+{0, 1}, N..E 3, SE..NW deadC, 3
 {0, 2}, N..E 1, SE..NW deadA, 1
 {0, 3}, N..E 2, SE..NW deadB, 2
-{0, 1}, N..E 3, SE..NW deadC, 3
 
 # the RockScissorsPaper rules
-live, [0: {3, 1, 2}], NE..NW any, 0
+{1..3}, [0: {3, 1, 2}], NE..NW any, 0
 
 # Three-neighbor survival
 # these can't be moved into the Birth transitions above, because
