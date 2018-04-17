@@ -1,6 +1,23 @@
 # rueltabel
-A reimagined Golly ruletable format, compiling to the traditional syntax. See [`examples/`](/examples) for examples.
- 
+A compiler for a reimagined Golly ruletable language to the traditional format. See [`examples/`](/examples) for examples.
+
+## Setup
+
+1. [Download & install Python 3.6](https://www.python.org/downloads/release/python-365/) or higher (support for < 3.6 hopefully coming soon)
+2. `git clone` this project, then `cd` to its directory
+3. Using Python's bundled *pip* package manager, execute the terminal command `pip install -r requirements.txt` (or
+   any of its variations -- you may need to try `python -m pip install`, `python3 -m pip install`, `py -m pip install`
+   on Windows, ...)
+4. Write your own rueltabel, then continue with the **Usage** section below.
+
+## Usage
+```bash
+$ python to_ruletable.py [infile] [outdir] [flags...]
+```
+The output file will be written to `outdir` with a .rule extension and the same filename as `infile`.  
+Currently, the only supported flag is `-v` (`--verbose`), which will cause more info to be printed the
+more it is repeated (up to three repetitions).
+
 ## Spec
 - All variables unbound by default, because needing to define eight "any state" vars is ridiculous.
 - Support for `{}` literals, usable directly in transitions, as 'on-the-spot' variables. (Parentheses are also allowed. I personally prefer them to braces.)
@@ -50,12 +67,6 @@ replace what would otherwise require a separate transition for each of `0`...`1`
 - If a variable literal is too small to map to, an error will be raised that can be rectified by either (a) filling it out with explicit transitions,
 or (b) using the `...` operator to say *"fill the rest out with whatever value preceded the `...`"*.
 - If the "map-to" is instead *larger* than its "map-from", extraneous values will simply be ignored.
-- Transitions under permutational symmetry can make use of a shorthand syntax, specifying only the quantity of cells in each state. For example, `0,2,2,2,1,1,1,0,0,1`
-  in a Moore+permute table can be compacted to `0, 2:3, 1:3, 0:2, 1`.  
-  Unmarked states will be filled in to match the number of cells in the transition's neighborhood, meaning
-  that this transition can also be written as `0, 0:2, 1, 2, 1` or `0, 1:3, 2:3, 0, 1`.  
-- If the number of cells to fill is not divisible by the number of unmarked states, precedence will
-  be given to those that appear earlier; `2,1,0`, for instance, will also expand into `2,2,2,1,1,1,0,0`, but `0,1,2` will expand into `0,0,0,1,1,1,2,2`.
 - Treat live cells as moving objects: allow a cardinal direction to travel in and resultant cell state to be specified post transition.
 ```py
 foo, N..NW bar, baz -> S:2 E[(2, 3)] SE[wutz] N[NE: (2, 3)] NE[E]
@@ -71,29 +82,18 @@ foo, N..NW bar, baz -> S:2 E[(2, 3)] SE[wutz] N[NE: (2, 3)] NE[E]
 # Tentative because it's ... weird, and inconsistent because you can't do something like
 # N[SE: (2, 3)] unless you were to exceed the speed of light
 ```
-- Within these "post-transition cardinal direction specifiers" (PTCDs), the `_` keyword says "leave the cell as is".
+- Within these "post-transition cardinal direction specifiers" (referred to as "output mappings", formerly "PTCDs"), the `_` keyword says "leave the cell as is".
 
-## Unimplemented / Dropped
-- "Later transitions override earlier ones, bc the current switched system feels unintuitive"  
-(It felt even more unintuitive doing it CSS-style)
-- The original spec entry for PTCDs had a number of holes in it:
-
-> - treat live cells as objects: allow a cardinal direction to be specified within/after the last term of a transition
-> ```py
-> foo,bar,bar,bar,bar,bar,bar,bar,bar,0 NW:2 NE[4] S[6:{2,6,9}]
-> 
-> # the final 0 says "I turn into a state-0 cell"
-> 
-> # NW:2 says "I then spawn a state-2 cell to the northwest"
-> #      (colon optional but prettier than NW2)
-> 
-> # NE[4] says "Whatever was in the fourth 'bar' spawns to the northeast"
-> 
-> # S[6:{2,6,9}] says "The sixth 'bar', mapped to states {2,6,9}, spawns to the south"
-> ```
-> which would be equivalent to cutting this off at 0 then defining a `0...X` transition for the other directions
 
 ## To do
+- DOCS! Or at least a proper introductory writeup.
+- Implement the "tentative" output-map syntax from above.
+- Allow transitions under permutational symmetry to make use of a shorthand syntax, specifying only the quantity of cells in each state. For example, `0,2,2,2,1,1,1,0,0,1`
+  in a Moore+permute table can be compacted to `0, 2:3, 1:3, 0:2, 1`.  
+  Unmarked states will be filled in to match the number of cells in the transition's neighborhood, meaning
+  that this transition can also be written as `0, 0:2, 1, 2, 1` or `0, 1:3, 2:3, 0, 1`.  
+  - If the number of cells to fill is not divisible by the number of unmarked states, precedence will
+    be given to those that appear earlier; `2,1,0`, for instance, will also expand into `2,2,2,1,1,1,0,0`, but `0,1,2` will expand into `0,0,0,1,1,1,2,2`.
 - Support switching symmetries partway through via the `symmetries:` directive. (When parsing, this will result in all transitions being expanded to the 'lowest'
 symmetry type specified overall).
 - Do something (???) to attempt to simplify permutationally-symmetric transitions such as in TripleLife.
