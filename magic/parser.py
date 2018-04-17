@@ -20,7 +20,7 @@ class AbstractTabel:
     _rASSIGNMENT = re.compile(rf'\w+?\s*=\s*{__rVAR}')
     _rBINDMAP = re.compile(rf'\[[0-8](?::\s*?(?:{__rVAR}|[^_]\w+?))?\]')
     _rCARDINAL = re.compile(rf'\b(\[)?({__rCARDINALS})((?(1)\]))\b')
-    _rPTCD = re.compile(rf'\b({__rCARDINALS})(?::(\d+)\b|\[((?:{__rCARDINALS})\s*:)?\s*(\w+|{__rVAR})]\B)')
+    _rPTCD = re.compile(rf'\b({__rCARDINALS})(?::(\d+)\b|:?\[((?:{__rCARDINALS})\s*:)?\s*(\w+|{__rVAR})]\B)')
     _rRANGE = re.compile(r'\d+? *?\.\. *?\d+?')
     _rTRANSITION = re.compile(
       rf'((?:(?:\d|{__rCARDINALS})'                  # Meaningless cardinal direction before state (like ", NW 2,")
@@ -174,7 +174,7 @@ class AbstractTabel:
         lno = start
         tblines = ((idx, stmt.strip()) for idx, line in enumerate(self[start:], start) for stmt in line.split('#')[0].split(';'))
         for lno, decl in tblines:
-            if utils.globalmatch(self._rTRANSITION, decl):
+            if utils.globalmatch(self._rTRANSITION, decl.split('->')[0].strip()):
                 break
             if not decl:
                 continue
