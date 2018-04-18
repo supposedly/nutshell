@@ -22,26 +22,24 @@ var __all__0 = {0, 1, 2, 3, 4}
 var __all__1 = {0, 1, 2, 3, 4}
 var __all__2 = {0, 1, 2, 3, 4}
 
+var move_0 = {1, 2}
+
+var wait_0 = {3, 4}
+
 var any_0 = {0, 1, 2, 3, 4}
 var any_1 = any_0
 var any_2 = any_0
 var any_3 = any_0
 
-var move_0 = {1, 2}
-
-var wait_0 = {3, 4}
-
-var _863727665414250_0 = {2, 3, 4}
+var _490246945299929_0 = {1, 2, 3, 4}
 
 3, any_0, any_1, any_2, any_3, 1
 4, any_0, any_1, any_2, any_3, 2
 1, any_0, any_1, 0, any_3, 0
-1, any_0, any_1, 1, any_3, 3
-1, any_0, any_1, _863727665414250_0, any_3, 3
+1, any_0, any_1, _490246945299929_0, any_3, 3
 0, 1, __all__0, __all__1, __all__2, 3
 2, any_0, 0, any_2, any_3, 0
-2, any_0, 1, any_2, any_3, 4
-2, any_0, _863727665414250_0, any_2, any_3, 4
+2, any_0, _490246945299929_0, any_2, any_3, 4
 0, __all__0, __all__1, __all__2, 2, 4
 
 

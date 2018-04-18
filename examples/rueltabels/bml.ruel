@@ -14,7 +14,6 @@ states: 5
 neighborhood: von Neumann
 symmetries: none
 
-any = (0..4)
 move = (1, 2)
 wait = (3, 4)
 

@@ -57,7 +57,7 @@ class AbstractTabel:
         self._tbl = tbl
         
         self.vars = bidict.bidict()  # {Variable(name) | str(name) :: tuple(value)}
-        self.var_all, self.var_all_rep = (), 0  # replaces self.vars['__all__']
+        self.var_all, self.var_all_rep = (), 0  # instead of self.vars['__all__']
         self.directives = {}
         self.transitions = []
         
@@ -148,7 +148,8 @@ class AbstractTabel:
     
     def _parse_directives(self):
         """
-        Parse extracted directives to understand their values.
+        Parse extracted directives to translate their values.
+        Also initialize the "__all__" and "any" variables.
         """
         try:
             self.var_all = tuple(range(int(self.directives['states'])))
@@ -161,6 +162,7 @@ class AbstractTabel:
             name = str(e).split("'")[1]
             raise TabelNameError(None, f'{name!r} directive not declared')
         self.directives['n_states'] = self.directives.pop('states')
+        self.vars[Variable('any')] = self.var_all  # Provided beforehand
         return cardinals
     
     def _extract_initial_vars(self, start):
@@ -386,8 +388,8 @@ class AbstractTabel:
                     map_to[-1] = map_to[-2]
                     # Replace the extra states in map_to with a variable name
                     # Could be a new variable or it could be one with same value
-                    self.vars[Variable.random_name()] = new = tuple(map_from[len(map_to)-1:])
-                    map_from[len(map_to)-1:] = [self.vars.inv[new].name]
+                    self.vars[Variable.random_name()] = new = tuple(map_from[len(map_to)-2:])
+                    map_from[len(map_to)-2:] = [self.vars.inv[new].name]
                 if len(map_from) > len(map_to):
                     raise TabelValueError(
                       lno,
