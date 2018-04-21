@@ -52,4 +52,4 @@ Looking at variables in transitions:
 ## Pass 4
 
 1. Write the appropriate header text and variable declarations into a Golly-compatible @TABLE-formatted file.
-2. Write the now-converted transitions into the same file, perhaps with parseable #comments serving to help up-compile back into a rueltabel.
+2. Write the now-converted transitions into the same file, perhaps with parseable #comments serving to help up-compile back into a rueltable.

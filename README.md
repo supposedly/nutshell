@@ -1,4 +1,4 @@
-# rueltabel
+# rueltable
 A compiler for a reimagined Golly ruletable language to the traditional format. See [`examples/`](/examples) for examples.
 
 ## Setup
@@ -8,7 +8,7 @@ A compiler for a reimagined Golly ruletable language to the traditional format. 
 3. Using Python's bundled *pip* package manager, execute the terminal command `pip install -r requirements.txt` (or
    any of its variations -- you may need to try `python -m pip install`, `python3 -m pip install`, `py -m pip install`
    on Windows, ...)
-4. Write your own rueltabel, then continue with the **Usage** section below.
+4. Write your own rueltable, then continue with the **Usage** section below.
 
 ## Usage
 ```bash

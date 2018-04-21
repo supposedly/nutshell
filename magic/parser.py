@@ -1,4 +1,4 @@
-"""Facilitates parsing of a rueltabel file into an abstract, computer-readable format."""
+"""Facilitates parsing of a rueltable file into an abstract, computer-readable format."""
 import re
 import struct
 
@@ -6,13 +6,13 @@ import bidict
 
 from .common import utils
 from .common.utils import print_verbose
-from .common.classes import Coord, TabelRange, Variable
-from .common.classes.errors import TabelNameError, TabelSyntaxError, TabelValueError, TabelFeatureUnsupported, TabelException
+from .common.classes import Coord, TableRange, Variable
+from .common.classes.errors import TableNameError, TableSyntaxError, TableValueError, TableFeatureUnsupported, TableException
 
 
-class AbstractTabel:
+class AbstractTable:
     """
-    An abstract, Golly-transferrable representation of a ruelfile's @TABEL section.
+    An abstract, Golly-transferrable representation of a ruelfile's @TABLE section.
     """
     __rCARDINALS = 'NE|NW|SE|SW|N|E|S|W'
     __rVAR = r'[({](?:\w*\s*(?:,|\.\.)\s*)*(?:\w|(?:\.\.\.)?)*[})]'
@@ -118,7 +118,7 @@ class AbstractTabel:
                 cop.append(int(state))
             elif self._rRANGE.match(state):
                 try:
-                    cop.extend(TabelRange(state))
+                    cop.extend(TableRange(state))
                 except ValueError as e:
                     raise SyntaxError((str(e).split("'")[1], state)) from None
             elif mapping and state == '...' or ptcd and state in ('...', '_'):
@@ -155,12 +155,12 @@ class AbstractTabel:
             self.var_all = tuple(range(int(self.directives['states'])))
             cardinals = self.CARDINALS.get(self.directives['neighborhood'])
             if cardinals is None:
-                raise TabelValueError(None, f"Invalid neighborhood {self.directives['neighborhood']!r} declared")
+                raise TableValueError(None, f"Invalid neighborhood {self.directives['neighborhood']!r} declared")
             if 'symmetries' not in self.directives:
                 raise KeyError("'symmetries'")
         except KeyError as e:
             name = str(e).split("'")[1]
-            raise TabelNameError(None, f'{name!r} directive not declared')
+            raise TableNameError(None, f'{name!r} directive not declared')
         self.directives['n_states'] = self.directives.pop('states')
         self.vars[Variable('any')] = self.var_all  # Provided beforehand
         return cardinals
@@ -169,7 +169,7 @@ class AbstractTabel:
         """
         start: line number to start from
         
-        Iterate through tabel and gather all explicit variable declarations.
+        Iterate through table and gather all explicit variable declarations.
         
         return: line number at which transition declaration starts
         """
@@ -181,32 +181,32 @@ class AbstractTabel:
             if not decl:
                 continue
             if not self._rASSIGNMENT.fullmatch(decl):
-                raise TabelSyntaxError(lno, f'Invalid syntax in variable declaration (please let Wright know ASAP if this is incorrect)')
+                raise TableSyntaxError(lno, f'Invalid syntax in variable declaration (please let Wright know ASAP if this is incorrect)')
             name, value = map(str.strip, decl.split('='))
 
             try:
                 var = self._parse_variable(value)
             except NameError as e:
                 if not str(e):  # Means two consecutive commas, or a comma at the end of a literal
-                    raise TabelSyntaxError(lno, 'Invalid comma placement in variable declaration')
+                    raise TableSyntaxError(lno, 'Invalid comma placement in variable declaration')
                 adj = 'undefined' if str(e).isalpha() else 'invalid'
-                raise TabelNameError(lno, f"Declaration of variable {name!r} references {adj} name '{e}'")
+                raise TableNameError(lno, f"Declaration of variable {name!r} references {adj} name '{e}'")
             except SyntaxError as e:
                 bound, range_ = e.msg
-                raise TabelSyntaxError(lno, f"Bound '{bound}' of range {range_} is not an integer")
+                raise TableSyntaxError(lno, f"Bound '{bound}' of range {range_} is not an integer")
             
             if name == '__all__':  # the special var
                 self.var_all = var
                 continue
             if not name.isalpha():
-                raise TabelSyntaxError(
+                raise TableSyntaxError(
                   lno,
                   f'Variable name {name!r} contains nonalphabetical character {next(i for i in name if not i.isalpha())!r}',
                   )
             try:
                 self.vars[Variable(name)] = var
             except bidict.ValueDuplicationError:
-                raise TabelValueError(lno, f"Value {value} is already assigned to variable '{self.vars.inv[var]}'")
+                raise TableValueError(lno, f"Value {value} is already assigned to variable '{self.vars.inv[var]}'")
         self.vars.on_dup_val = bidict.IGNORE
         return lno
     
@@ -227,10 +227,10 @@ class AbstractTabel:
         try:
             _map_to, map_to = [], self._parse_variable(match[4], ptcd=True)
         except NameError as e:
-            raise TabelNameError(lno, f"PTCD references undefined name '{e}'")
+            raise TableNameError(lno, f"PTCD references undefined name '{e}'")
         except SyntaxError as e:
             bound, range_ = e.msg
-            raise TabelSyntaxError(lno, f"Bound '{bound}' of range {range_} is not an integer")
+            raise TableSyntaxError(lno, f"Bound '{bound}' of range {range_} is not an integer")
         for idx, state in enumerate(map_to):
             if state == '_':  # Leave as is (indicated by a None value)
                 state = None
@@ -240,7 +240,7 @@ class AbstractTabel:
                 break
             _map_to.append(state)
         if len(copy_to) > sum(len(i) if isinstance(i, range) else 1 for i in _map_to):
-            raise TabelValueError(
+            raise TableValueError(
               lno,
               f"Variable at index {self.cardinals[cdir]} in PTCD (direction {cdir})"
               " mapped to a smaller variable. Maybe add a '...' to fill the latter out?"
@@ -298,7 +298,7 @@ class AbstractTabel:
         return: PTCD expanded into its full transition(s)
         """
         if match[3] is not None:
-            raise TabelFeatureUnsupported(lno, 'PTCDs that copy neighbor states are not yet supported')
+            raise TableFeatureUnsupported(lno, 'PTCDs that copy neighbor states are not yet supported')
         cd_idx, copy_to, map_to = self._extract_ptcd_var(tr, match, lno)
         # Start expanding to transitions
         transitions = []
@@ -330,12 +330,12 @@ class AbstractTabel:
             if not line:
                 continue
             if self._rASSIGNMENT.match(line):
-                raise TabelSyntaxError(lno, 'Variable declaration after transitions')
+                raise TableSyntaxError(lno, 'Variable declaration after transitions')
             napkin, ptcds = map(str.strip, line.partition('->')[::2])
             try:
                 napkin = [self._rCARDINAL.sub(self._cardinal_sub, i.strip()) for i, _ in self._rTRANSITION.findall(napkin)]
             except KeyError as e:
-                raise TabelValueError(
+                raise TableValueError(
                   lno,
                   f"Invalid cardinal direction {e} for {self.directives['symmetries']!r} symmetry"
                   )
@@ -350,7 +350,7 @@ class AbstractTabel:
                     try:
                         napkin[idx] = self.vars[elem]
                     except KeyError:
-                        raise TabelNameError(lno, f'Transition references undefined name {elem!r}')
+                        raise TableNameError(lno, f'Transition references undefined name {elem!r}')
             ptcds = [(lno, tr) for ptcd in self._rPTCD.finditer(ptcds) for tr in self._parse_ptcd(napkin, ptcd, lno=lno)]
             self.transitions.extend([(lno, napkin), *ptcds])
     
@@ -370,9 +370,9 @@ class AbstractTabel:
                   for val in tr
                   )
             except SyntaxError as e:
-                raise TabelSyntaxError(lno, e.msg)
+                raise TableSyntaxError(lno, e.msg)
             except ValueError as e:
-                raise TabelValueError(lno, e.args[0])
+                raise TableValueError(lno, e.args[0])
             
             self.transitions[idx] = [
               # list() because we're need to mutate it if it has an ellipsis
@@ -391,7 +391,7 @@ class AbstractTabel:
                     self.vars[Variable.random_name()] = new = tuple(map_from[len(map_to)-2:])
                     map_from[len(map_to)-2:] = [self.vars.inv[new].name]
                 if len(map_from) > len(map_to):
-                    raise TabelValueError(
+                    raise TableValueError(
                       lno,
                       f"Variable with value {map_from} mapped to a smaller variable with "
                       f"value {tuple(map_to)}. Maybe add a '...' to fill the latter out?"
@@ -472,7 +472,7 @@ def parse(fp):
     """
     fp: file pointer to a full .ruel file
     
-    return: file, sectioned into dict with tabel and
+    return: file, sectioned into dict with table and
     colors as convertable representations
     """
     parts, lines = {}, {}
@@ -480,27 +480,26 @@ def parse(fp):
     
     for lno, line in enumerate(map(str.strip, fp), 1):
         if line.startswith('@'):
-            # @RUEL, @TABEL, @COLORS, ...
+            # @RUEL, @TABLE, @COLORS, ...
             segment, *name = line.split(None, 1)
             parts[segment], lines[segment] = name, lno
             continue
         parts[segment].append(line)
     
     try:
-        parts['@TABLE'] = AbstractTabel(parts['@TABEL'])
+        parts['@TABLE'] = AbstractTable(parts['@TABLE'])
     except KeyError:
-        raise TabelValueError(None, "No '@TABEL' segment found")
-    except TabelException as exc:
+        raise TableValueError(None, "No '@TABLE' segment found")
+    except TableException as exc:
         if exc.lno is None:
             raise exc.__class__(exc.lno, exc.msg)
-        raise exc.__class__(exc.lno, exc.msg, parts['@TABEL'], lines['@TABEL'])
+        raise exc.__class__(exc.lno, exc.msg, parts['@TABLE'], lines['@TABLE'])
     
     try:
         parts['@COLORS'] = AbstractColors(parts['@COLORS']).format()
     except KeyError:
         pass
-    except TabelException as exc:
+    except TableException as exc:
         raise exc.__class__(exc.lno, exc.msg, parts['@COLORS'], lines['@COLORS'])
     
-    del parts['@TABEL']
     return parts

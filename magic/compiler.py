@@ -6,7 +6,7 @@ def _handle_rule(comp, seg):
     comp.append(f'@RULE {name}')
     comp.append(cleandoc('''
     *********************************
-    **** COMPILED FROM RUELTABEL ****
+    **** COMPILED FROM RUELTABLE ****
     *********************************
     '''))
     comp.extend([*seg, ''])

@@ -1,0 +1,28 @@
+@RUEL DeficientSeeds
+
+1 permute
+2 c
+3 e
+
+@TABEL
+states: 4
+neighborhood: Moore
+symmetries: rotate4 reflect
+
+live = (1..3)
+NoC = (1, 3)
+NoE = (1, 2)
+
+# birth
+0, N..W 0, NW NoC, 2
+0, N NoE, NE..NW 0, 3
+
+# S2
+live, N 0, NE live, E..W 0, NW live, 1
+live, N live, NE..SW 0, W live, NW 0, 1
+live, 0, 0, live, SE..W 0, live, 1
+live, live, NE..W 0, live, 1
+live, live, NE..SE 0, live, SW..NW 0, 1
+live, N..E 0, live, S..W 0, live, 1
+
+any, N..NW any, 0

@@ -12,7 +12,7 @@ class AdditiveDict(dict):
             self[str(key)] = self.get(key, 0) + int(val or 1)
     
     def expand(self):
-        return (i for k, v in self.items() for i in k*v)
+        return (i for k, v in self.items() for i in [k]*v)
 
 
 class Variable:
