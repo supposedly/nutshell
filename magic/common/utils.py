@@ -9,14 +9,7 @@ from . import classes
 rSHORTHAND = re.compile(r'(\d+\s*\.\.\s*\d+)\s+(.+)')
 rRANGE = re.compile(r'\d\s*\.\.\s*\d?')
 rSEGMENT = re.compile(
-  r'(?:((?:\d|NE|NW|SE|SW|N|E|S|W)'
-  r'(?:\s*\.\.\s*(?:\d|NE|NW|SE|SW|N|E|S|W))?)\s+)?'
-  r'(\[(?:\d|NE|NW|SE|SW|N|E|S|W)]'
-  r'|\[(?:(?:\d|NE|NW|SE|SW|N|E|S|W)\s*:\s*)?'  # mapping
-  r'(?:[({](?:\w*\s*(?:,|\.\.)\s*)*(?:\w|(?:\.\.\.)?)*[})]|[A-Za-z]+)\]'  # mapping pt 2
-  r'|\[?[A-Za-z]+]?'  # This really should be stricter about brackets matching, but I don't want to add another capture group for conditional :(
-  r'|\d+'
-  r'|[({](?:\w*\s*(?:,|\.\.)\s*)*\w+[})])'
+  r'(?:([0-8](?:\s*\.\.\s*[0-8])?)\s+)?(-?-?\d+|-?-?(?:[({](?:\w*\s*(?:,|\.\.)\s*)*\w+[})]|\[?[A-Za-z]+]?)|\[[0-8]]|\[(?:[0-8]\s*:\s*)?(?:[({](?:\w*\s*(?:,|\.\.)\s*)*(?:\w|(?:\.\.\.)?)*[})]|[A-Za-z]+)])(?:-(?:(?:\d+|(?:[({](?:\w*\s*(?:,|\.\.)\s*)*\w+[})]|[A-Za-z]+)|)))?'
   )
 rBINDING = re.compile(r'\[(\d+)')
 rALREADY = re.compile(r'(.+)_(\d+)$')
@@ -123,9 +116,9 @@ def expand_tr(tr: (list, tuple)):
             idx += 1
             cop.append(state)
             continue
-        lower, upper = classes.TabelRange.bounds(group)
+        lower, upper = classes.TableRange.bounds(group)
         if lower != idx:
-            raise ValueError({'lower': lower, 'idx': idx})
+            raise ValueError(group, state, {'lower': lower, 'idx': idx})
         span = upper - lower
         if all((state.startswith('['), ':' not in state, state[1:-1].isalpha())):  # if it's a binding with a var name inside
             group = [state[1:-1]]
@@ -150,6 +143,7 @@ def of(tr, idx):
     while isinstance(val, str) and val.startswith('['):
         val = tr[int(rBINDING.match(val)[1])]
     return val
+
 
 def globalmatch(regex: re.compile, string: str, start: int = 0) -> bool:
     """

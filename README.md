@@ -23,6 +23,20 @@ more it is repeated (up to three repetitions).
 - Support for `{}` literals, usable directly in transitions, as 'on-the-spot' variables. (Parentheses are also allowed. I personally prefer them to braces.)
 - Support for cellstate *ranges* in variables, via double..dots as in `(0..8)` -- interspersible with state-by-state specification,
   so you can do `(0, 1, 4..6, 9)` to mean `(0, 1, 4, 5, 6, 9)`.
+- Support for negation and subtraction of variables via the `-` and `--` operators:
+```py
+0, foo-bar, bar-2, bar-(2, 3), -1, --1, -bar, --(3, 4), (foo, bar), baz
+
+# foo-bar says "All states in foo that are not in bar"
+# foo-2 says "All states in foo that are not 2"
+# bar-(2, 3) says "All states in bar that are not in (2, 3)"
+# -1 says "All *live* states that are not 1" (expands to {2, 3, 4} assuming n_states==5)
+# --1 says "*All* states (including 0) that are not 1" (expands to {0, 2, 3, 4} assuming the same)
+# -bar and --(3, 4) say the same but with multiple states enclosed in a variable
+# 
+```
+Note that `--` can never be used between two variables; its only purpose is negation including state 0. `-`, however, is overloaded to mean both subtraction and negation-excluding-0.  
+"Addition" of two variables can be accomplished by placing them in a variable literal; `(foo, bar, 1)` is equivalent to writing out the values of foo and bar manually.
 - Allow a variable to be made 'bound' by referring to its *index* in the transition, wrapped in [brackets]:  
 ```py
 # current (barC repeats)
@@ -75,19 +89,17 @@ foo, N..NW bar, baz -> S:2 E[(2, 3)] SE[wutz] N[NE: (2, 3)] NE[E]
 
 # E[(2, 3)] and SE[wutz] say "map this cell (E or SE) to this variable"
 
-# N[NE: (2, 3)] is a TENTATIVE syntax that, if implemented, would spawn a cell to the north
-# that maps the *northeastern* state variable to the (2, 3) literal.
-# NE[E] would, similarly, spawn a cell to the north that maps the eastern state variable
-# to the northeastern cell's current state.
-# Tentative because it's ... weird, and inconsistent because you can't do something like
-# N[SE: (2, 3)] unless you were to exceed the speed of light
+# N[NE: (2, 3)] says "spawn a cell to the north
+# that maps the *northeastern* state variable to the (2, 3) literal."
+
+# Be careful with this last syntax! You cannot, for example, write
+# N[SE: (2, 3)] -- it implies a violation of the speed of light.
 ```
-- Within these "post-transition cardinal direction specifiers" (referred to as "output mappings", formerly "PTCDs"), the `_` keyword says "leave the cell as is".
+- Within these "post-transition cardinal direction specifiers" (referred to as "output specifiers", formerly "PTCDs"), the `_` keyword says "leave the cell as is".
 
 
 ## To do
 - DOCS! Or at least a proper introductory writeup.
-- Implement the "tentative" output-map syntax from above.
 - Allow transitions under permutational symmetry to make use of a shorthand syntax, specifying only the quantity of cells in each state. For example, `0,2,2,2,1,1,1,0,0,1`
   in a Moore+permute table can be compacted to `0, 2:3, 1:3, 0:2, 1`.  
   Unmarked states will be filled in to match the number of cells in the transition's neighborhood, meaning

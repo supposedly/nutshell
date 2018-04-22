@@ -9,7 +9,7 @@ def _handle_rule(comp, seg):
     **** COMPILED FROM RUELTABLE ****
     *********************************
     '''))
-    comp.extend([*seg, ''])
+    comp.extend(seg)
 
 
 def _handle_table(comp, tbl):

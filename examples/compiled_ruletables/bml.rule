@@ -1,6 +1,6 @@
 @RULE bml
 *********************************
-**** COMPILED FROM RUELTABEL ****
+**** COMPILED FROM RUELTABLE ****
 *********************************
 The Biham–Middleton–Levine traffic model.
 
@@ -11,7 +11,6 @@ The Biham–Middleton–Levine traffic model.
 4: Rightward-bound car, waiting
 
 Generation 0 will consist only of states 0, 2, 3.
-
 
 @TABLE
 neighborhood: vonNeumann
@@ -31,15 +30,15 @@ var any_1 = any_0
 var any_2 = any_0
 var any_3 = any_0
 
-var _616305449725389_0 = {1, 2, 3, 4}
+var live_0 = {1, 2, 3, 4}
 
 3, any_0, any_1, any_2, any_3, 1
 4, any_0, any_1, any_2, any_3, 2
 1, any_0, any_1, 0, any_3, 0
-1, any_0, any_1, _616305449725389_0, any_3, 3
+1, any_0, any_1, live_0, any_3, 3
 0, 1, __all__0, __all__1, __all__2, 3
 2, any_0, 0, any_2, any_3, 0
-2, any_0, _616305449725389_0, any_2, any_3, 4
+2, any_0, live_0, any_2, any_3, 4
 0, __all__0, __all__1, __all__2, 2, 4
 
 

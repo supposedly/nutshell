@@ -1,9 +1,8 @@
 @RULE RockPaperScissors
 *********************************
-**** COMPILED FROM RUELTABEL ****
+**** COMPILED FROM RUELTABLE ****
 *********************************
 From "RockScissorsPaperLife" by Dave Greene
-
 
 @TABLE
 neighborhood: Moore
@@ -43,20 +42,20 @@ var any_6 = any_0
 var any_7 = any_0
 var any_8 = any_0
 
-var _609922902583414_0 = {0, 1}
+var live_0 = {1, 2, 3}
 
-var _142267027466765_0 = {0, 2}
+var _996991487094193_0 = {0, 1}
 
-var _208640732001194_0 = {0, 3}
+var _336007063014488_0 = {0, 2}
 
-var _716562661443819_0 = {1, 2, 3}
+var _495956290832387_0 = {0, 3}
 
-_609922902583414_0, 1, 1, 1, 3, 3, 3, deadC_0, deadC_1, 3
-_142267027466765_0, 2, 2, 2, 1, 1, 1, deadA_0, deadA_1, 1
-_208640732001194_0, 3, 3, 3, 2, 2, 2, deadB_0, deadB_1, 2
-_609922902583414_0, 3, 3, 3, deadC_0, deadC_1, deadC_2, deadC_3, deadC_4, 3
-_142267027466765_0, 1, 1, 1, deadA_0, deadA_1, deadA_2, deadA_3, deadA_4, 1
-_208640732001194_0, 2, 2, 2, deadB_0, deadB_1, deadB_2, deadB_3, deadB_4, 2
+_996991487094193_0, 1, 1, 1, 3, 3, 3, deadC_0, deadC_1, 3
+_336007063014488_0, 2, 2, 2, 1, 1, 1, deadA_0, deadA_1, 1
+_495956290832387_0, 3, 3, 3, 2, 2, 2, deadB_0, deadB_1, 2
+_996991487094193_0, 3, 3, 3, deadC_0, deadC_1, deadC_2, deadC_3, deadC_4, 3
+_336007063014488_0, 1, 1, 1, deadA_0, deadA_1, deadA_2, deadA_3, deadA_4, 1
+_495956290832387_0, 2, 2, 2, deadB_0, deadB_1, deadB_2, deadB_3, deadB_4, 2
 1, 3, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 0
 2, 1, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 0
 3, 2, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 0

@@ -49,7 +49,7 @@ class Variable:
         return cls(f'_{random.randrange(10**15)}')
 
 
-class TabelRange:
+class TableRange:
     """
     Proxy for a range object.
     TODO: Make this into a proper range copy whose objects have self.bounds()
@@ -76,38 +76,47 @@ class Coord(tuple):
     Represents a 'unit coordinate' of a cell.
     """
     _NAMES = bidict.bidict({
-      (0, 1): 'N',
-      (1, 1): 'NE',
-      (1, 0): 'E',
-      (1, -1): 'SE',
-      (0, -1): 'S',
-      (-1, -1): 'SW',
-      (-1, 0): 'W',
-      (-1, 1): 'NW'
+      'N': (0, 1),
+      'NE': (1, 1),
+      'E': (1, 0),
+      'SE': (1, -1),
+      'S': (0, -1),
+      'SW': (-1, -1),
+      'W': (-1, 0),
+      'NW': (-1, 1)
       })
     _DIRS = ('N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW')
     
+    def __init__(self, _):
+        if any(i not in {-1, 0, 1} for i in self):
+            raise errors.CoordOutOfBoundsError(self)
     def __repr__(self):
         return f'Coord({tuple(self)})'
+    
+    @classmethod
+    def from_name(cls, cd):
+        return cls(cls._NAMES[cd])
     def diagonal(self):
         return all(self)
+    def center(self):
+        return not any(self)
     def move(self, cd):
         return getattr(self, cd.lower())
     
     @property
     def name(self):
-        return self._NAMES[self]
+        return self._NAMES.inv[self]
     @property
     def inv(self):
         return Coord(-i for i in self)
     @property
     def cw(self):
         idx = (1 + self._DIRS.index(self.name)) % 8
-        return MaybeCallableCW(self._NAMES.inv[self._DIRS[idx]])
+        return MaybeCallableCW(self._NAMES[self._DIRS[idx]])
     @property
     def ccw(self):
         idx = self._DIRS.index(self.name) - 1
-        return MaybeCallableCCW(self._NAMES.inv[self._DIRS[idx]])
+        return MaybeCallableCCW(self._NAMES[self._DIRS[idx]])
     
     @property
     def n(self):
@@ -120,7 +129,7 @@ class Coord(tuple):
         return Coord((1+self[0], self[1]))
     @property
     def se(self):
-        return Coord((self[0]-1, 1+self[1]))
+        return Coord((1+self[0], self[1]-1))
     @property
     def s(self):
         return Coord((self[0], self[1]-1))

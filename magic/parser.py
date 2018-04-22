@@ -20,16 +20,18 @@ class AbstractTable:
     _rASSIGNMENT = re.compile(rf'\w+?\s*=\s*{__rVAR}')
     _rBINDMAP = re.compile(rf'\[[0-8](?::\s*?(?:{__rVAR}|[^_]\w+?))?\]')
     _rCARDINAL = re.compile(rf'\b(\[)?({__rCARDINALS})((?(1)\]))\b')
-    _rPTCD = re.compile(rf'\b({__rCARDINALS})(?::(\d+)\b|:?\[((?:{__rCARDINALS})\s*:)?\s*(\w+|{__rVAR})]\B)')
+    _rPTCD = re.compile(rf'\b({__rCARDINALS})(?::(\d+)\b|:?\[(?:({__rCARDINALS})\s*:)?\s*(\w+|{__rVAR})]\B)')
     _rRANGE = re.compile(r'\d+? *?\.\. *?\d+?')
     _rTRANSITION = re.compile(
+       r'(?<!-)'                                     # To avoid minuends being counted as segments (even without a comma)
       rf'((?:(?:\d|{__rCARDINALS})'                  # Meaningless cardinal direction before state (like ", NW 2,")
       rf'(?:\s*\.\.\s*(?:\d|{__rCARDINALS}))?\s+)?'  # Range of cardinal directions (like ", N..NW 2,")
-       r'(?:\d+|'                                    # Normal state (like ", 2,")
-       r'(?:[({](?:\w*\s*(?:,|\.\.)\s*)*\w+[})]'     # Variable literal (like ", (1, 2..2, 3),") w/o "..." at end
+       r'(?:-?-?\d+|'                                  # Normal state (like ", 2,")
+       r'-?-?(?:[({](?:\w*\s*(?:,|\.\.)\s*)*\w+[})]'   # Variable literal (like ", (1, 2..2, 3),") w/o "..." at end
        r'|[A-Za-z]+)'                                # Variable name (like ", aaaa,")
       rf'|\[(?:(?:\d|{__rCARDINALS})\s*:\s*)?'       # Or a mapping, which starts with either a number or the equivalent cardinal direction
-      rf'(?:{__rVAR}|[A-Za-z]+)]))'                  # ...and then has either a variable name or literal (like ", [S: (1, 2, ...)],")
+      rf'(?:{__rVAR}|[A-Za-z]+)])'                   # ...and then has either a variable name or literal (like ", [S: (1, 2, ...)],")
+      r'(?:-(?:(?:\d+|(?:[({](?:\w*\s*(?:,|\.\.)\s*)*\w+[})]|[A-Za-z]+)|)))?)'  # subtrahends can't be bindings/mappings
        r'(,)?(?(2)\s*)'                              # Finally, an optional comma and whitespace after it. Last term has no comma.
       )
     _rSEGMENT = re.compile(
@@ -41,16 +43,6 @@ class AbstractTable:
       'Moore': {'N': 1, 'NE': 2, 'E': 3, 'SE': 4, 'S': 5, 'SW': 6, 'W': 7, 'NW': 8},
       'vonNeumann': {'N': 1, 'E': 2, 'S': 3, 'W': 4},
       'hexagonal': {'N': 1, 'E': 2, 'SE': 3, 'S': 4, 'W': 5, 'NW': 6}
-      }
-    POSITIONS = {
-      'E': Coord((1, 0)),
-      'N': Coord((0, 1)),
-      'NE': Coord((1, 1)),
-      'NW': Coord((-1, 1)),
-      'S': Coord((0, -1)),
-      'SE': Coord((1, -1)),
-      'SW': Coord((-1, -1)),
-      'W': Coord((-1, 0))
       }
     
     def __init__(self, tbl, start=0):
@@ -73,7 +65,7 @@ class AbstractTable:
         
         self._parse_transitions(_transition_start)
         print_verbose(
-          '\b'*4 + 'PARSED transitions & PTCDs',
+          '\b'*4 + 'PARSED transitions & output specifiers',
           ['\b\btransitions (before binding):', *self.transitions, '\b\bvars:', self.vars],
           pre='    ', sep='\n', end='\n'
           )
@@ -104,6 +96,22 @@ class AbstractTable:
         except KeyError:
             raise KeyError(match[2])
     
+    def _subtract_var(self, subt, minuend):
+        """
+        subt: subtrahend
+        minuend: minuend
+        """
+        try:
+            match = int(minuend)
+        except ValueError:
+            match = tuple(i for i in subt if i not in self._parse_variable(minuend))
+        else:
+            if match > int(self.directives['n_states']):
+                raise ValueError('negated value greater than n_states hm')
+            match = tuple(i for i in subt if i != match)
+        self.vars[Variable.random_name()] = match
+        return match
+    
     def _parse_variable(self, var: str, *, mapping=False, ptcd=False):
         """
         var: a variable literal
@@ -112,8 +120,16 @@ class AbstractTable:
         """
         if var.isalpha() or var.startswith('_'):
             return self.vars[var]
+        if var.count('-') == 1:
+            # Subtraction & negation (from live states)
+            subt, minuend = map(str.strip, var.split('-'))  # Don't *think* I need to strip bc can't have spaces anyway
+            subt = self._parse_variable(subt) if subt else self.vars['live']
+            return self._subtract_var(subt, minuend)
+        if var.startswith('--'):
+            # Negation (from all states)
+            return self._subtract_var(self.var_all, var.lstrip('-'))
         cop = []
-        for state in map(str.strip, var[1:-1].split(',')):  # var[1:-1] cuts out (parens)/{braces}
+        for state in map(str.strip, var.strip('{()}').split(',')):
             if state.isdigit():
                 cop.append(int(state))
             elif self._rRANGE.match(state):
@@ -140,9 +156,10 @@ class AbstractTable:
         for lno, line in enumerate((i.split('#')[0].strip() for i in self), start):
             if not line:
                 continue
-            if self._rASSIGNMENT.fullmatch(line.split(';')[0]):
+            try:
+                directive, value = map(str.strip, line.split(':'))
+            except ValueError:
                 break
-            directive, value = map(str.strip, line.split(':'))
             self.directives[directive] = value.replace(' ', '')
         return lno
     
@@ -163,6 +180,7 @@ class AbstractTable:
             raise TableNameError(None, f'{name!r} directive not declared')
         self.directives['n_states'] = self.directives.pop('states')
         self.vars[Variable('any')] = self.var_all  # Provided beforehand
+        self.vars[Variable('live')] = self.var_all[1:]  # Ditto^, all living states
         return cardinals
     
     def _extract_initial_vars(self, start):
@@ -210,24 +228,23 @@ class AbstractTable:
         self.vars.on_dup_val = bidict.IGNORE
         return lno
     
-    def _extract_ptcd_var(self, tr, match, lno):
+    def _extract_ptcd_vars(self, tr, match, lno):
         """
         tr: a transition
-        match: matched PTCD (regex match object)
+        match: matched output specifier (regex match object)
         lno: current line number
         
-        Parse the 'variable' segment of a PTCD.
+        Parse the 'variable' segment of an output specifier.
         
-        return: PTCD's variables
+        return: Output specifier's variables
         """
-        cdir = match[1]
-        copy_to = tr[self.cardinals[cdir]]
+        copy_to = tr[self.cardinals[match[1]]] if match[3] is None else tr[self.cardinals[match[3]]]
         if match[2] is not None:  # Means it's a simple "CD:state" instead of a "CD[variable]"
             return match[1], copy_to, map(int, match[2])
         try:
             _map_to, map_to = [], self._parse_variable(match[4], ptcd=True)
         except NameError as e:
-            raise TableNameError(lno, f"PTCD references undefined name '{e}'")
+            raise TableNameError(lno, f"Output specifier references undefined name '{e}'")
         except SyntaxError as e:
             bound, range_ = e.msg
             raise TableSyntaxError(lno, f"Bound '{bound}' of range {range_} is not an integer")
@@ -242,22 +259,17 @@ class AbstractTable:
         if len(copy_to) > sum(len(i) if isinstance(i, range) else 1 for i in _map_to):
             raise TableValueError(
               lno,
-              f"Variable at index {self.cardinals[cdir]} in PTCD (direction {cdir})"
+              f"Variable at index {self.cardinals[match[1]]} in output specifier (direction {match[1]})"
               " mapped to a smaller variable. Maybe add a '...' to fill the latter out?"
               )
-        return match[1], copy_to, _map_to
+        return match[1], match[3], copy_to, _map_to
     
-    def _make_transition(self, tr: list, source_cd: str, initial, result):
+    def __make_center_tr(self, tr, initial, result, orig, source_cd):
         """
-        tr: Original transition
-        source_cd: Cardinal direction as a letter or pair thereof. (N, S, SW, etc)
-        initial: hmph
-        
-        Build a transition from segments of a PTCD.
+        Handles making a transition from PTCD iff the source and copy-to cells happen to be the same.
         """
         new_tr = [initial, *['__all__']*len(self.cardinals), result]
-        orig = Coord(self.POSITIONS[source_cd]).inv  # gets position of orig cell relative to current
-        # Get adjacent cells to original cell (diagonal to us)
+        # Get adjacent cells to original cell (diagonal to current)
         try:
             new_tr[self.cardinals[orig.name]] = tr[0]
         except KeyError:
@@ -281,30 +293,62 @@ class AbstractTable:
             except KeyError:
                 pass
         return new_tr
+    
+    def _make_transition(self, tr: list, source_cd: str, cd_to: str, initial, result):
+        """
+        tr: Original transition
+        source_cd: Cardinal direction as a letter or pair thereof. (N, S, SW, etc)
+        initial: initial state value
         
+        Build a transition from segments of an output specifier.
+        """
+        # source_cd == East | East
+        # cd_to == SouthEast | East
+        cur = Coord.from_name(source_cd)  # position of current cell relative to original
+        # cur == East | East
+        orig = cur.inv  # position of original cell relative to current
+        # orig == West | West
+        new_tr = self.__make_center_tr(tr, initial, result, orig, source_cd)
+        if cd_to is None:
+            return new_tr
+        # Otherwise, we have to fiddle with the values at the initial and new_relative indices
+        new_cd = Coord.from_name(cd_to)  # position of "copy_to" cell relative to original
+        # new_cd == SouthEast | East
+        new_relative = orig.move(cd_to)  # position of "copy_to" cell relative to current
+        # new_relative == South (which is West moved SouthEast) | [CENTER] (which is West moved East)
+        if new_relative.center():
+            return new_tr
+        try:
+            new_tr[0] = tr[self.cardinals[cur.name]]
+        except KeyError:
+            pass
+        try:
+            new_tr[self.cardinals[new_relative.name]] = initial
+        except KeyError:
+            pass
+        return new_tr
+
     def _parse_ptcd(self, tr, match, lno):
         """
         tr: a fully-parsed transition statement
-        ptcd: a PTCD
+        ptcd: a output specifier
         variables: global dict of variables
         
-        PTCDs can be
+        output specifiers can be
             CD[(var_literal)]
             CD[variable]
         Or
             CD[CD: (var_literal)]
             CD[CD: variable]
         
-        return: PTCD expanded into its full transition(s)
+        return: output specifier expanded into its full transition(s)
         """
-        if match[3] is not None:
-            raise TableFeatureUnsupported(lno, 'PTCDs that copy neighbor states are not yet supported')
-        cd_idx, copy_to, map_to = self._extract_ptcd_var(tr, match, lno)
+        cd_idx, copy_idx, copy_to, map_to = self._extract_ptcd_vars(tr, match, lno)
         # Start expanding to transitions
         transitions = []
         while isinstance(copy_to, str) and copy_to.startswith('['):
-            # XXX: UGLY. Good gracious.
-            copy_to = tr[int(utils.rBINDING.match(copy_to)[1])]
+            copy_idx = int(utils.rBINDING.match(copy_to)[1])
+            copy_to = tr[copy_idx]
         for idx, (initial, result) in enumerate(zip(copy_to, map_to)):
             if result is None:
                 continue
@@ -313,10 +357,10 @@ class AbstractTable:
                 if map_to[idx-1] is None:  # Nothing more to add
                     break
                 new_initial = copy_to[result[0]:]
-                transitions.append(self._make_transition(tr, cd_idx, new_initial, map_to[idx-1]))
+                transitions.append(self._make_transition(tr, cd_idx, copy_idx, new_initial, map_to[idx-1]))
                 self.vars[Variable.random_name()] = new_initial
                 break
-            transitions.append(self._make_transition(tr, cd_idx, initial, result))
+            transitions.append(self._make_transition(tr, cd_idx, copy_idx, initial, result))
         return transitions
     
     def _parse_transitions(self, start):
@@ -344,7 +388,7 @@ class AbstractTable:
             for idx, elem in enumerate(napkin):
                 if elem.isdigit():
                     napkin[idx] = int(elem)
-                elif self._rVAR.match(elem):
+                elif self._rVAR.match(elem) or '-' in elem:
                     self.vars[Variable.random_name()] = napkin[idx] = self._parse_variable(elem)
                 elif not self._rBINDMAP.match(elem):  # leave mappings and bindings untouched for now
                     try:
@@ -486,10 +530,11 @@ def parse(fp):
             continue
         parts[segment].append(line)
     
+    if '@TABLE' not in parts:
+        raise TableValueError(None, "No '@TABLE' segment found")
+    
     try:
         parts['@TABLE'] = AbstractTable(parts['@TABLE'])
-    except KeyError:
-        raise TableValueError(None, "No '@TABLE' segment found")
     except TableException as exc:
         if exc.lno is None:
             raise exc.__class__(exc.lno, exc.msg)
