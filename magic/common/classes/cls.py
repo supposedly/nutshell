@@ -49,10 +49,10 @@ class Variable:
         return cls(f'_{random.randrange(10**15)}')
 
 
-class TableRange:
+class TabelRange:
     """
     Proxy for a range object.
-    TODO: Make this into a proper range copy whose objects have self.bounds()
+    TODO: Make this into a proper range subclass whose objects have self.bounds()
     """
     def __new__(cls, span, *, shift=0):
         """

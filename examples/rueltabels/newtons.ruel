@@ -8,7 +8,7 @@ By BlinkerSpawn
 5 down
 6 left
 
-@TABLE
+@TABEL
 states: 7
 neighborhood: Moore
 symmetries: none

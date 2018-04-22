@@ -6,7 +6,7 @@ def _handle_rule(comp, seg):
     comp.append(f'@RULE {name}')
     comp.append(cleandoc('''
     *********************************
-    **** COMPILED FROM RUELTABLE ****
+    **** COMPILED FROM RUELTABEL ****
     *********************************
     '''))
     comp.extend(seg)
@@ -33,7 +33,7 @@ def _handle_table(comp, tbl):
 def compile(parsed):
     comp = []
     _handle_rule(comp, parsed.pop('@RUEL'))
-    _handle_table(comp, parsed.pop('@TABLE'))
+    _handle_table(comp, parsed.pop('@TABEL'))
     for segment_name, seg in parsed.items():
         comp.extend(['', '', segment_name, *seg])
     return '\n'.join(comp)

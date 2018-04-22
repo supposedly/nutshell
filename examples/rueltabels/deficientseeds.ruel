@@ -6,7 +6,7 @@
 5 i
 6 n
 
-@TABLE
+@TABEL
 states: 7
 neighborhood: Moore
 symmetries: rotate4 reflect

@@ -1,5 +1,5 @@
 """Errors to be raised during rueltabel parsing."""
-class TableException(SystemExit):
+class TabelException(SystemExit):
     def __init__(self, lno: int, msg: str, seg: list = None, shift: int = 0):
         """
         lno: line number error occurred on
@@ -15,19 +15,19 @@ class TableException(SystemExit):
             self.code = f'\n  {exc_name} (line {1+shift+lno}):\n      {seg[lno]}\n  {msg}\n'
 
 
-class TableNameError(TableException):
+class TabelNameError(TabelException):
     pass
 
 
-class TableSyntaxError(TableException):
+class TabelSyntaxError(TabelException):
     pass
 
 
-class TableValueError(TableException):
+class TabelValueError(TabelException):
     pass
 
 
-class TableFeatureUnsupported(TableException):
+class TabelFeatureUnsupported(TabelException):
     pass
 
 class CoordOutOfBoundsError(Exception):

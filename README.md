@@ -1,4 +1,4 @@
-# rueltable
+# rueltabel
 A compiler for a reimagined Golly ruletable language to the traditional format. See [`examples/`](/examples) for examples.
 
 ## Setup
@@ -8,7 +8,7 @@ A compiler for a reimagined Golly ruletable language to the traditional format. 
 3. Using Python's bundled *pip* package manager, execute the terminal command `pip install -r requirements.txt` (or
    any of its variations -- you may need to try `python -m pip install`, `python3 -m pip install`, `py -m pip install`
    on Windows, ...)
-4. Write your own rueltable, then continue with the **Usage** section below.
+4. Write your own rueltabel, then continue with the **Usage** section below.
 
 ## Usage
 ```bash
@@ -33,10 +33,9 @@ more it is repeated (up to three repetitions).
 # -1 says "All *live* states that are not 1" (expands to {2, 3, 4} assuming n_states==5)
 # --1 says "*All* states (including 0) that are not 1" (expands to {0, 2, 3, 4} assuming the same)
 # -bar and --(3, 4) say the same but with multiple states enclosed in a variable
-# 
 ```
 Note that `--` can never be used between two variables; its only purpose is negation including state 0. `-`, however, is overloaded to mean both subtraction and negation-excluding-0.  
-"Addition" of two variables can be accomplished by placing them in a variable literal; `(foo, bar, 1)` is equivalent to writing out the values of foo and bar manually.
+"Addition" of two variables can be accomplished by placing them in a variable literal, as in the final state above.
 - Allow a variable to be made 'bound' by referring to its *index* in the transition, wrapped in [brackets]:  
 ```py
 # current (barC repeats)
@@ -101,7 +100,7 @@ foo, N..NW bar, baz -> S:2 E[(2, 3)] SE[wutz] N[NE: (2, 3)] NE[E]
 ## To do
 - DOCS! Or at least a proper introductory writeup.
 - Allow transitions under permutational symmetry to make use of a shorthand syntax, specifying only the quantity of cells in each state. For example, `0,2,2,2,1,1,1,0,0,1`
-  in a Moore+permute table can be compacted to `0, 2:3, 1:3, 0:2, 1`.  
+  in a Moore+permute rule can be compacted to `0, 2:3, 1:3, 0:2, 1`.  
   Unmarked states will be filled in to match the number of cells in the transition's neighborhood, meaning
   that this transition can also be written as `0, 0:2, 1, 2, 1` or `0, 1:3, 2:3, 0, 1`.  
   - If the number of cells to fill is not divisible by the number of unmarked states, precedence will

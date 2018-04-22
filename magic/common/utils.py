@@ -116,7 +116,7 @@ def expand_tr(tr: (list, tuple)):
             idx += 1
             cop.append(state)
             continue
-        lower, upper = classes.TableRange.bounds(group)
+        lower, upper = classes.TabelRange.bounds(group)
         if lower != idx:
             raise ValueError(group, state, {'lower': lower, 'idx': idx})
         span = upper - lower

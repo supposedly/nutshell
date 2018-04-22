@@ -9,7 +9,7 @@ The Biham–Middleton–Levine traffic model.
 
 Generation 0 will consist only of states 0, 2, 3.
 
-@TABLE
+@TABEL
 states: 5
 neighborhood: von Neumann
 symmetries: none
