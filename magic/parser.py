@@ -21,7 +21,7 @@ class AbstractTable:
     _rASSIGNMENT = re.compile(rf'\w+?\s*=\s*{__rVAR}')
     _rBINDMAP = re.compile(rf'\[[0-8](?::\s*?(?:{__rVAR}|[^_]\w+?))?\]')
     _rCARDINAL = re.compile(rf'\b(\[)?({__rCARDINALS})((?(1)\]))\b')
-    _rPTCD = re.compile(rf'\b({__rCARDINALS})(?::(\d+)\b|:?\[(?:(0|{__rCARDINALS})\s*:)?\s*(\w+|{__rVAR})]\B)')
+    _rPTCD = re.compile(rf'\b({__rCARDINALS})(?::(\d+)\b|:?\[(?:(0|{__rCARDINALS})\s*:)?\s*(\w+|{__rVAR})\s*]\B)')
     _rRANGE = re.compile(r'\d+? *?\.\. *?\d+?')
     _rTRANSITION = re.compile(
        r'(?<!-)'                                     # To avoid minuends being counted as segments (even without a comma)
@@ -251,44 +251,6 @@ class AbstractTable:
         self.vars.on_dup_val = bidict.IGNORE
         return lno
     
-    def _extract_ptcd_vars(self, tr, match, lno):
-        """
-        tr: a transition
-        match: matched output specifier (regex match object)
-        lno: current line number
-        
-        Parse the 'variable' segment of an output specifier.
-        
-        return: Output specifier's variables
-        """
-        copy_to = tr[match[1] != '0' and self.cardinals[match[1]]] if match[3] is None else match[3] != '0' and tr[self.cardinals[match[3]]]
-        if not copy_to:
-            copy_to = tr[copy_to]
-        if match[2] is not None:  # Means it's a simple "CD:state" instead of a "CD[variable]"
-            return match[1], copy_to, map(int, match[2])
-        try:
-            _map_to, map_to = [], self._parse_variable(match[4], ptcd=True)
-        except NameError as e:
-            raise TabelNameError(lno, f"Output specifier references undefined name '{e}'")
-        except SyntaxError as e:
-            bound, range_ = e.msg
-            raise TabelSyntaxError(lno, f"Bound '{bound}' of range {range_} is not an integer")
-        for idx, state in enumerate(map_to):
-            if state == '_':  # Leave as is (indicated by a None value)
-                state = None
-            if state == '...':  # Fill out with preceding element (this should be generalized to all mappings actually)
-                # TODO: Allow placement of ... in the middle of an expression (to be filled in from both sides)
-                _map_to.append(range(idx, len(copy_to)))  # Check isinstance(range) to determine whether to generate anonymous variable
-                break
-            _map_to.append(state)
-        if len(copy_to) > sum(len(i) if isinstance(i, range) else 1 for i in _map_to):
-            raise TabelValueError(
-              lno,
-              f"Variable at index {int(match[1] != '0') and self.cardinals[match[1]]} in output specifier (direction {match[1]})"
-              " mapped to a smaller variable. Maybe add a '...' to fill the latter out?"
-              )
-        return match[1], match[3], copy_to, _map_to
-    
     def __make_center_tr(self, tr, initial, result, orig, source_cd):
         """
         Handles making a transition from PTCD iff the source and copy-to cells happen to be the same.
@@ -350,6 +312,45 @@ class AbstractTable:
         except KeyError:
             pass
         return new_tr
+    
+    def _extract_ptcd_vars(self, tr, match, lno):
+        """
+        tr: a transition
+        match: matched output specifier (regex match object)
+        lno: current line number
+        
+        Parse the 'variable' segments of an output specifier.
+        
+        return: Output specifier's variables
+        """
+        copy_to = tr[self.cardinals[match[1]]] if match[3] is None else tr[match[3] != '0' and self.cardinals[match[3]]]
+        if match[2] is not None:  # Means it's a simple "CD:state" instead of a "CD[variable]"
+            return match[1], copy_to, map(int, match[2])
+        if match[4] in ('0', *self.cardinals) and match[3] is None:
+            index = match[4] != '0' and self.cardinals[match[4]]
+            return match[1], match[4], tr[index], tr[index]
+        try:
+            _map_to, map_to = [], self._parse_variable(match[4], ptcd=True)
+        except NameError as e:
+            raise TabelNameError(lno, f"Output specifier references undefined name '{e}'")
+        except SyntaxError as e:
+            bound, range_ = e.msg
+            raise TabelSyntaxError(lno, f"Bound '{bound}' of range {range_} is not an integer")
+        for idx, state in enumerate(map_to):
+            if state == '_':  # Leave as is (indicated by a None value)
+                state = None
+            if state == '...':  # Fill out with preceding element (this should be generalized to all mappings actually)
+                # TODO: Allow placement of ... in the middle of an expression (to be filled in from both sides)
+                _map_to.append(range(idx, len(copy_to)))  # Check isinstance(range) to determine whether to generate anonymous variable
+                break
+            _map_to.append(state)
+        if len(copy_to) > sum(len(i) if isinstance(i, range) else 1 for i in _map_to):
+            raise TabelValueError(
+              lno,
+              f"Variable at index {int(match[1] != '0') and self.cardinals[match[1]]} in output specifier (direction {match[1]})"
+              " mapped to a smaller variable. Maybe add a '...' to fill the latter out?"
+              )
+        return match[1], match[3], copy_to, _map_to
 
     def _parse_ptcd(self, tr, match, lno):
         """
@@ -372,6 +373,9 @@ class AbstractTable:
         while isinstance(copy_to, str) and copy_to.startswith('['):
             copy_idx = int(utils.rBINDING.match(copy_to)[1])
             copy_to = tr[copy_idx]
+        if copy_to == map_to:
+            transitions.append(self._make_transition(tr, cd_idx, copy_idx, copy_to, f'[{self.cardinals[Coord.from_name(cd_idx).inv.name]}]'))
+            return transitions
         for idx, (initial, result) in enumerate(zip(copy_to, map_to)):
             if result is None:
                 continue
