@@ -117,7 +117,7 @@ class AbstractTable:
                 if not (in_state == tr_state if isinstance(tr_state, int) else in_state in tr_state):
                     break
             else:
-                return f'line {1+self._start+lno}: {self._tbl[lno]}\ncompiled line: {self.transitions[idx][1]}'
+                return f'\nFound! Line {1+self._start+lno}: "{self._tbl[lno]}"\n\n(compiled line "{", ".join(map(str, self.transitions[idx][1]))}")\n'
     
     def _subtract_var(self, subt, minuend):
         """
@@ -534,7 +534,7 @@ class AbstractColors:
     
     def format(self):
         return [f'{state} {r} {g} {b}' for d in self.states for state, (r, g, b) in d.items()]
-    
+
 
 def parse(fp):
     """

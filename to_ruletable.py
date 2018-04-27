@@ -1,28 +1,30 @@
 """Facilitates conversion of a ruelfile into a Golly-compatible .rule file."""
+import argparse
 import os
-import sys
 
+from arg_parsing import args
 from magic import parser, compiler
 from magic.common import utils
 
-utils.VERBOSITY = sys.argv.count('-v') + sys.argv.count('--verbose')
+utils.VERBOSITY = args.verbosity
 
 
-def transpile(fp):
+def transpile(fp, *, match=None):
     """
     Parses and compiles the given ruelfile into an equivalent .rule.
     """
     print('\nParsing...')
     parsed = parser.parse(fp)
+    if match is not None:
+        raise SystemExit(parsed['@TABEL'].match(match) or 'No match\n')
     print('Complete!\n\nCompiling...')
     return compiler.compile(parsed)
 
 
 if __name__ == '__main__':
-    infile, outdir, *_ = sys.argv[1:]
-    fname, *_ = os.path.split(infile)[-1].split('.')
-    with open(infile) as infp:
-        finished = transpile(infp)
-    with open(f'{os.path.join(outdir, fname)}.rule', 'w') as outfp:
+    fname, *_ = os.path.split(args.infile)[-1].split('.')
+    with open(args.infile) as infp:
+        finished = transpile(infp, match=args.match)
+    with open(f'{os.path.join(args.outdir, fname)}.rule', 'w') as outfp:
         outfp.write(finished)
     print('Complete!')
