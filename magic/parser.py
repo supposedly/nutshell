@@ -1,6 +1,7 @@
 """Facilitates parsing of a rueltabel file into an abstract, computer-readable format."""
 import re
 import struct
+from itertools import zip_longest as zipln
 
 import bidict
 
@@ -95,6 +96,12 @@ class AbstractTable:
             return f"{match[1] or ''}{self.cardinals[match[2]]}{match[3]}"
         except KeyError:
             raise KeyError(match[2])
+    
+    def match(self, tr):
+        """
+        Finds the first transition in self.transitions 
+        """
+        tr = ...
     
     def _subtract_var(self, subt, minuend):
         """
@@ -418,7 +425,7 @@ class AbstractTable:
             except ValueError as e:
                 raise TabelValueError(lno, e.args[0])
             
-            self.transitions[idx] = [
+            self.transitions[idx] = lno, [
               # list() because we're need to mutate it if it has an ellipsis
               (val[0], list(self._parse_variable(val[1])), list(self._parse_variable(val[2], mapping=True)))
               if isinstance(val, tuple)
@@ -427,7 +434,7 @@ class AbstractTable:
               ]
             
             # filter out everything except mappings, so we can expand their ellipses if applicable
-            for i, (tr_idx, map_from, map_to) in ((j, t) for j, t in enumerate(self.transitions[idx]) if isinstance(t, tuple)):
+            for i, (tr_idx, map_from, map_to) in ((j, t) for j, t in enumerate(self.transitions[idx][1]) if isinstance(t, tuple)):
                 if map_to[-1] == '...':
                     map_to[-1] = map_to[-2]
                     # Replace the extra states in map_to with a variable name
@@ -440,7 +447,7 @@ class AbstractTable:
                       f"Variable with value {map_from} mapped to a smaller variable with "
                       f"value {tuple(map_to)}. Maybe add a '...' to fill the latter out?"
                       )
-                self.transitions[idx][i] = (tr_idx, tuple(map_from), tuple(map_to))
+                self.transitions[idx][1][i] = (tr_idx, tuple(map_from), tuple(map_to))
             
             print_verbose(*[None]*3, [tr, '->', self.transitions[idx], '\n  reps:', reps], sep='', end='\n\n')
             for name, rep in reps.items():
@@ -457,7 +464,7 @@ class AbstractTable:
         earlier ones and going down the branches.
         """
         print_verbose(None, None, '...expanding mappings...', pre='')
-        for tr_idx, tr in enumerate(self.transitions):
+        for tr_idx, (lno, tr) in enumerate(self.transitions):
             try:
                 # The only tuples left are mappings because we replaced var values w their names
                 # ...that also happens to be why it's hard for me (at this stage) to collapse
@@ -479,10 +486,10 @@ class AbstractTable:
                     if rep > self.vars.inv[var].rep:
                         self.vars.inv[var].rep = rep
             print_verbose(*[None]*3, new, start='', sep='\n', end='\n\n')
-            # We need to add this None in order for the loop to catch the next "new"
+            # We need to add an extraneous pre-value in order for the loop to catch the next "new"
             # because we're mutating the list while we iterate over it
-            # ( awful, I know :s )
-            self.transitions[tr_idx:1+tr_idx] = [None, *new]
+            # (awful, I know)
+            self.transitions[tr_idx:1+tr_idx] = None, *zipln([lno], new, fillvalue=lno)
         self.transitions = list(filter(None, self.transitions))
 
 
@@ -491,14 +498,16 @@ class AbstractColors:
     Parse a ruelfile's color format into something abstract &
     transferrable into Golly syntax.
     """
+    _rGOLLY_COLOR = re.compile(r'\s*(\d{0,3})'*3 + r'\s*.*')
+    
     def __init__(self, colors):
         self._src = colors
-        self.colors = [k.split(':') for k in self._src]
+        self.colors = [k.split(':') for k in self._src if k]
     
-    @staticmethod
-    def _unpack(color):
-        if color.count(' ') == 2:  # then it's in Golly format
-            return color
+    def _unpack(self, color):
+        m = self._rGOLLY_COLOR.match(color)
+        if m is not None:
+            return m[1], m[2], m[3]
         if len(color) % 2:  # three-char shorthand
             color *= 2
         return struct.unpack('BBB', bytes.fromhex(color))

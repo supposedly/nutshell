@@ -27,7 +27,7 @@ def _handle_table(comp, tbl):
         for suf in range(1, 1+var.rep):
             comp.append(f'var {var.name}_{suf} = {var.name}_0')
     comp.append('')
-    comp.extend(', '.join(map(str, tr)) for tr in tbl.transitions)
+    comp.extend(', '.join(map(str, tr)) for _lno, tr in tbl.transitions)
 
 
 def compile(parsed):

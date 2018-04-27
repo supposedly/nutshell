@@ -21,6 +21,8 @@ def transpile(fp):
 if __name__ == '__main__':
     infile, outdir, *_ = sys.argv[1:]
     fname, *_ = os.path.split(infile)[-1].split('.')
-    with open(infile) as infp, open(f'{os.path.join(outdir, fname)}.rule', 'w') as outfp:
-        outfp.write(transpile(infp))
+    with open(infile) as infp:
+        finished = transpile(infp)
+    with open(f'{os.path.join(outdir, fname)}.rule', 'w') as outfp:
+        outfp.write(finished)
     print('Complete!')
