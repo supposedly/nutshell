@@ -21,7 +21,7 @@ class AbstractTable:
     _rASSIGNMENT = re.compile(rf'\w+?\s*=\s*{__rVAR}')
     _rBINDMAP = re.compile(rf'\[[0-8](?::\s*?(?:{__rVAR}|[^_]\w+?))?\]')
     _rCARDINAL = re.compile(rf'\b(\[)?({__rCARDINALS})((?(1)\]))\b')
-    _rPTCD = re.compile(rf'\b({__rCARDINALS})(?::(\d+)\b|:?\[(?:({__rCARDINALS})\s*:)?\s*(\w+|{__rVAR})]\B)')
+    _rPTCD = re.compile(rf'\b({__rCARDINALS})(?::(\d+)\b|:?\[(?:(0|{__rCARDINALS})\s*:)?\s*(\w+|{__rVAR})]\B)')
     _rRANGE = re.compile(r'\d+? *?\.\. *?\d+?')
     _rTRANSITION = re.compile(
        r'(?<!-)'                                     # To avoid minuends being counted as segments (even without a comma)
@@ -92,7 +92,6 @@ class AbstractTable:
           ['\b\btransitions (after expanding):', *self.transitions, '\b\bvars:', self.vars],
           pre='    ', sep='\n', end='\n\n'
           )
-        print(self.match(int(i.strip()) for i in '3, 1, 2, 3, 1'.split(',')))
     
     def __iter__(self):
         return iter(self._tbl)
@@ -111,14 +110,14 @@ class AbstractTable:
         Finds the first transition in self.transitions matching tr.
         """
         in_tr = utils.unbind_vars(tr, bind=False)
-        for lno, tr in self._no_name_trs:
+        for idx, (lno, tr) in enumerate(self._no_name_trs):
             for in_state, tr_state in zip(in_tr, tr):
                 if isinstance(tr_state, str):
                     tr_state = tr[int(tr_state)]
                 if not (in_state == tr_state if isinstance(tr_state, int) else in_state in tr_state):
                     break
             else:
-                return f'line {self._start + 1 + lno}: {self._tbl[lno]}'
+                return f'line {1+self._start+lno}: {self._tbl[lno]}\ncompiled line: {self.transitions[idx][1]}'
     
     def _subtract_var(self, subt, minuend):
         """
@@ -262,7 +261,9 @@ class AbstractTable:
         
         return: Output specifier's variables
         """
-        copy_to = tr[self.cardinals[match[1]]] if match[3] is None else tr[self.cardinals[match[3]]]
+        copy_to = tr[match[1] != '0' and self.cardinals[match[1]]] if match[3] is None else match[3] != '0' and tr[self.cardinals[match[3]]]
+        if not copy_to:
+            copy_to = tr[copy_to]
         if match[2] is not None:  # Means it's a simple "CD:state" instead of a "CD[variable]"
             return match[1], copy_to, map(int, match[2])
         try:
@@ -283,7 +284,7 @@ class AbstractTable:
         if len(copy_to) > sum(len(i) if isinstance(i, range) else 1 for i in _map_to):
             raise TabelValueError(
               lno,
-              f"Variable at index {self.cardinals[match[1]]} in output specifier (direction {match[1]})"
+              f"Variable at index {int(match[1] != '0') and self.cardinals[match[1]]} in output specifier (direction {match[1]})"
               " mapped to a smaller variable. Maybe add a '...' to fill the latter out?"
               )
         return match[1], match[3], copy_to, _map_to
@@ -336,16 +337,14 @@ class AbstractTable:
         if cd_to is None:
             return new_tr
         # Otherwise, we have to fiddle with the values at the initial and new_relative indices
-        new_cd = Coord.from_name(cd_to)  # position of "copy_to" cell relative to original
-        # new_cd == SouthEast | East
-        new_relative = orig.move(cd_to)  # position of "copy_to" cell relative to current
-        # new_relative == South (which is West moved SouthEast) | [CENTER] (which is West moved East)
-        if new_relative.center():
-            return new_tr
         try:
             new_tr[0] = tr[self.cardinals[cur.name]]
         except KeyError:
             pass
+        new_relative = orig if cd_to == '0' else orig.move(cd_to)  # position of "copy_to" cell relative to current
+        # new_relative == South (which is West moved SouthEast) | [CENTER] (which is West moved East)
+        if new_relative.center():
+            return new_tr
         try:
             new_tr[self.cardinals[new_relative.name]] = initial
         except KeyError:
