@@ -48,13 +48,14 @@ class AbstractTable:
     
     def __init__(self, tbl, start=0):
         self._tbl = tbl
+        self._start = start
         
         self.vars = bidict.bidict()  # {Variable(name) | str(name) :: tuple(value)}
         self.var_all, self.var_all_rep = (), 0  # instead of self.vars['__all__']
         self.directives = {}
         self.transitions = []
         
-        _assignment_start = self._extract_directives(start)
+        _assignment_start = self._extract_directives()
         _transition_start = self._extract_initial_vars(_assignment_start)
         
         self.cardinals = self._parse_directives()
@@ -79,11 +80,19 @@ class AbstractTable:
           )
         
         self._expand_mappings()
+        self._no_name_trs = [
+          (lno, [
+            self.vars.get(state, self.var_all if state == '__all__' else state)
+            for state in utils.unbind_vars(tr)
+          ])
+          for lno, tr in self.transitions
+          ]
         print_verbose(
           '\b'*4 + 'EXPANDED mappings',
           ['\b\btransitions (after expanding):', *self.transitions, '\b\bvars:', self.vars],
           pre='    ', sep='\n', end='\n\n'
           )
+        print(self.match(int(i.strip()) for i in '3, 1, 2, 3, 1'.split(',')))
     
     def __iter__(self):
         return iter(self._tbl)
@@ -99,9 +108,17 @@ class AbstractTable:
     
     def match(self, tr):
         """
-        Finds the first transition in self.transitions 
+        Finds the first transition in self.transitions matching tr.
         """
-        tr = ...
+        in_tr = utils.unbind_vars(tr, bind=False)
+        for lno, tr in self._no_name_trs:
+            for in_state, tr_state in zip(in_tr, tr):
+                if isinstance(tr_state, str):
+                    tr_state = tr[int(tr_state)]
+                if not (in_state == tr_state if isinstance(tr_state, int) else in_state in tr_state):
+                    break
+            else:
+                return f'line {self._start + 1 + lno}: {self._tbl[lno]}'
     
     def _subtract_var(self, subt, minuend):
         """
@@ -153,7 +170,7 @@ class AbstractTable:
                     raise NameError(state) from None
         return tuple(cop)
     
-    def _extract_directives(self, start):
+    def _extract_directives(self, start=0):
         """
         Get directives from top of ruelfile.
         
@@ -542,7 +559,7 @@ def parse(fp):
         raise TabelValueError(None, "No '@TABEL' segment found")
     
     try:
-        parts['@TABEL'] = AbstractTable(parts['@TABEL'])
+        parts['@TABEL'] = AbstractTable(parts['@TABEL'], lines['@TABEL'])
     except TabelException as exc:
         if exc.lno is None:
             raise exc.__class__(exc.lno, exc.msg)

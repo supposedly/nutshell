@@ -92,6 +92,17 @@ def bind_vars(tr: (list, tuple), *, second_pass=False):
     return seen, built
 
 
+def unbind_vars(tr: (list, tuple), bind=True):
+    """Inverse of bind_vars(), ish, and w/o mapping-handling."""
+    seen, built = {}, []
+    for idx, state in enumerate(tr):
+        if state in seen and bind:
+            built.append(f'{seen[state]}')
+        else:
+            built.append(_unbind(state) if isinstance(state, str) else state)
+            seen[state] = idx
+    return built
+
 def expand_tr(tr: (list, tuple)):
     """
     Given a transition like
