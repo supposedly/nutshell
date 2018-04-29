@@ -2,7 +2,7 @@ from itertools import permutations
 from functools import lru_cache
 
 
-__all__ = 'NoSymmetry', 'ReflectHorizontal', 'Rotate2', 'Rotate3', 'Rotate4', 'Rotate4Reflect', 'Rotate6', 'Rotate6Reflect', 'Rotate8', 'Rotate8Reflect', 'Permute'
+__all__ = 'NAMES', 'NoSymmetry', 'ReflectHorizontal', 'Rotate2', 'Rotate3', 'Rotate4', 'Rotate4Reflect', 'Rotate6', 'Rotate6Reflect', 'Rotate8', 'Rotate8Reflect', 'Permute'
 
 
 class LazyProperty:
@@ -181,3 +181,19 @@ class Permute(Napkin):
     def clear(cls):
         cls.RECENTS.clear()
         cls.HASHES.clear()
+
+
+NAMES = {
+  'none': NoSymmetry,
+  'reflect': ReflectHorizontal,
+  'reflect_horizontal': ReflectHorizontal,
+  'rotate2': Rotate2,
+  'rotate3': Rotate3,
+  'rotate4': Rotate4,
+  'rotate4reflect': Rotate4Reflect,
+  'rotate6': Rotate6,
+  'rotate6reflect': Rotate6Reflect,
+  'rotate8': Rotate8,
+  'rotate8reflect': Rotate8Reflect,
+  'permute': Permute
+  }

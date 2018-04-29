@@ -2,22 +2,6 @@ from magic.common.utils import print_verbose
 from magic.common.classes.napkins import *
 
 
-NAMES = {
-  'none': NoSymmetry,
-  'reflect': ReflectHorizontal,
-  'reflect_horizontal': ReflectHorizontal,
-  'rotate2': Rotate2,
-  'rotate3': Rotate3,
-  'rotate4': Rotate4,
-  'rotate4reflect': Rotate4Reflect,
-  'rotate6': Rotate6,
-  'rotate6reflect': Rotate6Reflect,
-  'rotate8': Rotate8,
-  'rotate8reflect': Rotate8Reflect,
-  'permute': Permute
-  }
-
-
 def normalize(transitions, sym_lines):
     if len(sym_lines) < 2:
         return transitions, sym_lines[0][1]

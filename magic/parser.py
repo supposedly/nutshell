@@ -8,7 +8,7 @@ import bidict
 from . import desym
 from .common import utils
 from .common.utils import print_verbose
-from .common.classes import Coord, TabelRange, Variable
+from .common.classes import napkins, Coord, TabelRange, Variable
 from .common.classes.errors import TabelNameError, TabelSyntaxError, TabelValueError, TabelFeatureUnsupported, TabelException
 
 
@@ -83,13 +83,6 @@ class AbstractTable:
           )
         
         self._expand_mappings()
-        self._no_name_trs = [
-          (lno, [
-            self.vars.get(state, self.var_all if state == '__all__' else state)
-            for state in utils.unbind_vars(tr)
-          ])
-          for lno, tr in self.transitions
-          ]
         print_verbose(
           '\b'*4 + 'EXPANDED mappings',
           ['\b\btransitions (after expanding):', *self.transitions, '\b\bvars:', self.vars],
@@ -104,21 +97,33 @@ class AbstractTable:
     
     def lower_symmetries(self):
         self.transitions, self.directives['symmetries'] = desym.normalize(self.transitions, self._symmetry_lines)
+        self._trs_no_names = [
+          (lno, [
+            self.vars.get(state, self.var_all if state == '__all__' else state)
+            for state in utils.unbind_vars(int(i) if isinstance(i, int) or i.isdigit() else i for i in tr)
+          ])
+          for lno, tr in self.transitions
+          ]
         return self
     
     def match(self, tr):
         """
         Finds the first transition in self.transitions matching tr.
         """
+        print('Complete!\n\nSearching for match...')
+        sym_cls = napkins.NAMES[self.directives['symmetries']]
         in_tr = utils.unbind_vars(tr, bind=False)
-        for idx, (lno, tr) in enumerate(self._no_name_trs):
-            for in_state, tr_state in zip(in_tr, tr):
-                if isinstance(tr_state, str):
-                    tr_state = tr[int(tr_state)]
-                if not (in_state == tr_state if isinstance(tr_state, int) else in_state in tr_state):
-                    break
-            else:
-                return f'\nFound! Line {1+self._start+lno}: "{self._tbl[lno]}"\n\n(compiled line "{", ".join(map(str, self.transitions[idx][1]))}")\n'
+        start, end = in_tr.pop(0), in_tr.pop(-1)
+        in_napkins = sym_cls(in_tr)
+        for idx, (lno, tr) in enumerate(self._trs_no_names):
+            for in_tr in ((start, *napkin, end) for napkin in in_napkins.expand()):
+                for in_state, tr_state in zip(in_tr, tr):
+                    while isinstance(tr_state, str):
+                        tr_state = tr[int(tr_state)]
+                    if not (in_state == tr_state if isinstance(tr_state, int) else in_state in tr_state):
+                        break
+                else:
+                    return f'Found!\n\nLine {1+self._start+lno}: "{self._tbl[lno]}"\n(compiled line "{", ".join(map(str, self.transitions[idx][1]))}")\n'
         return None
     
     def _cardinal_sub(self, match):
