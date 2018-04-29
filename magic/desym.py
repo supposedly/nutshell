@@ -11,21 +11,22 @@ NAMES = {
   'permute': Permute
   }
 
-def expand(transitions, sym_lines):
+def normalize(transitions, sym_lines):
     if len(sym_lines) < 2:
-        return transitions
+        return transitions, sym_lines[0][1]
+    print('Complete!\n\nExpanding symmetries...')
     built = []
-    lowest_syms_cls = min((NAMES[sym] for _, sym in sym_lines), key=lambda cls: cls.order)
+    lowest_sym, lowest_sym_cls = min(((sym, NAMES[sym]) for _, sym in sym_lines), key=lambda tupl: tupl[1].order)
     for sym_idx, (after, cur_sym) in enumerate(sym_lines):
         try:
             before = sym_lines[1+sym_idx][0]
         except IndexError:
             before = 1 + transitions[-1][0]
-        cur_syms_cls = NAMES[cur_sym]
+        cur_sym_cls = NAMES[cur_sym]
         trs = [tr for tr in transitions if after < tr[0] < before]
-        if cur_syms_cls is lowest_syms_cls:
+        if cur_sym_cls is lowest_sym_cls:
             built.extend(trs)
             continue
         for lno, tr in trs:
-            built.extend((lno, [tr[0], *new_tr, tr[-1]]) for new_tr in {*map(lowest_syms_cls, cur_syms_cls(map(str, tr[1:-1])).expand())})
-    return built
+            built.extend((lno, [tr[0], *new_tr, tr[-1]]) for new_tr in {*map(lowest_sym_cls, cur_sym_cls(map(str, tr[1:-1])).expand())})
+    return built, lowest_sym

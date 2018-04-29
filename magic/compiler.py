@@ -14,6 +14,7 @@ def _handle_rule(comp, seg):
 
 def _handle_table(comp, tbl):
     comp.append('@TABLE')
+    comp.append(f"neighborhood: {tbl.directives.pop('neighborhood')}")
     for directive, value in tbl.directives.items():
         comp.append(f'{directive}: {value}')
     comp.append('')

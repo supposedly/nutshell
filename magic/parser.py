@@ -25,16 +25,17 @@ class AbstractTable:
     _rPTCD = re.compile(rf'\b({__rCARDINALS})(?::(\d+)\b|:?\[(?:(0|{__rCARDINALS})\s*:)?\s*(\w+|{__rVAR})\s*]\B)')
     _rRANGE = re.compile(r'\d+? *?\.\. *?\d+?')
     _rTRANSITION = re.compile(
-       r'(?<!-)'                                     # To avoid minuends being counted as segments (even without a comma)
-      rf'((?:(?:\d|{__rCARDINALS})'                  # Meaningless cardinal direction before state (like ", NW 2,")
+       r'(?<!-)'                                     # To avoid minuends being counted as segments (regardless of comma's presence)
+      rf'((?:(?:\d|{__rCARDINALS})'                  # Purely-cosmetic cardinal direction before state (like ", NW 2,")
       rf'(?:\s*\.\.\s*(?:\d|{__rCARDINALS}))?\s+)?'  # Range of cardinal directions (like ", N..NW 2,")
-       r'(?:-?-?\d+|'                                  # Normal state (like ", 2,")
-       r'-?-?(?:[({](?:\w*\s*(?:,|\.\.)\s*)*\w+[})]'   # Variable literal (like ", (1, 2..2, 3),") w/o "..." at end
+       r'(?:-?-?\d+|'                                # Normal state (like ", 2,")
+       r'-?-?(?:[({](?:\w*\s*(?:,|\.\.)\s*)*\w+[})]' # Variable literal (like ", (1, 2..2, 3),") with no ellipsis allowed at end
        r'|[A-Za-z]+)'                                # Variable name (like ", aaaa,")
       rf'|\[(?:(?:\d|{__rCARDINALS})\s*:\s*)?'       # Or a mapping, which starts with either a number or the equivalent cardinal direction
       rf'(?:{__rVAR}|[A-Za-z]+)])'                   # ...and then has either a variable name or literal (like ", [S: (1, 2, ...)],")
-      r'(?:-(?:(?:\d+|(?:[({](?:\w*\s*(?:,|\.\.)\s*)*\w+[})]|[A-Za-z]+)|)))?)'  # subtrahends can't be bindings/mappings
-       r'(,)?(?(2)\s*)'                              # Finally, an optional comma and whitespace after it. Last term has no comma.
+      r'(?:-(?:(?:\d+|(?:[({](?:\w*\s*(?:,|\.\.)\s*)*\w+[})]|[A-Za-z]+)|)))?)'  # Subtrahends can't be bindings/mappings
+       r'(?::[1-8])?'                                # Optional permute-symmetry shorthand...
+       r'(,)?(?(2)\s*)'                              # Then finally, an optional comma + whitespace after it. Last term has no comma.
       )
     _rSEGMENT = re.compile(
       r'(?:((?:\d|{__rCARDINALS})(?:\s*\.\.\s*(?:\d|{__rCARDINALS}))?)\s+)?([A-Za-z]+|[({](?:\w*\s*(?:,|\.\.)\s*)*\w+[})])'
@@ -102,7 +103,7 @@ class AbstractTable:
         return self._tbl[item]
     
     def lower_symmetries(self):
-        self.transitions = desym.expand(self.transitions, self._symmetry_lines)
+        self.transitions, self.directives['symmetries'] = desym.normalize(self.transitions, self._symmetry_lines)
         return self
     
     def match(self, tr):
@@ -407,18 +408,21 @@ class AbstractTable:
         # They can change, but an initial set of symmetries needs to be declared before transitions
         start = next(lno for lno, line in enumerate((i.split('#')[0].strip() for i in self[start:]), start) if line)
         if self.directives['symmetries'] is None:
-            raise TabelSyntaxError(start, "Transition before 'symmetries' directive declared")
-        
+            raise TabelSyntaxError(start, "Transition before initial declaration of 'symmetries' directive")
         lno = start
         for lno, line in enumerate((i.split('#')[0].strip() for i in self[start:]), start):
             if line.startswith('symmetries:'):
-                self._symmetry_lines.append(lno, line.split(':')[1].strip())
+                sym = line.split(':')[1].strip().replace(' ', '')
+                self._symmetry_lines.append((lno, sym))
+                self.directives['symmetries'] = sym
                 continue
             if not line:
                 continue
             if self._rASSIGNMENT.match(line):
                 raise TabelSyntaxError(lno, 'Variable declaration after first transition')
             napkin, ptcds = map(str.strip, line.partition('->')[::2])
+            if self.directives['symmetries'] == 'permute':
+                napkin = utils.conv_permute(napkin, len(self.cardinals))
             try:
                 napkin = [self._rCARDINAL.sub(self._cardinal_sub, i.strip()) for i, _ in self._rTRANSITION.findall(napkin)]
             except KeyError as e:
@@ -591,8 +595,4 @@ def parse(fp):
     except TabelException as exc:
         raise exc.__class__(exc.lno, exc.msg, parts['@COLORS'], lines['@COLORS'])
     
-    x = AbstractTable(parts['@TABEL'], lines['@TABEL']).lower_symmetries()
-    print(x.transitions)
-    print(x._symmetry_lines)
-
     return parts

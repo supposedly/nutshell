@@ -41,14 +41,6 @@ class Napkin(tuple):
     def __repr__(self):
         return f'{type(self).__name__}({super().__repr__()})'
     
-    @LazyProperty
-    def permute(self):
-        return tuple(map(type(self), self._permute))
-    
-    @property
-    def _permute(self):
-        return permutations(sorted(self))
-    
     @staticmethod
     def reflect(seq):
         return tuple(sorted((seq, (seq[0], *reversed(seq[1:])))))
@@ -68,16 +60,12 @@ class Napkin(tuple):
 
 class NoSymmetry(tuple):
     order = 0
-    
     def expand(self):
         return self,
 
 
 class ReflectHorizontal(Napkin):
     order = 1
-    def __init__(self, iterable):
-        super().__init__(iterable)
-    
     @property
     def _expanded(self):
         return Napkin.reflect(tuple(self))
@@ -85,9 +73,6 @@ class ReflectHorizontal(Napkin):
 
 class Rotate4(Napkin):
     order = 2
-    def __init__(self, iterable):
-        super().__init__(iterable)
-    
     @property
     def _expanded(self):
         return self.rotate4()
@@ -95,9 +80,6 @@ class Rotate4(Napkin):
 
 class Rotate4Reflect(Napkin):
     order = 3
-    def __init__(self, iterable):
-        super().__init__(iterable)
-    
     @property
     def _expanded(self):
         return (tup for i in self.rotate4() for tup in Napkin.reflect(i))
@@ -105,9 +87,6 @@ class Rotate4Reflect(Napkin):
 
 class Rotate8(Napkin):
     order = 4
-    def __init__(self, iterable):
-        super().__init__(iterable)
-    
     @property
     def _expanded(self):
         return (self.rotate8())
@@ -115,9 +94,6 @@ class Rotate8(Napkin):
 
 class Rotate8Reflect(Napkin):
     order = 5
-    def __init__(self, iterable):
-        super().__init__(iterable)
-    
     @property
     def _expanded(self):
         return (tup for i in self.rotate8() for tup in Napkin.reflect(i))
@@ -125,9 +101,6 @@ class Rotate8Reflect(Napkin):
 
 class Permute(Napkin):
     order = 6
-    def __init__(self, iterable):
-        super().__init__(iterable)
-    
     @property
     def _expanded(self):
-        return self._permute
+        return permutations(sorted(self))

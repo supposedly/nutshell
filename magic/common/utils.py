@@ -9,7 +9,7 @@ from . import classes
 rSHORTHAND = re.compile(r'(\d+\s*\.\.\s*\d+)\s+(.+)')
 rRANGE = re.compile(r'\d\s*\.\.\s*\d?')
 rSEGMENT = re.compile(
-  r'(?:([0-8](?:\s*\.\.\s*[0-8])?)\s+)?(-?-?\d+|-?-?(?:[({](?:\w*\s*(?:,|\.\.)\s*)*\w+[})]|\[?[A-Za-z]+]?)|\[[0-8]]|\[(?:[0-8]\s*:\s*)?(?:[({](?:\w*\s*(?:,|\.\.)\s*)*(?:\w|(?:\.\.\.)?)*[})]|[A-Za-z]+)])(?:-(?:(?:\d+|(?:[({](?:\w*\s*(?:,|\.\.)\s*)*\w+[})]|[A-Za-z]+)|)))?'
+  r'(?:([0-8](?:\s*\.\.\s*[0-8])?)\s+)?(-?-?\d+|-?-?(?:[({](?:\w*\s*(?:,|\.\.)\s*)*\w+[})]|\[?[A-Za-z]+]?)|\[[0-8]]|\[(?:[0-8]\s*:\s*)?(?:[({](?:\w*\s*(?:,|\.\.)\s*)*(?:\w|(?:\.\.\.)?)*[})]|[A-Za-z]+)])(?:-(?:(?:\d+|(?:[({](?:\w*\s*(?:,|\.\.)\s*)*\w+[})]|[A-Za-z]+)|)))?(?::([1-8]))?'
   )
 rBINDING = re.compile(r'\[(\d+)')
 rALREADY = re.compile(r'(.+)_(\d+)$')
@@ -30,10 +30,9 @@ def conv_permute(tr: str, total: int):
         1,1,1,1,0,0,0,0
     Order is not preserved.
     """
-    if isinstance(tr, str):
-        tr = tr.split(',')
     # Balance unspecified values
-    seq = [i.rpartition(':')[::2] for i in map(str.strip, tr)]
+    seq = [(match[2], match[3]) for match in rSEGMENT.finditer(tr)]
+    start, end = seq.pop(0), seq.pop(-1)
     # How many cells filled
     tally = total - sum(int(i) for _, i in seq if i)
     # And how many empty slots left to fill
@@ -42,7 +41,7 @@ def conv_permute(tr: str, total: int):
     # https://math.stackexchange.com/a/1081084
     filler = (ceil((tally-k+1)/empties) for k in range(1, 1+empties))
     gen = ((st, num or str(next(filler))) for st, num in seq)
-    return ','.join(classes.AdditiveDict(gen).expand())
+    return f"{start[0]},{','.join(classes.AdditiveDict(gen).expand())},{end[0]}"
 
 
 def _unbind(name):
@@ -68,7 +67,6 @@ def bind_vars(tr: (list, tuple), *, second_pass=False):
                 seen[m[1]] = int(m[2])
             except TypeError:
                 continue
-    
     for state in tr:
         if not isinstance(state, str) or state.isdigit() or rALREADY.match(state):
             built.append(state)
