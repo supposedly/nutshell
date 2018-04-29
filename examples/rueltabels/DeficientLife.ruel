@@ -4,7 +4,7 @@ states: 12
 neighborhood: Moore
 
 # Birth
-symmetries: rotate4 reflect
+symmetries: rotate4reflect
 0, 0, -2, 0, 0, 0, -2, 0, -2, 2
 0, -3, 0, -3, 0, 0, 0, -3, 0, 3
 0, 0, 0, -4, 0, -4, 0, 0, -4, 4
@@ -21,4 +21,6 @@ symmetries: permute
 live, live:2, 0, 1 # s2
 live, live:3, 0, 1 # s3
 
-any, any:8, 0
+# Death otherwise
+symmetries: rotate4reflect
+any, N..NW any, 0

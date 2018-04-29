@@ -17,7 +17,7 @@ class Napkin(tuple):
     
     def __hash__(self):
         if self._hash is None:
-            self._hash = hash(tuple(self._expanded))
+            self._hash = hash(tuple(sorted(self._expanded)))
         return self._hash
     
     def __repr__(self):
@@ -34,14 +34,14 @@ class OrthNapkin(Napkin):
     """Moore & vonNeumann"""
     @staticmethod
     def reflect(seq):
-        return tuple(sorted((seq, (seq[0], *reversed(seq[1:])))))
+        return sorted((seq, (seq[0], *reversed(seq[1:]))))
     
     def rotate4(self):
         # ternary is to account for Moore/vonNeumann differences
-        return tuple(sorted(map(self._rotate, range(4) if len(self) < 8 else range(0, 8, 2))))
+        return sorted(map(self._rotate, range(4) if len(self) < 8 else range(0, 8, 2)))
     
     def rotate8(self):
-        return tuple(sorted(map(self._rotate, range(8))))
+        return sorted(map(self._rotate, range(8)))
 
 
 class HexNapkin(Napkin):
@@ -51,16 +51,16 @@ class HexNapkin(Napkin):
         Golly devs chose to anchor reflection on upper-right cell instead of upper
         cell -- so we can't just reverse seq[1:] :(
         """
-        return tuple(sorted((seq, tuple(seq[i] for i in (4, 2, 3, 1, 0, 5)))))
+        return sorted((seq, tuple(seq[i] for i in (4, 2, 3, 1, 0, 5))))
     
     def rotate2(self):
-        return tuple(sorted(map(self._rotate, range(0, 6, 3))))
+        return sorted(map(self._rotate, range(0, 6, 3)))
     
     def rotate3(self):
-        return tuple(sorted(map(self._rotate, range(0, 6, 2))))
+        return sorted(map(self._rotate, range(0, 6, 2)))
     
     def rotate6(self):
-        return tuple(sorted(map(self._rotate, range(6))))
+        return sorted(map(self._rotate, range(6)))
 
 
 class NoSymmetry(tuple):
