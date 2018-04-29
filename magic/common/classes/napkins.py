@@ -1,25 +1,7 @@
-from abc import ABCMeta, abstractmethod
 from itertools import permutations
 
 
-__all__ = ['NoSymmetry', 'ReflectHorizontal', 'Rotate4', 'Rotate4Reflect', 'Rotate8', 'Rotate8Reflect', 'Permute']
-
-
-class LazyProperty:
-    """
-    Allows definition of properties calculated once and once only.
-    From user Cyclone on StackOverflow; modified slightly to look more
-    coherent for my own benefit.
-    """
-    def __init__(self, method):
-        self.method = method
-    
-    def __get__(self, obj, cls):
-        if not obj:
-            return None
-        ret = self.method(obj)
-        setattr(obj, self.method.__name__, ret)
-        return ret
+__all__ = 'NoSymmetry', 'ReflectHorizontal', 'Rotate2', 'Rotate3', 'Rotate4', 'Rotate4Reflect', 'Rotate6', 'Rotate6Reflect', 'Rotate8', 'Rotate8Reflect', 'Permute'
 
 
 class Napkin(tuple):
@@ -40,10 +22,6 @@ class Napkin(tuple):
     
     def __repr__(self):
         return f'{type(self).__name__}({super().__repr__()})'
-    
-    @staticmethod
-    def reflect(seq):
-        return tuple(sorted((seq, (seq[0], *reversed(seq[1:])))))
 
     def _rotate(self, i):
         return self[i:]+self[:i]
@@ -51,11 +29,38 @@ class Napkin(tuple):
     def expand(self):
         return map(type(self), self._expanded)
 
+
+class OrthNapkin(Napkin):
+    """Moore & vonNeumann"""
+    @staticmethod
+    def reflect(seq):
+        return tuple(sorted((seq, (seq[0], *reversed(seq[1:])))))
+    
     def rotate4(self):
-        return tuple(sorted(map(self._rotate, range(0, 8, 2))))
+        # ternary is to account for Moore/vonNeumann differences
+        return tuple(sorted(map(self._rotate, range(4) if len(self) < 8 else range(0, 8, 2))))
     
     def rotate8(self):
         return tuple(sorted(map(self._rotate, range(8))))
+
+
+class HexNapkin(Napkin):
+    @staticmethod
+    def reflect(seq):
+        """
+        Golly devs chose to anchor reflection on upper-right cell instead of upper
+        cell -- so we can't just reverse seq[1:] :(
+        """
+        return tuple(sorted((seq, tuple(seq[i] for i in (4, 2, 3, 1, 0, 5)))))
+    
+    def rotate2(self):
+        return tuple(sorted(map(self._rotate, range(0, 6, 3))))
+    
+    def rotate3(self):
+        return tuple(sorted(map(self._rotate, range(0, 6, 2))))
+    
+    def rotate6(self):
+        return tuple(sorted(map(self._rotate, range(6))))
 
 
 class NoSymmetry(tuple):
@@ -64,41 +69,72 @@ class NoSymmetry(tuple):
         return self,
 
 
-class ReflectHorizontal(Napkin):
+# Hexagonal napkins
+class Rotate2(HexNapkin):
     order = 1
     @property
     def _expanded(self):
-        return Napkin.reflect(tuple(self))
+        return self.rotate2()
 
 
-class Rotate4(Napkin):
+class Rotate3(HexNapkin):
+    order = 2
+    @property
+    def _expanded(self):
+        return self.rotate3()
+
+
+class Rotate6(HexNapkin):
+    order = 3
+    @property
+    def _expanded(self):
+        return self.rotate6()
+
+
+class Rotate6Reflect(HexNapkin):
+    order = 4
+    @property
+    def _expanded(self):
+        return (tup for i in self.rotate6() for tup in HexNapkin.reflect(i))
+
+
+# Orthogonal napkins
+class ReflectHorizontal(OrthNapkin):
+    order = 1
+    @property
+    def _expanded(self):
+        return OrthNapkin.reflect(tuple(self))
+
+
+class Rotate4(OrthNapkin):
     order = 2
     @property
     def _expanded(self):
         return self.rotate4()
 
 
-class Rotate4Reflect(Napkin):
+class Rotate4Reflect(OrthNapkin):
     order = 3
     @property
     def _expanded(self):
-        return (tup for i in self.rotate4() for tup in Napkin.reflect(i))
+        return (tup for i in self.rotate4() for tup in OrthNapkin.reflect(i))
 
 
-class Rotate8(Napkin):
+class Rotate8(OrthNapkin):
     order = 4
     @property
     def _expanded(self):
         return (self.rotate8())
 
 
-class Rotate8Reflect(Napkin):
+class Rotate8Reflect(OrthNapkin):
     order = 5
     @property
     def _expanded(self):
-        return (tup for i in self.rotate8() for tup in Napkin.reflect(i))
+        return (tup for i in self.rotate8() for tup in OrthNapkin.reflect(i))
 
 
+# General
 class Permute(Napkin):
     order = 6
     @property
