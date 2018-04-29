@@ -1,12 +1,12 @@
 @RULE RockPaperScissors
 *********************************
-**** COMPILED FROM RUELTABLE ****
+**** COMPILED FROM RUELTABEL ****
 *********************************
 From "RockScissorsPaperLife" by Dave Greene
 
 @TABLE
 neighborhood: Moore
-symmetries: permute
+symmetries: rotate2
 n_states: 4
 
 var __all__0 = {0, 1, 2, 3}

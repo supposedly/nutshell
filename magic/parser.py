@@ -118,6 +118,7 @@ class AbstractTable:
                     break
             else:
                 return f'\nFound! Line {1+self._start+lno}: "{self._tbl[lno]}"\n\n(compiled line "{", ".join(map(str, self.transitions[idx][1]))}")\n'
+        return None
     
     def _subtract_var(self, subt, minuend):
         """
