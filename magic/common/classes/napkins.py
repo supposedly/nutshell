@@ -1,7 +1,25 @@
 from itertools import permutations
+from functools import lru_cache
 
 
 __all__ = 'NoSymmetry', 'ReflectHorizontal', 'Rotate2', 'Rotate3', 'Rotate4', 'Rotate4Reflect', 'Rotate6', 'Rotate6Reflect', 'Rotate8', 'Rotate8Reflect', 'Permute'
+
+
+class LazyProperty:
+    """
+    Allows definition of properties calculated once and once only.
+    From user Cyclone on StackOverflow; modified slightly to look more
+    coherent for my own benefit.
+    """
+    def __init__(self, method):
+        self.method = method
+    
+    def __get__(self, obj, cls):
+        if not obj:
+            return None
+        ret = self.method(obj)
+        setattr(obj, self.method.__name__, ret)
+        return ret
 
 
 class Napkin(tuple):
@@ -10,6 +28,7 @@ class Napkin(tuple):
     Represents the 'neighborhood' segment of a transition.
     """
     def __init__(self, iterable):
+        self.__unique_expanded = None
         self._hash = None
     
     def __eq__(self, other):
@@ -17,7 +36,7 @@ class Napkin(tuple):
     
     def __hash__(self):
         if self._hash is None:
-            self._hash = hash(tuple(sorted(self._expanded)))
+            self._hash = hash(tuple(sorted(self._expanded_unique)))
         return self._hash
     
     def __repr__(self):
@@ -25,9 +44,13 @@ class Napkin(tuple):
 
     def _rotate(self, i):
         return self[i:]+self[:i]
+    
+    @LazyProperty
+    def _expanded_unique(self):
+        return set(self._expanded)
 
     def expand(self):
-        return map(type(self), self._expanded)
+        return map(type(self), self._expanded_unique)
 
 
 class OrthNapkin(Napkin):
@@ -101,14 +124,14 @@ class Rotate6Reflect(HexNapkin):
 # Orthogonal napkins
 class ReflectHorizontal(OrthNapkin):
     order = 1
-    @property
+    @LazyProperty
     def _expanded(self):
         return OrthNapkin.reflect(tuple(self))
 
 
 class Rotate4(OrthNapkin):
     order = 2
-    @property
+    @LazyProperty
     def _expanded(self):
         return self.rotate4()
 
@@ -122,9 +145,9 @@ class Rotate4Reflect(OrthNapkin):
 
 class Rotate8(OrthNapkin):
     order = 4
-    @property
+    @LazyProperty
     def _expanded(self):
-        return (self.rotate8())
+        return self.rotate8()
 
 
 class Rotate8Reflect(OrthNapkin):
@@ -137,6 +160,24 @@ class Rotate8Reflect(OrthNapkin):
 # General
 class Permute(Napkin):
     order = 6
-    @property
+    RECENTS = {}
+    HASHES = {}
+
+    def __hash__(self):
+        if self._hash is None:
+            self._hash = self.HASHES[tuple(sorted(self))]
+        return self._hash
+
+    @LazyProperty
     def _expanded(self):
-        return permutations(sorted(self))
+        t = tuple(sorted(self))
+        if t in self.RECENTS:
+            return self.RECENTS[t]
+        self.RECENTS[t] = list(permutations(sorted(self)))
+        self.HASHES[t] = hash(tuple(sorted(self.RECENTS[t])))
+        return self.RECENTS[t]
+    
+    @classmethod
+    def clear(cls):
+        cls.RECENTS.clear()
+        cls.HASHES.clear()

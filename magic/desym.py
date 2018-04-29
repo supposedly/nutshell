@@ -48,5 +48,6 @@ def normalize(transitions, sym_lines):
             exp = {*map(lowest_sym_cls, cur_sym_cls(map(str, tr[1:-1])).expand())}
             print_verbose(None, None, f'(1 transition -> {len(exp)} transitions)\n', start='\n')
             built.extend((lno, [tr[0], *new_tr, tr[-1]]) for new_tr in exp)
+        Permute.clear()
     print_verbose([f'FROM {len(transitions)} original transitions\n', f'\bTO {len(built)} transitions total\n'], start='')
     return built, lowest_sym
