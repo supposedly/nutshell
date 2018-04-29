@@ -33,7 +33,7 @@ def conv_permute(tr: str, total: int):
     if isinstance(tr, str):
         tr = tr.split(',')
     # Balance unspecified values
-    seq = [i.partition(':')[::2] for i in map(str.strip, tr)]
+    seq = [i.rpartition(':')[::2] for i in map(str.strip, tr)]
     # How many cells filled
     tally = total - sum(int(i) for _, i in seq if i)
     # And how many empty slots left to fill

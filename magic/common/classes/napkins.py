@@ -1,7 +1,8 @@
 from abc import ABCMeta, abstractmethod
 from itertools import permutations
 
-NoSymmetry = tuple
+
+__all__ = ['NoSymmetry', 'ReflectHorizontal', 'Rotate4', 'Rotate4Reflect', 'Rotate8', 'Rotate8Reflect', 'Permute']
 
 
 class LazyProperty:
@@ -63,9 +64,17 @@ class Napkin(tuple):
     
     def rotate8(self):
         return tuple(sorted(map(self._rotate, range(8))))
+
+
+class NoSymmetry(tuple):
+    order = 0
     
+    def expand(self):
+        return self,
+
 
 class ReflectHorizontal(Napkin):
+    order = 1
     def __init__(self, iterable):
         super().__init__(iterable)
     
@@ -75,6 +84,7 @@ class ReflectHorizontal(Napkin):
 
 
 class Rotate4(Napkin):
+    order = 2
     def __init__(self, iterable):
         super().__init__(iterable)
     
@@ -84,6 +94,7 @@ class Rotate4(Napkin):
 
 
 class Rotate4Reflect(Napkin):
+    order = 3
     def __init__(self, iterable):
         super().__init__(iterable)
     
@@ -93,6 +104,7 @@ class Rotate4Reflect(Napkin):
 
 
 class Rotate8(Napkin):
+    order = 4
     def __init__(self, iterable):
         super().__init__(iterable)
     
@@ -102,6 +114,7 @@ class Rotate8(Napkin):
 
 
 class Rotate8Reflect(Napkin):
+    order = 5
     def __init__(self, iterable):
         super().__init__(iterable)
     
@@ -111,6 +124,7 @@ class Rotate8Reflect(Napkin):
 
 
 class Permute(Napkin):
+    order = 6
     def __init__(self, iterable):
         super().__init__(iterable)
     

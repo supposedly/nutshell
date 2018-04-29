@@ -5,6 +5,7 @@ from itertools import zip_longest as zipln
 
 import bidict
 
+from . import desym
 from .common import utils
 from .common.utils import print_verbose
 from .common.classes import Coord, TabelRange, Variable
@@ -54,6 +55,7 @@ class AbstractTable:
         self.var_all, self.var_all_rep = (), 0  # instead of self.vars['__all__']
         self.directives = {}
         self.transitions = []
+        self._symmetry_lines = []
         
         _assignment_start = self._extract_directives()
         _transition_start = self._extract_initial_vars(_assignment_start)
@@ -99,11 +101,9 @@ class AbstractTable:
     def __getitem__(self, item):
         return self._tbl[item]
     
-    def _cardinal_sub(self, match):
-        try:
-            return f"{match[1] or ''}{self.cardinals[match[2]]}{match[3]}"
-        except KeyError:
-            raise KeyError(match[2])
+    def lower_symmetries(self):
+        self.transitions = desym.expand(self.transitions, self._symmetry_lines)
+        return self
     
     def match(self, tr):
         """
@@ -119,6 +119,12 @@ class AbstractTable:
             else:
                 return f'\nFound! Line {1+self._start+lno}: "{self._tbl[lno]}"\n\n(compiled line "{", ".join(map(str, self.transitions[idx][1]))}")\n'
         return None
+    
+    def _cardinal_sub(self, match):
+        try:
+            return f"{match[1] or ''}{self.cardinals[match[2]]}{match[3]}"
+        except KeyError:
+            raise KeyError(match[2])
     
     def _subtract_var(self, subt, minuend):
         """
@@ -176,6 +182,7 @@ class AbstractTable:
         
         return: the line number at which var assignment starts.
         """
+        self.directives['symmetries'] = None
         lno = start
         for lno, line in enumerate((i.split('#')[0].strip() for i in self), start):
             if not line:
@@ -192,13 +199,13 @@ class AbstractTable:
         Parse extracted directives to translate their values.
         Also initialize the "__all__" and "any" variables.
         """
+        if self.directives['symmetries'] is not None:
+            self._symmetry_lines.append((-1, self.directives['symmetries']))
         try:
             self.var_all = tuple(range(int(self.directives['states'])))
             cardinals = self.CARDINALS.get(self.directives['neighborhood'])
             if cardinals is None:
                 raise TabelValueError(None, f"Invalid neighborhood {self.directives['neighborhood']!r} declared")
-            if 'symmetries' not in self.directives:
-                raise KeyError("'symmetries'")
         except KeyError as e:
             name = str(e).split("'")[1]
             raise TabelNameError(None, f'{name!r} directive not declared')
@@ -397,12 +404,20 @@ class AbstractTable:
         
         Parse all the ruel's transitions into a list in self.transitions.
         """
+        # They can change, but an initial set of symmetries needs to be declared before transitions
+        start = next(lno for lno, line in enumerate((i.split('#')[0].strip() for i in self[start:]), start) if line)
+        if self.directives['symmetries'] is None:
+            raise TabelSyntaxError(start, "Transition before 'symmetries' directive declared")
+        
         lno = start
         for lno, line in enumerate((i.split('#')[0].strip() for i in self[start:]), start):
+            if line.startswith('symmetries:'):
+                self._symmetry_lines.append(lno, line.split(':')[1].strip())
+                continue
             if not line:
                 continue
             if self._rASSIGNMENT.match(line):
-                raise TabelSyntaxError(lno, 'Variable declaration after transitions')
+                raise TabelSyntaxError(lno, 'Variable declaration after first transition')
             napkin, ptcds = map(str.strip, line.partition('->')[::2])
             try:
                 napkin = [self._rCARDINAL.sub(self._cardinal_sub, i.strip()) for i, _ in self._rTRANSITION.findall(napkin)]
@@ -563,7 +578,7 @@ def parse(fp):
         raise TabelValueError(None, "No '@TABEL' segment found")
     
     try:
-        parts['@TABEL'] = AbstractTable(parts['@TABEL'], lines['@TABEL'])
+        parts['@TABEL'] = AbstractTable(parts['@TABEL'], lines['@TABEL']).lower_symmetries()
     except TabelException as exc:
         if exc.lno is None:
             raise exc.__class__(exc.lno, exc.msg)
@@ -576,4 +591,8 @@ def parse(fp):
     except TabelException as exc:
         raise exc.__class__(exc.lno, exc.msg, parts['@COLORS'], lines['@COLORS'])
     
+    x = AbstractTable(parts['@TABEL'], lines['@TABEL']).lower_symmetries()
+    print(x.transitions)
+    print(x._symmetry_lines)
+
     return parts
