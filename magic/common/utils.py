@@ -51,7 +51,7 @@ def _unbind(name):
     return '__all__' if name.startswith('__all__') else name.rsplit('_', 1)[0]
 
 
-def bind_vars(tr: (list, tuple), *, second_pass=False):
+def bind_vars(tr: (list, tuple), *, second_pass=False, return_reps=True):
     """
     Given an unbound ruel transition like the following:
         a,1,2,[0],a,a,6,7,8,[4]
@@ -87,19 +87,23 @@ def bind_vars(tr: (list, tuple), *, second_pass=False):
         else:
             seen[state] = 1 + seen.get(state, -1)
             built.append(f"{state}{'' if state.endswith('_') else '_'}{seen[state]}")
-    return seen, built
+    return (seen, built) if return_reps else built
 
 
-def unbind_vars(tr: (list, tuple), bind=True):
+def unbind_vars(tr: (list, tuple), bind=True, bind_keep=False):
     """Inverse of bind_vars(), ish, and w/o mapping-handling."""
     seen, built = {}, []
     for idx, state in enumerate(tr):
-        if state in seen and bind:
-            built.append(f'{seen[state]}')
-        else:
+        if state not in seen:
             built.append(_unbind(state) if isinstance(state, str) else state)
             seen[state] = idx
+        elif bind_keep:
+            built[seen[state]] = state
+            built.append(state)
+        elif bind:
+            built.append(f'{seen[state]}')
     return built
+
 
 def expand_tr(tr: (list, tuple)):
     """

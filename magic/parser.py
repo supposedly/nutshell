@@ -96,12 +96,17 @@ class AbstractTable:
         return self._tbl[item]
     
     def lower_symmetries(self):
-        self.transitions, self.directives['symmetries'] = desym.normalize(self.transitions, self._symmetry_lines)
+        print([(lno, utils.unbind_vars(tr, bind_keep=True)) for lno, tr in self.transitions])
+        transitions, self.directives['symmetries'] = desym.normalize(
+          [(lno, utils.unbind_vars(tr, bind_keep=True)) for lno, tr in self.transitions],
+          self._symmetry_lines
+          )
+        self.transitions = [(lno, utils.bind_vars(tr, second_pass=True, return_reps=False)) for lno, tr in transitions]
         self._trs_no_names = [
           (lno, [
             self.vars.get(state, self.var_all if state == '__all__' else state)
             for state in utils.unbind_vars(int(i) if isinstance(i, int) or i.isdigit() else i for i in tr)
-          ])
+            ])
           for lno, tr in self.transitions
           ]
         return self
