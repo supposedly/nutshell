@@ -548,14 +548,14 @@ class AbstractColors:
     Parse a ruelfile's color format into something abstract &
     transferrable into Golly syntax.
     """
-    _rGOLLY_COLOR = re.compile(r'\s*(\d{0,3})'*3 + r'\s*.*')
+    _rGOLLY_COLOR = re.compile(r'\s*(\d{0,3})\s+(\d{0,3})\s+(\d{0,3})\s*.*')
     
     def __init__(self, colors):
         self._src = colors
         self.colors = [k.split(':') for k in self._src if k]
     
     def _unpack(self, color):
-        m = self._rGOLLY_COLOR.match(color)
+        m = self._rGOLLY_COLOR.fullmatch(color)
         if m is not None:
             return m[1], m[2], m[3]
         if len(color) % 2:  # three-char shorthand
