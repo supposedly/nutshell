@@ -106,7 +106,14 @@ class AbstractTable:
         in_tr = utils.unbind_vars(tr, bind=False)
         start, end = in_tr.pop(0), in_tr.pop(-1)
         in_napkins = sym_cls(in_tr)
-        for idx, (lno, tr) in enumerate(self._trs_no_names):
+        _trs_no_names = (
+          (lno, [
+            self.vars.get(state, self.var_all if state == '__all__' else state)
+            for state in utils.unbind_vars(int(i) if isinstance(i, int) or i.isdigit() else i for i in tr)
+            ])
+          for lno, tr in self.transitions
+          )
+        for idx, (lno, tr) in enumerate(_trs_no_names):
             for in_tr in ((start, *napkin, end) for napkin in in_napkins.expand()):
                 for in_state, tr_state in zip(in_tr, tr):
                     while isinstance(tr_state, str):
@@ -179,13 +186,6 @@ class AbstractTable:
           self._symmetry_lines
           )
         self.transitions = [(lno, utils.bind_vars(tr, second_pass=True, return_reps=False)) for lno, tr in transitions]
-        self._trs_no_names = [
-          (lno, [
-            self.vars.get(state, self.var_all if state == '__all__' else state)
-            for state in utils.unbind_vars(int(i) if isinstance(i, int) or i.isdigit() else i for i in tr)
-            ])
-          for lno, tr in self.transitions
-          ]
     
     def _extract_directives(self, start=0):
         """

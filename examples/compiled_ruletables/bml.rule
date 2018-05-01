@@ -34,11 +34,11 @@ var live_0 = {1, 2, 3, 4}
 
 3, any_0, any_1, any_2, any_3, 1
 4, any_0, any_1, any_2, any_3, 2
-1, any_0, any_1, 0, any_3, 0
-1, any_0, any_1, live_0, any_3, 3
+1, any_0, any_1, 0, any_2, 0
+1, any_0, any_1, live_0, any_2, 3
 0, 1, __all__0, __all__1, __all__2, 3
-2, any_0, 0, any_2, any_3, 0
-2, any_0, live_0, any_2, any_3, 4
+2, any_0, 0, any_1, any_2, 0
+2, any_0, live_0, any_1, any_2, 4
 0, __all__0, __all__1, __all__2, 2, 4
 
 
