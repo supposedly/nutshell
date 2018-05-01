@@ -88,28 +88,14 @@ class AbstractTable:
           ['\b\btransitions (after expanding):', *self.transitions, '\b\bvars:', self.vars],
           pre='    ', sep='\n', end='\n\n'
           )
+        
+        self._fix_symmetries()
     
     def __iter__(self):
         return iter(self._tbl)
     
     def __getitem__(self, item):
         return self._tbl[item]
-    
-    def lower_symmetries(self):
-        print([(lno, utils.unbind_vars(tr, bind_keep=True)) for lno, tr in self.transitions])
-        transitions, self.directives['symmetries'] = desym.normalize(
-          [(lno, utils.unbind_vars(tr, bind_keep=True)) for lno, tr in self.transitions],
-          self._symmetry_lines
-          )
-        self.transitions = [(lno, utils.bind_vars(tr, second_pass=True, return_reps=False)) for lno, tr in transitions]
-        self._trs_no_names = [
-          (lno, [
-            self.vars.get(state, self.var_all if state == '__all__' else state)
-            for state in utils.unbind_vars(int(i) if isinstance(i, int) or i.isdigit() else i for i in tr)
-            ])
-          for lno, tr in self.transitions
-          ]
-        return self
     
     def match(self, tr):
         """
@@ -186,6 +172,20 @@ class AbstractTable:
                 except KeyError:
                     raise NameError(state) from None
         return tuple(cop)
+    
+    def _fix_symmetries(self):
+        transitions, self.directives['symmetries'] = desym.normalize(
+          [(lno, utils.unbind_vars(tr, bind_keep=True)) for lno, tr in self.transitions],
+          self._symmetry_lines
+          )
+        self.transitions = [(lno, utils.bind_vars(tr, second_pass=True, return_reps=False)) for lno, tr in transitions]
+        self._trs_no_names = [
+          (lno, [
+            self.vars.get(state, self.var_all if state == '__all__' else state)
+            for state in utils.unbind_vars(int(i) if isinstance(i, int) or i.isdigit() else i for i in tr)
+            ])
+          for lno, tr in self.transitions
+          ]
     
     def _extract_directives(self, start=0):
         """
@@ -592,7 +592,7 @@ def parse(fp):
         raise TabelValueError(None, "No '@TABEL' segment found")
     
     try:
-        parts['@TABEL'] = AbstractTable(parts['@TABEL'], lines['@TABEL']).lower_symmetries()
+        parts['@TABEL'] = AbstractTable(parts['@TABEL'], lines['@TABEL'])
     except TabelException as exc:
         if exc.lno is None:
             raise exc.__class__(exc.lno, exc.msg)
