@@ -34,7 +34,7 @@ class AbstractTable:
       rf'|\[(?:(?:\d|{__rCARDINALS})\s*:\s*)?'       # Or a mapping, which starts with either a number or the equivalent cardinal direction
       rf'(?:{__rVAR}|[A-Za-z]+)])'                   # ...and then has either a variable name or literal (like ", [S: (1, 2, ...)],")
       r'(?:-(?:(?:\d+|(?:[({](?:\w*\s*(?:,|\.\.)\s*)*\w+[})]|[A-Za-z]+)|)))?)'  # Subtrahends can't be bindings/mappings
-       r'(?::[1-8])?'                                # Optional permute-symmetry shorthand...
+       r'(?:\s*:\s*[1-8])?'                          # Optional permute-symmetry shorthand...
        r'(,)?(?(2)\s*)'                              # Then finally, an optional comma + whitespace after it. Last term has no comma.
       )
     _rSEGMENT = re.compile(
@@ -106,14 +106,14 @@ class AbstractTable:
         in_tr = utils.unbind_vars(tr, bind=False)
         start, end = in_tr.pop(0), in_tr.pop(-1)
         in_napkins = sym_cls(in_tr)
-        _trs_no_names = (
+        _trs_no_names = enumerate(
           (lno, [
             self.vars.get(state, self.var_all if state == '__all__' else state)
             for state in utils.unbind_vars(int(i) if isinstance(i, int) or i.isdigit() else i for i in tr)
             ])
           for lno, tr in self.transitions
           )
-        for idx, (lno, tr) in enumerate(_trs_no_names):
+        for idx, (lno, tr) in _trs_no_names:
             for in_tr in ((start, *napkin, end) for napkin in in_napkins.expand()):
                 for in_state, tr_state in zip(in_tr, tr):
                     while isinstance(tr_state, str):
@@ -149,19 +149,19 @@ class AbstractTable:
     def _parse_variable(self, var: str, *, mapping=False, ptcd=False):
         """
         var: a variable literal
-        
+
         return: var, but as a tuple with any references substituted for their literal values
         """
         if var.isalpha() or var.startswith('_'):
             return self.vars[var]
-        if var.count('-') == 1:
-            # Subtraction & negation (from live states)
-            subt, minuend = map(str.strip, var.split('-'))  # Don't *think* I need to strip bc can't have spaces anyway
-            subt = self._parse_variable(subt) if subt else self.vars['live']
-            return self._subtract_var(subt, minuend)
         if var.startswith('--'):
             # Negation (from all states)
-            return self._subtract_var(self.var_all, var.lstrip('-'))
+            return self._subtract_var(self.var_all, var[2:])
+        if '-' in var:
+            # Subtraction & negation (from live states)
+            subt, minuend = map(str.strip, var.split('-'))  # Actually don't *think* I need to strip bc can't have spaces anyway
+            subt = self._parse_variable(subt) if subt else self.vars['live']
+            return self._subtract_var(subt, minuend)
         cop = []
         for state in map(str.strip, var.strip('{()}').split(',')):
             if state.isdigit():
