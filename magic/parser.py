@@ -10,6 +10,7 @@ from .common import utils
 from .common.utils import print_verbose
 from .common.classes import napkins, Coord, TabelRange, Variable
 from .common.classes.errors import TabelNameError, TabelSyntaxError, TabelValueError, TabelFeatureUnsupported, TabelException
+from .icon_fixer import IconArray
 
 
 class AbstractTable:
@@ -121,7 +122,7 @@ class AbstractTable:
                     if not (in_state == tr_state if isinstance(tr_state, int) else in_state in tr_state):
                         break
                 else:
-                    return f'Found!\n\nLine {1+self._start+lno}: "{self._tbl[lno]}"\n(compiled line "{", ".join(map(str, self.transitions[idx][1]))}")\n'
+                    return f'Found!\n\nLine {1+self._start+lno}: "{self[lno]}"\n(compiled line "{", ".join(map(str, self.transitions[idx][1]))}")\n'
         return None
     
     def _cardinal_sub(self, match):
@@ -543,16 +544,19 @@ class AbstractTable:
         self.transitions = list(filter(None, self.transitions))
 
 
-class AbstractColors:
+class ColorSegment:
     """
     Parse a ruelfile's color format into something abstract &
     transferrable into Golly syntax.
     """
     _rGOLLY_COLOR = re.compile(r'\s*(\d{0,3})\s+(\d{0,3})\s+(\d{0,3})\s*.*')
     
-    def __init__(self, colors):
+    def __init__(self, colors, start=0):
         self._src = colors
         self.colors = [k.split(':') for k in self._src if k]
+    
+    def __iter__(self):
+        return (f'{state} {r} {g} {b}' for d in self.states for state, (r, g, b) in d.items())
     
     def _unpack(self, color):
         m = self._rGOLLY_COLOR.fullmatch(color)
@@ -564,11 +568,13 @@ class AbstractColors:
     
     @property
     def states(self):
-        return [{int(j.strip()): self._unpack(color.strip())} for state, color in self.colors for j in state.split()]
-    
-    def format(self):
-        return [f'{state} {r} {g} {b}' for d in self.states for state, (r, g, b) in d.items()]
+        return ({int(j.strip()): self._unpack(color.strip())} for state, color in self.colors for j in state.split())
 
+CONVERTERS = {
+  '@ICONS': IconArray,
+  '@COLORS': ColorSegment,
+  '@TABEL': AbstractTable
+  }
 
 def parse(fp):
     """
@@ -583,26 +589,25 @@ def parse(fp):
     for lno, line in enumerate(map(str.strip, fp), 1):
         if line.startswith('@'):
             # @RUEL, @TABEL, @COLORS, ...
-            segment, *name = line.split(None, 1)
+            sep = (None, ':')[':' in line]
+            segment, *name = map(str.strip, line.split(sep))
             parts[segment], lines[segment] = name, lno
             continue
         parts[segment].append(line)
     
-    if '@TABEL' not in parts:
-        raise TabelValueError(None, "No '@TABEL' segment found")
-    
-    try:
-        parts['@TABEL'] = AbstractTable(parts['@TABEL'], lines['@TABEL'])
-    except TabelException as exc:
-        if exc.lno is None:
-            raise exc.__class__(exc.lno, exc.msg)
-        raise exc.__class__(exc.lno, exc.msg, parts['@TABEL'], lines['@TABEL'])
-    
-    try:
-        parts['@COLORS'] = AbstractColors(parts['@COLORS']).format()
-    except KeyError:
-        pass
-    except TabelException as exc:
-        raise exc.__class__(exc.lno, exc.msg, parts['@COLORS'], lines['@COLORS'])
+    for lbl, converter in CONVERTERS.items():
+        try:
+            segment, seg_lno = parts[lbl], lines[lbl]
+        except KeyError:
+            continue
+        if segment[0] == ':golly':
+            parts[lbl] = segment[1:]
+            continue
+        try:
+            parts[lbl] = converter(segment, seg_lno)
+        except TabelException as exc:
+            if exc.lno is None:
+                raise exc.__class__(exc.lno, exc.msg)
+            raise exc.__class__(exc.lno, exc.msg, segment, seg_lno)
     
     return parts

@@ -1,40 +1,44 @@
-from inspect import cleandoc
+HEADER = '''\
+*********************************
+**** COMPILED FROM RUELTABEL ****
+*********************************
+'''
 
 
-def _handle_rule(comp, seg):
+def _handle_rule(rulefile, seg):
     name = seg.pop(0)
-    comp.append(f'@RULE {name}')
-    comp.append(cleandoc('''
-    *********************************
-    **** COMPILED FROM RUELTABEL ****
-    *********************************
-    '''))
-    comp.extend(seg)
+    rulefile.extend((f'@RULE {name}', HEADER, *seg))
 
 
-def _handle_table(comp, tbl):
-    comp.append('@TABLE')
-    comp.append(f"neighborhood: {tbl.directives.pop('neighborhood')}")
+def _handle_table(rulefile, tbl):
+    rulefile.append('@TABLE')
+    rulefile.append(f"neighborhood: {tbl.directives.pop('neighborhood')}")
     for directive, value in tbl.directives.items():
-        comp.append(f'{directive}: {value}')
-    comp.append('')
+        rulefile.append(f'{directive}: {value}')
+    rulefile.append('')
     
     for suf in range(1+tbl.var_all_rep):
-        comp.append(f"var __all__{suf} = {'__all__0' if suf else set(tbl.var_all)}")
+        rulefile.append(f"var __all__{suf} = {'__all__0' if suf else set(tbl.var_all)}")
     for var, value in tbl.vars.items():
-        comp.append('')
-        value = set(value)  # Removes duplicates and also gives it braces
-        comp.append(f'var {var.name}_0 = {value}')
+        rulefile.append('')
+        value = set(value)  # Removes duplicates and gives braces
+        rulefile.append(f'var {var.name}_0 = {value}')
         for suf in range(1, 1+var.rep):
-            comp.append(f'var {var.name}_{suf} = {var.name}_0')
-    comp.append('')
-    comp.extend(', '.join(map(str, tr)) for _lno, tr in tbl.transitions)
+            rulefile.append(f'var {var.name}_{suf} = {var.name}_0')
+    rulefile.append('')
+    rulefile.extend(', '.join(map(str, tr)) for _lno, tr in tbl.transitions)
 
 
 def compile(parsed):
-    comp = []
-    _handle_rule(comp, parsed.pop('@RUEL'))
-    _handle_table(comp, parsed.pop('@TABEL'))
+    rulefile = []
+    try:
+        _handle_rule(rulefile, parsed.pop('@RUEL'))
+    except KeyError:
+        pass
+    try:
+        _handle_table(rulefile, parsed.pop('@TABEL'))
+    except KeyError:
+        pass
     for segment_name, seg in parsed.items():
-        comp.extend(['', '', segment_name, *seg])
-    return '\n'.join(comp)
+        rulefile.extend(('', '', segment_name, *seg))
+    return '\n'.join(rulefile)
