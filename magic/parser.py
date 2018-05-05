@@ -7,9 +7,9 @@ import bidict
 
 from . import desym
 from .common import utils
-from .common.utils import print_verbose
 from .common.classes import napkins, Coord, TabelRange, Variable
-from .common.classes.errors import TabelNameError, TabelSyntaxError, TabelValueError, TabelFeatureUnsupported, TabelException
+from .common.classes.errors import TabelNameError, TabelSyntaxError, TabelValueError, TabelException
+from .common.utils import print_verbose
 from .icon_fixer import IconArray
 
 
@@ -104,7 +104,7 @@ class AbstractTable:
         """
         print('Complete!\n\nSearching for match...')
         sym_cls = napkins.NAMES[self.directives['symmetries']]
-        in_tr = utils.unbind_vars(tr, bind=False)
+        in_tr = utils.unbind_vars(tr, rebind=False)
         start, end = in_tr.pop(0), in_tr.pop(-1)
         in_napkins = sym_cls(in_tr)
         _trs_no_names = enumerate(
@@ -268,7 +268,10 @@ class AbstractTable:
                 self.vars[Variable(name)] = var
             except bidict.ValueDuplicationError:
                 raise TabelValueError(lno, f"Value {value} is already assigned to variable '{self.vars.inv[var]}'")
-        self.vars.on_dup_val = bidict.IGNORE
+        # bidict devs, between the start of this project and 5 May 2018,
+        # decided to make bidict().on_dup_val a read-only property
+        # so this was formerly just `self.vars.on_dup_val = bidict.IGNORE`
+        self.vars.__class__.on_dup_val = bidict.IGNORE
         return lno
     
     def __make_center_tr(self, tr, initial, result, orig, source_cd):
@@ -600,7 +603,7 @@ def parse(fp):
             segment, seg_lno = parts[lbl], lines[lbl]
         except KeyError:
             continue
-        if segment[0] == ':golly':
+        if segment[0] == 'golly':
             parts[lbl] = segment[1:]
             continue
         try:

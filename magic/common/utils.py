@@ -1,7 +1,5 @@
 """Utility functions to be used during rueltabel parsing."""
 import re
-import json
-import pprint
 from math import ceil
 
 from . import classes
@@ -93,7 +91,7 @@ def bind_vars(tr: (list, tuple), *, second_pass=False, return_reps=True):
     return (seen, built) if return_reps else built
 
 
-def unbind_vars(tr: (list, tuple), bind=True, bind_keep=False):
+def unbind_vars(tr: (list, tuple), rebind=True, bind_keep=False):
     """Inverse of bind_vars(), ish, and w/o mapping-handling."""
     seen, built = {}, []
     for idx, state in enumerate(tr):
@@ -103,8 +101,10 @@ def unbind_vars(tr: (list, tuple), bind=True, bind_keep=False):
         elif bind_keep:
             built[seen[state]] = state
             built.append(state)
-        elif bind:
+        elif rebind:
             built.append(f'{seen[state]}')
+        else:
+            built.append(state)
     return built
 
 
