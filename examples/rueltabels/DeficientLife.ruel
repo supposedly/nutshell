@@ -22,5 +22,4 @@ live, live:2, 0, 1 # s2
 live, live:3, 0, 1 # s3
 
 # Death otherwise
-symmetries: rotate4reflect
-any, N..NW any, 0
+any, any, 0

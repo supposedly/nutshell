@@ -18,7 +18,8 @@ class AbstractTable:
     An abstract, Golly-transferrable representation of a ruelfile's @TABEL section.
     """
     __rCARDINALS = 'NE|NW|SE|SW|N|E|S|W'
-    __rVAR = r'[({](?:\w*\s*(?:,|\.\.)\s*)*(?:\w|(?:\.\.\.)?)*[})]'
+    __rVAR = r'[({](?:[\w\-]*\s*(?:,|\.\.)\s*)*(?:[\w\-]|(?:\.\.\.)?)*[})]'
+    __rSMALLVAR = r'[({](?:[\w\-]*\s*(?:,|\.\.)\s*)*[\w\-]+[})]'
     
     _rASSIGNMENT = re.compile(rf'\w+?\s*=\s*{__rVAR}')
     _rBINDMAP = re.compile(rf'\[[0-8](?::\s*?(?:{__rVAR}|[^_]\w+?))?\]')
@@ -30,16 +31,12 @@ class AbstractTable:
       rf'((?:(?:\d|{__rCARDINALS})'                  # Purely-cosmetic cardinal direction before state (like ", NW 2,")
       rf'(?:\s*\.\.\s*(?:\d|{__rCARDINALS}))?\s+)?'  # Range of cardinal directions (like ", N..NW 2,")
        r'(?:-?-?\d+|'                                # Normal state (like ", 2,")
-       r'-?-?(?:[({](?:\w*\s*(?:,|\.\.)\s*)*\w+[})]' # Variable literal (like ", (1, 2..2, 3),") with no ellipsis allowed at end
-       r'|[A-Za-z]+)'                                # Variable name (like ", aaaa,")
+       r'(?:[({](?:[\w\-]*\s*(?:,|\.\.)\s*)*[\w\-]+[})]'  # Variable literal (like ", (1, 2..2, 3),") with no ellipsis allowed at end
+       r'|[A-Za-z\-\d]+)'                            # Variable name (like ", aaaa,") or some subtraction operation
       rf'|\[(?:(?:\d|{__rCARDINALS})\s*:\s*)?'       # Or a mapping, which starts with either a number or the equivalent cardinal direction
-      rf'(?:{__rVAR}|[A-Za-z]+)])'                   # ...and then has either a variable name or literal (like ", [S: (1, 2, ...)],")
-      r'(?:-(?:(?:\d+|(?:[({](?:\w*\s*(?:,|\.\.)\s*)*\w+[})]|[A-Za-z]+)|)))?)'  # Subtrahends can't be bindings/mappings
+      rf'(?:{__rVAR}|[0A-Za-z]+)]))'                 # ...and then has (or only has, in which case it's a binding) either a variable name or literal (like ", [S: (1, 2, ...)]," or ", [0],")
        r'(?:\s*:\s*[1-8])?'                          # Optional permute-symmetry shorthand...
        r'(,)?(?(2)\s*)'                              # Then finally, an optional comma + whitespace after it. Last term has no comma.
-      )
-    _rSEGMENT = re.compile(
-      r'(?:((?:\d|{__rCARDINALS})(?:\s*\.\.\s*(?:\d|{__rCARDINALS}))?)\s+)?([A-Za-z]+|[({](?:\w*\s*(?:,|\.\.)\s*)*\w+[})])'
       )
     _rVAR = re.compile(__rVAR)
     
@@ -158,9 +155,9 @@ class AbstractTable:
         if var.startswith('--'):
             # Negation (from all states)
             return self._subtract_var(self.var_all, var[2:])
-        if '-' in var:
+        if '-' in var and ',' not in var:
             # Subtraction & negation (from live states)
-            subt, minuend = map(str.strip, var.split('-'))  # Actually don't *think* I need to strip bc can't have spaces anyway
+            subt, minuend = map(str.strip, var.split('-', 1))  # Actually don't *think* I need to strip bc can't have spaces anyway
             subt = self._parse_variable(subt) if subt else self.vars['live']
             return self._subtract_var(subt, minuend)
         cop = []
@@ -174,6 +171,14 @@ class AbstractTable:
                     raise SyntaxError((str(e).split("'")[1], state)) from None
             elif mapping and state == '...' or ptcd and state in ('...', '_'):
                 cop.append(state)
+            elif state.startswith('--'):
+                # Negation (from all states)
+                return self._subtract_var(self.var_all, state[2:])
+            elif '-' in state:
+                # Subtraction & negation (from live states)
+                subt, minuend = map(str.strip, state.split('-', 1))  # Actually don't *think* I need to strip bc can't have spaces anyway
+                subt = self._parse_variable(subt) if subt else self.vars['live']
+                return self._subtract_var(subt, minuend)
             else:
                 try:
                     cop.extend(self.vars[state])
@@ -244,7 +249,7 @@ class AbstractTable:
             if not self._rASSIGNMENT.fullmatch(decl):
                 raise TabelSyntaxError(lno, f'Invalid syntax in variable declaration (please let Wright know ASAP if this is incorrect)')
             name, value = map(str.strip, decl.split('='))
-
+            
             try:
                 var = self._parse_variable(value)
             except NameError as e:
@@ -348,7 +353,7 @@ class AbstractTable:
         """
         copy_to = tr[self.cardinals[match[1]]] if match[3] is None else tr[match[3] != '0' and self.cardinals[match[3]]]
         if match[2] is not None:  # Means it's a simple "CD:state" instead of a "CD[variable]"
-            return match[1], copy_to, map(int, match[2])
+            return match[1], '_None', copy_to, int(match[2])
         if match[4] in ('0', *self.cardinals) and match[3] is None:
             index = match[4] != '0' and self.cardinals[match[4]]
             return match[1], match[4], tr[index], tr[index]
@@ -391,6 +396,8 @@ class AbstractTable:
         return: output specifier expanded into its full transition(s)
         """
         cd_idx, copy_idx, copy_to, map_to = self._extract_ptcd_vars(tr, match, lno)
+        if copy_idx == '_None':  # i mean ...
+            return [self._make_transition(tr, cd_idx, None, copy_to, map_to)]
         # Start expanding to transitions
         transitions = []
         while isinstance(copy_to, str) and copy_to.startswith('['):

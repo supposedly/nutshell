@@ -1,0 +1,65 @@
+@RUEL Simpl
+
+From "Simpl" by _zM.
+Wiring rule with states requiring any number of neighbouring cells to be ON - B0/S0 to B8/S8 all in one rule, essentially.
+
+0, 1: permanently off
+
+Bx/Sx | off | on
+0     | 2   | 11
+1     | 3   | 12
+2     | 4   | 13
+3     | 5   | 14
+4     | 6   | 15
+5     | 7   | 16
+6     | 8   | 17
+7     | 9   | 18
+8     | 10  | 19
+
+20: permanently on
+
+@TABEL
+states: 21
+neighborhood: Moore
+symmetries: permute
+
+on = {11..20}
+off = {0..10}
+
+
+(2, 11), off, 11
+(3, 12), on:1, off, 12
+(4, 13), on:2, off, 13
+(5, 14), on:3, off, 14
+(6, 15), on, off, 15
+(7, 16), on:5, off, 16
+(8, 17), on:6, off, 17
+(9, 18), on:7, off, 18
+(10, 19), on, 19
+
+(11..19), any, [0: (2..10)]
+
+
+@COLORS
+
+0: 808080
+1: 000
+2: 6E0000
+3: 6E4800
+4: 486E00
+5: 006E00
+6: 006E48
+7: 00486E
+8: 00006E
+9: 48006E
+10: 6E0048
+11: FFC8C8
+12: FFECC8
+13: ECFFC8
+14: C8FFC8
+15: C8FFEC
+16: C8ECFF
+17: C8C8FF
+18: ECC8FF
+19: FFC8EC
+20: FFF

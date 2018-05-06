@@ -1,5 +1,7 @@
 """Utility functions to be used during rueltabel parsing."""
 import re
+from collections import defaultdict
+from itertools import count as itercount
 from math import ceil
 
 from . import classes
@@ -8,8 +10,9 @@ rSHORTHAND = re.compile(r'(\d+\s*\.\.\s*\d+)\s+(.+)')
 rRANGE = re.compile(r'\d\s*\.\.\s*\d?')
 rSEGMENT = re.compile(
   r'(?:([0-8](?:\s*\.\.\s*[0-8])?)\s+)?'
-  r'(-?-?\d+|-?-?(?:[({](?:\w*\s*(?:,|\.\.)\s*)*\w+[})]|\[?[A-Za-z]+]?)|\[[0-8]]|\[(?:[0-8]\s*:\s*)?(?:[({](?:\w*\s*(?:,|\.\.)\s*)*(?:\w|(?:\.\.\.)?)*[})]|[A-Za-z]+)])'
-  r'(?:-(?:(?:\d+|(?:[({](?:\w*\s*(?:,|\.\.)\s*)*\w+[})]|[A-Za-z]+)|)))?'
+  r'(-?-?\d+|-?-?(?:[({](?:[\w\-]*\s*(?:,|\.\.)\s*)*[\w\-]+[})]|\[?[A-Za-z\-]+]?)|\[[0-8]]|\[(?:[0-8]\s*:\s*)?'
+  r'(?:[({](?:[\w\-]*\s*(?:,|\.\.)\s*)*(?:[\w\-]|(?:\.\.\.)?)*[})]|[A-Za-z\-]+)])'
+  r'(?:-(?:(?:\d+|(?:[({](?:[\w\-]*\s*(?:,|\.\.)\s*)*[\w\-]+[})]|[A-Za-z\-]+)|)))?'
   r'(?:\s*:\s*([1-8]))?'
   )
 rBINDING = re.compile(r'\[(\d+)')
@@ -60,12 +63,12 @@ def bind_vars(tr: (list, tuple), *, second_pass=False, return_reps=True):
         a_0,1,2,a_0,a_1,a_2,6,7,8,a_1
     Also resolve mappings into Python tuples.
     """
-    seen, built = {}, []
+    seen, built = defaultdict(set), []
     if second_pass:  # Find current numbers before adding more
         for state in tr:
             try:
                 m = rALREADY.match(state)
-                seen[m[1]] = int(m[2])
+                seen[m[1]].add(int(m[2]))
             except TypeError:
                 continue
     for state in tr:
@@ -86,9 +89,10 @@ def bind_vars(tr: (list, tuple), *, second_pass=False, return_reps=True):
             except IndexError:
                 raise ValueError(f"Binding in '{val}' does not refer to a previous index")
         else:
-            seen[state] = 1 + seen.get(state, -1)
-            built.append(f"{state}{'' if state.endswith('_') else '_'}{seen[state]}")
-    return (seen, built) if return_reps else built
+            this_num = next(i for i in itercount() if i not in seen[state])
+            seen[state].add(this_num)
+            built.append(f"{state}{'' if state.endswith('_') else '_'}{this_num}")
+    return ({k: max(v) for k, v in seen.items()}, built) if return_reps else built
 
 
 def unbind_vars(tr: (list, tuple), rebind=True, bind_keep=False):

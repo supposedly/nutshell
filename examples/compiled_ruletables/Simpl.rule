@@ -1,0 +1,122 @@
+@RULE Simpl
+*********************************
+**** COMPILED FROM RUELTABEL ****
+*********************************
+
+
+From "Simpl" by _zM.
+Wiring rule with states requiring any number of neighbouring cells to be ON - B0/S0 to B8/S8 all in one rule, essentially.
+
+0, 1: permanently off
+
+Bx/Sx | off | on
+0     | 2   | 11
+1     | 3   | 12
+2     | 4   | 13
+3     | 5   | 14
+4     | 6   | 15
+5     | 7   | 16
+6     | 8   | 17
+7     | 9   | 18
+8     | 10  | 19
+
+20: permanently on
+
+@TABLE
+neighborhood: Moore
+symmetries: permute
+n_states: 21
+
+var __all__0 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+
+var on_0 = {11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+var on_1 = on_0
+var on_2 = on_0
+var on_3 = on_0
+var on_4 = on_0
+var on_5 = on_0
+var on_6 = on_0
+var on_7 = on_0
+
+var off_0 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+var off_1 = off_0
+var off_2 = off_0
+var off_3 = off_0
+var off_4 = off_0
+var off_5 = off_0
+var off_6 = off_0
+var off_7 = off_0
+
+var any_0 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+var any_1 = any_0
+var any_2 = any_0
+var any_3 = any_0
+var any_4 = any_0
+var any_5 = any_0
+var any_6 = any_0
+var any_7 = any_0
+
+var live_0 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+
+var _628758934920772_0 = {2, 11}
+
+var _890302857514376_0 = {3, 12}
+
+var _287349900330211_0 = {4, 13}
+
+var _251588397174546_0 = {5, 14}
+
+var _711812170150130_0 = {6, 15}
+
+var _618370303287386_0 = {16, 7}
+
+var _474572596347593_0 = {8, 17}
+
+var _904954952461376_0 = {9, 18}
+
+var _93042342085102_0 = {10, 19}
+
+var _525222718443583_0 = {11, 12, 13, 14, 15, 16, 17, 18, 19}
+
+_628758934920772_0, off_0, off_1, off_2, off_3, off_4, off_5, off_6, off_7, 11
+_890302857514376_0, on_0, off_0, off_1, off_2, off_3, off_4, off_5, off_6, 12
+_287349900330211_0, on_0, on_1, off_0, off_1, off_2, off_3, off_4, off_5, 13
+_251588397174546_0, on_0, on_1, on_2, off_0, off_1, off_2, off_3, off_4, 14
+_711812170150130_0, on_0, on_1, on_2, on_3, off_0, off_1, off_2, off_3, 15
+_618370303287386_0, on_0, on_1, on_2, on_3, on_4, off_0, off_1, off_2, 16
+_474572596347593_0, on_0, on_1, on_2, on_3, on_4, on_5, off_0, off_1, 17
+_904954952461376_0, on_0, on_1, on_2, on_3, on_4, on_5, on_6, off_0, 18
+_93042342085102_0, on_0, on_1, on_2, on_3, on_4, on_5, on_6, on_7, 19
+11, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 2
+12, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 3
+13, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 4
+14, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 5
+15, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 6
+16, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 7
+17, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 8
+18, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 9
+19, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 10
+
+
+@COLORS
+0 128 128 128
+1 0 0 0
+2 110 0 0
+3 110 72 0
+4 72 110 0
+5 0 110 0
+6 0 110 72
+7 0 72 110
+8 0 0 110
+9 72 0 110
+10 110 0 72
+11 255 200 200
+12 255 236 200
+13 236 255 200
+14 200 255 200
+15 200 255 236
+16 200 236 255
+17 200 200 255
+18 236 200 255
+19 255 200 236
+20 255 255 255
