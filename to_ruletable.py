@@ -3,8 +3,8 @@ import argparse
 import os
 
 from arg_parsing import args
-from magic import parser, compiler
-from magic.common import utils
+from rueltabel import parser, compiler
+from rueltabel.common import utils
 
 utils.VERBOSITY = args.verbosity
 

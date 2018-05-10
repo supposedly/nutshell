@@ -1,5 +1,5 @@
-from magic.common.utils import print_verbose
-from magic.common.classes.napkins import *
+from .utils import print_verbose
+from .classes.napkins import *
 
 
 def normalize(transitions, sym_lines):
