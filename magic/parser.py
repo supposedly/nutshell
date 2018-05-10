@@ -31,11 +31,11 @@ class AbstractTable:
       rf'((?:(?:\d|{__rCARDINALS})'                  # Purely-cosmetic cardinal direction before state (like ", NW 2,")
       rf'(?:\s*\.\.\s*(?:\d|{__rCARDINALS}))?\s+)?'  # Range of cardinal directions (like ", N..NW 2,")
        r'(?:-?-?\d+|'                                # Normal state (like ", 2,")
-       r'(?:[({](?:[\w\-]*\s*(?:,|\.\.)\s*)*[\w\-]+[})]'  # Variable literal (like ", (1, 2..2, 3),") with no ellipsis allowed at end
+      rf'(?:{__rSMALLVAR}'                           # Variable literal (like ", (1, 2..3, 4),") with no ellipsis allowed at end
        r'|[A-Za-z\-\d]+)'                            # Variable name (like ", aaaa,") or some subtraction operation
       rf'|\[(?:(?:\d|{__rCARDINALS})\s*:\s*)?'       # Or a mapping, which starts with either a number or the equivalent cardinal direction
       rf'(?:{__rVAR}|[0A-Za-z]+)]))'                 # ...and then has (or only has, in which case it's a binding) either a variable name or literal (like ", [S: (1, 2, ...)]," or ", [0],")
-       r'(?:\s*:\s*[1-8])?'                          # Optional permute-symmetry shorthand...
+       r'(?:\s*\*\s*[1-8])?'                         # Optional permute-symmetry shorthand...
        r'(,)?(?(2)\s*)'                              # Then finally, an optional comma + whitespace after it. Last term has no comma.
       )
     _rVAR = re.compile(__rVAR)
@@ -112,14 +112,13 @@ class AbstractTable:
           for lno, tr in self.transitions
           )
         for idx, (lno, tr) in _trs_no_names:
-            for in_tr in ((start, *napkin, end) for napkin in in_napkins.expand()):
-                for in_state, tr_state in zip(in_tr, tr):
-                    while isinstance(tr_state, str):
-                        tr_state = tr[int(tr_state)]
-                    if not (in_state == tr_state if isinstance(tr_state, int) else in_state in tr_state):
-                        break
-                else:
-                    return f'Found!\n\nLine {1+self._start+lno}: "{self[lno]}"\n(compiled line "{", ".join(map(str, self.transitions[idx][1]))}")\n'
+            for in_state, tr_state in (zip(in_tr, tr) for in_tr in ((start, *napkin, end) for napkin in in_napkins.expand())):
+                while isinstance(tr_state, str):
+                    tr_state = tr[int(tr_state)]
+                if not (in_state == tr_state if isinstance(tr_state, int) else in_state in tr_state):
+                    break
+            else:
+                return f'Found!\n\nLine {1+self._start+lno}: "{self[lno]}"\n(compiled line "{", ".join(map(str, self.transitions[idx][1]))}")\n'
         return None
     
     def _cardinal_sub(self, match):
@@ -139,7 +138,7 @@ class AbstractTable:
             match = tuple(i for i in subt if i not in self._parse_variable(minuend))
         else:
             if match > int(self.directives['n_states']):
-                raise ValueError('negated value greater than n_states hm')
+                raise ValueError('negated value greater than n_states !!!!!! !!! !!!!')
             match = tuple(i for i in subt if i != match)
         self.vars[Variable.random_name()] = match
         return match
@@ -232,7 +231,7 @@ class AbstractTable:
         return cardinals
     
     def _extract_initial_vars(self, start):
-        """
+        """should
         start: line number to start from
         
         Iterate through table and gather all explicit variable declarations.
@@ -451,7 +450,11 @@ class AbstractTable:
                   lno,
                   f"Invalid cardinal direction {e} for {self.directives['symmetries']!r} symmetry"
                   )
-            napkin = utils.expand_tr(napkin)
+            try:
+                napkin = utils.expand_tr(napkin)
+            except ValueError as e:
+                group, expected, got = e
+                raise TabelValueError(lno, f'Expected lower value of {expected} in group {group}, got {got}')
             # Parse napkin into proper range of ints
             for idx, elem in enumerate(napkin):
                 if elem.isdigit():
@@ -563,7 +566,7 @@ class ColorSegment:
     
     def __init__(self, colors, start=0):
         self._src = colors
-        self.colors = [k.split(':') for k in self._src if k]
+        self.colors = [k.split('#')[0].split(':' if ':' in k else None, 1) for k in self._src if k]
     
     def __iter__(self):
         return (f'{state} {r} {g} {b}' for d in self.states for state, (r, g, b) in d.items())
@@ -599,8 +602,7 @@ def parse(fp):
     for lno, line in enumerate(map(str.strip, fp), 1):
         if line.startswith('@'):
             # @RUEL, @TABEL, @COLORS, ...
-            sep = (None, ':')[':' in line]
-            segment, *name = map(str.strip, line.split(sep))
+            segment, *name = line.split()
             parts[segment], lines[segment] = name, lno
             continue
         parts[segment].append(line)
@@ -610,7 +612,7 @@ def parse(fp):
             segment, seg_lno = parts[lbl], lines[lbl]
         except KeyError:
             continue
-        if segment[0] == 'golly':
+        if segment[0].replace(' ', '').lower() == '#golly':
             parts[lbl] = segment[1:]
             continue
         try:

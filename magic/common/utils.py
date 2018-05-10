@@ -13,7 +13,7 @@ rSEGMENT = re.compile(
   r'(-?-?\d+|-?-?(?:[({](?:[\w\-]*\s*(?:,|\.\.)\s*)*[\w\-]+[})]|\[?[A-Za-z\-]+]?)|\[[0-8]]|\[(?:[0-8]\s*:\s*)?'
   r'(?:[({](?:[\w\-]*\s*(?:,|\.\.)\s*)*(?:[\w\-]|(?:\.\.\.)?)*[})]|[A-Za-z\-]+)])'
   r'(?:-(?:(?:\d+|(?:[({](?:[\w\-]*\s*(?:,|\.\.)\s*)*[\w\-]+[})]|[A-Za-z\-]+)|)))?'
-  r'(?:\s*:\s*([1-8]))?'
+  r'(?:\s*\*\s*([1-8]))?'
   )
 rBINDING = re.compile(r'\[(\d+)')
 rALREADY = re.compile(r'(.+)_(\d+)$')
@@ -138,7 +138,7 @@ def expand_tr(tr: (list, tuple)):
             continue
         lower, upper = classes.TabelRange.bounds(group)
         if lower != idx:
-            raise ValueError(group, state, {'lower': lower, 'idx': idx})
+            raise ValueError(group, lower, idx)
         span = upper - lower
         if all((state.startswith('['), ':' not in state, state[1:-1].isalpha())):  # if it's a binding with a var name inside
             group = [state[1:-1]]

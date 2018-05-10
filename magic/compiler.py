@@ -41,4 +41,4 @@ def compile(parsed):
         pass
     for segment_name, seg in parsed.items():
         rulefile.extend(('', '', segment_name, *seg))
-    return '\n'.join(rulefile)
+    return '\n'.join(rulefile) + '\n'
