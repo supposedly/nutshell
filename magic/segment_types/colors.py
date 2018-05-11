@@ -32,5 +32,5 @@ class ColorSegment:
     def _pack(self, color):
         m = self._rGOLLY_COLOR.fullmatch(color)
         if m is None:
-            return color
+            return color if len(color) == 6 else color * 2
         return struct.pack('BBB', *map(int, m.groups())).hex().upper()

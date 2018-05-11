@@ -1,12 +1,13 @@
 import re
 import random
+import string
 from collections import defaultdict
 from itertools import chain, filterfalse, groupby, takewhile
 from math import ceil
 
 import bidict
 
-#from ..common.classes.errors import TabelReferenceError, TabelValueError
+from ..common.classes.errors import TabelReferenceError, TabelValueError
 
 
 SYMBOL_MAP = bidict.frozenbidict({
@@ -15,7 +16,7 @@ SYMBOL_MAP = bidict.frozenbidict({
   **{num: chr(110 + ceil(num/24)) + chr(64 + (num % 24 or 24)) for num in range(25, 256)}
   })
 
-TWO_BYTE_CHARS = ''.join(filter(str.isprintable, map(chr, range(0x100, 0x800))))
+SAFE_CHARS = string.ascii_lowercase + string.digits + string.punctuation.replace('.', '')
 
 
 def lazylen(iterable):
@@ -58,8 +59,8 @@ class Icon:
         earliest = min(lazylen(takewhile('.'.__eq__, line)) for line in self._split)
         max_len = max(map(len, self._split))
         # Vertical padding
-        pre = len(self._split) // 2
-        post = len(self._split) - pre
+        pre = (self.HEIGHT - len(self._split)) // 2
+        post = (self.HEIGHT - len(self._split)) - pre
         return self._FILL * pre + [f"{f'{line[earliest:]:.<{max_len}}':.^{2*self.HEIGHT}}" for line in self._split] + self._FILL * post
 
 
@@ -92,7 +93,7 @@ class IconArray:
     
     @staticmethod
     def _make_name():
-        return random.choice(TWO_BYTE_CHARS)
+        return ''.join(random.sample(SAFE_CHARS, 2))
     
     def _parse_colors(self, start=0):
         lno, colormap = start, {}
@@ -116,20 +117,23 @@ class IconArray:
             if line.startswith('#'):
                 cur_state = int(''.join(filter(str.isdigit, line)))
                 if not 0 < cur_state < 256:
-                    raise TabelValueError(lno, f'Icon given for invalid state {cur_state}')
+                    raise TabelValueError(lno, f'Icon declared for invalid state {cur_state}')
                 continue
             states[cur_state].append(line)
         return states
     
     def _fill_missing_states(self):
         # Account for that some/all cellstates may be expressed as non-numeric symbols rather than their state's number
-        _colormap_inv = {v: k for k, v in self.colormap.items()}
         max_state = max(SYMBOL_MAP.inv.get(state, state) for state in self.icons)
+        _colormap_inv = {v: k for k, v in self.colormap.items()}
         for state in filterfalse(self.icons.__contains__, range(1, max_state)):
             try:
                 color = self._parsed_color_segment[state]
             except KeyError:
                 raise TabelReferenceError(self._start, f'No @ICONS-defined icon (and, subsequently, no substitute @COLORS-defined fill color) found for state {state}')
-            symbol = _colormap_inv.get(color, self._make_name())
+            _name = self._make_name()
+            while _name in self.colormap.values():
+                _name = self._make_name()
+            symbol = _colormap_inv.get(color, _name)
             self.colormap[symbol] = color
             self.icons[state] = Icon.solid_color(symbol)
