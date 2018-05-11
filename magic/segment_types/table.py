@@ -8,7 +8,12 @@ import bidict
 from ..common import desym, utils
 from ..common.utils import print_verbose
 from ..common.classes import napkins, Coord, TabelRange, Variable
-from ..common.classes.errors import TabelNameError, TabelSyntaxError, TabelValueError, TabelException
+from ..common.classes.errors import TabelReferenceError, TabelSyntaxError, TabelValueError, TabelException
+
+
+class Bidict(bidict.bidict):
+    """Just so I can modify on_dup_x without screwing with the base bidict cls"""
+    pass
 
 
 class AbstractTable:
@@ -44,11 +49,11 @@ class AbstractTable:
       'hexagonal': {'N': 1, 'E': 2, 'SE': 3, 'S': 4, 'W': 5, 'NW': 6}
       }
     
-    def __init__(self, tbl, start=0, *_):
+    def __init__(self, tbl, start=0):
         self._tbl = tbl
         self._start = start
         
-        self.vars = bidict.bidict()  # {Variable(name) | str(name) :: tuple(value)}
+        self.vars = Bidict()  # {Variable(name) | str(name) :: tuple(value)}
         self.var_all, self.var_all_rep = (), 0  # instead of self.vars['__all__']
         self.directives = {}
         self.transitions = []
@@ -222,7 +227,7 @@ class AbstractTable:
                 raise TabelValueError(None, f"Invalid neighborhood {self.directives['neighborhood']!r} declared")
         except KeyError as e:
             name = str(e).split("'")[1]
-            raise TabelNameError(None, f'{name!r} directive not declared')
+            raise TabelReferenceError(None, f'{name!r} directive not declared')
         self.directives['n_states'] = self.directives.pop('states')
         self.vars[Variable('any')] = self.var_all  # Provided beforehand
         self.vars[Variable('live')] = self.var_all[1:]  # Ditto^, all living states
@@ -253,7 +258,7 @@ class AbstractTable:
                 if not str(e):  # Means two consecutive commas, or a comma at the end of a literal
                     raise TabelSyntaxError(lno, 'Invalid comma placement in variable declaration')
                 adj = 'undefined' if str(e).isalpha() else 'invalid'
-                raise TabelNameError(lno, f"Declaration of variable {name!r} references {adj} name '{e}'")
+                raise TabelReferenceError(lno, f"Declaration of variable {name!r} references {adj} name '{e}'")
             except SyntaxError as e:
                 bound, range_ = e.msg
                 raise TabelSyntaxError(lno, f"Bound '{bound}' of range {range_} is not an integer")
@@ -357,7 +362,7 @@ class AbstractTable:
         try:
             _map_to, map_to = [], self._parse_variable(match[4], ptcd=True)
         except NameError as e:
-            raise TabelNameError(lno, f"Output specifier references undefined name '{e}'")
+            raise TabelReferenceError(lno, f"Output specifier references undefined name '{e}'")
         except SyntaxError as e:
             bound, range_ = e.msg
             raise TabelSyntaxError(lno, f"Bound '{bound}' of range {range_} is not an integer")
@@ -463,7 +468,7 @@ class AbstractTable:
                     try:
                         napkin[idx] = self.vars[elem]
                     except KeyError:
-                        raise TabelNameError(lno, f'Transition references undefined name {elem!r}')
+                        raise TabelReferenceError(lno, f'Transition references undefined name {elem!r}')
             ptcds = [(lno, tr) for ptcd in self._rPTCD.finditer(ptcds) for tr in self._parse_ptcd(napkin, ptcd, lno=lno)]
             self.transitions.extend([(lno, napkin), *ptcds])
     

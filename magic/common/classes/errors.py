@@ -15,7 +15,7 @@ class TabelException(SystemExit):
             self.code = f'\n  {exc_name} (line {1+shift+lno}):\n      {seg[lno]}\n  {msg}\n'
 
 
-class TabelNameError(TabelException):
+class TabelReferenceError(TabelException):
     pass
 
 

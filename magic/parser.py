@@ -1,11 +1,13 @@
+import inspect
+
 from .segment_types import AbstractTable, ColorSegment, IconArray
 from .common.classes.errors import TabelException
 
 
 CONVERTERS = {
-  '@ICONS': IconArray,
+  '@TABEL': AbstractTable,
   '@COLORS': ColorSegment,
-  '@TABEL': AbstractTable
+  '@ICONS': IconArray,
   }
 
 
@@ -35,11 +37,12 @@ def parse(fp):
         if segment[0].replace(' ', '').lower() == '#golly':
             parts[lbl] = segment[1:]
             continue
+        dep = inspect.signature(converter).parameters.get('dep', {})
         try:
-            parts[lbl] = converter(segment, seg_lno, parts)
+            parts[lbl] = converter(segment, seg_lno, **(dep and {'dep': parts.get(dep.annotation)}))
         except TabelException as exc:
             if exc.lno is None:
-                raise exc.__class__(exc.lno, exc.msg)
+                raise exc.__class__(None, exc.msg)
             raise exc.__class__(exc.lno, exc.msg, segment, seg_lno)
     
     return parts

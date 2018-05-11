@@ -1,6 +1,6 @@
 import argparse
 
-from rueltabel import compiler
+from magic import compiler
 
 def argtuple(s):
     return tuple(int(i.strip()) for i in s.split(','))
