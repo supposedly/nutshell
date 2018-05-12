@@ -1,5 +1,4 @@
 @RUEL bct
-
 An implementation of bitwise cyclic tag.
 
 state 0: Vacuum.
@@ -11,8 +10,6 @@ state 3: Program-tape 0.
 state 4: Program-tape 1.
 
 state 5: Shifter. Moves both itself and the data tape one unit down to render program execution cyclic.
-
-
 
 state 6: Transitory program-tape 0.
 state 7: Transitory program-tape 1.
@@ -32,30 +29,26 @@ state 15: Ditto but about to turn into normal reflector.
 state 16: To-be-moved-down data-tape 0.
 state 17: To-be-moved-down data-tape 1.
 
-@COLORS: golly
-1  235 235 235  lighter gray
-2   30  30  30  darker gray
-12 235 235 235  lighter gray
-13  30  30  30  darker gray
-16 235 235 235  lighter gray
-17  30  30  30  darker gray
-3  200 200 200  light gray
-4   90  90  90  dark gray
-5    0 255 255  cyan
-14   0 255 255  cyan
-15   0 255 255  cyan
+@COLORS
+      3: C8C8C8  # light gray
+      4: 5A5A5A  # dark gray
+1 12 16: EBEBEB  # lighter gray
+2 13 17: 1E1E1E  # darker gray
+5 14 15: 00FFFF  # cyan
 
 @TABEL
 states: 18
 neighborhood: Moore
 symmetries: none
 
+
 data = {1, 2}
 rdata = {12, 13}
 ddata = {16, 17}
-vacdata = {0, 1, 2}
+vacdata = {0..2}
 vacrdata = {0, 12, 13}
 vacddata = {0, 16, 17}
+
 
 # If a shifter is encountered, reflect + shift data tape down 2 cell
 # go right
@@ -72,20 +65,20 @@ rdata, any, any, any, any, any, any, 0, any, 0
 
 # shift the shifter down two as well
 # right
-0, 5, any, any, any, any, any, 0, rdata, 14
+0, 5, NE..SW any, 0, rdata, 14
 # left
-0, 5, data, 0, any, any, any, any, any, 14
+0, 5, data, 0, SE..NW any, 14
 # finally
 (14, 15), N..NW any, 0 -> S[0: (15, 5)]
 # delete shifter at end of its input stream
-5, 0, 0, 0, ddata, 0, 0, 0, 0, 0
-5, 0, 0, 0, 0, 0, data, 0, 0, 0
+5, N..E 0, SE ddata, S..NW 0, 0
+5, N..S 0, data, 0, 0, 0
 
 # Shift prgm tape down 1 if rightward data above it
 (3, 4), rdata, NE..NW any, [0: (10, 11)]
 
 # If a data bit has a shifter to its right, don't attempt to copy it
-data, any, any, 5, any, any, any, any, any, 0
+data, N..NE any, E 5, SE..NW any, 0
 
 # If a prgm-tape 1 is encountered, shift it downward
 # and append the command to its left (by copying+shifting down) onto the right end of the data tape, 

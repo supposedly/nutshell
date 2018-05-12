@@ -70,11 +70,11 @@ var any_7 = any_0
 
 var live_0 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17}
 
-var _233626425726624_0 = {14, 15}
+var _149636772488731_0 = {14, 15}
 
-var _227631875077152_0 = {3, 4}
+var _764365149070759_0 = {3, 4}
 
-var _328669587150795_0 = {10, 11}
+var _945675959837757_0 = {10, 11}
 
 vacddata_0, 1, any_0, any_1, any_2, any_3, any_4, any_5, 5, 16
 vacddata_0, 2, any_0, any_1, any_2, any_3, any_4, any_5, 5, 17
@@ -87,7 +87,7 @@ vacrdata_0, any_0, any_1, any_2, any_3, any_4, any_5, rdata_0, any_6, rdata_0
 rdata_0, any_0, any_1, any_2, any_3, any_4, any_5, 0, any_6, 0
 0, 5, any_0, any_1, any_2, any_3, any_4, 0, rdata_0, 14
 0, 5, data_0, 0, any_0, any_1, any_2, any_3, any_4, 14
-_233626425726624_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
+_149636772488731_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
 any_0, 14, any_1, any_2, __all__0, __all__1, __all__2, any_3, any_4, 15
 any_0, 15, any_1, any_2, __all__0, __all__1, __all__2, any_3, any_4, 5
 5, 0, 0, 0, ddata_0, 0, 0, 0, 0, 0
@@ -106,7 +106,7 @@ data_0, any_0, any_1, 5, any_2, any_3, any_4, any_5, any_6, 0
 0, 8, any_0, any_1, __all__0, __all__1, __all__2, any_2, any_3, 10
 9, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 2
 0, 9, any_0, any_1, __all__0, __all__1, __all__2, any_2, any_3, 11
-_328669587150795_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
+_945675959837757_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
 any_0, 10, any_1, any_2, __all__0, __all__1, __all__2, any_3, any_4, 3
 any_0, 11, any_1, any_2, __all__0, __all__1, __all__2, any_3, any_4, 4
 data_0, any_0, any_1, 0, any_2, data_1, any_3, any_4, any_5, data_1
@@ -123,14 +123,14 @@ vacdata_0, any_0, any_1, vacdata_1, any_2, any_3, any_4, any_5, any_6, vacdata_1
 
 
 @COLORS
-1  235 235 235  lighter gray
-2   30  30  30  darker gray
-12 235 235 235  lighter gray
-13  30  30  30  darker gray
-16 235 235 235  lighter gray
-17  30  30  30  darker gray
-3  200 200 200  light gray
-4   90  90  90  dark gray
-5    0 255 255  cyan
-14   0 255 255  cyan
-15   0 255 255  cyan
+3 200 200 200
+4 90 90 90
+1 235 235 235
+12 235 235 235
+16 235 235 235
+2 30 30 30
+13 30 30 30
+17 30 30 30
+5 0 255 255
+14 0 255 255
+15 0 255 255

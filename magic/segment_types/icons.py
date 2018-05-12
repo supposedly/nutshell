@@ -23,6 +23,12 @@ def lazylen(iterable):
     return sum(1 for _ in iterable)
 
 
+def maybe_double(symbol: str):
+    if len(symbol.encode()) < 2:
+        return symbol * 2
+    return symbol
+
+
 class Icon:
     HEIGHT = None
     _FILL = None
@@ -34,7 +40,7 @@ class Icon:
         self._FILL = ['..' * self.HEIGHT]
         self._rle = rle
         self._split =''.join(
-          (val * 2 if len(val.encode()) < 2 else val) * int(run_length or 1)
+          maybe_double(val) * int(run_length or 1)
           for run_length, val in
             self._rRUNS.findall(self._rle)
           ).split('$$')
@@ -50,9 +56,7 @@ class Icon:
     
     @classmethod
     def solid_color(cls, color):
-        if len(color.encode()) < 2:
-            color *= 2
-        return [color * cls.HEIGHT] * cls.HEIGHT
+        return [maybe_double(color) * cls.HEIGHT] * cls.HEIGHT
     
     def _pad(self):
         # Horizontal padding
@@ -87,13 +91,15 @@ class IconArray:
         # /* width height num_colors chars_per_pixel */
         yield f'"{Icon.HEIGHT} {len(self.icons)*Icon.HEIGHT} {len(self.colormap)} 2"'
         # /* colors */
-        yield from (f'"{(symbol * 2 if len(symbol.encode()) < 2 else symbol)} c #{color}"' for symbol, color in self.colormap.items())
+        yield from (f'"{maybe_double(symbol)} c #{color}"' for symbol, color in self.colormap.items())
         # /* icons */
         yield from (f'"{line}"' for icon in (self.icons[key] for key in sorted(self.icons)) for line in icon)
     
-    @staticmethod
-    def _make_name():
-        return ''.join(random.sample(SAFE_CHARS, 2))
+    def _make_color_symbol(self):
+        name = ''.join(random.sample(SAFE_CHARS, 2))
+        while name in self.colormap.values():
+            name = ''.join(random.sample(SAFE_CHARS, 2))
+        return name
     
     def _parse_colors(self, start=0):
         lno, colormap = start, {}
@@ -106,7 +112,7 @@ class IconArray:
             state, color = match.groups()
             if len(color) < 6:
                 color *= 2
-            colormap[SYMBOL_MAP[int(state)] if state.isdigit() else state * 2 if len(state.encode()) < 2 else state] = color.upper()
+            colormap[SYMBOL_MAP[int(state)] if state.isdigit() else maybe_double(state)] = color.upper()
         return colormap, lno
 
     def _sep_states(self, start) -> dict:
@@ -131,9 +137,6 @@ class IconArray:
                 color = self._parsed_color_segment[state]
             except KeyError:
                 raise TabelReferenceError(self._start, f'No @ICONS-defined icon (and, subsequently, no substitute @COLORS-defined fill color) found for state {state}')
-            _name = self._make_name()
-            while _name in self.colormap.values():
-                _name = self._make_name()
-            symbol = _colormap_inv.get(color, _name)
+            symbol = _colormap_inv.get(color, self._make_color_symbol())
             self.colormap[symbol] = color
-            self.icons[state] = Icon.solid_color(symbol)
+            self.icons[state] = list(Icon.solid_color(symbol))

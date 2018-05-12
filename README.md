@@ -1,5 +1,5 @@
 # rueltabel
-A compiler for a reimagined Golly ruletable language to the traditional format. See [`examples/`](/examples) for examples.
+A transpiler from a reimagined Golly ruletable language to the traditional format. See [`examples/`](/examples) for examples.
 
 ## Setup
 
@@ -15,8 +15,18 @@ A compiler for a reimagined Golly ruletable language to the traditional format. 
 $ python to_ruletable.py [infile] [outdir] [flags...]
 ```
 The output file will be written to `outdir` with a .rule extension and the same filename as `infile`.  
-Currently, the only supported flag is `-v` (`--verbose`), which will cause more info to be printed the
-more it is repeated (up to three repetitions).
+Supported flags:
+  - `-v`: Verbose. Can be repeated up to four times, causing more info to be displayed each time.
+  - `-t [HEADER]`: Change the "COMPILED FROM RUELTABEL" header that is added by default to transpiled
+                   rules. (If `-t` is given no argument the header will be removed)
+  - `-f TRANSITION`: Find a certain transition defined within a tabel section; requires, of course, that
+                     the rule have a `@TABEL` section to search within. Makes it so that, if a certain
+                     cell isn't behaving the way it's supposed to, you can `-f` the transition it's
+                     undergoing and the script will find the offending transition for you (instead of
+                     making you guess at what you typo'd).  
+                     Transition should be given in the standard Golly form `C,N,...,C'` -- that is, state of the
+                     current center cell, then its neighborhood, and finally the state it transitions into
+                     on the next tick. Example [here](https://user-images.githubusercontent.com/32081933/39951382-2b37fca0-553e-11e8-87b5-69685dfe4881.png)!  
 
 ## Spec
 - All variables unbound by default, because needing to define eight "any state" vars is ridiculous.
@@ -104,6 +114,19 @@ foo, N..NW bar, baz -> S:2 E[(2, 3)] SE[wutz] N[NE: (2, 3)] NE[E]
 - Support switching symmetries partway through via the `symmetries:` directive. (When parsing, this results in all transitions being expanded to the 'lowest'
 symmetry type specified overall.)
 
+## Non-table-related changes
+- The `@COLORS` segment in a ruelfile allows multiple states with the same color to be defined as such
+  on the same line as each other, and for colors to be written as either base-10 `R G B` values or as
+  hexadecimal color codes. `1 10: FFF`, for instance, says to assign the color `#FFFFFF` to states 1 and
+  10, and can also be written as `1 10: FFFFFF` or `1 10: 255 255 255` (or as two separate lines, although
+  the colon is still mandatory). Comments in this segment start with `#` and go until the end of their line.
+- The `@ICONS` segment uses an ad-hoc RLE syntax instead of Gollyesque XPM data. See [this post](http://conwaylife.com/forums/viewtopic.php?f=7&t=3361&p=59944#p59944)
+  for an explanation + example.
+- **All segments are optional**. The parser will also transcribe unidentified segments as is, meaning that
+  a file can have a `@TABLE` segment (under which the normal Golly ruletable language is used) rather than
+  `@TABEL` and it will not be modified by the parser.
+- Specially-treated ruel segments whose names are not respellings, like `@ICONS` and `@COLORS`, will still be
+  ignored by the parser if their header is immediately followed by the comment `#golly`, either on the same line (after whitespace) or on the line immediately below.
 
 ## To do
 - DOCS! Or at least a proper introductory writeup.

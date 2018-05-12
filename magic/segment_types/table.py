@@ -115,13 +115,14 @@ class AbstractTable:
           for lno, tr in self.transitions
           )
         for idx, (lno, tr) in _trs_no_names:
-            for in_state, tr_state in (zip(in_tr, tr) for in_tr in ((start, *napkin, end) for napkin in in_napkins.expand())):
-                while isinstance(tr_state, str):
-                    tr_state = tr[int(tr_state)]
-                if not (in_state == tr_state if isinstance(tr_state, int) else in_state in tr_state):
-                    break
-            else:
-                return f'Found!\n\nLine {1+self._start+lno}: "{self[lno]}"\n(compiled line "{", ".join(map(str, self.transitions[idx][1]))}")\n'
+            for in_tr in ((start, *napkin, end) for napkin in in_napkins.expand()):
+                for in_state, tr_state in zip(in_tr, tr):
+                    while isinstance(tr_state, str):  # binding
+                        tr_state = tr[int(tr_state)]
+                    if not (in_state == tr_state if isinstance(tr_state, int) else in_state in tr_state):
+                        break
+                else:
+                    return f'Found!\n\nLine {1+self._start+lno}: "{self._tbl[lno]}"\n(compiled line "{", ".join(map(str, self.transitions[idx][1]))}")\n'
         return None
     
     def _cardinal_sub(self, match):
