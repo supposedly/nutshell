@@ -7,6 +7,7 @@ from math import ceil
 
 import bidict
 
+from ..common.classes import ColorRange
 from ..common.classes.errors import TabelReferenceError, TabelValueError
 
 
@@ -37,7 +38,8 @@ class Icon:
     def __init__(self, rle):
         if self.HEIGHT not in (7, 15, 31):
             raise ValueError(f"Need to declare valid height (not '{self.HEIGHT!r}')")
-        self._FILL = ['..' * self.HEIGHT]
+        if self._FILL is None:
+            self.__class__._FILL = ['..' * self.HEIGHT]
         self._rle = rle
         self._split =''.join(
           maybe_double(val) * int(run_length or 1)
@@ -70,12 +72,14 @@ class Icon:
 
 class IconArray:
     _rDIMS = re.compile(r'\s*x\s*=\s*(\d+),\s*y\s*=\s*(\d+)')
-    _rCOLOR = re.compile(r'\s*(\d+|[.A-Z]|[p-y][A-O])\s+([0-9A-F]{6}|[0-9A-F]{3}).*')
+    _rCOLOR = re.compile(r'(\d+|[.A-Z]|[p-y][A-O])\s+([0-9A-F]{6}|[0-9A-F]{3}).*')
     
-    def __init__(self, seg, start=0, *, dep: '@COLORS'):
+    def __init__(self, seg, start=0, *, dep: ['@COLORS', '@TABEL']):
         self._src = seg
         self._start = start
-        self._parsed_color_segment = dep
+        self._parsed_color_segment, _tabel = dep
+        self._n_states = _tabel and _tabel.directives['n_states']
+        self._missing = None
         
         self.colormap, _start_state_def = self._parse_colors(start)
         self._states = self._sep_states(_start_state_def)
@@ -103,7 +107,17 @@ class IconArray:
     
     def _parse_colors(self, start=0):
         lno, colormap = start, {}
-        for lno, line in enumerate(self._src):
+        for lno, line in enumerate(map(str.strip, self._src)):
+            if line.startswith('?'):
+                # Can put n_states in a comment if no TABEL section to grab it from
+                pre, *post = line.split('#', 1)
+                # The *_ allows for an arbitrary separator like `000 ... FFF` between the two colors
+                _, start, *_, end = pre.split()
+                # If available, get n_states from said n_states-containing comment
+                n_states = post and int(''.join(filter(str.isdigit, post[0])))
+                # Construct ColorRange from states and start/end values
+                self._missing = ColorRange(int(self._n_states or n_states), start, end)
+                continue
             match = self._rCOLOR.match(line)
             if match is None:
                 if line:
@@ -135,8 +149,16 @@ class IconArray:
         for state in filterfalse(self.icons.__contains__, range(1, max_state)):
             try:
                 color = self._parsed_color_segment[state]
-            except KeyError:
-                raise TabelReferenceError(self._start, f'No @ICONS-defined icon (and, subsequently, no substitute @COLORS-defined fill color) found for state {state}')
+            except (KeyError, TypeError):  # (not present, no @COLORS)
+                if self._missing is None:
+                    raise TabelReferenceError(self._start,
+                      f'No icon available for state {state}. '
+                      'To change this, either (a) define an icon for it in @ICONS, '
+                      '(b) define a color for it in non-golly @COLORS to be filled in as a solid square, '
+                      "or (c) add a '?' ('missing' states) specifier to the initial @ICONS "
+                      'color declarations, followed by two colors: the start and end of a gradient.'
+                      )
+                color = self._missing[state]
             symbol = _colormap_inv.get(color, self._make_color_symbol())
             self.colormap[symbol] = color
-            self.icons[state] = list(Icon.solid_color(symbol))
+            self.icons[state] = Icon.solid_color(symbol)

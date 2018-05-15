@@ -436,7 +436,11 @@ class AbstractTable:
         Parse all the ruel's transitions into a list in self.transitions.
         """
         # They can change, but an initial set of symmetries needs to be declared before transitions
-        start = next(lno for lno, line in enumerate((i.split('#')[0].strip() for i in self[start:]), start) if line)
+        try:
+            start = next(lno for lno, line in enumerate((i.split('#')[0].strip() for i in self[start:]), start) if line)
+        except StopIteration:
+            # No transitions
+            return
         if self.directives['symmetries'] is None:
             raise TabelSyntaxError(start, "Transition before initial declaration of 'symmetries' directive")
         lno = start

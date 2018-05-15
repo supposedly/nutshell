@@ -37,11 +37,13 @@ def parse(fp):
         if segment[0].replace(' ', '').lower() == '#golly':
             parts[lbl] = segment[1:]
             continue
-        # If the converter requires another segment to work, it'll have
-        # a kwarg called 'dep' annotated with the name of said segment
-        dep = inspect.signature(converter).parameters.get('dep', {})
+        # If the converter requires another segment/s to work, it'll have
+        # a kwarg called 'dep' annotated with the name of said segment(s)
+        annot = getattr(inspect.signature(converter).parameters.get('dep'), 'annotation', {})
+        # This used to be so elegant but then I had to allow multiple deps
+        dep = parts.get(annot or None) if not isinstance(annot, (list, tuple)) else [parts.get(i) for i in annot]
         try:
-            parts[lbl] = converter(segment, seg_lno, **(dep and {'dep': parts.get(dep.annotation)}))
+            parts[lbl] = converter(segment, seg_lno, **(annot and {'dep': dep}))
         except TabelException as exc:
             if exc.lno is None:
                 raise exc.__class__(None, exc.msg)
