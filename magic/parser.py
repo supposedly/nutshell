@@ -13,7 +13,7 @@ CONVERTERS = {
 
 def parse(fp):
     """
-    fp: file pointer to a full .ruel file
+    fp: file obj pointing to a full ruelfile
     
     return: file, sectioned into dict with table and
     colors as convertable representations
@@ -37,6 +37,8 @@ def parse(fp):
         if segment[0].replace(' ', '').lower() == '#golly':
             parts[lbl] = segment[1:]
             continue
+        # If the converter requires another segment to work, it'll have
+        # a kwarg called 'dep' annotated with the name of said segment
         dep = inspect.signature(converter).parameters.get('dep', {})
         try:
             parts[lbl] = converter(segment, seg_lno, **(dep and {'dep': parts.get(dep.annotation)}))

@@ -17,8 +17,6 @@ def _handle_table(rulefile, tbl):
         rulefile.append(f'{directive}: {value}')
     rulefile.append('')
     
-    for suf in range(tbl.var_all_rep + 1):
-        rulefile.append(f"var __all__{suf} = {'__all__0' if suf else set(tbl.var_all)}")
     for var, value in tbl.vars.items():
         rulefile.append('')
         value = set(value)  # Removes duplicates and gives braces

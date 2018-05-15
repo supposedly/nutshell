@@ -54,13 +54,14 @@ class AbstractTable:
         self._start = start
         
         self.vars = Bidict()  # {Variable(name) | str(name) :: tuple(value)}
-        self.var_all, self.var_all_rep = (), 0  # instead of self.vars['__all__']
         self.directives = {}
         self.transitions = []
         self._symmetry_lines = []
         
         _assignment_start = self._extract_directives()
         _transition_start = self._extract_initial_vars(_assignment_start)
+        if self.directives['states'] == '?':
+            self._resolve_n_states(_assignment_start)
         
         self.cardinals = self._parse_directives()
         print_verbose(
@@ -109,7 +110,7 @@ class AbstractTable:
         in_napkins = sym_cls(in_tr)
         _trs_no_names = enumerate(
           (lno, [
-            self.vars.get(state, self.var_all if state == '__all__' else state)
+            self.vars.get(state, state)
             for state in utils.unbind_vars(int(i) if isinstance(i, int) or i.isdigit() else i for i in tr)
             ])
           for lno, tr in self.transitions
@@ -117,7 +118,7 @@ class AbstractTable:
         for idx, (lno, tr) in _trs_no_names:
             for in_tr in ((start, *napkin, end) for napkin in in_napkins.expand()):
                 for in_state, tr_state in zip(in_tr, tr):
-                    while isinstance(tr_state, str):  # binding
+                    while isinstance(tr_state, str):  # handle lingering bindings
                         tr_state = tr[int(tr_state)]
                     if not (in_state == tr_state if isinstance(tr_state, int) else in_state in tr_state):
                         break
@@ -157,7 +158,7 @@ class AbstractTable:
             return self.vars[var]
         if var.startswith('--'):
             # Negation (from all states)
-            return self._subtract_var(self.var_all, var[2:])
+            return self._subtract_var(self.vars['any'], var[2:])
         if '-' in var and ',' not in var:
             # Subtraction & negation (from live states)
             subt, minuend = map(str.strip, var.split('-', 1))  # Actually don't *think* I need to strip bc can't have spaces anyway
@@ -176,7 +177,7 @@ class AbstractTable:
                 cop.append(state)
             elif state.startswith('--'):
                 # Negation (from all states)
-                return self._subtract_var(self.var_all, state[2:])
+                return self._subtract_var(self.vars['any'], state[2:])
             elif '-' in state:
                 # Subtraction & negation (from live states)
                 subt, minuend = map(str.strip, state.split('-', 1))  # Actually don't *think* I need to strip bc can't have spaces anyway
@@ -195,6 +196,15 @@ class AbstractTable:
           self._symmetry_lines
           )
         self.transitions = [(lno, utils.bind_vars(tr, second_pass=True, return_reps=False)) for lno, tr in transitions]
+    
+    def _resolve_n_states(self, start):
+        """
+        Absolutely disgusting.
+        But sorta neatish.
+        """
+        r_int = re.compile(r'(?<!\w|\[)\d+(?!\w|])')  # Fails if the user decides to put [ 0 ] spaces inside their binding brackets...
+        self.directives['states'] = 1 + max(int(match.group().strip()) for line in self[start:] for match in r_int.finditer(line.split('#')[0]))
+        print_verbose(['Found n_states:', self.directives['states']])
     
     def _extract_directives(self, start=0):
         """
@@ -217,21 +227,20 @@ class AbstractTable:
     def _parse_directives(self):
         """
         Parse extracted directives to translate their values.
-        Also initialize the "__all__" and "any" variables.
+        Also initialize the "any" and "live" variables.
         """
         if self.directives['symmetries'] is not None:
             self._symmetry_lines.append((-1, self.directives['symmetries']))
         try:
-            self.var_all = tuple(range(int(self.directives['states'])))
+            self.vars[Variable('any')] = tuple(range(int(self.directives['states'])))
             cardinals = self.CARDINALS.get(self.directives['neighborhood'])
             if cardinals is None:
                 raise TabelValueError(None, f"Invalid neighborhood {self.directives['neighborhood']!r} declared")
         except KeyError as e:
             name = str(e).split("'")[1]
             raise TabelReferenceError(None, f'{name!r} directive not declared')
+        self.vars[Variable('live')] = self.vars['any'][1:]  # Ditto^, all living states
         self.directives['n_states'] = self.directives.pop('states')
-        self.vars[Variable('any')] = self.var_all  # Provided beforehand
-        self.vars[Variable('live')] = self.var_all[1:]  # Ditto^, all living states
         return cardinals
     
     def _extract_initial_vars(self, start):
@@ -264,9 +273,6 @@ class AbstractTable:
                 bound, range_ = e.msg
                 raise TabelSyntaxError(lno, f"Bound '{bound}' of range {range_} is not an integer")
             
-            if name == '__all__':  # the special var
-                self.var_all = var
-                continue
             if not name.isalpha():
                 raise TabelSyntaxError(
                   lno,
@@ -286,7 +292,7 @@ class AbstractTable:
         """
         Handles making a transition from PTCD iff the source and copy-to cells happen to be the same.
         """
-        new_tr = [initial, *['__all__']*len(self.cardinals), result]
+        new_tr = [initial, *['any']*len(self.cardinals), result]
         # Get adjacent cells to original cell (diagonal to current)
         try:
             new_tr[self.cardinals[orig.name]] = tr[0]
@@ -519,9 +525,6 @@ class AbstractTable:
             
             print_verbose(*[None]*3, [tr, '->', self.transitions[idx], '\n  reps:', reps], sep='', end='\n\n')
             for name, rep in reps.items():
-                if name == '__all__':
-                    self.var_all_rep = max(rep, self.var_all_rep)
-                    continue
                 var = self.vars[name]
                 if rep > self.vars.inv[var].rep:
                     self.vars.inv[var].rep = rep

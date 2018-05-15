@@ -3,7 +3,6 @@
 **** COMPILED FROM RUELTABEL ****
 *********************************
 
-
 An implementation of bitwise cyclic tag.
 
 state 0: Vacuum.
@@ -15,8 +14,6 @@ state 3: Program-tape 0.
 state 4: Program-tape 1.
 
 state 5: Shifter. Moves both itself and the data tape one unit down to render program execution cyclic.
-
-
 
 state 6: Transitory program-tape 0.
 state 7: Transitory program-tape 1.
@@ -41,9 +38,6 @@ neighborhood: Moore
 symmetries: none
 n_states: 18
 
-var __all__0 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17}
-var __all__1 = __all__0
-var __all__2 = __all__0
 
 var data_0 = {1, 2}
 var data_1 = data_0
@@ -70,11 +64,11 @@ var any_7 = any_0
 
 var live_0 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17}
 
-var _149636772488731_0 = {14, 15}
+var _584284969755385_0 = {14, 15}
 
-var _764365149070759_0 = {3, 4}
+var _33742858248726_0 = {3, 4}
 
-var _945675959837757_0 = {10, 11}
+var _42321466922139_0 = {10, 11}
 
 vacddata_0, 1, any_0, any_1, any_2, any_3, any_4, any_5, 5, 16
 vacddata_0, 2, any_0, any_1, any_2, any_3, any_4, any_5, 5, 17
@@ -87,9 +81,9 @@ vacrdata_0, any_0, any_1, any_2, any_3, any_4, any_5, rdata_0, any_6, rdata_0
 rdata_0, any_0, any_1, any_2, any_3, any_4, any_5, 0, any_6, 0
 0, 5, any_0, any_1, any_2, any_3, any_4, 0, rdata_0, 14
 0, 5, data_0, 0, any_0, any_1, any_2, any_3, any_4, 14
-_149636772488731_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
-any_0, 14, any_1, any_2, __all__0, __all__1, __all__2, any_3, any_4, 15
-any_0, 15, any_1, any_2, __all__0, __all__1, __all__2, any_3, any_4, 5
+_584284969755385_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
+any_0, 14, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 15
+any_0, 15, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 5
 5, 0, 0, 0, ddata_0, 0, 0, 0, 0, 0
 5, 0, 0, 0, 0, 0, data_0, 0, 0, 0
 3, rdata_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 10
@@ -101,20 +95,20 @@ data_0, any_0, any_1, 5, any_2, any_3, any_4, any_5, any_6, 0
 4, any_0, 1, 4, any_1, any_2, any_3, any_4, any_5, 7
 4, data_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 7
 7, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
-0, 7, any_0, any_1, __all__0, __all__1, __all__2, any_2, any_3, 11
+0, 7, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 11
 8, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 1
-0, 8, any_0, any_1, __all__0, __all__1, __all__2, any_2, any_3, 10
+0, 8, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 10
 9, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 2
-0, 9, any_0, any_1, __all__0, __all__1, __all__2, any_2, any_3, 11
-_945675959837757_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
-any_0, 10, any_1, any_2, __all__0, __all__1, __all__2, any_3, any_4, 3
-any_0, 11, any_1, any_2, __all__0, __all__1, __all__2, any_3, any_4, 4
+0, 9, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 11
+_42321466922139_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
+any_0, 10, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 3
+any_0, 11, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 4
 data_0, any_0, any_1, 0, any_2, data_1, any_3, any_4, any_5, data_1
 data_0, any_0, any_1, 0, data_1, any_2, any_3, any_4, any_5, data_1
 data_0, data_1, 0, any_0, any_1, any_2, any_3, any_4, any_5, 0
 3, data_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 6
 6, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
-any_0, 6, any_1, any_2, __all__0, __all__1, __all__2, any_3, any_4, 10
+any_0, 6, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 10
 0, any_0, any_1, data_0, 3, any_2, any_3, any_4, any_5, 0
 data_0, data_1, any_0, any_1, any_2, any_3, any_4, any_5, any_6, data_0
 0, data_0, any_0, data_1, any_1, any_2, any_3, any_4, any_5, 0

@@ -48,13 +48,6 @@ def conv_permute(tr: str, total: int):
     return f"{start[0]},{','.join(classes.AdditiveDict(gen).expand())},{end[0]}"
 
 
-def _unbind(name):
-    """
-    Quick & dirty. 'foo_342' -> 'foo', and '__all__0' -> '__all__'
-    """
-    return '__all__' if name.startswith('__all__') else name.rsplit('_', 1)[0]
-
-
 def bind_vars(tr: (list, tuple), *, second_pass=False, return_reps=True):
     """
     Given an unbound ruel transition like the following:
@@ -82,7 +75,7 @@ def bind_vars(tr: (list, tuple), *, second_pass=False, return_reps=True):
                 raise SyntaxError(f"Invalid attempted variable binding '{val}'")
             try:
                 built.append(
-                  (ref, _unbind(built[ref]), val[1+val.find(':'):].strip())
+                  (ref, built[ref].rsplit('_', 1)[0], val[1+val.find(':'):].strip())
                   if ':' in val else
                   built[ref]
                   )
@@ -100,7 +93,7 @@ def unbind_vars(tr: (list, tuple), rebind=True, bind_keep=False):
     seen, built = {}, []
     for idx, state in enumerate(tr):
         if state not in seen:
-            built.append(_unbind(state) if isinstance(state, str) else state)
+            built.append(state.rsplit('_', 1)[0] if isinstance(state, str) else state)
             seen[state] = idx
         elif bind_keep:
             built[seen[state]] = state
