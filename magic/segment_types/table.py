@@ -50,7 +50,7 @@ class AbstractTable:
       }
     
     def __init__(self, tbl, start=0, *, dep: '@RUEL'):
-        self._tbl = tbl
+        self._src = tbl
         self._start = start
         
         self.vars = Bidict()  # {Variable(name) | str(name) :: tuple(value)}
@@ -98,13 +98,13 @@ class AbstractTable:
         self._fix_symmetries()
     
     def __iter__(self):
-        return iter(self._tbl)
+        return iter(self._src)
     
     def __getitem__(self, item):
-        return self._tbl[item]
+        return self._src[item]
     
     def __setitem__(self, item, value):
-        self._tbl[item] = value
+        self._src[item] = value
     
     def match(self, tr):
         """
@@ -130,7 +130,7 @@ class AbstractTable:
                     if not (in_state == tr_state if isinstance(tr_state, int) else in_state in tr_state):
                         break
                 else:
-                    return f'Found!\n\nLine {1+self._start+lno}: "{self._tbl[lno]}"\n(compiled line "{", ".join(map(str, self.transitions[idx][1]))}")\n'
+                    return f'Found!\n\nLine {1+self._start+lno}: "{self[lno]}"\n(compiled line "{", ".join(map(str, self.transitions[idx][1]))}")\n'
         return None
     
     def _cardinal_sub(self, match):
@@ -267,15 +267,18 @@ class AbstractTable:
         Additionally, {<name>} is removed from final @RUEL output.
         """
         r_const = re.compile(r'(\s*)(\d+):(.*?)\s*\{\s*([A-Za-z]+)\s*}(.*)')
+        found = False
         for lno, line in enumerate(dep):
             match = r_const.match(line)
             if match is not None:
                 _0, state, _1, name, _2 = match.groups()
                 self._constants[name] = int(state)
                 dep[lno] = f'{_0}{state}:{_1}{_2}'
-        r_consts = re.compile(r'\b' + r'\b|\b'.join(self._constants) + r'\b')
-        for idx, line in enumerate(self):
-            self[idx] = r_consts.sub(lambda m: str(self._constants[m[0]]), line)
+                found = True
+        if found:
+            r_consts = re.compile(r'\b' + r'\b|\b'.join(self._constants) + r'\b')
+            for idx, line in enumerate(self):
+                self[idx] = r_consts.sub(lambda m: str(self._constants[m[0]]), line)
 
     
     def _extract_initial_vars(self, start):

@@ -3,6 +3,7 @@ HEADER = '''\
 **** COMPILED FROM RUELTABEL ****
 *********************************
 '''
+COMMENT_SRC = True
 
 
 def _handle_rule(rulefile, seg):
@@ -24,7 +25,17 @@ def _handle_table(rulefile, tbl):
         for suf in range(1, 1+var.rep):
             rulefile.append(f'var {var.name}_{suf} = {var.name}_0')
     rulefile.append('')
-    rulefile.extend(', '.join(map(str, tr)) for _lno, tr in tbl.transitions)
+    if COMMENT_SRC:
+        def new():
+            done = set()
+            for lno, tr in tbl.transitions:
+                if lno not in done:
+                    yield f"# {tbl[lno].split('#')[0]}"
+                    done.add(lno)
+                yield ', '.join(map(str, tr))
+    else:
+        new = lambda: (', '.join(map(str, tr)) for _lno, tr in tbl.transitions)
+    rulefile.extend(new())
 
 
 def compile(parsed):

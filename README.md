@@ -17,6 +17,8 @@ $ python to_ruletable.py [infile] [outdir] [flags...]
 The output file will be written to `outdir` with a .rule extension and the same filename as `infile`.  
 Supported flags:
   - `-v`: Verbose. Can be repeated up to four times, causing more info to be displayed each time.
+  - `-c`: Comment. Writes each original rueltabel line as a comment above the line(s) it compiles
+          to in the final output.
   - `-t [HEADER]`: Change the "COMPILED FROM RUELTABEL" header that is added by default to transpiled
                    rules. (If `-t` is given no argument the header will be removed)
   - `-f TRANSITION`: Find a certain transition defined within a tabel section; requires, of course, that

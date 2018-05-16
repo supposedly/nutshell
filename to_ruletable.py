@@ -2,7 +2,7 @@
 import argparse
 import os
 
-from arg_parsing import args
+from arg_parser import args
 from magic import parser, compiler
 from magic.common import utils
 
