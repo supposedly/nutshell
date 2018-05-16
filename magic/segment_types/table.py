@@ -1,4 +1,4 @@
-"""Facilitates parsing of a rueltabel file into an abstract, computer-readable format."""
+"""Facilitates parsing of a rueltabel file into an abstract, compiler.py-readable format."""
 import re
 import struct
 from itertools import zip_longest as zipln
@@ -13,7 +13,7 @@ from ..common.classes.errors import TabelReferenceError, TabelSyntaxError, Tabel
 
 class Bidict(bidict.bidict):
     """Just so I can modify on_dup_x without screwing with the base bidict cls"""
-    pass
+    on_dup_val = bidict.OVERWRITE
 
 
 class AbstractTable:
@@ -24,7 +24,7 @@ class AbstractTable:
     __rVAR = r'[({](?:[\w\-]*\s*(?:,|\.\.)\s*)*(?:[\w\-]|(?:\.\.\.)?)*[})]'
     __rSMALLVAR = r'[({](?:[\w\-]*\s*(?:,|\.\.)\s*)*[\w\-]+[})]'
     
-    _rASSIGNMENT = re.compile(rf'\w+?\s*=\s*{__rVAR}')
+    _rASSIGNMENT = re.compile(rf'\w+?\s*=\s*-?-?(?:{__rSMALLVAR}|\d+|[A-Za-z]+)(?:--?-?(?:[A-Za-z]+|\d+|{__rSMALLVAR}))?')
     _rBINDMAP = re.compile(rf'\[[0-8](?::\s*?(?:{__rVAR}|[^_]\w+?))?\]')
     _rCARDINAL = re.compile(rf'\b(\[)?({__rCARDINALS})((?(1)\]))\b')
     _rPTCD = re.compile(rf'\b({__rCARDINALS})(?::(\d+)\b|:?\[(?:(0|{__rCARDINALS})\s*:)?\s*(\w+|{__rVAR})\s*]\B)')
@@ -49,7 +49,7 @@ class AbstractTable:
       'hexagonal': {'N': 1, 'E': 2, 'SE': 3, 'S': 4, 'W': 5, 'NW': 6}
       }
     
-    def __init__(self, tbl, start=0):
+    def __init__(self, tbl, start=0, *, dep: '@RUEL'):
         self._tbl = tbl
         self._start = start
         
@@ -57,13 +57,17 @@ class AbstractTable:
         self.directives = {}
         self.transitions = []
         self._symmetry_lines = []
+        self._constants = {}
+        
+        if dep is not None:
+            self._extract_constants(dep)
         
         _assignment_start = self._extract_directives()
-        _transition_start = self._extract_initial_vars(_assignment_start)
         if self.directives['states'] == '?':
             self._resolve_n_states(_assignment_start)
-        
         self.cardinals = self._parse_directives()
+        
+        _transition_start = self._extract_initial_vars(_assignment_start)
         print_verbose(
           '\b'*4 + 'PARSED directives & var assignments',
           ['\b\bdirectives:', self.directives, '\b\bvars:', self.vars],
@@ -145,7 +149,6 @@ class AbstractTable:
             if match > int(self.directives['n_states']):
                 raise ValueError('negated value greater than n_states !!!!!! !!! !!!!')
             match = tuple(i for i in subt if i != match)
-        self.vars[Variable.random_name()] = match
         return match
     
     def _parse_variable(self, var: str, *, mapping=False, ptcd=False):
@@ -156,10 +159,12 @@ class AbstractTable:
         """
         if var.isalpha() or var.startswith('_'):
             return self.vars[var]
+        if var in self._constants:
+            return self._constants[var]
         if var.startswith('--'):
             # Negation (from all states)
             return self._subtract_var(self.vars['any'], var[2:])
-        if '-' in var and ',' not in var:
+        if '-' in var and not self._rVAR.fullmatch(var):
             # Subtraction & negation (from live states)
             subt, minuend = map(str.strip, var.split('-', 1))  # Actually don't *think* I need to strip bc can't have spaces anyway
             subt = self._parse_variable(subt) if subt else self.vars['live']
@@ -239,9 +244,27 @@ class AbstractTable:
         except KeyError as e:
             name = str(e).split("'")[1]
             raise TabelReferenceError(None, f'{name!r} directive not declared')
-        self.vars[Variable('live')] = self.vars['any'][1:]  # Ditto^, all living states
+        self.vars[Variable('live')] = self.vars['any'][1:]
         self.directives['n_states'] = self.directives.pop('states')
         return cardinals
+    
+    def _extract_constants(self, dep):
+        """
+        Extract constants from @RUEL section, defined as follows:
+
+            <state>: <...> {<name>} <...>
+        
+        Where <name> is the constant's name.
+        Additionally, {<name>} is removed from final @RUEL output.
+        """
+        r_const = re.compile(r'(\s*)(\d+):(.*?)\s*\{\s*([A-Za-z]+)\s*}(.*)')
+        for lno, line in enumerate(dep):
+            match = r_const.match(line)
+            if match is not None:
+                _0, state, _1, name, _2 = match.groups()
+                self._constants[name] = int(state)
+                dep[lno] = f'{_0}{state}:{_1}{_2}'
+
     
     def _extract_initial_vars(self, start):
         """should
@@ -259,16 +282,20 @@ class AbstractTable:
             if not decl:
                 continue
             if not self._rASSIGNMENT.fullmatch(decl):
-                raise TabelSyntaxError(lno, f'Invalid syntax in variable declaration (please let Wright know ASAP if this is incorrect)')
+                raise TabelSyntaxError(lno, f'Invalid syntax in variable declaration')
             name, value = map(str.strip, decl.split('='))
+            
+            if value.isdigit():
+                self._constants[name] = int(value)
+                continue
             
             try:
                 var = self._parse_variable(value)
             except NameError as e:
                 if not str(e):  # Means two consecutive commas, or a comma at the end of a literal
                     raise TabelSyntaxError(lno, 'Invalid comma placement in variable declaration')
-                adj = 'undefined' if str(e).isalpha() else 'invalid'
-                raise TabelReferenceError(lno, f"Declaration of variable {name!r} references {adj} name '{e}'")
+                adjective = 'undefined' if str(e).isalpha() else 'invalid'
+                raise TabelReferenceError(lno, f"Declaration of variable {name!r} references {adjective} name '{e}'")
             except SyntaxError as e:
                 bound, range_ = e.msg
                 raise TabelSyntaxError(lno, f"Bound '{bound}' of range {range_} is not an integer")
@@ -280,7 +307,7 @@ class AbstractTable:
                   )
             try:
                 self.vars[Variable(name)] = var
-            except bidict.ValueDuplicationError:
+            except bidict.ValueDuplicationError:  # Deprecated currently
                 raise TabelValueError(lno, f"Value {value} is already assigned to variable '{self.vars.inv[var]}'")
         # bidict devs, between the start of this project and 5 May 2018,
         # decided to make bidict().on_dup_val a read-only property
@@ -477,7 +504,7 @@ class AbstractTable:
                     self.vars[Variable.random_name()] = napkin[idx] = self._parse_variable(elem)
                 elif not self._rBINDMAP.match(elem):  # leave mappings and bindings untouched for now
                     try:
-                        napkin[idx] = self.vars[elem]
+                        napkin[idx] = self.vars[elem] if elem in self.vars else self._constants[elem]
                     except KeyError:
                         raise TabelReferenceError(lno, f'Transition references undefined name {elem!r}')
             ptcds = [(lno, tr) for ptcd in self._rPTCD.finditer(ptcds) for tr in self._parse_ptcd(napkin, ptcd, lno=lno)]
