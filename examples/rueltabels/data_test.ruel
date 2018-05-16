@@ -1,0 +1,68 @@
+@RUEL data_test
+
+ 1: {Data} Data
+
+ 2: {Prompt} Output prompter
+ 3: {DataOut} Data turned output, will revert to data on next generation
+ 4: {ZeroOut} Data being output, will revert to vacuum on next generation
+ 5: {FinalDataOut} Data being output that will not extend anymore
+ 6: {FinalZeroOut} Data being output that will not extend anymore
+
+ 7: Incrementor            {IncSignal}
+ 8: ^ moving through data  {IncData}
+ 9: Decrementor            {DecSignal}
+10: ^ moving through data  {DecData}
+
+x = 15, y = 15, rule = data_test
+.A$2.A$3.A2.A$4.A.2A$A.A2.A.2A$.A.2A.4A2.A$.2A.7A.2A$2.13A$9.B2$8.B2$
+10.G2$12.I!
+
+@TABEL
+states: ?
+neighborhood: Moore
+symmetries: none
+
+vacdata = (0, 1)
+up = (2, 3)
+out = (4, 3)
+signal = (IncSignal, DecSignal, 2)
+
+signal, 0, live, E..W 0, live, 0 -> N[0: (1, 0, ...)]
+
+Prompt, 0, NE..NW any, 0 -> N:Prompt
+
+vacdata, N..SE any, S up, any, W 0, NW any, [0: (6, 5)]
+{6, 5}, N..NW any, [0: vacdata] -> N[(6, 5, _, ...)]
+
+up, N..NW any, [0: vacdata] -> N[(4, 3, _, ...)]
+
+out, N..NW any, [0: vacdata] -> N[(4, 3, _, ...)]  NW[(_, 3, _, ...)]
+
+IncSignal, N..NW any, 0 -> N[(IncSignal, IncData, ...)]
+DecSignal, N..NW any, 0 -> N[(DecSignal, DecData, ...)]
+
+Data, N..E any, SE DecData, S..NW any, [NW: (0, DecData, ...)]
+vacdata, N..E any, SE IncData, S..NW any, [0: (1, IncData)]
+0, N..E any, SE IncData, S..NW any, [NW: (Data, IncData, ...)]
+
+DecData, N..E any, SE 0, S..NW any, [NW: (vacdata, ...)]
+{IncData, DecData}, N..NW any, Data
+
+
+@ICONS
+? 00FFFF .. FF0000  # 10
+0 303030
+1 FFF
+2 00A0FF
+
+#C 2
+x = 7, y = 6, rule = data_test
+2A2.2A$A.A.A.A$A.A.A.A$2A2.A.A$A.A.A.A$A.A.2A!
+
+#C 7
+x = 7, y = 7, rule = data_test
+2.2B$2.2B$6B$6B$2.2B$2.2B!
+
+#C 9
+x = 6, y = 2, rule = data_test
+6B$6B!

@@ -103,6 +103,9 @@ class AbstractTable:
     def __getitem__(self, item):
         return self._tbl[item]
     
+    def __setitem__(self, item, value):
+        self._tbl[item] = value
+    
     def match(self, tr):
         """
         Finds the first transition in self.transitions matching tr.
@@ -180,14 +183,16 @@ class AbstractTable:
                     raise SyntaxError((str(e).split("'")[1], state)) from None
             elif mapping and state == '...' or ptcd and state in ('...', '_'):
                 cop.append(state)
+            elif state in self._constants:
+                cop.append(self._constants[state])
             elif state.startswith('--'):
                 # Negation (from all states)
-                return self._subtract_var(self.vars['any'], state[2:])
+                cop.extend(self._subtract_var(self.vars['any'], state[2:]))
             elif '-' in state:
                 # Subtraction & negation (from live states)
                 subt, minuend = map(str.strip, state.split('-', 1))  # Actually don't *think* I need to strip bc can't have spaces anyway
                 subt = self._parse_variable(subt) if subt else self.vars['live']
-                return self._subtract_var(subt, minuend)
+                cop.extend(self._subtract_var(subt, minuend))
             else:
                 try:
                     cop.extend(self.vars[state])
@@ -208,7 +213,11 @@ class AbstractTable:
         But sorta neatish.
         """
         r_int = re.compile(r'(?<!\w|\[)\d+(?!\w|])')  # Fails if the user decides to put [ 0 ] spaces inside their binding brackets...
-        self.directives['states'] = 1 + max(int(match.group().strip()) for line in self[start:] for match in r_int.finditer(line.split('#')[0]))
+        self.directives['states'] = 1 + max(
+          int(match.group().strip())
+          for line in self[start:]
+          for match in r_int.finditer(line.split('#')[0])
+          )
         print_verbose(['Found n_states:', self.directives['states']])
     
     def _extract_directives(self, start=0):
@@ -264,6 +273,9 @@ class AbstractTable:
                 _0, state, _1, name, _2 = match.groups()
                 self._constants[name] = int(state)
                 dep[lno] = f'{_0}{state}:{_1}{_2}'
+        r_consts = re.compile(r'\b' + r'\b|\b'.join(self._constants) + r'\b')
+        for idx, line in enumerate(self):
+            self[idx] = r_consts.sub(lambda m: str(self._constants[m[0]]), line)
 
     
     def _extract_initial_vars(self, start):

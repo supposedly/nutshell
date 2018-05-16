@@ -54,11 +54,17 @@ class Icon:
     @classmethod
     def set_height(cls, dims):
         max_dim = max(map(max, zip(*dims)))
-        cls.HEIGHT = min((7, 15, 31), key=lambda x: abs(max_dim-x))
+        cls.HEIGHT = min(filter(max_dim.__le__, (7, 15, 31)), key=lambda x: abs(max_dim-x))
     
     @classmethod
     def solid_color(cls, color):
         return [maybe_double(color) * cls.HEIGHT] * cls.HEIGHT
+    
+    @staticmethod
+    def _fix_two(s):
+        if not any('.' in i != ('.', '.') for i in zip(*[iter(s)]*2)):
+            return s
+        return s[1:] + '.'
     
     def _pad(self):
         # Horizontal padding
@@ -67,7 +73,7 @@ class Icon:
         # Vertical padding
         pre = (self.HEIGHT - len(self._split)) // 2
         post = (self.HEIGHT - len(self._split)) - pre
-        return self._FILL * pre + [f"{f'{line[earliest:]:.<{max_len}}':.^{2*self.HEIGHT}}" for line in self._split] + self._FILL * post
+        return self._FILL * pre + [self._fix_two(f"{f'{line[earliest:]:.<{max_len}}':.^{2*self.HEIGHT}}") for line in self._split] + self._FILL * post
 
 
 class IconArray:
@@ -79,6 +85,7 @@ class IconArray:
         self._start = start
         self._parsed_color_segment, _tabel = dep
         self._n_states = _tabel and _tabel.directives['n_states']
+        self._set_states = None
         self._missing = None
         
         self.colormap, _start_state_def = self._parse_colors(start)
@@ -114,9 +121,9 @@ class IconArray:
                 # The *_ allows for an arbitrary separator like `000 ... FFF` between the two colors
                 _, start, *_, end = pre.split()
                 # If available, get n_states from said n_states-containing comment
-                n_states = post and int(''.join(filter(str.isdigit, post[0])))
+                self._set_states = post and int(''.join(filter(str.isdigit, post[0]))) or self._n_states
                 # Construct ColorRange from states and start/end values
-                self._missing = ColorRange(int(self._n_states or n_states), start, end)
+                self._missing = ColorRange(int(self._set_states), start, end)
                 continue
             match = self._rCOLOR.match(line)
             if match is None:
@@ -144,7 +151,7 @@ class IconArray:
     
     def _fill_missing_states(self):
         # Account for that some/all cellstates may be expressed as non-numeric symbols rather than their state's number
-        max_state = max(SYMBOL_MAP.inv.get(state, state) for state in self.icons)
+        max_state = 1 + (self._set_states or max(SYMBOL_MAP.inv.get(state, state) for state in self.icons))
         _colormap_inv = {v: k for k, v in self.colormap.items()}
         for state in filterfalse(self.icons.__contains__, range(1, max_state)):
             try:
