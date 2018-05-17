@@ -1,6 +1,6 @@
 """Errors to be raised during rueltabel parsing."""
 class TabelException(SystemExit):
-    def __init__(self, lno: int, msg: str, seg: list = None, shift: int = 0):
+    def __init__(self, lno: int, msg: str, seg_name: str = None, segment: list = None, shift: int = 0):
         """
         lno: line number error occurred on
         msg: error message
@@ -8,11 +8,11 @@ class TabelException(SystemExit):
         shift: line number seg starts on
         """
         self.lno, self.msg = lno, msg
-        exc_name = self.__class__.__name__
-        self.code = f'\n  {exc_name}: {msg}\n' if lno is None else f'\n  {exc_name} (line {1+shift+lno}): {msg}\n'
-        if isinstance(seg, (list, tuple)):
+        start = f'\n  {self.__class__.__name__} in {seg_name}'
+        self.code = f'{start}: {msg}\n' if lno is None else f'{start} (line {1+shift+lno}): {msg}\n'
+        if isinstance(segment, list):
             # add 1 because 'lno' is zero-indexed
-            self.code = f'\n  {exc_name} (line {1+shift+lno}):\n      {seg[lno]}\n  {msg}\n'
+            self.code = f'{start} (line {1+shift+lno}):\n      {segment[lno]}\n  {msg}\n'
 
 
 class TabelReferenceError(TabelException):
@@ -29,6 +29,7 @@ class TabelValueError(TabelException):
 
 class TabelFeatureUnsupported(TabelException):
     pass
+
 
 class CoordOutOfBoundsError(Exception):
     """

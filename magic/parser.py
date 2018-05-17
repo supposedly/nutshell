@@ -29,13 +29,13 @@ def parse(fp):
             continue
         parts[segment].append(line)
     
-    for lbl, converter in CONVERTERS.items():
+    for label, converter in CONVERTERS.items():
         try:
-            segment, seg_lno = parts[lbl], lines[lbl]
+            segment, seg_lno = parts[label], lines[label]
         except KeyError:
             continue
         if segment[0].replace(' ', '').lower() == '#golly':
-            parts[lbl] = segment[1:]
+            parts[label] = segment[1:]
             continue
         # If the converter requires another segment/s to work, it'll have
         # a kwarg called 'dep' annotated with the name of said segment(s)
@@ -43,10 +43,10 @@ def parse(fp):
         # This used to be so elegant but then I had to allow multiple deps
         dep = parts.get(annot or None) if not isinstance(annot, (list, tuple)) else [parts.get(i) for i in annot]
         try:
-            parts[lbl] = converter(segment, seg_lno, **(annot and {'dep': dep}))
+            parts[label] = converter(segment, seg_lno, **(annot and {'dep': dep}))
         except TabelException as exc:
             if exc.lno is None:
-                raise exc.__class__(None, exc.msg)
-            raise exc.__class__(exc.lno, exc.msg, segment, seg_lno)
+                raise exc.__class__(None, exc.msg, label)
+            raise exc.__class__(exc.lno, exc.msg, label, segment, seg_lno)
     
     return parts

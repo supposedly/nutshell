@@ -33,11 +33,10 @@ class AbstractTable:
        r'(?<!-)'                                     # To avoid minuends being counted as segments (regardless of comma's presence)
       rf'((?:(?:\d|{__rCARDINALS})'                  # Purely-cosmetic cardinal direction before state (like ", NW 2,")
       rf'(?:\s*\.\.\s*(?:\d|{__rCARDINALS}))?\s+)?'  # Range of cardinal directions (like ", N..NW 2,")
-       r'(?:-?-?\d+|'                                # Normal state (like ", 2,")
       rf'(?:{__rSMALLVAR}'                           # Variable literal (like ", (1, 2..3, 4),") with no ellipsis allowed at end
-       r'|[A-Za-z\-\d]+)'                            # Variable name (like ", aaaa,") or some subtraction operation
+       r'|[\w\-]+)'                                  # Variable name (like ", aaaa,"), some subtraction operation, or a normal numeric state
       rf'|\[(?:(?:\d|{__rCARDINALS})\s*:\s*)?'       # Or a mapping, which starts with either a number or the equivalent cardinal direction
-      rf'(?:{__rVAR}|[0A-Za-z]+)]))'                 # ...and then has (or only has, in which case it's a binding) either a variable name or literal (like ", [S: (1, 2, ...)]," or ", [0],")
+      rf'(?:{__rVAR}|[0A-Za-z]+)])'                  # ...and then has (or only has, in which case it's a binding) either a variable name or literal (like ", [S: (1, 2, ...)]," or ", [0],")
        r'(?:\s*\*\s*[1-8])?'                         # Optional permute-symmetry shorthand...
        r'(,)?(?(2)\s*)'                              # Then finally, an optional comma + whitespace after it. Last term has no comma.
       )

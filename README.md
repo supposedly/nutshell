@@ -30,25 +30,12 @@ Supported flags:
                      current center cell, then its neighborhood, and finally the state it transitions into
                      on the next tick. Example [here](https://user-images.githubusercontent.com/32081933/39951382-2b37fca0-553e-11e8-87b5-69685dfe4881.png)!  
 
-## Spec
-- All variables unbound by default, because needing to define eight "any state" vars is ridiculous.
+## What's new
+- All variables always unbound, because needing to define eight "any state" vars is ridiculous.
 - Support for `{}` literals, usable directly in transitions, as 'on-the-spot' variables. (Parentheses are also allowed. I personally prefer them to braces.)
 - Support for cellstate *ranges* in variables, via double..dots as in `(0..8)` -- interspersible with state-by-state specification,
   so you can do `(0, 1, 4..6, 9)` to mean `(0, 1, 4, 5, 6, 9)`.
-- Support for negation and subtraction of variables via the `-` and `--` operators:
-```py
-0, foo-bar, bar-2, bar-(2, 3), -1, --1, -bar, --(3, 4), (foo, bar), baz
-
-# foo-bar says "All states in foo that are not in bar"
-# foo-2 says "All states in foo that are not 2"
-# bar-(2, 3) says "All states in bar that are not in (2, 3)"
-# -1 says "All *live* states that are not 1" (expands to {2, 3, 4} assuming n_states==5)
-# --1 says "*All* states (including 0) that are not 1" (expands to {0, 2, 3, 4} assuming the same)
-# -bar and --(3, 4) say the same but with multiple states enclosed in a variable
-```
-Note that `--` can never be used between two variables; its only purpose is negation including state 0. `-`, however, is overloaded to mean both subtraction and negation-excluding-0.  
-"Addition" of two variables can be accomplished by placing them in a variable literal, as in the final state above.
-- Allow a variable to be made 'bound' by referring to its *index* in the transition, wrapped in [brackets]:  
+- A variable is made 'bound' by referring to its *index* in the transition, wrapped in [brackets]:  
 ```py
 # current (barC repeats)
 foo,barA,barB,barC,barD,barE,barF,barG,barH,barC
@@ -91,44 +78,82 @@ replace what would otherwise require a separate transition for each of `0`...`1`
   Mapping of course works with named variables as well.
 - If a variable literal is too small to map to, an error will be raised that can be rectified by either (a) filling it out with explicit transitions,
 or (b) using the `...` operator to say *"fill the rest out with whatever value preceded the `...`"*.
-- If the "map-to" is instead *larger* than its "map-from", extraneous values will simply be ignored.
-- Treat live cells as moving objects: allow a cardinal direction to travel in and resultant cell state to be specified post transition.
+  If the "map-to" is instead *larger* than its "map-from", extraneous values will simply be ignored.
+- Support for negation and subtraction of variables via the `-` and `--` operators:
 ```py
-foo, N..NW bar, baz -> S:2 E[(2, 3)] SE[wutz] N[NE: (2, 3)] NE[E]
+0, foo-bar, bar-2, bar-(2, 3), -1, --1, -bar, --(3, 4), (foo, bar), baz
+
+# foo-bar says "All states in foo that are not in bar"
+# foo-2 says "All states in foo that are not 2"
+# bar-(2, 3) says "All states in bar that are not in (2, 3)"
+# -1 says "All *live* states that are not 1" (expands to {2, 3, 4} assuming n_states==5)
+# --1 says "*All* states (including 0) that are not 1" (expands to {0, 2, 3, 4} assuming the same)
+# -bar and --(3, 4) say the same but with multiple states enclosed in a variable
+``` 
+"Addition" of two variables can be accomplished by placing them in a variable literal, as in the final state above.
+- Live cells can be treated as moving objects: a cardinal direction to travel in and resultant cell state are specifiable post transition.
+```py
+foo, N..NW bar, baz -> S:2  E[(2, 3)]  SE[wutz]  N[NE: (2, 3)]  NE[E]
 
 # S:2 says "spawn a state-2 cell to my south"
 
 # E[(2, 3)] and SE[wutz] say "map this cell (E or SE) to this variable"
 
-# N[NE: (2, 3)] says "spawn a cell to the north
+# N[NE: (2, 3)] says "spawn a cell to my north
 # that maps the *northeastern* state variable to the (2, 3) literal."
 
-# Be careful with this last syntax! You cannot, for example, write
-# N[SE: (2, 3)] -- it implies a violation of the speed of light.
+# N[NE] is identical to N[NE: bar], or N[NE: [N]] if nested binding/mapping were supported
+# "spawn a cell to my north that maps the *northeastern* state variable to the one currently
+# north of me."
+
+# Be careful with the syntax presented in these last two bits! You cannot, for example, write
+# NW[S] or N[SE: (2, 3)] -- these imply a violation of the speed of light.
 ```
-- Within these "post-transition cardinal direction specifiers" (referred to as "output specifiers", formerly "PTCDs"), the `_` keyword says "leave the cell as is".
-- Allow transitions under permutational symmetry to make use of a shorthand syntax, specifying only the quantity of cells in each state. For example, `0,2,2,2,1,1,1,0,0,1`
+- Within these "output specifiers" (formerly "PTCDs" from "**p**ost-**t**ransition **c**ompass-**d**irection specifier**s**"), the `_` keyword says "leave the cell as is".
+- Transitions under permutational symmetry can make use of a shorthand syntax, specifying only the quantity of cells in each state. For example, `0,2,2,2,1,1,1,0,0,1`
   in a Moore+permute rule can be compacted to `0, 2*3, 1*3, 0*2, 1`.  
   Unmarked states will be filled in to match the number of cells in the transition's neighborhood, meaning
   that this transition can also be written as `0, 0*2, 1, 2, 1` or `0, 1*3, 2*3, 0, 1`.  
   - If the number of cells to fill is not divisible by the number of unmarked states, precedence will
     be given to those that appear earlier; `2,1,0`, for instance, will also expand into `2,2,2,1,1,1,0,0`, but `0,1,2` will expand into `0,0,0,1,1,1,2,2`.
-- Support switching symmetries partway through via the `symmetries:` directive. (When parsing, this results in all transitions being expanded to the 'lowest'
+- You're allowed to switch symmetries partway through via the `symmetries:` directive. (When parsing, this results in all transitions being expanded to the 'lowest'
 symmetry type specified overall.)
 
 ## Non-table-related changes
-- The `@COLORS` segment in a ruelfile allows multiple states with the same color to be defined as such
-  on the same line as each other, and for colors to be written as either base-10 `R G B` values or as
-  hexadecimal color codes. `1 10: FFF`, for instance, says to assign the color `#FFFFFF` to states 1 and
-  10, and can also be written as `1 10: FFFFFF` or `1 10: 255 255 255` (or as two separate lines, although
-  the colon is still mandatory). Comments in this segment start with `#` and go until the end of their line.
-- The `@ICONS` segment uses an ad-hoc RLE syntax instead of Gollyesque XPM data. See [this post](http://conwaylife.com/forums/viewtopic.php?f=7&t=3361&p=59944#p59944)
+- Comments in every segment (barring `@RUEL`, where everything after the first word is a comment) start with `#` and stretch to the end of a line.
+- The `@COLORS` segment in a ruelfile allows multiple states with the same color to be defined
+  on the same line as each other, and for a color to be written as either a hexadecimal color code or a
+  group of base-10 `R G B` values. `1 10: FFF`, for instance, says to assign the color `#FFFFFF` to states 1 and
+  10, and can also be written as `1 10: FFFFFF` or `1 10: 255 255 255` (or as two separate lines for each of `1` and `10`, although
+  the colon remains mandatory).
+- The `@ICONS` segment is based around RLEs instead of Gollyesque XPM data. See [this post](http://conwaylife.com/forums/viewtopic.php?f=7&t=3361&p=59944#p59944)
   for an explanation + example.
-- **All segments are optional**. The parser will also transcribe unidentified segments as is, meaning that
-  a file can have a `@TABLE` segment (under which the normal Golly ruletable language is used) rather than
-  `@TABEL` and it will not be modified by the parser.
-- Specially-treated ruel segments whose names are not respellings, like `@ICONS` and `@COLORS`, will still be
-  ignored by the parser if their header is immediately followed by the comment `#golly`, either on the same line (after whitespace) or on the line immediately below.
+- The `@RUEL` segment allows *constants*, which carry over to and are usable in the `@TABEL` segment, to be
+  defined alongside a description of each state. Take the following example:
+
+```rb
+@RUEL foo
+
+1: Stationary data {Data}
+3: Signal over data
+4: Signal over vacuum {Signal}
+
+@TABEL
+...
+```
+  The names `Data` and `Signal` will be usable within the `@TABEL` section as aliases for, respectively, `1` and `4`.  
+  It is recommended, but nowhere required, that constant names be written in `PascalCase` and normal variable names in `lowercase` or `camelCase`;
+  the initial capital letter helps visually distinguish constants from multi-state variables.  
+  For the actual registering of a constant, all that matters is that its line in `@RUEL` start with `<number>:` and contain anywhere a pair
+  of `{braces}` that enclose the constant's name. The braced part and any whitespace separating it from the previous word will be removed
+  from the final `@RULE` segment in the output file.
+- **All segments are optional**. The parser will in addition transcribe "non-special" segments *as is*, meaning that
+  a file can have a `@TABLE` segment (under which can be written a normal Golly ruletable) rather than
+  `@TABEL` and it will not be touched by the parser but appear in the final output; same with writing
+  `@RULE` rather than `@RUEL`.
+- "Special" rueltabel segments whose names are not respellings, like `@ICONS` and `@COLORS`, will still be
+  ignored by the parser if their header is immediately followed by the comment `#golly` -- either on the same line
+  (after whitespace) or on the line immediately below.
 
 ## To do
 - DOCS! Or at least a proper introductory writeup.

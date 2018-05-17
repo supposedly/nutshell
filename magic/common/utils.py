@@ -9,8 +9,9 @@ from . import classes
 rSHORTHAND = re.compile(r'(\d+\s*\.\.\s*\d+)\s+(.+)')
 rRANGE = re.compile(r'\d\s*\.\.\s*\d?')
 rSEGMENT = re.compile(
+  r'(?:(?<=,)|(?<=^))\s*'
   r'(?:([0-8](?:\s*\.\.\s*[0-8])?)\s+)?'
-  r'(-?-?\d+|-?-?(?:[({](?:[\w\-]*\s*(?:,|\.\.)\s*)*[\w\-]+[})]|\[?[A-Za-z\-]+]?)|\[[0-8]]|\[(?:[0-8]\s*:\s*)?'
+  r'(-?-?(?:[({](?:[\w\-]*\s*(?:,|\.\.)\s*)*[\w\-]+[})]|\[?[\w\-]+]?)|\[[0-8]]|\[(?:[0-8]\s*:\s*)?'
   r'(?:[({](?:[\w\-]*\s*(?:,|\.\.)\s*)*(?:[\w\-]|(?:\.\.\.)?)*[})]|[A-Za-z\-]+)])'
   r'(?:-(?:(?:\d+|(?:[({](?:[\w\-]*\s*(?:,|\.\.)\s*)*[\w\-]+[})]|[A-Za-z\-]+)|)))?'
   r'(?:\s*\*\s*([1-8]))?'
@@ -37,6 +38,7 @@ def conv_permute(tr: str, total: int):
     # Balance unspecified values
     seq = [(match[2], match[3]) for match in rSEGMENT.finditer(tr)]
     start, end = seq.pop(0), seq.pop(-1)
+    print(start, seq, end)
     # How many cells filled
     tally = total - sum(int(i) for _, i in seq if i)
     # And how many empty slots left to fill
