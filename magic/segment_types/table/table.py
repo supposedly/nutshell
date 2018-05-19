@@ -1,14 +1,13 @@
 """Facilitates parsing of a rueltabel file into an abstract, compiler.py-readable format."""
 import re
-import struct
 from itertools import zip_longest as zipln
 
 import bidict
 
-from ..common import desym, utils
-from ..common.utils import print_verbose
-from ..common.classes import napkins, Coord, TabelRange, Variable
-from ..common.classes.errors import TabelReferenceError, TabelSyntaxError, TabelValueError, TabelException
+from ...common.errors import *
+from ...common.utils import print_verbose
+from . import _napkins as napkins, _utils as utils
+from ._classes import Coord, TabelRange, Variable
 
 
 class Bidict(bidict.bidict):
@@ -34,7 +33,7 @@ class AbstractTable:
       rf'((?:(?:\d|{__rCARDINALS})'                  # Purely-cosmetic cardinal direction before state (like ", NW 2,")
       rf'(?:\s*\.\.\s*(?:\d|{__rCARDINALS}))?\s+)?'  # Range of cardinal directions (like ", N..NW 2,")
       rf'(?:{__rSMALLVAR}'                           # Variable literal (like ", (1, 2..3, 4),") with no ellipsis allowed at end
-       r'|[\w\-]+)'                                  # Variable name (like ", aaaa,"), some subtraction operation, or a normal numeric state
+       r'|[\w\-]+)+'                                 # Variable name (like ", aaaa,"), some subtraction operation, or a normal numeric state (ad indefiniteness bc subtraction)
       rf'|\[(?:(?:\d|{__rCARDINALS})\s*:\s*)?'       # Or a mapping, which starts with either a number or the equivalent cardinal direction
       rf'(?:{__rVAR}|[0A-Za-z]+)])'                  # ...and then has (or only has, in which case it's a binding) either a variable name or literal (like ", [S: (1, 2, ...)]," or ", [0],")
        r'(?:\s*\*\s*[1-8])?'                         # Optional permute-symmetry shorthand...
@@ -168,7 +167,7 @@ class AbstractTable:
             return self._subtract_var(self.vars['any'], var[2:])
         if '-' in var and not self._rVAR.fullmatch(var):
             # Subtraction & negation (from live states)
-            subt, minuend = map(str.strip, var.split('-', 1))  # Actually don't *think* I need to strip bc can't have spaces anyway
+            subt, minuend = var.split('-', 1)  # Actually don't *think* I need to strip bc can't have spaces anyway
             subt = self._parse_variable(subt) if subt else self.vars['live']
             return self._subtract_var(subt, minuend)
         cop = []
@@ -189,7 +188,7 @@ class AbstractTable:
                 cop.extend(self._subtract_var(self.vars['any'], state[2:]))
             elif '-' in state:
                 # Subtraction & negation (from live states)
-                subt, minuend = map(str.strip, state.split('-', 1))  # Actually don't *think* I need to strip bc can't have spaces anyway
+                subt, minuend = state.split('-', 1)  # Actually don't *think* I need to strip bc can't have spaces anyway
                 subt = self._parse_variable(subt) if subt else self.vars['live']
                 cop.extend(self._subtract_var(subt, minuend))
             else:
@@ -200,7 +199,7 @@ class AbstractTable:
         return tuple(cop)
     
     def _fix_symmetries(self):
-        transitions, self.directives['symmetries'] = desym.normalize(
+        transitions, self.directives['symmetries'] = utils.desym(
           [(lno, utils.unbind_vars(tr, bind_keep=True)) for lno, tr in self.transitions],
           self._symmetry_lines
           )

@@ -1,33 +1,11 @@
 import re
 import random
-import string
 from collections import defaultdict
-from itertools import chain, filterfalse, groupby, takewhile
-from math import ceil
+from itertools import chain, filterfalse, takewhile
 
-import bidict
-
-from ..common.classes import ColorRange
-from ..common.classes.errors import TabelReferenceError, TabelValueError
-
-
-SYMBOL_MAP = bidict.frozenbidict({
-    0: '.',
-  **{num: chr(64+num) for num in range(1, 25)},
-  **{num: chr(110 + ceil(num/24)) + chr(64 + (num % 24 or 24)) for num in range(25, 256)}
-  })
-
-SAFE_CHARS = string.ascii_lowercase + string.digits + string.punctuation.replace('.', '')
-
-
-def lazylen(iterable):
-    return sum(1 for _ in iterable)
-
-
-def maybe_double(symbol: str):
-    if len(symbol.encode()) < 2:
-        return symbol * 2
-    return symbol
+from ...common.errors import *
+from ._classes import ColorRange
+from ._utils import lazylen, maybe_double, SAFE_CHARS, SYMBOL_MAP
 
 
 class Icon:
@@ -41,7 +19,7 @@ class Icon:
         if self._FILL is None:
             self.__class__._FILL = ['..' * self.HEIGHT]
         self._rle = rle
-        self._split =''.join(
+        self._split = ''.join(
           maybe_double(val) * int(run_length or 1)
           for run_length, val in
             self._rRUNS.findall(self._rle)
@@ -121,7 +99,7 @@ class IconArray:
                 # The *_ allows for an arbitrary separator like `000 ... FFF` between the two colors
                 _, start, *_, end = pre.split()
                 # If available, get n_states from said n_states-containing comment
-                self._set_states = post and int(''.join(filter(str.isdigit, post[0]))) or self._n_states
+                self._set_states = int(''.join(filter(str.isdigit, post[0]))) if post else self._n_states
                 # Construct ColorRange from states and start/end values
                 self._missing = ColorRange(int(self._set_states), start, end)
                 continue

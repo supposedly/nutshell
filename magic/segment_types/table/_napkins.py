@@ -1,5 +1,4 @@
 from itertools import permutations
-from functools import lru_cache
 
 
 __all__ = 'NAMES', 'NoSymmetry', 'ReflectHorizontal', 'Rotate2', 'Rotate3', 'Rotate4', 'Rotate4Reflect', 'Rotate6', 'Rotate6Reflect', 'Rotate8', 'Rotate8Reflect', 'Permute'

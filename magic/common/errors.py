@@ -29,10 +29,3 @@ class TabelValueError(TabelException):
 
 class TabelFeatureUnsupported(TabelException):
     pass
-
-
-class CoordOutOfBoundsError(Exception):
-    """
-    Raised when |one of a coord's values| > 1
-    """
-    pass

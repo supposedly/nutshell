@@ -1,7 +1,7 @@
 import inspect
 
 from .segment_types import AbstractTable, ColorSegment, IconArray
-from .common.classes.errors import TabelException
+from .common.errors import TabelException
 
 
 CONVERTERS = {

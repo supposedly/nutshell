@@ -1,4 +1,4 @@
-from ..common.classes import ColorMixin
+from ...common.classes import ColorMixin
 
 class ColorSegment(ColorMixin):
     """

@@ -34,7 +34,8 @@ def _handle_table(rulefile, tbl):
                     done.add(lno)
                 yield ', '.join(map(str, tr))
     else:
-        new = lambda: (', '.join(map(str, tr)) for _lno, tr in tbl.transitions)
+        def new():
+            return (', '.join(map(str, tr)) for _lno, tr in tbl.transitions)
     rulefile.extend(new())
 
 
