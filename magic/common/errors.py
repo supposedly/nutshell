@@ -9,7 +9,7 @@ class TabelException(SystemExit):
         """
         self.lno, self.msg = lno, msg
         start = f'\n  {self.__class__.__name__} in {seg_name}'
-        self.code = f'{start}: {msg}\n' if lno is None else f'{start} (line {1+shift+lno}): {msg}\n'
+        self.code = f'{start}:\n      {msg}\n' if lno is None else f'{start} (line {1+shift+lno}):\n      {msg}\n'
         if isinstance(segment, list):
             # add 1 because 'lno' is zero-indexed
             self.code = f'{start} (line {1+shift+lno}):\n      {segment[lno]}\n  {msg}\n'

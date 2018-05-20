@@ -56,17 +56,16 @@ class Icon:
 
 class IconArray:
     _rDIMS = re.compile(r'\s*x\s*=\s*(\d+),\s*y\s*=\s*(\d+)')
-    _rCOLOR = re.compile(r'(\d+|[.A-Z]|[p-y][A-O])\s+([0-9A-F]{6}|[0-9A-F]{3}).*')
+    _rCOLOR = re.compile(r'(\d+:\s*|[.A-Z]|[p-y][A-O]\s+)([0-9A-F]{6}|[0-9A-F]{3}).*')
     
     def __init__(self, seg, start=0, *, dep: ['@COLORS', '@TABEL']):
         self._src = seg
-        self._start = start
         self._parsed_color_segment, _tabel = dep
         self._n_states = _tabel and _tabel.directives['n_states']
         self._set_states = None
-        self._missing = None
+        self._fill_gradient = None
         
-        self.colormap, _start_state_def = self._parse_colors(start)
+        self.colormap, _start_state_def = self._parse_colors()
         self._states = self._sep_states(_start_state_def)
         
         # this mess just constructs a "sequence" of (x, y) coords to pass to set_height(), grabbed from the RLEs in self._states.values()
@@ -101,14 +100,14 @@ class IconArray:
                 # If available, get n_states from said n_states-containing comment
                 self._set_states = int(''.join(filter(str.isdigit, post[0]))) if post else self._n_states
                 # Construct ColorRange from states and start/end values
-                self._missing = ColorRange(int(self._set_states), start, end)
+                self._fill_gradient = ColorRange(int(self._set_states), start, end)
                 continue
             match = self._rCOLOR.match(line)
             if match is None:
                 if line:
                     break
                 continue
-            state, color = match.groups()
+            color, state = match[2], match[1].strip().strip(':')
             if len(color) < 6:
                 color *= 2
             colormap[SYMBOL_MAP[int(state)] if state.isdigit() else maybe_double(state)] = color.upper()
@@ -120,11 +119,12 @@ class IconArray:
             if not line:
                 continue
             if line.startswith('#'):
-                cur_state = int(''.join(filter(str.isdigit, line)))
-                if not 0 < cur_state < 256:
-                    raise TabelValueError(lno, f'Icon declared for invalid state {cur_state}')
+                cur_states = {int(i) for split in map(str.split, line.split(',')) for i in split if i.isdigit()}
+                if not all(0 < state < 256 for state in cur_states):
+                    raise TabelValueError(lno, f'Icon declared for invalid state {next(i for i in cur_states if not 0 < i < 256)}')
                 continue
-            states[cur_state].append(line)
+            for state in cur_states:
+                states[state].append(line)
         return states
     
     def _fill_missing_states(self):
@@ -135,15 +135,15 @@ class IconArray:
             try:
                 color = self._parsed_color_segment[state]
             except (KeyError, TypeError):  # (not present, no @COLORS)
-                if self._missing is None:
-                    raise TabelReferenceError(self._start,
+                if self._fill_gradient is None:
+                    raise TabelReferenceError(None,
                       f'No icon available for state {state}. '
                       'To change this, either (a) define an icon for it in @ICONS, '
                       '(b) define a color for it in non-golly @COLORS to be filled in as a solid square, '
                       "or (c) add a '?' ('missing' states) specifier to the initial @ICONS "
                       'color declarations, followed by two colors: the start and end of a gradient.'
                       )
-                color = self._missing[state]
+                color = self._fill_gradient[state]
             symbol = _colormap_inv.get(color, self._make_color_symbol())
             self.colormap[symbol] = color
             self.icons[state] = Icon.solid_color(symbol)

@@ -8,10 +8,10 @@
  5: {FinalDataOut} Data being output that will not extend anymore
  6: {FinalZeroOut} Data being output that will not extend anymore
 
- 7: Incrementor            {IncSignal}
- 8: ^ moving through data  {IncData}
- 9: Decrementor            {DecSignal}
-10: ^ moving through data  {DecData}
+ 7: Incrementor             {IncSignal}
+ 8: ^same, moving thru data {IncData}
+ 9: Decrementor             {DecSignal}
+10: ^same, moving thru data {DecData}
 
 x = 15, y = 15, rule = data_test
 .A$2.A$3.A2.A$4.A.2A$A.A2.A.2A$.A.2A.4A2.A$.2A.7A.2A$2.13A$9.B2$8.B2$
@@ -51,9 +51,9 @@ DecData, N..E any, SE 0, S..NW any, [NW: (vacdata, ...)]
 
 @ICONS
 ? 00FFFF .. FF0000  # 10
-0 303030
-1 FFF
-2 00A0FF
+0: 303030
+1: FFF
+2: 00A0FF
 
 #C 2
 x = 7, y = 6, rule = data_test

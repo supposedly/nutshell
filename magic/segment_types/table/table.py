@@ -233,6 +233,8 @@ class AbstractTable:
                 directive, value = map(str.strip, line.split(':'))
             except ValueError:
                 break
+            if not directive.isalpha():
+                break
             self.directives[directive] = value.replace(' ', '')
         return lno
     

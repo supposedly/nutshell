@@ -3,12 +3,21 @@ HEADER = '''\
 **** COMPILED FROM RUELTABEL ****
 *********************************
 '''
-COMMENT_SRC = True
+COMMENT_SRC = False
 
 
 def _handle_rule(rulefile, seg):
     name = seg.pop(0)
     rulefile.extend((f'@RULE {name}', HEADER, *seg))
+
+
+def _iter_transitions(transitions):
+    done = set()
+    for lno, tr in transitions:
+        if COMMENT_SRC and lno not in done:
+            yield f"# {tbl[lno].split('#')[0]}"
+            done.add(lno)
+        yield ', '.join(map(str, tr))
 
 
 def _handle_table(rulefile, tbl):
@@ -25,18 +34,7 @@ def _handle_table(rulefile, tbl):
         for suf in range(1, 1+var.rep):
             rulefile.append(f'var {var.name}_{suf} = {var.name}_0')
     rulefile.append('')
-    if COMMENT_SRC:
-        def new():
-            done = set()
-            for lno, tr in tbl.transitions:
-                if lno not in done:
-                    yield f"# {tbl[lno].split('#')[0]}"
-                    done.add(lno)
-                yield ', '.join(map(str, tr))
-    else:
-        def new():
-            return (', '.join(map(str, tr)) for _lno, tr in tbl.transitions)
-    rulefile.extend(new())
+    rulefile.extend(_iter_transitions(tbl.transitions))
 
 
 def compile(parsed):
@@ -49,6 +47,6 @@ def compile(parsed):
         _handle_table(rulefile, parsed.pop('@TABEL'))
     except KeyError:
         pass
-    for segment_name, seg in parsed.items():
-        rulefile.extend(('', '', segment_name, *seg))
+    for label, segment in parsed.items():
+        rulefile.extend(('', '', label, *segment))
     return '\n'.join(rulefile) + '\n'
