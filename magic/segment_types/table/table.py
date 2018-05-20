@@ -24,7 +24,7 @@ class AbstractTable:
     __rSMALLVAR = r'[({](?:[\w\-]*\s*(?:,|\.\.)\s*)*[\w\-]+[})]'
     
     _rASSIGNMENT = re.compile(rf'\w+?\s*=\s*-?-?(?:{__rSMALLVAR}|\d+|[A-Za-z]+)(?:--?-?(?:[A-Za-z]+|\d+|{__rSMALLVAR}))?')
-    _rBINDMAP = re.compile(rf'\[[0-8](?::\s*?(?:{__rVAR}|[^_]\w+?))?\]')
+    _rBINDMAP = re.compile(rf'\[[0-8](?::\s*?(?:{__rVAR}|[^_][\w\-]+?))?\]')
     _rCARDINAL = re.compile(rf'\b(\[)?({__rCARDINALS})((?(1)\]))\b')
     _rPTCD = re.compile(rf'\b({__rCARDINALS})(?::(\d+)\b|:?\[(?:(0|{__rCARDINALS})\s*:)?\s*(\w+|{__rVAR})\s*]\B)')
     _rRANGE = re.compile(r'\d+? *?\.\. *?\d+?')
@@ -35,7 +35,7 @@ class AbstractTable:
       rf'(?:{__rSMALLVAR}'                           # Variable literal (like ", (1, 2..3, 4),") with no ellipsis allowed at end
        r'|[\w\-]+)+'                                 # Variable name (like ", aaaa,"), some subtraction operation, or a normal numeric state (ad indefiniteness bc subtraction)
       rf'|\[(?:(?:\d|{__rCARDINALS})\s*:\s*)?'       # Or a mapping, which starts with either a number or the equivalent cardinal direction
-      rf'(?:{__rVAR}|[0A-Za-z]+)])'                  # ...and then has (or only has, in which case it's a binding) either a variable name or literal (like ", [S: (1, 2, ...)]," or ", [0],")
+      rf'(?:{__rVAR}|[0A-Za-z\-]+)])'                # ...and then has (or only has, in which case it's a binding) either a variable name or literal (like ", [S: (1, 2, ...)]," or ", [0],")
        r'(?:\s*\*\s*[1-8])?'                         # Optional permute-symmetry shorthand...
        r'(,)?(?(2)\s*)'                              # Then finally, an optional comma + whitespace after it. Last term has no comma.
       )
@@ -515,8 +515,11 @@ class AbstractTable:
             for idx, elem in enumerate(napkin):
                 if elem.isdigit():
                     napkin[idx] = int(elem)
-                elif self._rVAR.match(elem) or '-' in elem:
-                    self.vars[Variable.random_name()] = napkin[idx] = self._parse_variable(elem)
+                elif self._rVAR.match(elem) or '-' in elem and not self._rBINDMAP.match(elem):
+                    try:
+                        self.vars[Variable.random_name()] = napkin[idx] = self._parse_variable(elem)
+                    except NameError as e:
+                        raise TabelReferenceError(lno, f"Transition references undefined name '{e}'")
                 elif not self._rBINDMAP.match(elem):  # leave mappings and bindings untouched for now
                     try:
                         napkin[idx] = self.vars[elem] if elem in self.vars else self._constants[elem]

@@ -1,10 +1,11 @@
 """Utility functions to be used during rueltabel parsing."""
 import re
 from collections import defaultdict
-from itertools import count as itercount
+from itertools import count
 from math import ceil
 
 from . import _classes as classes, _napkins as napkins
+from ...common.utils import print_verbose
 
 rSHORTHAND = re.compile(r'(\d+\s*\.\.\s*\d+)\s+(.+)')
 rRANGE = re.compile(r'\d\s*\.\.\s*\d?')
@@ -33,21 +34,20 @@ class AdditiveDict(dict):
 
 def conv_permute(tr: str, total: int):
     """
-    Given a new-style permutationally-symmetric transition:
+    Given a shorthand permutationally-symmetric transition:
         total=8 (Moore neighborhood)
         -------
         1,0
-        1:4,0:4
-        1:4,0
-        1:3,1,0,0
-    Return its old-style representation:
+        1*4,0*4
+        1*4,0
+        1*3,1,0,0
+    Return its expanded representation:
         1,1,1,1,0,0,0,0
     Order is not preserved.
     """
     # Balance unspecified values
     seq = [(match[2], match[3]) for match in rSEGMENT.finditer(tr)]
     start, end = seq.pop(0), seq.pop(-1)
-    print(start, seq, end)
     # How many cells filled
     tally = total - sum(int(i) for _, i in seq if i)
     # And how many empty slots left to fill
@@ -55,7 +55,7 @@ def conv_permute(tr: str, total: int):
     # filler algo courtesy of Thomas Russell on math.stackexchange
     # https://math.stackexchange.com/a/1081084
     filler = (ceil((tally-k+1)/empties) for k in range(1, 1+empties))
-    gen = ((st, num or str(next(filler))) for st, num in seq)
+    gen = ((val, num or str(next(filler))) for val, num in seq)
     return f"{start[0]},{','.join(AdditiveDict(gen))},{end[0]}"
 
 
@@ -93,7 +93,7 @@ def bind_vars(tr: (list, tuple), *, second_pass=False, return_reps=True):
             except IndexError:
                 raise ValueError(f"Binding in '{val}' does not refer to a previous index")
         else:
-            this_num = next(i for i in itercount() if i not in seen[state])
+            this_num = next(i for i in count() if i not in seen[state])
             seen[state].add(this_num)
             built.append(f"{state}{'' if state.endswith('_') else '_'}{this_num}")
     return ({k: max(v) for k, v in seen.items()}, built) if return_reps else built
@@ -189,6 +189,7 @@ def globalmatch(regex: re.compile, string: str, start: int = 0) -> bool:
         return False
     return start >= match.start() and (end == len(string) or globalmatch(regex, string, end))
 
+
 def desym(transitions, sym_lines):
     """
     Normalize symmetries if a tabel has multiple.
@@ -219,9 +220,9 @@ def desym(transitions, sym_lines):
         for lno, tr in trs:
             cur = cur_sym_cls(map(str, tr[1:-1]))
             print_verbose(None, ['converting...', f'  {cur}', f'...to {lowest_sym}'], sep='\n', start='\n', end='\n\n')
-            exp = {*map(lowest_sym_cls, cur_sym_cls(map(str, tr[1:-1])).expand())}
+            exp = set(map(lowest_sym_cls, cur.expand()))
             print_verbose(None, None, f'(1 transition -> {len(exp)} transitions)\n', start='\n')
             built.extend((lno, [tr[0], *new_tr, tr[-1]]) for new_tr in exp)
-        Permute.clear()
+        napkins.Permute.clear()
     print_verbose([f'FROM {len(transitions)} original transitions\n', f'\bTO {len(built)} transitions total\n'], start='')
     return built, lowest_sym

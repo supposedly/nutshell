@@ -1,10 +1,10 @@
-def _vprint(val, *, pre='  ', **kwargs):
+def _vprint(*stuff, pre='  ', **kwargs):
     """
     val: Thing to print.
     pre: What to prepend to val on print.
     **kwargs: Passed to print()
     """
-    if val is not None:
+    for val in filter(None, stuff):
         print(*(f'{pre}{i}' for i in (val if type(val) is list else [val])), **kwargs)
 
 
