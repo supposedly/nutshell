@@ -8,7 +8,7 @@ from . import _classes as classes, _napkins as napkins
 from ...common.utils import print_verbose
 
 rSHORTHAND = re.compile(r'(\d+\s*\.\.\s*\d+)\s+(.+)')
-rRANGE = re.compile(r'\d\s*\.\.\s*\d?')
+rRANGE = re.compile(r'\d+(?:\+\d+)?\s*\.\.\s*\d+')
 rSEGMENT = re.compile(
   r'(?:(?<=,)|(?<=^))\s*'
   r'(?:([0-8](?:\s*\.\.\s*[0-8])?)\s+)?'
@@ -140,7 +140,7 @@ def expand_tr(tr: (list, tuple)):
             idx += 1
             cop.append(state)
             continue
-        lower, upper = classes.TabelRange.bounds(group)
+        lower, upper = classes.TabelRange(group).bounds
         if lower != idx:
             raise ValueError(group, lower, idx)
         span = upper - lower

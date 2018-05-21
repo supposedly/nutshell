@@ -20,14 +20,14 @@ class AbstractTable:
     An abstract, Golly-transferrable representation of a ruelfile's @TABEL section.
     """
     __rCARDINALS = 'NE|NW|SE|SW|N|E|S|W'
-    __rVAR = r'[({](?:[\w\-]*\s*(?:,|\.\.)\s*)*(?:[\w\-]|(?:\.\.\.)?)*[})]'
-    __rSMALLVAR = r'[({](?:[\w\-]*\s*(?:,|\.\.)\s*)*[\w\-]+[})]'
+    __rRANGE = r'\d+(?:\+\d+)?\s*\.\.\s*\d+'
+    __rVAR = r'[({](?:(?:[\w\-]+|' rf'{__rRANGE})*,\s*)*(?:[\w\-]+|{__rRANGE}|(?:\.\.\.)?)' r'[})]'
+    __rSMALLVAR = r'[({](?:(?:[\w\-]+|' rf'{__rRANGE})*,\s*)*(?:[\w\-]+|{__rRANGE})' r'[})]'
     
     _rASSIGNMENT = re.compile(rf'\w+?\s*=\s*-?-?(?:{__rSMALLVAR}|\d+|[A-Za-z]+)(?:--?-?(?:[A-Za-z]+|\d+|{__rSMALLVAR}))?')
     _rBINDMAP = re.compile(rf'\[[0-8](?::\s*?(?:{__rVAR}|[^_][\w\-]+?))?\]')
     _rCARDINAL = re.compile(rf'\b(\[)?({__rCARDINALS})((?(1)\]))\b')
     _rPTCD = re.compile(rf'\b({__rCARDINALS})(?::(\d+)\b|:?\[(?:(0|{__rCARDINALS})\s*:)?\s*(\w+|{__rVAR})\s*]\B)')
-    _rRANGE = re.compile(r'\d+? *?\.\. *?\d+?')
     _rTRANSITION = re.compile(
        r'(?<!-)'                                     # To avoid minuends being counted as segments (regardless of comma's presence)
       rf'((?:(?:\d|{__rCARDINALS})'                  # Purely-cosmetic cardinal direction before state (like ", NW 2,")
@@ -39,6 +39,7 @@ class AbstractTable:
        r'(?:\s*\*\s*[1-8])?'                         # Optional permute-symmetry shorthand...
        r'(,)?(?(2)\s*)'                              # Then finally, an optional comma + whitespace after it. Last term has no comma.
       )
+    _rRANGE = re.compile(__rRANGE)
     _rVAR = re.compile(__rVAR)
     
     CARDINALS = {

@@ -34,7 +34,8 @@ Supported flags:
 - All variables always unbound, because needing to define eight "any state" vars is ridiculous.
 - Support for `{}` literals, usable directly in transitions, as 'on-the-spot' variables. (Parentheses are also allowed. I personally prefer them to braces.)
 - Support for cellstate *ranges* in variables, via double..dots as in `(0..8)` -- interspersible with state-by-state specification,
-  so you can do `(0, 1, 4..6, 9)` to mean `(0, 1, 4, 5, 6, 9)`.
+  so you can do `(0, 1, 4..6, 9)` to mean `(0, 1, 4, 5, 6, 9)`.  
+  Ranges also accept a step, so you can also do `(0, 1+10..50, 102)` to mean `(0, 1, 11, 21, 31, 41, 102)`.
 - A variable is made 'bound' by referring to its *index* in the transition, wrapped in [brackets]:  
 ```py
 # current (barC repeats)
