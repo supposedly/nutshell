@@ -1,0 +1,438 @@
+@RULE bf
+*********************************
+**** COMPILED FROM RUELTABEL ****
+*********************************
+
+
+0: Vacuum
+
+1: +
+2: -
+3: [
+4: ]
+5: <
+6: >
+7: .
+8: ,
+
+9: Plain pointer
+10: Pointer +
+11: Pointer -
+12: Pointer ]
+13: Pointer <
+14: Pointer >
+15: Pointer .
+16: Pointer ,
+17: Pointer moving west
+
+18: Shadow
+
+19: Northbound +
+20: Northbound -
+21: Northbound ]
+22: Northbound <
+23: Northbound >
+24: Northbound .
+25: Northbound ,
+
+26: Westbound +
+27: Westbound -
+29: Westbound ]
+30: Westbound <
+31: Westbound >
+32: Westbound .
+33: Westbound ,
+
+34: Eastbound +
+35: Eastbound -
+36: Eastbound ]
+37: Eastbound <
+38: Eastbound >
+39: Eastbound .
+40: Eastbound ,
+
+41: Southbound +
+42: Southbound -
+43: Southbound ]
+44: Southbound <
+45: Southbound >
+46: Southbound .
+47: Southbound ,
+
+48: Eastward-pointing shadow cell
+49: Westward-pointing shadow cell
+
+
++ Setup:
+Data pointer is placed anywhere, and data is initalized as unary stacks one cell north of it it.
+Program tape is placed so its west end is south and at least two cells east of the data pointer.
+A single state-49 shadow cell is placed directly north of this west end, exactly one row below the data pointer.
+
++ Post-setup initialization (autonomy starts here):
+Program-tape cells touching a state-3 ] or state-2 [ move down one cell. This change cascades inward until bracket pairs are properly telescoped.
+The instruction pointer starts immediately, being placed initially in the cell directly northwest of the prgm-tape west end -- assuming balanced
+brackets, it will never be able to "beat" the bracket-telescoping (because both happen at lightspeed), so there is no point in delaying its start.
+
++ Program execution:
+The instruction pointer reads the cell below it.
+[ pass
+] send TST signal to shadow -> data pointer, which detects whether it has anything above it and returns either 37 (false) or 38 (true)
+false: pass
+true: become state 12 and move west until touching a state-2 [
++ send INC signal to shadow -> data pointer
+- send DEC signal to shadow -> data pointer
+> send RGT signal to shadow -> data pointer
+< send LFT signal to shadow -> data pointer
+, pause and instruct the comma to reel in all stacked unary data below it, which is then fed to shadow -> data pointer as INC
+. send OUT signal to data pointer, which just sends a reader/outputter state-34 up that accumulates to its right
+The instruction pointer will at every step send two signals: one northward to tell the shadow cell to move with it, and one southward
+(passing through the program tape) to tell the input tape to move with it.
+
++ Input
+The input tape will be stacked vertically in unary, with one state-0 cell separating successive input segments.
+The prgm-tape head will at every execution step send a signal cell downward (by turning the prgm cell below it into a state
+
+@TABLE
+neighborhood: Moore
+symmetries: none
+n_states: 9
+
+
+var any_0 = {0, 1, 2, 3, 4, 5, 6, 7, 8}
+var any_1 = any_0
+var any_2 = any_0
+
+var live_0 = {1, 2, 3, 4, 5, 6, 7, 8}
+
+var anyPrgm_0 = {1, 2, 3, 4, 5, 6, 7, 8}
+
+var vac_0 = {0, 1, 2, 3, 4, 5, 6, 7, 8}
+var vac_1 = vac_0
+var vac_2 = vac_0
+var vac_3 = vac_0
+var vac_4 = vac_0
+var vac_5 = vac_0
+var vac_6 = vac_0
+
+var prgm_0 = {1, 2, 5, 6, 7, 8}
+var prgm_1 = prgm_0
+
+var _691277904621666_0 = {1, 2, 3, 5, 6, 7, 8}
+
+var _810775874584595_0 = {1, 2, 4, 5, 6, 7, 8}
+
+# (prgm, 3), 0, 0, 3, SE..NW vac, 0 -> S[0]
+_691277904621666_0, 0, 0, 3, vac_0, vac_1, vac_2, vac_3, vac_4, 0
+vac_0, _691277904621666_0, 3, vac_1, any_0, any_1, any_2, vac_2, vac_3, _691277904621666_0
+# (prgm, 3), N..E vac, anyPrgm, S..NW vac, 0 -> S[0]
+_691277904621666_0, vac_0, vac_1, vac_2, anyPrgm_0, vac_3, vac_4, vac_5, vac_6, 0
+vac_0, _691277904621666_0, vac_1, anyPrgm_0, any_0, any_1, any_2, vac_2, vac_3, _691277904621666_0
+# (prgm, 4), 0, NE..SW vac, 4, vac, 0 -> S[0]
+_810775874584595_0, 0, vac_0, vac_1, vac_2, vac_3, vac_4, 4, vac_5, 0
+vac_0, _810775874584595_0, vac_1, vac_2, any_0, any_1, any_2, vac_3, 4, _810775874584595_0
+# (prgm, 4), N..S vac, anyPrgm, W..NW vac, 0 -> S[0]
+_810775874584595_0, vac_0, vac_1, vac_2, vac_3, vac_4, anyPrgm_0, vac_5, vac_6, 0
+vac_0, _810775874584595_0, vac_1, vac_2, any_0, any_1, any_2, anyPrgm_0, vac_3, _810775874584595_0
+# 4, 0, 0, vac, vac, 0, 3, 0, 0, 0 -> S:4
+4, 0, 0, vac_0, vac_1, 0, 3, 0, 0, 0
+0, 4, vac_0, vac_1, any_0, any_1, any_2, 3, 0, 4
+# 3, 0, 0, 0, 4, 0, vac, vac, 0, 0 -> S:3
+3, 0, 0, 0, 4, 0, vac_0, vac_1, 0, 0
+0, 3, 0, 4, any_0, any_1, any_2, vac_0, vac_1, 3
+# 4, N..SW 0, vac, vac, 0 -> S:4
+4, 0, 0, 0, 0, 0, 0, vac_0, vac_1, 0
+0, 4, 0, 0, any_0, any_1, any_2, 0, vac_0, 4
+# 3, 0, vac, vac, SE..NW 0, 0 -> S:3
+3, 0, vac_0, vac_1, 0, 0, 0, 0, 0, 0
+0, 3, vac_0, 0, any_0, any_1, any_2, 0, 0, 3
+# prgm, 0, 0, prgm, 0, 0, 3, 0, 0, 0 -> S[0]  
+prgm_0, 0, 0, prgm_1, 0, 0, 3, 0, 0, 0
+0, prgm_0, prgm_1, 0, any_0, any_1, any_2, 3, 0, prgm_0
+# prgm, 0, 0, 0, 4, 0, 0, prgm, 0, 0 -> S[0]  
+prgm_0, 0, 0, 0, 4, 0, 0, prgm_1, 0, 0
+0, prgm_0, 0, 4, any_0, any_1, any_2, 0, prgm_1, prgm_0
+
+
+@ICONS
+XPM
+"15 270 10 2"
+".. c #303030"
+"AA c #D0D0D0"
+"BB c #007FFF"
+"CC c #535353"
+"DD c #AD331D"
+"EE c #1A1A1A"
+"FF c #C0C0C0"
+"GG c #6077A0"
+"HH c #405780"
+"II c #0000FF"
+".............................."
+".............................."
+"............CCCCCC............"
+"............CCCCCC............"
+"............CCCCCC............"
+"............CCCCCC............"
+"....CCCCCCCCCCCCCCCCCCCCCC...."
+"....CCCCCCCCCCCCCCCCCCCCCC...."
+"....CCCCCCCCCCCCCCCCCCCCCC...."
+"............CCCCCC............"
+"............CCCCCC............"
+"............CCCCCC............"
+"............CCCCCC............"
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+"....CCCCCCCCCCCCCCCCCCCCCC...."
+"....CCCCCCCCCCCCCCCCCCCCCC...."
+"....CCCCCCCCCCCCCCCCCCCCCC...."
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+"..........BBBBBBBBBB.........."
+"..........BBBBBBBBBB.........."
+"................BBBB.........."
+"................BBBB.........."
+"................BBBB.........."
+"................BBBB.........."
+"................BBBB.........."
+"................BBBB.........."
+"................BBBB.........."
+"..........BBBBBBBBBB.........."
+"..........BBBBBBBBBB.........."
+".............................."
+".............................."
+".............................."
+".............................."
+"..........BBBBBBBBBB.........."
+"..........BBBBBBBBBB.........."
+"..........BBBB................"
+"..........BBBB................"
+"..........BBBB................"
+"..........BBBB................"
+"..........BBBB................"
+"..........BBBB................"
+"..........BBBB................"
+"..........BBBBBBBBBB.........."
+"..........BBBBBBBBBB.........."
+".............................."
+".............................."
+".............................."
+".............................."
+"....DDDD......................"
+"....DDDDDDDD.................."
+"........DDDDDDDD.............."
+"............DDDDDDDD.........."
+"................DDDDDDDD......"
+"....................DDDDDD...."
+"................DDDDDDDD......"
+"............DDDDDDDD.........."
+"........DDDDDDDD.............."
+"....DDDDDDDD.................."
+"....DDDD......................"
+".............................."
+".............................."
+".............................."
+".............................."
+"......................DDDD...."
+"..................DDDDDDDD...."
+"..............DDDDDDDD........"
+"..........DDDDDDDD............"
+"......DDDDDDDD................"
+"....DDDDDD...................."
+"......DDDDDDDD................"
+"..........DDDDDDDD............"
+"..............DDDDDDDD........"
+"..................DDDDDDDD...."
+"......................DDDD...."
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+"........EEEEEEEEEEEEEE........"
+"......EEEEEEEEEEEEEEEEEE......"
+"......EEEEEEEEEEEEEEEEEE......"
+"......EEEEEEEEEEEEEEEEEE......"
+"......EEEEEEEEEEEEEEEEEE......"
+"......EEEEEEEEEEEEEEEEEE......"
+"........EEEEEEEEEEEEEE........"
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+"........EEEEEEEEEEEEEE........"
+"......EEEEEEEEEEEEEEEEEE......"
+"......EEEEEEEEEEEEEEEEEE......"
+"......EEEEEEEEEEEEEEEEEE......"
+"......EEEEEEEEEEEEEEEEEE......"
+"......EEEEEEEEEEEEEEEEEE......"
+"........EEEEEEEEEEEEEEEE......"
+"................EEEEEEEE......"
+"................EEEEEEEE......"
+"..............EEEEEEEE........"
+"........EEEEEEEEEEEE.........."
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+"......GGGG..........GGGG......"
+"......GGGG..........GGGG......"
+"........GGGG......GGGG........"
+"........GGGG......GGGG........"
+"..........GGGG..GGGG.........."
+"..........GGGG..GGGG.........."
+"............GGGGGG............"
+"............GGGGGG............"
+"..............GG.............."
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+"......GGGG..........GGGG......"
+"......GGGG..........GGGG......"
+"........GGGG......GGGG........"
+"........GGGG......GGGG........"
+"..........GGGG..GGGG.........."
+"..........GGGG..GGGG.........."
+"............GGGGGG............"
+"............GGGGGG............"
+"..............GG.............."
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+"......GGGG..........GGGG......"
+"......GGGG..........GGGG......"
+"........GGGG......GGGG........"
+"........GGGG......GGGG........"
+"..........GGGG..GGGG.........."
+"..........GGGG..GGGG.........."
+"............GGGGGG............"
+"............GGGGGG............"
+"..............GG.............."
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+"......GGGG..........GGGG......"
+"......GGGG..........GGGG......"
+"........GGGG......GGGG........"
+"........GGGG......GGGG........"
+"..........GGGG..GGGG.........."
+"..........GGGG..GGGG.........."
+"............GGGGGG............"
+"............GGGGGG............"
+"..............GG.............."
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+"......GGGG..........GGGG......"
+"......GGGG..........GGGG......"
+"........GGGG......GGGG........"
+"........GGGG......GGGG........"
+"..........GGGG..GGGG.........."
+"..........GGGG..GGGG.........."
+"............GGGGGG............"
+"............GGGGGG............"
+"..............GG.............."
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+"......GGGG..........GGGG......"
+"......GGGG..........GGGG......"
+"........GGGG......GGGG........"
+"........GGGG......GGGG........"
+"..........GGGG..GGGG.........."
+"..........GGGG..GGGG.........."
+"............GGGGGG............"
+"............GGGGGG............"
+"..............GG.............."
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+"......GGGG..........GGGG......"
+"......GGGG..........GGGG......"
+"........GGGG......GGGG........"
+"........GGGG......GGGG........"
+"..........GGGG..GGGG.........."
+"..........GGGG..GGGG.........."
+"............GGGGGG............"
+"............GGGGGG............"
+"..............GG.............."
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+"......GGGG..........GGGG......"
+"......GGGG..........GGGG......"
+"........GGGG......GGGG........"
+"........GGGG......GGGG........"
+"..........GGGG..GGGG.........."
+"..........GGGG..GGGG.........."
+"............GGGGGG............"
+"............GGGGGG............"
+"..............GG.............."
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+".............................."
+"......GGGG..........GGGG......"
+"......GGGG..........GGGG......"
+"........GGGG......GGGG........"
+"........GGGG......GGGG........"
+"..........GGGG..GGGG.........."
+"..........GGGG..GGGG.........."
+"............GGGGGG............"
+"............GGGGGG............"
+"..............GG.............."
+".............................."
+".............................."
+".............................."
+".............................."
+"............AAAAAA............"
+"............AAAAAA............"
+"......AAAAAAAAAAAAAAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAAAAAAAAAAAAAA......"
+"............AAAAAA............"
+"............AAAAAA............"
+".............................."

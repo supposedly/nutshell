@@ -7,7 +7,7 @@ import bidict
 from ...common.errors import *
 from ...common.utils import print_verbose
 from . import _napkins as napkins, _utils as utils
-from ._classes import Coord, TabelRange, Variable
+from ._classes import Coord, TabelRange, SpecialVar, VarName
 
 
 class Bidict(bidict.bidict):
@@ -32,12 +32,12 @@ class AbstractTable:
        r'(?<!-)'                                     # To avoid minuends being counted as segments (regardless of comma's presence)
       rf'((?:(?:\d|{__rCARDINALS})'                  # Purely-cosmetic cardinal direction before state (like ", NW 2,")
       rf'(?:\s*\.\.\s*(?:\d|{__rCARDINALS}))?\s+)?'  # Range of cardinal directions (like ", N..NW 2,")
-      rf'(?:{__rSMALLVAR}'                           # Variable literal (like ", (1, 2..3, 4),") with no ellipsis allowed at end
+      rf'(?:(?:{__rSMALLVAR}'                        # Variable literal (like ", (1, 2..3, 4),") with no ellipsis allowed at end
        r'|[\w\-]+)+'                                 # Variable name (like ", aaaa,"), some subtraction operation, or a normal numeric state (ad indefiniteness bc subtraction)
       rf'|\[(?:(?:\d|{__rCARDINALS})\s*:\s*)?'       # Or a mapping, which starts with either a number or the equivalent cardinal direction
-      rf'(?:{__rVAR}|[0A-Za-z\-]+)])'                # ...and then has (or only has, in which case it's a binding) either a variable name or literal (like ", [S: (1, 2, ...)]," or ", [0],")
+      rf'(?:{__rVAR}|[0A-Za-z\-]+)]))'               # ...and then has (or only has, in which case it's a binding) either a variable name or literal (like ", [S: (1, 2, ...)]," or ", [0],")
        r'(?:\s*\*\s*[1-8])?'                         # Optional permute-symmetry shorthand...
-       r'(,)?(?(2)\s*)'                              # Then finally, an optional comma + whitespace after it. Last term has no comma.
+       r'(,)?\s*'                                    # Then finally, an optional comma + whitespace after it. (Optional because last term has no comma.)
       )
     _rRANGE = re.compile(__rRANGE)
     _rVAR = re.compile(__rVAR)
@@ -247,14 +247,14 @@ class AbstractTable:
         if self.directives['symmetries'] is not None:
             self._symmetry_lines.append((-1, self.directives['symmetries']))
         try:
-            self.vars[Variable('any')] = tuple(range(int(self.directives['states'])))
+            self.vars[VarName('any')] = SpecialVar(range(int(self.directives['states'])))
             cardinals = self.CARDINALS.get(self.directives['neighborhood'])
             if cardinals is None:
                 raise TabelValueError(None, f"Invalid neighborhood {self.directives['neighborhood']!r} declared")
         except KeyError as e:
             name = str(e).split("'")[1]
             raise TabelReferenceError(None, f'{name!r} directive not declared')
-        self.vars[Variable('live')] = self.vars['any'][1:]
+        self.vars[VarName('live')] = SpecialVar(self.vars['any'][1:])
         self.directives['n_states'] = self.directives.pop('states')
         return cardinals
     
@@ -280,10 +280,9 @@ class AbstractTable:
             r_consts = re.compile(r'\b' + r'\b|\b'.join(self._constants) + r'\b')
             for idx, line in enumerate(self):
                 self[idx] = r_consts.sub(lambda m: str(self._constants[m[0]]), line)
-
     
     def _extract_initial_vars(self, start):
-        """should
+        """
         start: line number to start from
         
         Iterate through table and gather all explicit variable declarations.
@@ -292,6 +291,7 @@ class AbstractTable:
         """
         lno = start
         tblines = ((idx, stmt.strip()) for idx, line in enumerate(self[start:], start) for stmt in line.split('#')[0].split(';'))
+        _live, _any = self.vars['live'], self.vars['any']
         for lno, decl in tblines:
             if utils.globalmatch(self._rTRANSITION, decl.split('->')[0].strip()):
                 break
@@ -322,7 +322,7 @@ class AbstractTable:
                   f'Variable name {name!r} contains nonalphabetical character {next(i for i in name if not i.isalpha())!r}',
                   )
             try:
-                self.vars[Variable(name)] = var
+                self.vars[VarName(name)] = var
             except bidict.ValueDuplicationError:  # Deprecated currently
                 raise TabelValueError(lno, f"Value {value} is already assigned to variable '{self.vars.inv[var]}'")
         # bidict devs, between the start of this project and 5 May 2018,
@@ -467,7 +467,7 @@ class AbstractTable:
                     break
                 new_initial = copy_to[result[0]:]
                 transitions.append(self._make_transition(tr, cd_idx, copy_idx, new_initial, map_to[idx-1]))
-                self.vars[Variable.random_name()] = new_initial
+                self.vars[VarName.random()] = new_initial
                 break
             transitions.append(self._make_transition(tr, cd_idx, copy_idx, initial, result))
         return transitions
@@ -518,7 +518,7 @@ class AbstractTable:
                     napkin[idx] = int(elem)
                 elif self._rVAR.match(elem) or '-' in elem and not self._rBINDMAP.match(elem):
                     try:
-                        self.vars[Variable.random_name()] = napkin[idx] = self._parse_variable(elem)
+                        self.vars[VarName.random()] = napkin[idx] = self._parse_variable(elem)
                     except NameError as e:
                         raise TabelReferenceError(lno, f"Transition references undefined name '{e}'")
                 elif not self._rBINDMAP.match(elem):  # leave mappings and bindings untouched for now
@@ -563,7 +563,7 @@ class AbstractTable:
                     map_to[-1] = map_to[-2]
                     # Replace the extra states in map_to with a variable name
                     # Could be a new variable or it could be one with same value
-                    self.vars[Variable.random_name()] = new = tuple(map_from[len(map_to)-2:])
+                    self.vars[VarName.random()] = new = tuple(map_from[len(map_to)-2:])
                     map_from[len(map_to)-2:] = [self.vars.inv[new].name]
                 if len(map_from) > len(map_to):
                     raise TabelValueError(

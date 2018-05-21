@@ -11,9 +11,9 @@ def _handle_rule(rulefile, seg):
     rulefile.extend((f'@RULE {name}', HEADER, *seg))
 
 
-def _iter_transitions(transitions):
+def _iter_transitions(tbl):
     done = set()
-    for lno, tr in transitions:
+    for lno, tr in tbl.transitions:
         if COMMENT_SRC and lno not in done:
             yield f"# {tbl[lno].split('#')[0]}"
             done.add(lno)
@@ -34,7 +34,7 @@ def _handle_table(rulefile, tbl):
         for suf in range(1, 1+var.rep):
             rulefile.append(f'var {var.name}_{suf} = {var.name}_0')
     rulefile.append('')
-    rulefile.extend(_iter_transitions(tbl.transitions))
+    rulefile.extend(_iter_transitions(tbl))
 
 
 def compile(parsed):

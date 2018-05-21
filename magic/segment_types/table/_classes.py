@@ -102,7 +102,7 @@ class _MaybeCallableCCW(Coord):
         return Coord(new)
 
 
-class Variable:
+class VarName:
     """
     Represents a variable and how many times it should be
     redefined (to avoid binding) in a Golly table.
@@ -128,12 +128,22 @@ class Variable:
         return f'{type(self).__name__}({self.name!r}, rep={self.rep})'
     
     @classmethod
-    def random_name(cls):
+    def random(cls):
         """
         Generates a Variable with a random name.
         Method of random generation liable to change.
         """
         return cls(f'_{random.randrange(10**15)}')
+
+
+class SpecialVar(tuple):
+    """Non-overwritable."""
+    def __eq__(self, other):
+        return type(other) is type(self) and super().__eq__(other)
+    def __hash__(self):
+        return super().__hash__()
+    def __repr__(self):
+        return f'SpecialVar({super().__repr__()})'
 
 
 class TabelRange:
