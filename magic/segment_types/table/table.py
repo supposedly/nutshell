@@ -11,7 +11,7 @@ from ._classes import Coord, TabelRange, SpecialVar, VarName
 
 
 class Bidict(bidict.bidict):
-    """Just so I can modify on_dup_x without screwing with the base bidict cls"""
+    """Just so I can modify on_dup_x without messing with the base bidict cls"""
     on_dup_val = bidict.OVERWRITE
 
 
@@ -138,7 +138,7 @@ class AbstractTable:
         except KeyError:
             raise KeyError(match[2])
     
-    def _subtract_var(self, subt, minuend):
+    def _subtract_var(self, subt, minuend, lno):
         """
         subt: subtrahend
         minuend: minuend
@@ -146,14 +146,56 @@ class AbstractTable:
         try:
             match = int(minuend)
         except ValueError:
-            match = tuple(i for i in subt if i not in self._parse_variable(minuend))
+            match = tuple(i for i in subt if i not in self._parse_variable(minuend, lno))
         else:
             if match > int(self.directives['n_states']):
-                raise ValueError('negated value greater than n_states !!!!!! !!! !!!!')
+                raise TabelValueError(lno, f'Minuend -{match} greater than n_states')
             match = tuple(i for i in subt if i != match)
         return match
     
-    def _parse_variable(self, var: str, *, mapping=False, ptcd=False):
+    def __var_loop(self, var, lno, *, mapping=False, ptcd=False, tr=None):
+        new = []
+        for state in map(str.strip, var.strip('{()}').split(',')):
+            if state.isdigit():
+                new.append(int(state))
+            elif self._rRANGE.match(state):
+                try:
+                    new.extend(TabelRange(state))
+                except ValueError as e:
+                    bound = str(e).split("'")[1]
+                    raise TabelSyntaxError(lno, f"Bound '{bound}' of range {state} is not an integer")
+            elif mapping or ptcd:
+                if state in ('...', '_'):  # should maybe restrict '_' to only ptcd?
+                    new.append(state)
+                    continue
+                elif self._rBINDMAP.match(state):
+                    if ':' in state:
+                        raise TabelFeatureUnsupported(
+                          lno,
+                          f"Nested mappings (as with '{state}' in '{var}') "
+                          'are not currently supported. Use multiple transitions '
+                          'instead'
+                          )
+                    new.append(state.strip('[]'))  # hoping this works with the late-stage str-binding thing...
+            elif state in self._constants:
+                new.append(self._constants[state])
+            elif state.startswith('--'):
+                # Negation (from all states)
+                new.extend(self._subtract_var(self.vars['any'], state[2:], lno))
+            elif '-' in state:
+                # Subtraction & negation (from live states)
+                subt, minuend = state.split('-', 1)  # Actually don't *think* I need to strip bc can't have spaces anyway
+                subt = self._parse_variable(subt, lno) if subt else self.vars['live']
+                new.extend(self._subtract_var(subt, minuend, lno))
+            else:
+                try:
+                    new.extend(self.vars[state])
+                except KeyError:
+                    current = 'Output specifier' if ptcd else 'Transition'
+                    raise TabelReferenceError(lno, f"{current} references undefined name '{e}'")
+        return new
+    
+    def _parse_variable(self, var: str, lno: int, **kwargs):
         """
         var: a variable literal
 
@@ -165,39 +207,13 @@ class AbstractTable:
             return self._constants[var]
         if var.startswith('--'):
             # Negation (from all states)
-            return self._subtract_var(self.vars['any'], var[2:])
+            return self._subtract_var(self.vars['any'], var[2:], lno)
         if '-' in var and not self._rVAR.fullmatch(var):
             # Subtraction & negation (from live states)
             subt, minuend = var.split('-', 1)  # Actually don't *think* I need to strip bc can't have spaces anyway
-            subt = self._parse_variable(subt) if subt else self.vars['live']
-            return self._subtract_var(subt, minuend)
-        cop = []
-        for state in map(str.strip, var.strip('{()}').split(',')):
-            if state.isdigit():
-                cop.append(int(state))
-            elif self._rRANGE.match(state):
-                try:
-                    cop.extend(TabelRange(state))
-                except ValueError as e:
-                    raise SyntaxError((str(e).split("'")[1], state)) from None
-            elif mapping and state == '...' or ptcd and state in ('...', '_'):
-                cop.append(state)
-            elif state in self._constants:
-                cop.append(self._constants[state])
-            elif state.startswith('--'):
-                # Negation (from all states)
-                cop.extend(self._subtract_var(self.vars['any'], state[2:]))
-            elif '-' in state:
-                # Subtraction & negation (from live states)
-                subt, minuend = state.split('-', 1)  # Actually don't *think* I need to strip bc can't have spaces anyway
-                subt = self._parse_variable(subt) if subt else self.vars['live']
-                cop.extend(self._subtract_var(subt, minuend))
-            else:
-                try:
-                    cop.extend(self.vars[state])
-                except KeyError:
-                    raise NameError(state) from None
-        return tuple(cop)
+            subt = self._parse_variable(subt, lno) if subt else self.vars['live']
+            return self._subtract_var(subt, minuend, lno)
+        return tuple(self.__var_loop(var, lno, **kwargs))
     
     def _fix_symmetries(self):
         transitions, self.directives['symmetries'] = utils.desym(
@@ -306,15 +322,13 @@ class AbstractTable:
                 continue
             
             try:
-                var = self._parse_variable(value)
-            except NameError as e:
-                if not str(e):  # Means two consecutive commas, or a comma at the end of a literal
+                var = self._parse_variable(value, lno)
+            except TabelReferenceError as e:
+                bad = str(e).split("'")[1]
+                if not bad:  # Means two consecutive commas, or a comma at the end of a literal
                     raise TabelSyntaxError(lno, 'Invalid comma placement in variable declaration')
-                adjective = 'undefined' if str(e).isalpha() else 'invalid'
-                raise TabelReferenceError(lno, f"Declaration of variable {name!r} references {adjective} name '{e}'")
-            except SyntaxError as e:
-                bound, range_ = e.msg
-                raise TabelSyntaxError(lno, f"Bound '{bound}' of range {range_} is not an integer")
+                adjective = 'undefined' if bad.isalpha() else 'invalid'
+                raise TabelReferenceError(lno, f'Declaration of variable {name!r} references {adjective} name {bad!r}')
             
             if not name.isalpha():
                 raise TabelSyntaxError(
@@ -409,13 +423,8 @@ class AbstractTable:
         if match[4] in ('0', *self.cardinals) and match[3] is None:
             index = match[4] != '0' and self.cardinals[match[4]]
             return match[1], match[4], tr[index], tr[index]
-        try:
-            _map_to, map_to = [], self._parse_variable(match[4], ptcd=True)
-        except NameError as e:
-            raise TabelReferenceError(lno, f"Output specifier references undefined name '{e}'")
-        except SyntaxError as e:
-            bound, range_ = e.msg
-            raise TabelSyntaxError(lno, f"Bound '{bound}' of range {range_} is not an integer")
+        _map_to = []
+        map_to = self._parse_variable(match[4], lno, tr=tr, ptcd=True)
         for idx, state in enumerate(map_to):
             if state == '_':  # Leave as is (indicated by a None value)
                 state = None
@@ -517,10 +526,7 @@ class AbstractTable:
                 if elem.isdigit():
                     napkin[idx] = int(elem)
                 elif self._rVAR.match(elem) or '-' in elem and not self._rBINDMAP.match(elem):
-                    try:
-                        self.vars[VarName.random()] = napkin[idx] = self._parse_variable(elem)
-                    except NameError as e:
-                        raise TabelReferenceError(lno, f"Transition references undefined name '{e}'")
+                    self.vars[VarName.random()] = napkin[idx] = self._parse_variable(elem, lno)
                 elif not self._rBINDMAP.match(elem):  # leave mappings and bindings untouched for now
                     try:
                         napkin[idx] = self.vars[elem] if elem in self.vars else self._constants[elem]
@@ -551,7 +557,7 @@ class AbstractTable:
             
             self.transitions[idx] = lno, [
               # list() because we're need to mutate it if it has an ellipsis
-              (val[0], list(self._parse_variable(val[1])), list(self._parse_variable(val[2], mapping=True)))
+              (val[0], list(self._parse_variable(val[1], lno)), list(self._parse_variable(val[2], lno, tr=tr, mapping=True)))
               if isinstance(val, tuple)
                 else val
               for val in tr

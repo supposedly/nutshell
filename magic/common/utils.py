@@ -1,3 +1,5 @@
+from argv_parse import ARGS
+
 def _vprint(*stuff, pre='  ', **kwargs):
     """
     val: Thing to print.
@@ -15,13 +17,13 @@ def print_verbose(*args, start='\n', end=None, accum=True, **kwargs):
     accum: Whether to print everything up to VERBOSITY or just the item at VERBOSITY
     **kwargs: Passed to _vprint()
     """
-    if not VERBOSITY:
+    if not ARGS.verbosity:
         return
-    if any(args[:VERBOSITY]):
+    if any(args[:ARGS.verbosity]):
         print(start, end='')
     if accum:
-        _vprint(*args[:VERBOSITY-1], **kwargs)
+        _vprint(*args[:ARGS.verbosity-1], **kwargs)
     try:
-        _vprint(args[VERBOSITY-1], end=end, **kwargs)
+        _vprint(args[ARGS.verbosity-1], end=end, **kwargs)
     except IndexError:
         pass

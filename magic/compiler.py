@@ -1,20 +1,17 @@
-HEADER = '''\
-*********************************
-**** COMPILED FROM RUELTABEL ****
-*********************************
-'''
-COMMENT_SRC = False
+from argv_parse import ARGS
 
 
 def _handle_rule(rulefile, seg):
     name = seg.pop(0)
-    rulefile.extend((f'@RULE {name}', HEADER, *seg))
+    rulefile.extend((f'@RULE {name}', ARGS.header, *seg))
 
 
 def _iter_transitions(tbl):
+    if not ARGS.comment_src:
+        return (', '.join(map(str, tr)) for tr in tbl.transitions)
     done = set()
     for lno, tr in tbl.transitions:
-        if COMMENT_SRC and lno not in done:
+        if lno not in done:
             yield f"# {tbl[lno].split('#')[0]}"
             done.add(lno)
         yield ', '.join(map(str, tr))
