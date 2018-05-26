@@ -8,7 +8,8 @@ def _handle_rule(rulefile, seg):
 
 def _iter_transitions(tbl):
     if not ARGS.comment_src:
-        return (', '.join(map(str, tr)) for tr in tbl.transitions)
+        yield from (', '.join(map(str, tr)) for _lno, tr in tbl.transitions)
+        raise StopIteration
     done = set()
     for lno, tr in tbl.transitions:
         if lno not in done:

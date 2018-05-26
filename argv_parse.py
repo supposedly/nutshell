@@ -42,13 +42,13 @@ def comment_src():
 
 
 @parser.clump(XOR=0)
-@parser.flag(short='f')
+@parser.flag(short='f', default=None)
 def find(transition):
     """Locate first transition in `infile` that matches"""
     return tuple(int(i.strip()) for i in transition.split(','))
 
 
-@parser.flag(short='v', namespace={'count': 0})
+@parser.flag('verbosity', short='v', namespace={'count': 0}, default=0)
 def verbose(nsp):
     """Repeat for more verbosity; max x4"""
     if nsp.count < 4:
@@ -62,3 +62,4 @@ def transition(tr):
 
 
 ARGS = parser.parse()
+print(ARGS)
