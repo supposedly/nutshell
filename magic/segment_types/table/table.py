@@ -21,8 +21,8 @@ class AbstractTable:
     """
     __rCARDINALS = 'NE|NW|SE|SW|N|E|S|W'
     __rRANGE = r'\d+(?:\+\d+)?\s*\.\.\s*\d+'
-    __rVAR = r'[({](?:(?:[\w\-]+|' rf'{__rRANGE})*,\s*)*(?:[\w\-]+|{__rRANGE}|(?:\.\.\.)?)' r'[})]'
-    __rSMALLVAR = r'[({](?:(?:[\w\-]+|' rf'{__rRANGE})*,\s*)*(?:[\w\-]+|{__rRANGE})' r'[})]'
+    __rVAR = r'[({](?:(?:\[?[\w\-]+]?|' rf'{__rRANGE})*,\s*)*(?:\[?[\w\-]+]?|{__rRANGE}|(?:\.\.\.)?)' r'[})]'
+    __rSMALLVAR = r'[({](?:(?:\[?[\w\-]+]?|' rf'{__rRANGE})*,\s*)*(?:\[?[\w\-]+]?|{__rRANGE})' r'[})]'
     
     _rASSIGNMENT = re.compile(rf'\w+?\s*=\s*-?-?(?:{__rSMALLVAR}|\d+|[A-Za-z]+)(?:--?-?(?:[A-Za-z]+|\d+|{__rSMALLVAR}))?')
     _rBINDMAP = re.compile(rf'\[[0-8](?::\s*?(?:{__rVAR}|[^_][\w\-]+?))?\]')
@@ -164,19 +164,23 @@ class AbstractTable:
                 except ValueError as e:
                     bound = str(e).split("'")[1]
                     raise TabelSyntaxError(lno, f"Bound '{bound}' of range {state} is not an integer")
-            elif mapping or ptcd:
-                if state in ('...', '_'):  # should maybe restrict '_' to only ptcd?
-                    new.append(state)
-                    continue
-                elif self._rBINDMAP.match(state):
-                    if ':' in state:
-                        raise TabelFeatureUnsupported(
-                          lno,
-                          f"Nested mappings (as with '{state}' in '{var}') "
-                          'are not currently supported. Use multiple transitions '
-                          'instead'
-                          )
-                    new.append(state.strip('[]'))  # hoping this works with the late-stage str-binding thing...
+            elif (mapping or ptcd) and state in ('...', '_'):  # should maybe restrict '_' to only ptcd?
+                new.append(state)
+                continue
+            elif (mapping or ptcd) and self._rBINDMAP.match(state):
+                if ':' in state:
+                    raise TabelFeatureUnsupported(
+                        lno,
+                        f"Nested mappings (as with '{state}' in '{var}') "
+                        'are not currently supported. Use multiple transitions '
+                        'instead'
+                        )
+                try:
+                    new.append(tr[int(state.strip('[]'))])
+                except IndexError:
+                    raise TabelValueError(lno,
+                        f'Nested binding {state} does not refer to a previous index'
+                        )
             elif state in self._constants:
                 new.append(self._constants[state])
             elif state.startswith('--'):
@@ -190,7 +194,7 @@ class AbstractTable:
             else:
                 try:
                     new.extend(self.vars[state])
-                except KeyError:
+                except KeyError as e:
                     current = 'Output specifier' if ptcd else 'Transition'
                     raise TabelReferenceError(lno, f"{current} references undefined name '{e}'")
         return new
@@ -440,6 +444,23 @@ class AbstractTable:
               " mapped to a smaller variable. Maybe add a '...' to fill the latter out?"
               )
         return match[1], match[3], copy_to, _map_to
+    
+    def _resolve_chain(self, orig, tr, current):
+        """
+        Returns chain's final link and the tr without any chain
+        """
+        chained = {orig.index(current)}
+        tr = tr.copy()
+        while isinstance(current, str) and current.startswith('['):
+            cur_idx = int(utils.rBINDING.match(current)[1])
+            chained.add(cur_idx)
+            current = tr[cur_idx]
+        for idx in chained:
+            tr[idx] = current
+        try:
+            return tr, current, cur_idx
+        except UnboundLocalError as e:
+            raise ValueError  # fffffffff
 
     def _parse_ptcd(self, tr, match, lno):
         """
@@ -456,16 +477,24 @@ class AbstractTable:
         
         return: output specifier expanded into its full transition(s)
         """
-        cd_idx, copy_idx, copy_to, map_to = self._extract_ptcd_vars(tr, match, lno)
-        if copy_idx == '_None':  # i mean ...
+        _orig_tr = tr.copy()
+        cd_idx, cd_to, copy_to, map_to = self._extract_ptcd_vars(tr, match, lno)
+        try:
+            tr, map_to, _ = self._resolve_chain(_orig_tr, tr, map_to)
+        except ValueError:
+            pass
+        if cd_to == '_None':  # i mean ...
             return [self._make_transition(tr, cd_idx, None, copy_to, map_to)]
         # Start expanding to transitions
         transitions = []
-        while isinstance(copy_to, str) and copy_to.startswith('['):
-            copy_idx = int(utils.rBINDING.match(copy_to)[1])
-            copy_to = tr[copy_idx]
+        try:
+            tr, copy_to, copy_idx = self._resolve_chain(_orig_tr, tr, copy_to)
+        except ValueError:
+            pass
+        else:
+            cd_to = next(k for k, v in self.cardinals.items() if v == copy_idx) if copy_idx else '0'
         if copy_to == map_to:
-            transitions.append(self._make_transition(tr, cd_idx, copy_idx, copy_to, f'[{self.cardinals[Coord.from_name(cd_idx).inv.name]}]'))
+            transitions.append(self._make_transition(tr, cd_idx, cd_to, copy_to, f'[{self.cardinals[Coord.from_name(cd_idx).inv.name]}]'))
             return transitions
         for idx, (initial, result) in enumerate(zip(copy_to, map_to)):
             if result is None:
@@ -475,10 +504,10 @@ class AbstractTable:
                 if map_to[idx-1] is None:  # Nothing more to add
                     break
                 new_initial = copy_to[result[0]:]
-                transitions.append(self._make_transition(tr, cd_idx, copy_idx, new_initial, map_to[idx-1]))
+                transitions.append(self._make_transition(tr, cd_idx, cd_to, new_initial, map_to[idx-1]))
                 self.vars[VarName.random()] = new_initial
                 break
-            transitions.append(self._make_transition(tr, cd_idx, copy_idx, initial, result))
+            transitions.append(self._make_transition(tr, cd_idx, cd_to, initial, result))
         return transitions
     
     def _parse_transitions(self, start):
@@ -519,7 +548,7 @@ class AbstractTable:
             try:
                 napkin = utils.expand_tr(napkin)
             except ValueError as e:
-                group, expected, got = e
+                group, expected, got = e.args
                 raise TabelValueError(lno, f'Expected lower value of {expected} in group {group}, got {got}')
             # Parse napkin into proper range of ints
             for idx, elem in enumerate(napkin):
@@ -559,7 +588,7 @@ class AbstractTable:
               # list() because we're need to mutate it if it has an ellipsis
               (val[0], list(self._parse_variable(val[1], lno)), list(self._parse_variable(val[2], lno, tr=tr, mapping=True)))
               if isinstance(val, tuple)
-                else val
+              else val
               for val in tr
               ]
             

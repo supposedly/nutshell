@@ -59,6 +59,11 @@ def conv_permute(tr: str, total: int):
     return f"{start[0]},{','.join(AdditiveDict(gen))},{end[0]}"
 
 
+def suffix_num(num):
+    suffix = ['th', 'st', 'nd', 'rd', *['th']*6][int(str(num)[-1])]
+    return f'{num}{suffix}'
+
+
 def bind_vars(tr: (list, tuple), *, second_pass=False, return_reps=True):
     """
     Given an unbound ruel transition like the following:
@@ -75,7 +80,7 @@ def bind_vars(tr: (list, tuple), *, second_pass=False, return_reps=True):
                 seen[m[1]].add(int(m[2]))
             except TypeError:
                 continue
-    for state in tr:
+    for idx, state in enumerate(tr):
         if not isinstance(state, str) or state.isdigit() or rALREADY.match(state):
             built.append(state)
         elif state.startswith('['):
@@ -91,7 +96,7 @@ def bind_vars(tr: (list, tuple), *, second_pass=False, return_reps=True):
                   built[ref]
                   )
             except IndexError:
-                raise ValueError(f"Binding in '{val}' does not refer to a previous index")
+                raise ValueError(f"Binding '{state}' ({suffix_num(1+idx)} state) does not refer to a previous index")
         else:
             this_num = next(i for i in count() if i not in seen[state])
             seen[state].add(this_num)

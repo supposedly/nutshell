@@ -58,8 +58,21 @@ def verbose(nsp):
 
 @preview.arg(required=True)
 def transition(tr):
+    """rueltabel-formatted transition to preview"""
     return tr
 
 
+@preview.flag(short='n', default='Moore')
+def neighborhood(value):
+    """Neighborhood to consider transition part of"""
+    if value.replace(' ', '') not in ('Moore', 'vonNeumann', 'hexagonal'):
+        raise ValueError('Invalid preview-transition neighborhood')
+    return value
+
+@preview.flag(short='o', default='?')
+def states(num):
+    """Number of states to include in transition (default guess)"""
+    return str(num)
+
+
 ARGS = parser.parse()
-print(ARGS)
