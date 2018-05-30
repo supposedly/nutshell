@@ -21,8 +21,17 @@ class AbstractTable:
     """
     __rCARDINALS = 'NE|NW|SE|SW|N|E|S|W'
     __rRANGE = r'\d+(?:\+\d+)?\s*\.\.\s*\d+'
-    __rVAR = r'[({](?:(?:\[?[\w\-]+]?|' rf'{__rRANGE})*,\s*)*(?:\[?[\w\-]+]?|{__rRANGE}|(?:\.\.\.)?)' r'[})]'
-    __rSMALLVAR = r'[({](?:(?:\[?[\w\-]+]?|' rf'{__rRANGE})*,\s*)*(?:\[?[\w\-]+]?|{__rRANGE})' r'[})]'
+    __rVAR = (
+      r'[({](?:(?:\[?[\w\-]+]?'
+      r'(?:\s*\*\s*[\w\-])?|'  # multiplication
+     rf'{__rRANGE})*,\s*)*(?:\[?[\w\-]+]?|{__rRANGE}|(?:\.\.\.)?)'
+      r'[})]'
+      )
+    __rSMALLVAR = (
+      r'[({](?:(?:\[?[\w\-]+]?(?:\s*\*\s*[\w\-])?|'
+     rf'{__rRANGE})*,\s*)*(?:\[?[\w\-]+]?|{__rRANGE})'
+      r'[})]'
+      )
     
     _rASSIGNMENT = re.compile(rf'\w+?\s*=\s*-?-?(?:{__rSMALLVAR}|\d+|[A-Za-z]+)(?:--?-?(?:[A-Za-z]+|\d+|{__rSMALLVAR}))?')
     _rBINDMAP = re.compile(rf'\[[0-8](?::\s*?(?:{__rVAR}|[^_][\w\-]+?))?\]')
@@ -138,6 +147,11 @@ class AbstractTable:
         except KeyError:
             raise KeyError(match[2])
     
+    def _multiply_var(self, a, b, lno):
+        a = [int(a)] if isinstance(a, int) or a.isdigit() else self._parse_variable(a, lno)
+        b = int(b) if isinstance(b, int) or b.isdigit() else len(self._parse_variable(b, lno))
+        return a * b
+
     def _subtract_var(self, subt, minuend, lno):
         """
         subt: subtrahend
@@ -167,6 +181,9 @@ class AbstractTable:
             elif (mapping or ptcd) and state in ('...', '_'):  # should maybe restrict '_' to only ptcd?
                 new.append(state)
                 continue
+            elif ptcd and '_' == state.split('*')[0].strip():  # eh
+                b = state.split('*')[1].strip()
+                new.extend('_' * int(b) if isinstance(b, int) or b.isdigit() else len(self._parse_variable(b, lno)))
             elif (mapping or ptcd) and self._rBINDMAP.match(state):
                 if ':' in state:
                     raise TabelFeatureUnsupported(
@@ -191,6 +208,8 @@ class AbstractTable:
                 subt, minuend = state.split('-', 1)  # Actually don't *think* I need to strip bc can't have spaces anyway
                 subt = self._parse_variable(subt, lno) if subt else self.vars['live']
                 new.extend(self._subtract_var(subt, minuend, lno))
+            elif '*' in state:
+                new.extend(self._multiply_var(*map(str.strip, state.split('*', 1)), lno))
             else:
                 try:
                     new.extend(self.vars[state])
@@ -212,9 +231,9 @@ class AbstractTable:
         if var.startswith('--'):
             # Negation (from all states)
             return self._subtract_var(self.vars['any'], var[2:], lno)
-        if '-' in var and not self._rVAR.fullmatch(var):
+        if '-' in var and not self._rVAR.fullmatch(var):  # top-level subtraction
             # Subtraction & negation (from live states)
-            subt, minuend = var.split('-', 1)  # Actually don't *think* I need to strip bc can't have spaces anyway
+            subt, minuend = var.split('-', 1)
             subt = self._parse_variable(subt, lno) if subt else self.vars['live']
             return self._subtract_var(subt, minuend, lno)
         return tuple(self.__var_loop(var, lno, **kwargs))
@@ -287,7 +306,7 @@ class AbstractTable:
         Where <name> is the constant's name.
         Additionally, {<name>} is removed from final @RUEL output.
         """
-        r_const = re.compile(r'(\s*)(\d+):(.*?)\s*\{\s*([A-Za-z]+)\s*}(.*)')
+        r_const = re.compile(r'(\s*)(\d+):(.*?)\s*\{\s*(.+)\s*}(.*)')
         found = False
         for lno, line in enumerate(dep):
             match = r_const.match(line)

@@ -15,14 +15,14 @@ parser.group('grp_0', XOR=0)
 preview = parser.command('preview', XOR=0)
 
 
-@parser.grp_0.clump(AND=1)
+#@parser.grp_0.clump(AND=1)
 @parser.arg()
 def infile(path):
     """rueltabel-formatted input file"""
     return path
 
 
-@parser.grp_0.clump(OR=0, AND=1)
+#@parser.grp_0.clump(OR=0, AND=1)
 @parser.grp_0.arg()
 def outdir(path):
     """Directory to create output file in"""
@@ -41,7 +41,7 @@ def comment_src():
     return True
 
 
-@parser.clump(XOR=0)
+#@parser.clump(XOR=0)
 @parser.flag(short='f', default=None)
 def find(transition):
     """Locate first transition in `infile` that matches"""

@@ -15,7 +15,7 @@ def transpile(fp, *, preview=False):
     if preview:
         return '\n'.join(', '.join(map(str, tr)) for _, tr in parsed['@TABEL'].transitions)
     if ARGS.find:
-        raise SystemExit(parsed['@TABEL'].match(match) or 'No match\n')
+        raise SystemExit(parsed['@TABEL'].match(ARGS.find) or 'No match\n')
     print('Complete!', 'Compiling...', sep='\n\n')
     return compiler.compile(parsed)
 

@@ -90,6 +90,8 @@ def bind_vars(tr: (list, tuple), *, second_pass=False, return_reps=True):
             except ValueError:
                 raise SyntaxError(f"Invalid attempted variable binding '{val}'")
             try:
+                while isinstance(built[ref], tuple):
+                    ref = built[ref][0]
                 built.append(
                   (ref, built[ref].rsplit('_', 1)[0], val[1+val.find(':'):].strip())
                   if ':' in val else

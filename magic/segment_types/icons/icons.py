@@ -3,9 +3,16 @@ import random
 from collections import defaultdict
 from itertools import chain, filterfalse, takewhile
 
+import bidict
+
 from ...common.errors import *
 from ._classes import ColorRange
 from ._utils import lazylen, maybe_double, SAFE_CHARS, SYMBOL_MAP
+
+
+class IShouldntHaveToDoThisBidict(bidict.bidict):
+    """Why isn't it an __init__ parameter"""
+    on_dup_val = bidict.OVERWRITE
 
 
 class Icon:
@@ -90,7 +97,8 @@ class IconArray:
         return name
     
     def _parse_colors(self, start=0):
-        lno, colormap = start, {}
+        colormap = IShouldntHaveToDoThisBidict()
+        lno = start
         for lno, line in enumerate(map(str.strip, self._src)):
             if line.startswith('?'):
                 # Can put n_states in a comment if no TABEL section to grab it from
@@ -130,7 +138,6 @@ class IconArray:
     def _fill_missing_states(self):
         # Account for that some/all cellstates may be expressed as non-numeric symbols rather than their state's number
         max_state = 1 + (self._set_states or max(SYMBOL_MAP.inv.get(state, state) for state in self.icons))
-        _colormap_inv = {v: k for k, v in self.colormap.items()}
         for state in filterfalse(self.icons.__contains__, range(1, max_state)):
             try:
                 color = self._parsed_color_segment[state]
@@ -144,6 +151,6 @@ class IconArray:
                       'color declarations, followed by two colors: the start and end of a gradient.'
                       )
                 color = self._fill_gradient[state]
-            symbol = _colormap_inv.get(color, self._make_color_symbol())
+            symbol = self.colormap.inv.get(color, self._make_color_symbol())
             self.colormap[symbol] = color
             self.icons[state] = Icon.solid_color(symbol)
