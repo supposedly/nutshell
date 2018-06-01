@@ -1,6 +1,6 @@
 """Facilitates parsing of a rueltabel file into an abstract, compiler.py-readable format."""
 import re
-from itertools import zip_longest as zipln
+from itertools import cycle, islice, zip_longest
 
 import bidict
 
@@ -24,12 +24,12 @@ class AbstractTable:
     __rVAR = (
       r'[({](?:(?:\[?[\w\-]+]?'
       r'(?:\s*\*\s*[\w\-])?|'  # multiplication
-     rf'{__rRANGE})*,\s*)*(?:\[?[\w\-]+]?|{__rRANGE}|(?:\.\.\.)?)'
+     rf'{__rRANGE})*,\s*)*(?:\[?[\w\-*\s]+]?|{__rRANGE}|\.\.\.)'
       r'[})]'
       )
     __rSMALLVAR = (
       r'[({](?:(?:\[?[\w\-]+]?(?:\s*\*\s*[\w\-])?|'
-     rf'{__rRANGE})*,\s*)*(?:\[?[\w\-]+]?|{__rRANGE})'
+     rf'{__rRANGE})*,\s*)*(?:\[?[\w\-*\s]+]?|{__rRANGE})'
       r'[})]'
       )
     
@@ -120,9 +120,9 @@ class AbstractTable:
         """
         print('Complete!\n\nSearching for match...')
         sym_cls = napkins.NAMES[self.directives['symmetries']]
-        in_tr = utils.unbind_vars(tr, rebind=False)
-        start, end = in_tr.pop(0), in_tr.pop(-1)
-        in_napkins = sym_cls(in_tr)
+        input_tr = utils.unbind_vars(tr, rebind=False)
+        start, end = input_tr.pop(0), input_tr.pop(-1)
+        in_napkins = sym_cls(input_tr)
         _trs_no_names = enumerate(
           (lno, [
             self.vars.get(state, state)
@@ -148,10 +148,11 @@ class AbstractTable:
             raise KeyError(match[2])
     
     def _multiply_var(self, a, b, lno):
-        a = [int(a)] if isinstance(a, int) or a.isdigit() else self._parse_variable(a, lno)
-        b = int(b) if isinstance(b, int) or b.isdigit() else len(self._parse_variable(b, lno))
-        return a * b
-
+        a = [int(a)] if a.isdigit() else self._parse_variable(a, lno)
+        if b.isdigit():
+            return a * int(b)
+        return islice(cycle(a), len(self._parse_variable(b, lno)))
+    
     def _subtract_var(self, subt, minuend, lno):
         """
         subt: subtrahend
@@ -183,7 +184,7 @@ class AbstractTable:
                 continue
             elif ptcd and '_' == state.split('*')[0].strip():  # eh
                 b = state.split('*')[1].strip()
-                new.extend('_' * int(b) if isinstance(b, int) or b.isdigit() else len(self._parse_variable(b, lno)))
+                new.extend('_' * int(b) if b.isdigit() else len(self._parse_variable(b, lno)))
             elif (mapping or ptcd) and self._rBINDMAP.match(state):
                 if ':' in state:
                     raise TabelFeatureUnsupported(
@@ -555,7 +556,7 @@ class AbstractTable:
             if self._rASSIGNMENT.match(line):
                 raise TabelSyntaxError(lno, 'Variable declaration after first transition')
             napkin, ptcds = map(str.strip, line.partition('->')[::2])
-            if self.directives['symmetries'] == 'permute':
+            if 'permute' in self.directives['symmetries']:
                 napkin = utils.conv_permute(napkin, len(self.cardinals))
             try:
                 napkin = [self._rCARDINAL.sub(self._cardinal_sub, i.strip()) for i, _ in self._rTRANSITION.findall(napkin)]
@@ -664,5 +665,5 @@ class AbstractTable:
             # We need to add an extraneous pre-value in order for the loop to catch the next "new"
             # because we're mutating the list while we iterate over it
             # (awful, I know)
-            self.transitions[tr_idx:1+tr_idx] = None, *zipln([lno], new, fillvalue=lno)
+            self.transitions[tr_idx:1+tr_idx] = None, *zip_longest([lno], new, fillvalue=lno)
         self.transitions = list(filter(None, self.transitions))

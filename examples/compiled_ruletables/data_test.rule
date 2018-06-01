@@ -3,7 +3,6 @@
 **** COMPILED FROM RUELTABEL ****
 *********************************
 
-
 1: Data
 
 2: Output prompter
@@ -13,9 +12,9 @@
 6: Data being output that will not extend anymore
 
 7: Incrementor
-8: ^ moving through data
+8: ^same, moving thru data
 9: Decrementor
-10: ^ moving through data
+10: ^same, moving thru data
 
 x = 15, y = 15, rule = data_test
 .A$2.A$3.A2.A$4.A.2A$A.A2.A.2A$.A.2A.4A2.A$.2A.7A.2A$2.13A$9.B2$8.B2$
@@ -26,7 +25,6 @@ neighborhood: Moore
 symmetries: none
 n_states: 11
 
-
 var any_0 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 var any_1 = any_0
 var any_2 = any_0
@@ -35,38 +33,30 @@ var any_4 = any_0
 var any_5 = any_0
 var any_6 = any_0
 var any_7 = any_0
-
 var live_0 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 var live_1 = live_0
-
 var vacdata_0 = {0, 1}
-
 var up_0 = {2, 3}
-
 var out_0 = {3, 4}
-
 var signal_0 = {9, 2, 7}
-
-var _415786085162644_0 = {2}
-
-var _673900411364011_0 = {5, 6}
-
-var _940505496509410_0 = {2, 3, 4, 5, 6, 7, 8, 9, 10}
-
-var _31537313786663_0 = {8, 10}
+var _263997673073137_0 = {2}
+var _733560254813144_0 = {5, 6}
+var _843747459478258_0 = {2, 3, 4, 5, 6, 7, 8, 9, 10}
+var _307500065729887_0 = {8, 10}
+var _215094483471240_0 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
 signal_0, 0, live_0, 0, 0, 0, 0, 0, live_1, 0
 0, any_0, any_1, live_0, 0, 7, 0, live_1, any_2, 1
 0, any_0, any_1, live_0, 0, 9, 0, live_1, any_2, 0
-0, any_0, any_1, live_0, 0, _415786085162644_0, 0, live_1, any_2, 0
+0, any_0, any_1, live_0, 0, _263997673073137_0, 0, live_1, any_2, 0
 2, 0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 0
 0, any_0, any_1, any_2, any_3, 2, any_4, any_5, any_6, 2
 0, any_0, any_1, any_2, any_3, up_0, any_4, 0, any_5, 6
 1, any_0, any_1, any_2, any_3, up_0, any_4, 0, any_5, 5
 6, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
 5, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 1
-0, any_0, any_1, any_2, any_3, _673900411364011_0, any_4, any_5, any_6, 6
-1, any_0, any_1, any_2, any_3, _673900411364011_0, any_4, any_5, any_6, 5
+0, any_0, any_1, any_2, any_3, _733560254813144_0, any_4, any_5, any_6, 6
+1, any_0, any_1, any_2, any_3, _733560254813144_0, any_4, any_5, any_6, 5
 2, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
 3, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 1
 0, any_0, any_1, any_2, any_3, up_0, any_4, any_5, any_6, 4
@@ -79,20 +69,20 @@ signal_0, 0, live_0, 0, 0, 0, 0, 0, live_1, 0
 7, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
 0, any_0, any_1, any_2, any_3, 7, any_4, any_5, any_6, 7
 1, any_0, any_1, any_2, any_3, 7, any_4, any_5, any_6, 8
-_940505496509410_0, any_0, any_1, any_2, any_3, 7, any_4, any_5, any_6, 8
+_843747459478258_0, any_0, any_1, any_2, any_3, 7, any_4, any_5, any_6, 8
 9, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
 0, any_0, any_1, any_2, any_3, 9, any_4, any_5, any_6, 9
 1, any_0, any_1, any_2, any_3, 9, any_4, any_5, any_6, 10
-_940505496509410_0, any_0, any_1, any_2, any_3, 9, any_4, any_5, any_6, 10
+_843747459478258_0, any_0, any_1, any_2, any_3, 9, any_4, any_5, any_6, 10
 1, any_0, any_1, any_2, 10, any_3, any_4, any_5, 0, 0
-1, any_0, any_1, any_2, 10, any_3, any_4, any_5, live_0, 10
+1, any_0, any_1, any_2, 10, any_3, any_4, any_5, _215094483471240_0, 10
 0, any_0, any_1, any_2, 8, any_3, any_4, any_5, any_6, 1
 1, any_0, any_1, any_2, 8, any_3, any_4, any_5, any_6, 8
 0, any_0, any_1, any_2, 8, any_3, any_4, any_5, 0, 1
-0, any_0, any_1, any_2, 8, any_3, any_4, any_5, live_0, 8
+0, any_0, any_1, any_2, 8, any_3, any_4, any_5, _215094483471240_0, 8
 10, any_0, any_1, any_2, 0, any_3, any_4, any_5, 0, 0
-10, any_0, any_1, any_2, 0, any_3, any_4, any_5, live_0, 1
-_31537313786663_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 1
+10, any_0, any_1, any_2, 0, any_3, any_4, any_5, _215094483471240_0, 1
+_307500065729887_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 1
 
 
 @ICONS
@@ -101,20 +91,20 @@ XPM
 ".. c #303030"
 "AA c #FFFFFF"
 "BB c #00A0FF"
-"f( c #19E5E5"
-"kz c #4CB2B2"
-"l" c #669999"
-"9d c #7F7F7F"
-"t# c #996666"
-"}) c #CC3333"
-"f$ c #FF0000"
-"f(f(f(f(f(f(f("
-"f(f(f(f(f(f(f("
-"f(f(f(f(f(f(f("
-"f(f(f(f(f(f(f("
-"f(f(f(f(f(f(f("
-"f(f(f(f(f(f(f("
-"f(f(f(f(f(f(f("
+"ti c #19E5E5"
+"`~ c #4CB2B2"
+"<# c #669999"
+"/7 c #7F7F7F"
+"a@ c #996666"
+"#e c #CC3333"
+"~4 c #FF0000"
+"tititititititi"
+"tititititititi"
+"tititititititi"
+"tititititititi"
+"tititititititi"
+"tititititititi"
+"tititititititi"
 "AAAA....AAAA.."
 "AA..AA..AA..AA"
 "AA..AA..AA..AA"
@@ -122,34 +112,34 @@ XPM
 "AA..AA..AA..AA"
 "AA..AA..AAAA.."
 ".............."
-"kzkzkzkzkzkzkz"
-"kzkzkzkzkzkzkz"
-"kzkzkzkzkzkzkz"
-"kzkzkzkzkzkzkz"
-"kzkzkzkzkzkzkz"
-"kzkzkzkzkzkzkz"
-"kzkzkzkzkzkzkz"
-"l"l"l"l"l"l"l""
-"l"l"l"l"l"l"l""
-"l"l"l"l"l"l"l""
-"l"l"l"l"l"l"l""
-"l"l"l"l"l"l"l""
-"l"l"l"l"l"l"l""
-"l"l"l"l"l"l"l""
-"9d9d9d9d9d9d9d"
-"9d9d9d9d9d9d9d"
-"9d9d9d9d9d9d9d"
-"9d9d9d9d9d9d9d"
-"9d9d9d9d9d9d9d"
-"9d9d9d9d9d9d9d"
-"9d9d9d9d9d9d9d"
-"t#t#t#t#t#t#t#"
-"t#t#t#t#t#t#t#"
-"t#t#t#t#t#t#t#"
-"t#t#t#t#t#t#t#"
-"t#t#t#t#t#t#t#"
-"t#t#t#t#t#t#t#"
-"t#t#t#t#t#t#t#"
+"`~`~`~`~`~`~`~"
+"`~`~`~`~`~`~`~"
+"`~`~`~`~`~`~`~"
+"`~`~`~`~`~`~`~"
+"`~`~`~`~`~`~`~"
+"`~`~`~`~`~`~`~"
+"`~`~`~`~`~`~`~"
+"<#<#<#<#<#<#<#"
+"<#<#<#<#<#<#<#"
+"<#<#<#<#<#<#<#"
+"<#<#<#<#<#<#<#"
+"<#<#<#<#<#<#<#"
+"<#<#<#<#<#<#<#"
+"<#<#<#<#<#<#<#"
+"/7/7/7/7/7/7/7"
+"/7/7/7/7/7/7/7"
+"/7/7/7/7/7/7/7"
+"/7/7/7/7/7/7/7"
+"/7/7/7/7/7/7/7"
+"/7/7/7/7/7/7/7"
+"/7/7/7/7/7/7/7"
+"a@a@a@a@a@a@a@"
+"a@a@a@a@a@a@a@"
+"a@a@a@a@a@a@a@"
+"a@a@a@a@a@a@a@"
+"a@a@a@a@a@a@a@"
+"a@a@a@a@a@a@a@"
+"a@a@a@a@a@a@a@"
 "....BBBB......"
 "....BBBB......"
 "BBBBBBBBBBBB.."
@@ -157,13 +147,13 @@ XPM
 "....BBBB......"
 "....BBBB......"
 ".............."
-"})})})})})})})"
-"})})})})})})})"
-"})})})})})})})"
-"})})})})})})})"
-"})})})})})})})"
-"})})})})})})})"
-"})})})})})})})"
+"#e#e#e#e#e#e#e"
+"#e#e#e#e#e#e#e"
+"#e#e#e#e#e#e#e"
+"#e#e#e#e#e#e#e"
+"#e#e#e#e#e#e#e"
+"#e#e#e#e#e#e#e"
+"#e#e#e#e#e#e#e"
 ".............."
 ".............."
 "BBBBBBBBBBBB.."
@@ -171,10 +161,10 @@ XPM
 ".............."
 ".............."
 ".............."
-"f$f$f$f$f$f$f$"
-"f$f$f$f$f$f$f$"
-"f$f$f$f$f$f$f$"
-"f$f$f$f$f$f$f$"
-"f$f$f$f$f$f$f$"
-"f$f$f$f$f$f$f$"
-"f$f$f$f$f$f$f$"
+"~4~4~4~4~4~4~4"
+"~4~4~4~4~4~4~4"
+"~4~4~4~4~4~4~4"
+"~4~4~4~4~4~4~4"
+"~4~4~4~4~4~4~4"
+"~4~4~4~4~4~4~4"
+"~4~4~4~4~4~4~4"

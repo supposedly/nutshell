@@ -3,7 +3,6 @@
 **** COMPILED FROM RUELTABEL ****
 *********************************
 
-
 From "Simpl" by _zM.
 Wiring rule with states requiring any number of neighbouring cells to be ON - B0/S0 to B8/S8 all in one rule, essentially.
 
@@ -27,25 +26,6 @@ neighborhood: Moore
 symmetries: permute
 n_states: 21
 
-
-var on_0 = {11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
-var on_1 = on_0
-var on_2 = on_0
-var on_3 = on_0
-var on_4 = on_0
-var on_5 = on_0
-var on_6 = on_0
-var on_7 = on_0
-
-var off_0 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-var off_1 = off_0
-var off_2 = off_0
-var off_3 = off_0
-var off_4 = off_0
-var off_5 = off_0
-var off_6 = off_0
-var off_7 = off_0
-
 var any_0 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
 var any_1 = any_0
 var any_2 = any_0
@@ -54,38 +34,43 @@ var any_4 = any_0
 var any_5 = any_0
 var any_6 = any_0
 var any_7 = any_0
-
 var live_0 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+var on_0 = {11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+var on_1 = on_0
+var on_2 = on_0
+var on_3 = on_0
+var on_4 = on_0
+var on_5 = on_0
+var on_6 = on_0
+var on_7 = on_0
+var off_0 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+var off_1 = off_0
+var off_2 = off_0
+var off_3 = off_0
+var off_4 = off_0
+var off_5 = off_0
+var off_6 = off_0
+var off_7 = off_0
+var _709399909198804_0 = {2, 11}
+var _33749684864925_0 = {3, 12}
+var _458059836577463_0 = {4, 13}
+var _607750643839175_0 = {5, 14}
+var _157653583480306_0 = {6, 15}
+var _343330238869670_0 = {16, 7}
+var _236545763991815_0 = {8, 17}
+var _256343188149618_0 = {9, 18}
+var _172861292807763_0 = {10, 19}
+var _145872110452298_0 = {11, 12, 13, 14, 15, 16, 17, 18, 19}
 
-var _483981111440902_0 = {2, 11}
-
-var _881060075535122_0 = {3, 12}
-
-var _71501690592453_0 = {4, 13}
-
-var _661051782595069_0 = {5, 14}
-
-var _243069438173103_0 = {6, 15}
-
-var _403069315122294_0 = {16, 7}
-
-var _305731027551409_0 = {8, 17}
-
-var _58681186124889_0 = {9, 18}
-
-var _510677262577119_0 = {10, 19}
-
-var _273956184244098_0 = {11, 12, 13, 14, 15, 16, 17, 18, 19}
-
-_483981111440902_0, off_0, off_1, off_2, off_3, off_4, off_5, off_6, off_7, 11
-_881060075535122_0, on_0, off_0, off_1, off_2, off_3, off_4, off_5, off_6, 12
-_71501690592453_0, on_0, on_1, off_0, off_1, off_2, off_3, off_4, off_5, 13
-_661051782595069_0, on_0, on_1, on_2, off_0, off_1, off_2, off_3, off_4, 14
-_243069438173103_0, on_0, on_1, on_2, on_3, off_0, off_1, off_2, off_3, 15
-_403069315122294_0, on_0, on_1, on_2, on_3, on_4, off_0, off_1, off_2, 16
-_305731027551409_0, on_0, on_1, on_2, on_3, on_4, on_5, off_0, off_1, 17
-_58681186124889_0, on_0, on_1, on_2, on_3, on_4, on_5, on_6, off_0, 18
-_510677262577119_0, on_0, on_1, on_2, on_3, on_4, on_5, on_6, on_7, 19
+_709399909198804_0, off_0, off_1, off_2, off_3, off_4, off_5, off_6, off_7, 11
+_33749684864925_0, on_0, off_0, off_1, off_2, off_3, off_4, off_5, off_6, 12
+_458059836577463_0, on_0, on_1, off_0, off_1, off_2, off_3, off_4, off_5, 13
+_607750643839175_0, on_0, on_1, on_2, off_0, off_1, off_2, off_3, off_4, 14
+_157653583480306_0, on_0, on_1, on_2, on_3, off_0, off_1, off_2, off_3, 15
+_343330238869670_0, on_0, on_1, on_2, on_3, on_4, off_0, off_1, off_2, 16
+_236545763991815_0, on_0, on_1, on_2, on_3, on_4, on_5, off_0, off_1, 17
+_256343188149618_0, on_0, on_1, on_2, on_3, on_4, on_5, on_6, off_0, 18
+_172861292807763_0, on_0, on_1, on_2, on_3, on_4, on_5, on_6, on_7, 19
 11, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 2
 12, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 3
 13, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 4

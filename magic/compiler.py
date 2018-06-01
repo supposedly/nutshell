@@ -26,7 +26,6 @@ def _handle_table(rulefile, tbl):
     rulefile.append('')
     
     for var, value in tbl.vars.items():
-        rulefile.append('')
         value = set(value)  # Removes duplicates and gives braces
         rulefile.append(f'var {var.name}_0 = {value}')
         for suf in range(1, 1+var.rep):

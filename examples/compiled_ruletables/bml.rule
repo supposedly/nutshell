@@ -2,7 +2,6 @@
 *********************************
 **** COMPILED FROM RUELTABEL ****
 *********************************
-
 The Biham–Middleton–Levine traffic model.
 
 0: Road
@@ -18,25 +17,22 @@ neighborhood: vonNeumann
 symmetries: none
 n_states: 5
 
-
-var move_0 = {1, 2}
-
-var wait_0 = {3, 4}
-
 var any_0 = {0, 1, 2, 3, 4}
 var any_1 = any_0
 var any_2 = any_0
 var any_3 = any_0
-
 var live_0 = {1, 2, 3, 4}
+var move_0 = {1, 2}
+var wait_0 = {3, 4}
+var _22458432362905_0 = {1, 2, 3, 4}
 
 3, any_0, any_1, any_2, any_3, 1
 4, any_0, any_1, any_2, any_3, 2
 1, any_0, any_1, 0, any_2, 0
-1, any_0, any_1, live_0, any_2, 3
+1, any_0, any_1, _22458432362905_0, any_2, 3
 0, 1, any_0, any_1, any_2, 3
 2, any_0, 0, any_1, any_2, 0
-2, any_0, live_0, any_1, any_2, 4
+2, any_0, _22458432362905_0, any_1, any_2, 4
 0, any_0, any_1, any_2, 2, 4
 
 
