@@ -130,16 +130,27 @@ class AbstractTable:
             ])
           for lno, tr in self.transitions
           )
+        target_len = len(tr)
         for idx, (lno, tr) in _trs_no_names:
             for in_tr in ((start, *napkin, end) for napkin in in_napkins.expand()):
-                for in_state, tr_state in zip(in_tr, tr):
+                for cur_len, (in_state, tr_state) in enumerate(zip(in_tr, tr), 1):
                     while isinstance(tr_state, str):  # handle lingering bindings
                         tr_state = tr[int(tr_state)]
                     if not (in_state == tr_state if isinstance(tr_state, int) else in_state in tr_state):
+                        if cur_len == target_len:
+                            return (
+                              'No match\n\n'
+                              f'Impossible match; overridden on line {1+self._start+lno} by "{self[lno]}"\n'
+                              f'(compiled line "{", ".join(map(str, self.transitions[idx][1]))}")'
+                              )
                         break
                 else:
-                    return f'Found!\n\nLine {1+self._start+lno}: "{self[lno]}"\n(compiled line "{", ".join(map(str, self.transitions[idx][1]))}")\n'
-        return None
+                    return (
+                      'Found!\n\n'
+                      f'Line {1+self._start+lno}: "{self[lno]}"\n'
+                      f'(compiled line "{", ".join(map(str, self.transitions[idx][1]))}")'
+                      )
+        return 'No match'
     
     def _cardinal_sub(self, match):
         try:
@@ -556,14 +567,14 @@ class AbstractTable:
             if self._rASSIGNMENT.match(line):
                 raise TabelSyntaxError(lno, 'Variable declaration after first transition')
             napkin, ptcds = map(str.strip, line.partition('->')[::2])
-            if 'permute' in self.directives['symmetries']:
+            if self.directives['symmetries'] == 'permute':
                 napkin = utils.conv_permute(napkin, len(self.cardinals))
             try:
                 napkin = [self._rCARDINAL.sub(self._cardinal_sub, i.strip()) for i, _ in self._rTRANSITION.findall(napkin)]
             except KeyError as e:
                 raise TabelValueError(
                   lno,
-                  f"Invalid cardinal direction {e} for {self.directives['symmetries']!r} symmetry"
+                  f"Invalid cardinal direction {e} for {self.directives['neighborhood']!r} neighborhood"
                   )
             try:
                 napkin = utils.expand_tr(napkin)

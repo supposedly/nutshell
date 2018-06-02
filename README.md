@@ -2,7 +2,6 @@
 A transpiler from a reimagined Golly ruletable language to the traditional format. See [`examples/`](/examples) for examples.
 
 ## Setup
-
 1. [Download & install Python 3.6](https://www.python.org/downloads/release/python-365/) or higher (support for < 3.6 hopefully coming soon)
 2. `git clone` this project, then `cd` to its directory
 3. Using Python's bundled *pip* package manager, execute the terminal command `pip install -r requirements.txt` (or
@@ -13,6 +12,7 @@ A transpiler from a reimagined Golly ruletable language to the traditional forma
 ## Usage
 ```bash
 $ python to_ruletable.py [infile] [outdir] [flags...]
+$ python to_ruletable.py preview [transition] [flags...]
 ```
 The output file will be written to `outdir` with a .rule extension and the same filename as `infile`.  
 Supported flags:
@@ -24,13 +24,13 @@ Supported flags:
   - `-t [HEADER]`: Change the "COMPILED FROM RUELTABEL" header that is added by default to transpiled
                    rules. (If `-t` is given no argument the header will be removed)
   - `-f TRANSITION`: Find a certain transition defined within a tabel section; requires, of course, that
-                     the rule have a `@TABEL` section to search within. Makes it so that, if a certain
-                     cell isn't behaving the way it's supposed to, you can `-f` the transition it's
-                     undergoing and the script will find the offending transition for you (instead of
-                     making you guess at what you typo'd).  
+                     the rule have a `@TABEL` segment to search within. If a certain cell isn't behaving
+                     the way it's supposed to, you can `-f` the transition it's undergoing and rueltabel
+                     will find the offending transition for you (rather than you having to guess at what
+                     you typo'd).  
                      Transition should be given in the standard Golly form `C,N,...,C'` -- that is, state of the
                      current center cell, then its neighborhood, and finally the state it transitions into
-                     on the next tick. Example [here](https://user-images.githubusercontent.com/32081933/39951382-2b37fca0-553e-11e8-87b5-69685dfe4881.png)!  
+                     on the next tick. Example [here](https://user-images.githubusercontent.com/32081933/39951382-2b37fca0-553e-11e8-87b5-69685dfe4881.png)!
 
 ## What's new
 - All variables always unbound, because needing to define eight "any state" vars is ridiculous.
@@ -93,7 +93,14 @@ or (b) using the `...` operator to say *"fill the rest out with whatever value p
 # --1 says "*All* states (including 0) that are not 1" (expands to {0, 2, 3, 4} assuming the same)
 # -bar and --(3, 4) say the same but with multiple states enclosed in a variable
 ``` 
-"Addition" of two variables can be accomplished by placing them in a variable literal, as in the final state above.
+"Addition" of two variables can be accomplished by placing them in a variable literal, as in the `(foo, bar)` state above.
+- The `*` operator within a variable literal acts as something like multiplication. It repeats or truncates the left-hand operand until its
+  length matches the right-hand operand's -- if the latter is a variable -- or until the former's length equals the right-hand operand itself
+  if the latter is a number.  
+  - `0*5` expands to `(0, 0, 0, 0, 0)`
+  - `any*5` assuming `any = (0, 1, 2)` expands to `(0, 1, 2, 0, 1)` -- note the new length, 5
+  - `5*any` assuming the same expands to `(5, 5, 5)`
+  - `live*any` assuming as well that `live = (1, 2)` expands to `(1, 2, 1)`
 - Live cells can be treated as moving objects: a cardinal direction to travel in and resultant cell state are specifiable post transition.
 ```py
 foo, N..NW bar, baz -> S:2  E[(2, 3)]  SE[wutz]  N[NE: (2, 3)]  NE[E]
@@ -112,7 +119,8 @@ foo, N..NW bar, baz -> S:2  E[(2, 3)]  SE[wutz]  N[NE: (2, 3)]  NE[E]
 # Be careful with the syntax presented in these last two bits! You cannot, for example, write
 # NW[S] or N[SE: (2, 3)] -- these imply a violation of the speed of light.
 ```
-- Within these "output specifiers" (formerly "PTCDs" from "**p**ost-**t**ransition **c**ompass-**d**irection specifier**s**"), the `_` keyword says "leave the cell as is".
+- Within these "output specifiers", the `_` keyword says "leave the cell as is".   
+    - (formerly "PTCDs", from "**p**ost-**t**ransition **c**ompass-**d**irection specifier**s**")
 - Transitions under permutational symmetry can make use of a shorthand syntax, specifying only the quantity of cells in each state. For example, `0,2,2,2,1,1,1,0,0,1`
   in a Moore+permute rule can be compacted to `0, 2*3, 1*3, 0*2, 1`.  
   Unmarked states will be filled in to match the number of cells in the transition's neighborhood, meaning
@@ -137,16 +145,16 @@ symmetry type specified overall.)
 ```rb
 @RUEL foo
 
-1: Stationary data {Data}
+1: Stationary data {DATA}
 3: Signal over data
-4: Signal over vacuum {Signal}
+4: Signal over vacuum {SIGNAL}
 
 @TABEL
 ...
 ```
-  The names `Data` and `Signal` will be usable within the `@TABEL` section as aliases for, respectively, `1` and `4`.  
-  It is recommended, but nowhere required, that constant names be written in `PascalCase` and normal variable names in `lowercase` or `camelCase`;
-  the initial capital letter helps visually distinguish constants from multi-state variables.  
+  The names `DATA` and `SIGNAL` will be usable within the `@TABEL` section as aliases for, respectively, states `1` and `4`.  
+  It is recommended but nowhere required that constant names be written in `UPPERCASE` and normal variable names in `lowercase` or `camelCase`;
+  the capital letters help visually distinguish constants from multi-state variables.  
   For the actual registering of a constant, all that matters is that its line in `@RUEL` start with `<number>:` and contain anywhere a pair
   of `{braces}` that enclose the constant's name. The braced part and any whitespace separating it from the previous word will be removed
   from the final `@RULE` segment in the output file.

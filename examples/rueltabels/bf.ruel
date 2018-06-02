@@ -2,61 +2,61 @@
 
  0: Vacuum
  
- 1: +  {Plus}
- 2: -  {Minus}
- 3: [  {RBrack}
- 4: ]  {LBrack}
- 5: <  {RAngle}
- 6: >  {LAngle}
- 7: .  {Dot}
- 8: ,  {Comma}
+ 1: +  {PLUS}
+ 2: -  {MINUS}
+ 3: [  {R_BRACK}
+ 4: ]  {L_BRACK}
+ 5: <  {R_ANGLE}
+ 6: >  {L_ANGLE}
+ 7: .  {DOT}
+ 8: ,  {COMMA}
  
- 9: Plain pointer  {Pointer}
-10: Pointer +  {PointerPlus}
-11: Pointer -  {PointerMinus}
-12: Pointer ]  {PointerLBrack}
-13: Pointer <  {PointerRAngle}
-14: Pointer >  {PointerLAngle}
-15: Pointer .  {PointerDot}
-16: Pointer ,  {PointerComma}
-17: Pointer moving west {WestPointer}
+ 9: Plain pointer  {POINTER}
+10: Pointer +  {POINTER_PLUS}
+11: Pointer -  {POINTER_MINUS}
+12: Pointer ]  {POINTER_L_BRACK}
+13: Pointer <  {POINTER_R_ANGLE}
+14: Pointer >  {POINTER_L_ANGLE}
+15: Pointer .  {POINTER_DOT}
+16: Pointer ,  {POINTER_COMMA}
+17: Pointer moving west {WEST_POINTER}
 
-18: Shadow  {Shadow}
+18: Shadow  {SHADOW}
 
-19: Northbound +  {NorthPlus}
-20: Northbound -  {NorthMinus}
-21: Northbound ]  {NorthLBrack}
-22: Northbound <  {NorthRAngle}
-23: Northbound >  {NorthLAngle}
-24: Northbound .  {NorthDot}
-25: Northbound ,  {NorthComma}
+19: Northbound +  {NORTH_PLUS}
+20: Northbound -  {NORTH_MINUS}
+21: Northbound ]  {NORTH_L_BRACK}
+22: Northbound <  {NORTH_R_ANGLE}
+23: Northbound >  {NORTH_L_ANGLE}
+24: Northbound .  {NORTH_DOT}
+25: Northbound ,  {NORTH_COMMA}
 
-26: Westbound +  {WestPlus}
-27: Westbound -  {WestMinus}
-29: Westbound ]  {WestLBrack}
-30: Westbound <  {WestRAngle}
-31: Westbound >  {WestLAngle}
-32: Westbound .  {WestDot}
-33: Westbound ,  {WestComma}
+26: Westbound +  {WEST_PLUS}
+27: Westbound -  {WEST_MINUS}
+29: Westbound ]  {WEST_L_BRACK}
+30: Westbound <  {WEST_R_ANGLE}
+31: Westbound >  {WEST_L_ANGLE}
+32: Westbound .  {WEST_DOT}
+33: Westbound ,  {WEST_COMMA}
 
-34: Eastbound +  {EastPlus}
-35: Eastbound -  {EastMinus}
-36: Eastbound ]  {EastLBrack}
-37: Eastbound <  {EastRAngle}
-38: Eastbound >  {EastLAngle}
-39: Eastbound .  {EastDot}
-40: Eastbound ,  {EastComma}
+34: Eastbound +  {EAST_PLUS}
+35: Eastbound -  {EAST_MINUS}
+36: Eastbound ]  {EAST_L_BRACK}
+37: Eastbound <  {EAST_R_ANGLE}
+38: Eastbound >  {EAST_L_ANGLE}
+39: Eastbound .  {EAST_DOT}
+40: Eastbound ,  {EAST_COMMA}
 
-41: Southbound +  {SouthPlus}
-42: Southbound -  {SouthMinus}
-43: Southbound ]  {SouthLBrack}
-44: Southbound <  {SouthRAngle}
-45: Southbound >  {SouthLAngle}
-46: Southbound .  {SouthDot}
-47: Southbound ,  {SouthComma}
+41: Southbound +  {SOUTH_PLUS}
+42: Southbound -  {SOUTH_MINUS}
+43: Southbound ]  {SOUTH_l_BRACK}
+44: Southbound <  {SOUTH_R_ANGLE}
+45: Southbound >  {SOUTH_L_ANGLE}
+46: Southbound .  {SOUTH_DOT}
+47: Southbound ,  {SOUTH_COMMA}
 
-48: Eastward-pointing shadow cell  {EastShadow}
-49: Westward-pointing shadow cell  {WestShadow}
+48: Eastward-pointing shadow cell  {EAST_SHADOW}
+49: Westward-pointing shadow cell  {WEST_SHADOW}
 
 
 + Setup:
@@ -93,40 +93,40 @@ states: ?
 neighborhood: Moore
 symmetries: none
 
-anyPrgm = (1..8)
+anyPrgm = (PLUS..COMMA)
 vac = (0, anyPrgm)
-prgm = anyPrgm-(LBrack, RBrack)
+prgm = anyPrgm-(L_BRACK, R_BRACK)
 
 #### INITIAL TELESCOPING OF WHAT IS IN BETWEEN BRACKETS ####
 
 # move program cell down if it has a closing bracket to its east
-(prgm, RBrack), 0, 0, 3, SE..NW vac, 0 -> S[0]
+(prgm, R_BRACK), 0, 0, R_BRACK, SE..NW vac, 0 -> S[0]
 
 # move program cell down if the cell to its east is below it
-(prgm, RBrack), N..E vac, anyPrgm, S..NW vac, 0 -> S[0]
+(prgm, R_BRACK), N..E vac, anyPrgm, S..NW vac, 0 -> S[0]
 
 ## (NOTE: The above two groups aren't even necessary but symmetry finishes sooner) ##
 
 # move program cell down if it has an opening bracket to its west
-(prgm, LBrack), 0, NE..SW vac, LBrack, vac, 0 -> S[0]
+(prgm, L_BRACK), 0, NE..SW vac, L_BRACK, vac, 0 -> S[0]
 
 # move program cell down if the cell to its west is below it
-(prgm, LBrack), N..S vac, anyPrgm, W..NW vac, 0 -> S[0]
+(prgm, L_BRACK), N..S vac, anyPrgm, W..NW vac, 0 -> S[0]
 
 # special-casing for ][ cases. could probably be handled above, hm
-LBrack, 0, 0, vac, vac, 0, RBrack, 0, 0, 0 -> S:LBrack
-RBrack, 0, 0, 0, LBrack, 0, vac, vac, 0, 0 -> S:RBrack
+L_BRACK, 0, 0, vac, vac, 0, R_BRACK, 0, 0, 0 -> S:L_BRACK
+R_BRACK, 0, 0, 0, L_BRACK, 0, vac, vac, 0, 0 -> S:R_BRACK
 
 # if a bracket has nothing in its mouth, assume it needs to travel south
 # to catch up to a different level
 # In the same vein, spawn a cell if in an empty cell between a bracket (N) and
 # a prgm tape bit (SW/SE)
-LBrack, N..SW 0, vac, vac, 0 -> S:LBrack
-RBrack, 0, vac, vac, SE..NW 0, 0 -> S:RBrack
+L_BRACK, N..SW 0, vac, vac, 0 -> S:L_BRACK
+R_BRACK, 0, vac, vac, SE..NW 0, 0 -> S:R_BRACK
 
 # if the above happens,  move the now-hanging-one-lvl-too-high prgm tape data south
-prgm, 0, 0, prgm, 0, 0, RBrack, 0, 0, 0 -> S[0]  # ]x
-prgm, 0, 0, 0, LBrack, 0, 0, prgm, 0, 0 -> S[0]  # x[
+prgm, 0, 0, prgm, 0, 0, R_BRACK, 0, 0, 0 -> S[0]  # ]x
+prgm, 0, 0, 0, L_BRACK, 0, 0, prgm, 0, 0 -> S[0]  # x[
 
 
 @ICONS
@@ -141,15 +141,6 @@ prgm, 0, 0, 0, LBrack, 0, 0, prgm, 0, 0 -> S[0]  # x[
 8: 405780
 9: 0000FF
 
-# 1: +  {Plus}
-# 2: -  {Minus}
-# 3: [  {RBrack}
-# 4: ]  {LBrack}
-# 5: <  {RAngle}
-# 6: >  {LAngle}
-# 7: .  {Dot}
-# 8: ,  {Comma}
-
 #C 18, empty space
 x = 13, y = 13, rule = //10
 5.3A$5.3A$2.9A$2.3A3.3A$2.3A3.3A$3A7.3A$3A7.3A$3A7.3A$2.3A3.3A$2.3A3.
@@ -163,11 +154,11 @@ x = 5, y = 11, rule = //10
 x = 5, y = 11, rule = //10
 5B$5B$3.2B$3.2B$3.2B$3.2B$3.2B$3.2B$3.2B$5B$5B!
 
-#C Plus sign 1
+#C PLUS sign 1
 x = 11, y = 11, rule = //10
 4.3C$4.3C$4.3C$4.3C$11C$11C$11C$4.3C$4.3C$4.3C$4.3C!
 
-#C minus sign 2
+#C MINUS sign 2
 x = 11, y = 3, rule = //10
 11C$11C$11C!
 
@@ -179,11 +170,11 @@ x = 11, y = 11, rule = //10
 x = 11, y = 11, rule = //10
 2D$4D$2.4D$4.4D$6.4D$8.3D$6.4D$4.4D$2.4D$4D$2D!
 
-#C Comma 8
+#C COMMA 8
 x = 9, y = 11, rule = //10
 .7E$9E$9E$9E$9E$9E$.8E$5.4E$5.4E$4.4E$.6E!
  
-#C Dot 7
+#C DOT 7
 x = 9, y = 7, rule = //10
 .7E$9E$9E$9E$9E$9E$.7E!
 

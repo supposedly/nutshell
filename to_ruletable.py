@@ -1,5 +1,6 @@
 """Facilitates conversion of a ruelfile into a Golly-compatible .rule file."""
 import os
+import sys
 from inspect import cleandoc
 
 from argv_parse import ARGS
@@ -15,7 +16,7 @@ def transpile(fp, *, preview=False):
     if preview:
         return '\n'.join(', '.join(map(str, tr)) for _, tr in parsed['@TABEL'].transitions)
     if ARGS.find:
-        raise SystemExit(parsed['@TABEL'].match(ARGS.find) or 'No match\n')
+        raise SystemExit(parsed['@TABEL'].match(ARGS.find) + '\n')
     print('Complete!', 'Compiling...', sep='\n\n')
     return compiler.compile(parsed)
 
@@ -29,21 +30,24 @@ def _preview(args):
       {args.transition}
     '''
     parsed = transpile(cleandoc(mock).splitlines(), preview=True)
-    print('Complete! Transpiled preview:\n', parsed, '', sep='\n')
+    return ('Complete! Transpiled preview:\n', parsed, '')
 
 
 def _transpile(args):
+    if args.infile == '=':
+        return ('', transpile(sys.stdin.read().splitlines(True)))
     with open(args.infile) as infp:
         finished = transpile(infp)
     with open(f'{os.path.join(args.outdir, fname)}.rule', 'w') as outfp:
         outfp.write(finished)
-        print('Complete!', f'Created {os.path.realpath(outfp.name)}', sep='\n\n')
+        return ('Complete!', '', f'Created {os.path.realpath(outfp.name)}')
 
 
 if __name__ == '__main__':
     try:
         fname, *_ = os.path.split(ARGS.infile)[-1].split('.')
     except AttributeError:
-        _preview(ARGS.preview)
+        res = _preview(ARGS.preview)
     else:
-        _transpile(ARGS)
+        res = _transpile(ARGS)
+    print(*res, sep='\n')
