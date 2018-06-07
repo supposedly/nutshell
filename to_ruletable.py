@@ -24,7 +24,7 @@ def transpile(fp, *, preview=False):
 def _preview(args):
     mock = f'''
       @TABEL
-      states: ?
+      states: {args.states}
       symmetries: none
       neighborhood: {args.neighborhood}
       {args.transition}
@@ -34,7 +34,7 @@ def _preview(args):
 
 
 def _transpile(args):
-    if args.infile == '=':
+    if args.infile == '-':
         return ('', transpile(sys.stdin.read().splitlines(True)))
     with open(args.infile) as infp:
         finished = transpile(infp)

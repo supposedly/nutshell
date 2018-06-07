@@ -1,5 +1,3 @@
-import textwrap
-
 from ergo import Parser
 
 
@@ -12,17 +10,18 @@ DEFAULT_HEADER = '''\
 
 parser = Parser()
 parser.group('grp_0', XOR=0)
-preview = parser.command('preview', XOR=0)
+preview = parser.command('preview', XOR=0, OR=0)
 
 
-#@parser.grp_0.clump(AND=1)
+@parser.grp_0.clump(AND=0)
 @parser.arg()
 def infile(path):
     """rueltabel-formatted input file"""
     return path
 
 
-#@parser.grp_0.clump(OR=0, AND=1)
+@parser.clump(OR=0)
+@parser.grp_0.clump(AND=0)
 @parser.grp_0.arg()
 def outdir(path):
     """Directory to create output file in"""
@@ -41,7 +40,7 @@ def comment_src():
     return True
 
 
-#@parser.clump(XOR=0)
+@parser.clump(XOR=0)
 @parser.flag(short='f', default=None)
 def find(transition):
     """Locate first transition in `infile` that matches"""
@@ -66,12 +65,15 @@ def transition(tr):
 def neighborhood(value):
     """Neighborhood to consider transition part of"""
     if value.replace(' ', '') not in ('Moore', 'vonNeumann', 'hexagonal'):
-        raise ValueError('Invalid preview-transition neighborhood')
+        raise ValueError("Invalid preview-transition neighborhood (must be one of 'Moore', 'vonNeumann', 'hexagonal')")
     return value
+
 
 @preview.flag(short='o', default='?')
 def states(num):
     """Number of states to include in transition (default guess)"""
+    if not num.isdigit() and num != '?':
+        raise ValueError('Preview n_states must be ? or an integer')
     return str(num)
 
 
