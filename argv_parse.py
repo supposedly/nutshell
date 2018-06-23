@@ -1,4 +1,4 @@
-from ergo import Parser
+from ergo import Parser, Group
 
 
 DEFAULT_HEADER = '''\
@@ -9,7 +9,7 @@ DEFAULT_HEADER = '''\
 
 
 parser = Parser()
-parser.group('grp_0', XOR=0)
+parser.grp_0 = Group(XOR=0)
 preview = parser.command('preview', XOR=0, OR=0)
 
 
@@ -77,4 +77,4 @@ def states(num):
     return str(num)
 
 
-ARGS = parser.parse()
+ARGS = parser.parse(strict=True)
