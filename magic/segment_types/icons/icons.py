@@ -11,7 +11,7 @@ from ._utils import lazylen, maybe_double, SAFE_CHARS, SYMBOL_MAP
 
 
 class IShouldntHaveToDoThisBidict(bidict.bidict):
-    """Why isn't it an __init__ parameter"""
+    """Why isn't this an __init__ parameter"""
     on_dup_val = bidict.OVERWRITE
 
 
@@ -103,7 +103,7 @@ class IconArray:
             if line.startswith('?'):
                 # Can put n_states in a comment if no TABEL section to grab it from
                 pre, *post = line.split('#', 1)
-                # The *_ allows for an arbitrary separator like `000 ... FFF` between the two colors
+                # Below *_ allows for an arbitrary separator like `000 ... FFF` between the two colors
                 _, start, *_, end = pre.split()
                 # If available, get n_states from said n_states-containing comment
                 self._set_states = int(''.join(filter(str.isdigit, post[0]))) if post else self._n_states
@@ -123,6 +123,8 @@ class IconArray:
 
     def _sep_states(self, start) -> dict:
         states = defaultdict(list)
+        used_states = set()
+        _last_comment = 0
         for lno, line in enumerate(map(str.strip, self._src[start:]), start):
             if not line:
                 continue
@@ -130,9 +132,13 @@ class IconArray:
                 cur_states = {int(i) for split in map(str.split, line.split(',')) for i in split if i.isdigit()}
                 if not all(0 < state < 256 for state in cur_states):
                     raise TabelValueError(lno, f'Icon declared for invalid state {next(i for i in cur_states if not 0 < i < 256)}')
+                if cur_states & used_states:
+                    raise TabelValueError(lno, f'State {next(iter(cur_states & used_states))} was already assigned an icon')
+                _last_comment = lno
                 continue
             for state in cur_states:
                 states[state].append(line)
+            used_states.update(cur_states)
         return states
     
     def _fill_missing_states(self):

@@ -94,10 +94,13 @@ neighborhood: Moore
 symmetries: none
 
 anyPrgm = (PLUS..COMMA)
-vac = (0, anyPrgm)
 prgm = anyPrgm-(L_BRACK, R_BRACK)
+vac = (0, anyPrgm)
 
-#### INITIAL TELESCOPING OF WHAT IS IN BETWEEN BRACKETS ####
+pointerOp = (POINTER_PLUS..POINTER_COMMA)-POINTER_L_BRACK
+northbound = (NORTH_PLUS..NORTH_COMMA)-NORTH_L_BRACK
+
+##### INITIAL TELESCOPING OF BRACKET-ENCLOSED STUFF #####
 
 # move program cell down if it has a closing bracket to its east
 (prgm, R_BRACK), 0, 0, R_BRACK, SE..NW vac, 0 -> S[0]
@@ -129,7 +132,12 @@ prgm, 0, 0, prgm, 0, 0, R_BRACK, 0, 0, 0 -> S[0]  # ]x
 prgm, 0, 0, 0, L_BRACK, 0, 0, prgm, 0, 0 -> S[0]  # x[
 
 
+##### POINTER MOVEMENT #####
+(POINTER, pointerOp), any, 0, vac, prgm, prgm, vac, vac, any, 0 -> N[0: (_, northbound)]  E[SE: pointerOp]
+
+
 @ICONS
+? FFFF00 .. FF0000
 0: 303030
 1: D0D0D0
 2: 007FFF
@@ -154,27 +162,33 @@ x = 5, y = 11, rule = //10
 x = 5, y = 11, rule = //10
 5B$5B$3.2B$3.2B$3.2B$3.2B$3.2B$3.2B$3.2B$5B$5B!
 
-#C PLUS sign 1
+#C Plus sign
+#C 1 19 26 34 41
 x = 11, y = 11, rule = //10
 4.3C$4.3C$4.3C$4.3C$11C$11C$11C$4.3C$4.3C$4.3C$4.3C!
 
-#C MINUS sign 2
+#C Minus sign
+#C 2 20 27 35 42
 x = 11, y = 3, rule = //10
 11C$11C$11C!
 
-#C Left angle bracket 6
+#C Left angle bracket
+#C 6 23 31 38 45
 x = 11, y = 11, rule = //10
 9.2D$7.4D$5.4D$3.4D$.4D$3D$.4D$3.4D$5.4D$7.4D$9.2D!
 
-#C Right angle bracket 5
+#C Right angle bracket
+#C 5 22 30 37 44
 x = 11, y = 11, rule = //10
 2D$4D$2.4D$4.4D$6.4D$8.3D$6.4D$4.4D$2.4D$4D$2D!
 
-#C COMMA 8
+#C Comma
+#C 8 25 33 40 47
 x = 9, y = 11, rule = //10
 .7E$9E$9E$9E$9E$9E$.8E$5.4E$5.4E$4.4E$.6E!
  
-#C DOT 7
+#C Period
+#C 7 24 32 49 46
 x = 9, y = 7, rule = //10
 .7E$9E$9E$9E$9E$9E$.7E!
 
