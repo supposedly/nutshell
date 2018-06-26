@@ -132,13 +132,12 @@ class IconArray:
                 cur_states = {int(i) for split in map(str.split, line.split(',')) for i in split if i.isdigit()}
                 if not all(0 < state < 256 for state in cur_states):
                     raise TabelValueError(lno, f'Icon declared for invalid state {next(i for i in cur_states if not 0 < i < 256)}')
-                if cur_states & used_states:
-                    raise TabelValueError(lno, f'State {next(iter(cur_states & used_states))} was already assigned an icon')
+                if cur_states.intersection(states):
+                    raise TabelValueError(lno, f'States {cur_states.intersection(states)} were already assigned an icon')
                 _last_comment = lno
                 continue
             for state in cur_states:
                 states[state].append(line)
-            used_states.update(cur_states)
         return states
     
     def _fill_missing_states(self):

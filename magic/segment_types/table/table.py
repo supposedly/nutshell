@@ -7,7 +7,7 @@ import bidict
 from ...common.errors import *
 from ...common.utils import print_verbose
 from . import _napkins as napkins, _utils as utils
-from ._classes import Coord, TabelRange, SpecialVar, VarName
+from ._classes import TabelRange, SpecialVar, VarName, PTCD
 
 
 class Bidict(bidict.bidict):
@@ -380,167 +380,6 @@ class AbstractTable:
         self.vars.__class__.on_dup_val = bidict.IGNORE
         return lno
     
-    def __make_center_tr(self, tr, initial, result, orig, source_cd):
-        """
-        Handles making a transition from PTCD iff the source and copy-to cells happen to be the same.
-        """
-        new_tr = [initial, *['any']*len(self.cardinals), result]
-        # Get adjacent cells to original cell (diagonal to current)
-        try:
-            new_tr[self.cardinals[orig.name]] = tr[0]
-        except KeyError:
-            pass
-        try:
-            new_tr[self.cardinals[orig.cw.name]] = utils.of(tr, self.cardinals[orig.cw.move(source_cd).name])
-        except KeyError:
-            pass
-        try:
-            new_tr[self.cardinals[orig.ccw.name]] = utils.of(tr, self.cardinals[orig.ccw.move(source_cd).name])
-        except KeyError:
-            pass
-        # If we're orthogonal to orig, we have to count for the cells adjacent to us too
-        if not orig.diagonal():
-            try:
-                new_tr[self.cardinals[orig.cw(2).name]] = utils.of(tr, self.cardinals[orig.cw(3).name])
-            except KeyError:
-                pass
-            try:
-                new_tr[self.cardinals[orig.ccw(2).name]] = utils.of(tr, self.cardinals[orig.ccw(3).name])
-            except KeyError:
-                pass
-        return new_tr
-    
-    def _make_transition(self, tr: list, source_cd: str, cd_to: str, initial, result):
-        """
-        tr: Original transition
-        source_cd: Cardinal direction as a letter or pair thereof. (N, S, SW, etc)
-        initial: initial state value
-        
-        Build a transition from segments of an output specifier.
-        """
-        # source_cd == East | East
-        # cd_to == SouthEast | East
-        cur = Coord.from_name(source_cd)  # position of current cell relative to original
-        # cur == East | East
-        orig = cur.inv  # position of original cell relative to current
-        # orig == West | West
-        new_tr = self.__make_center_tr(tr, initial, result, orig, source_cd)
-        if cd_to is None:
-            return new_tr
-        # Otherwise, we have to fiddle with the values at the initial and new_relative indices
-        try:
-            new_tr[0] = tr[self.cardinals[cur.name]]
-        except KeyError:
-            pass
-        new_relative = orig if cd_to == '0' else orig.move(cd_to)  # position of "copy_to" cell relative to current
-        # new_relative == South (which is West moved SouthEast) | [CENTER] (which is West moved East)
-        if new_relative.center():
-            return new_tr
-        try:
-            new_tr[self.cardinals[new_relative.name]] = initial
-        except KeyError:
-            pass
-        return new_tr
-    
-    def _extract_ptcd_vars(self, tr, match, lno):
-        """
-        tr: a transition
-        match: matched output specifier (regex match object)
-        lno: current line number
-        
-        Parse the 'variable' segments of an output specifier.
-        
-        return: Output specifier's variables
-        """
-        copy_to = tr[self.cardinals[match[1]]] if match[3] is None else tr[match[3] != '0' and self.cardinals[match[3]]]
-        if match[2] is not None:  # Means it's a simple "CD:state" instead of a "CD[variable]"
-            return match[1], '_None', copy_to, int(match[2])
-        if match[4] in ('0', *self.cardinals) and match[3] is None:
-            index = match[4] != '0' and self.cardinals[match[4]]
-            return match[1], match[4], tr[index], tr[index]
-        _map_to = []
-        map_to = self._parse_variable(match[4], lno, tr=tr, ptcd=True)
-        for idx, state in enumerate(map_to):
-            if state == '_':  # Leave as is (indicated by a None value)
-                state = None
-            if state == '...':  # Fill out with preceding element (this should be generalized to all mappings actually)
-                # TODO: Allow placement of ... in the middle of an expression (to be filled in from both sides)
-                _map_to.append(range(idx, len(copy_to)))  # Check isinstance(range) to determine whether to generate anonymous variable
-                break
-            _map_to.append(state)
-        if len(copy_to) > sum(len(i) if isinstance(i, range) else 1 for i in _map_to):
-            raise TabelValueError(
-              lno,
-              f"Variable at index {int(match[1] != '0') and self.cardinals[match[1]]} in output specifier (direction {match[1]})"
-              " mapped to a smaller variable. Maybe add a '...' to fill the latter out?"
-              )
-        return match[1], match[3], copy_to, _map_to
-    
-    def _resolve_chain(self, orig, tr, current):
-        """
-        Returns chain's final link and the tr without any chain
-        """
-        chained = {orig.index(current)}
-        tr = tr.copy()
-        while isinstance(current, str) and current.startswith('['):
-            cur_idx = int(utils.rBINDING.match(current)[1])
-            chained.add(cur_idx)
-            current = tr[cur_idx]
-        for idx in chained:
-            tr[idx] = current
-        try:
-            return tr, current, cur_idx
-        except UnboundLocalError as e:
-            raise ValueError  # fffffffff
-
-    def _parse_ptcd(self, tr, match, lno):
-        """
-        tr: a fully-parsed transition statement
-        ptcd: a output specifier
-        variables: global dict of variables
-        
-        output specifiers can be
-            CD[(var_literal)]
-            CD[variable]
-        Or
-            CD[CD: (var_literal)]
-            CD[CD: variable]
-        
-        return: output specifier expanded into its full transition(s)
-        """
-        _orig_tr = tr.copy()
-        cd_idx, cd_to, copy_to, map_to = self._extract_ptcd_vars(tr, match, lno)
-        try:
-            tr, map_to, _ = self._resolve_chain(_orig_tr, tr, map_to)
-        except ValueError:
-            pass
-        if cd_to == '_None':  # i mean ...
-            return [self._make_transition(tr, cd_idx, None, copy_to, map_to)]
-        # Start expanding to transitions
-        transitions = []
-        try:
-            tr, copy_to, copy_idx = self._resolve_chain(_orig_tr, tr, copy_to)
-        except ValueError:
-            pass
-        else:
-            cd_to = next(k for k, v in self.cardinals.items() if v == copy_idx) if copy_idx else '0'
-        if copy_to == map_to:
-            transitions.append(self._make_transition(tr, cd_idx, cd_to, copy_to, f'[{self.cardinals[Coord.from_name(cd_idx).inv.name]}]'))
-            return transitions
-        for idx, (initial, result) in enumerate(zip(copy_to, map_to)):
-            if result is None:
-                continue
-            # If the result is an ellipsis, fill out
-            if isinstance(result, range):
-                if map_to[idx-1] is None:  # Nothing more to add
-                    break
-                new_initial = copy_to[result[0]:]
-                transitions.append(self._make_transition(tr, cd_idx, cd_to, new_initial, map_to[idx-1]))
-                self.vars[VarName.random()] = new_initial
-                break
-            transitions.append(self._make_transition(tr, cd_idx, cd_to, initial, result))
-        return transitions
-    
     def _parse_transitions(self, start):
         """
         start: line number to start on
@@ -592,7 +431,7 @@ class AbstractTable:
                         napkin[idx] = self.vars[elem] if elem in self.vars else self._constants[elem]
                     except KeyError:
                         raise TabelReferenceError(lno, f'Transition references undefined name {elem!r}')
-            ptcds = [(lno, tr) for ptcd in self._rPTCD.finditer(ptcds) for tr in self._parse_ptcd(napkin, ptcd, lno=lno)]
+            ptcds = [(lno, tr) for ptcd in self._rPTCD.finditer(ptcds) for tr in PTCD(self, napkin, ptcd, lno=lno)]
             self.transitions.extend([(lno, napkin), *ptcds])
     
     def _disambiguate(self):
