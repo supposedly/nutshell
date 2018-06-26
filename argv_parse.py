@@ -44,7 +44,7 @@ def comment_src():
 @parser.flag(short='f', default=None)
 def find(transition):
     """Locate first transition in `infile` that matches"""
-    return tuple(int(i.strip()) for i in transition.split(','))
+    return tuple(s if s == '*' else int(s) for s in map(str.strip, transition.split(',')))
 
 
 @parser.flag('verbosity', short='v', namespace={'count': 0}, default=0)

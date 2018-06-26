@@ -136,7 +136,7 @@ class AbstractTable:
                 for cur_len, (in_state, tr_state) in enumerate(zip(in_tr, tr), 1):
                     while isinstance(tr_state, str):  # handle lingering bindings
                         tr_state = tr[int(tr_state)]
-                    if not (in_state == tr_state if isinstance(tr_state, int) else in_state in tr_state):
+                    if in_state != '*' and not (in_state == tr_state if isinstance(tr_state, int) else in_state in tr_state):
                         if cur_len == target_len:
                             return (
                               'No match\n\n'
@@ -150,6 +150,8 @@ class AbstractTable:
                       f'Line {1+self._start+lno}: "{self[lno]}"\n'
                       f'(compiled line "{", ".join(map(str, self.transitions[idx][1]))}")'
                       )
+        if start == end:
+            return 'No match\nThis transition is the result of default behavior'
         return 'No match'
     
     def _cardinal_sub(self, match):
