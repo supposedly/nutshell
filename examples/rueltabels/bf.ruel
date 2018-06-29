@@ -135,6 +135,8 @@ prgm, 0, 0, 0, L_BRACK, 0, 0, prgm, 0, 0 -> S[0]  # x[
 ##### POINTER MOVEMENT #####
 (POINTER, pointerOp), any, 0, vac, prgm, prgm, vac, vac, any, 0 -> N[0: (_, northbound)]  E[SE: pointerOp]
 
+northbound, N..NW any, 0 -> N[0]
+
 
 @ICONS
 ? FFFF00 .. FF0000

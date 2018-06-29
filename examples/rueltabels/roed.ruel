@@ -3,7 +3,7 @@
 http://esolangs.org/wiki/Roie
 (sans i, plus a [d]elay instruction)
 
-1: e {_E}
+1: e {\E}
 
 2-5: pointer 0 (n-w)
     2: n {P_N0}
@@ -93,7 +93,7 @@ east = (eastZero, P_E1, R_E1, D_E1, O_N1, O_S1, O_NE1, O_SE1)
 south = (southZero, P_S1, R_S1, D_S1, O_E1, O_W1, O_SW1, O_SE1)
 west = (westZero, P_W1, R_W1, D_W1, O_N1, O_S1, O_NW1, O_SW1)
 
-_E, N..NW any, _E
+\E, N..NW any, \E
 
 # OR instruction setup
 # output-0 cases first to override later ones

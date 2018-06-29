@@ -3,6 +3,7 @@ import random
 import bidict
 
 from . import _utils as utils
+from ...common.errors import TabelValueError
 
 class CoordOutOfBoundsError(Exception):
     """
@@ -28,11 +29,11 @@ class Coord(tuple):
     _DIRS = ('N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW')
     
     def __init__(self, _):
-        if any(i not in {-1, 0, 1} for i in self):
+        if not all(-2 < i < 2 for i in self):
             raise CoordOutOfBoundsError(self)
     
     def __repr__(self):
-        return f'Coord({tuple(self)})'
+        return f'Coord({tuple(self)!r})'
     
     @classmethod
     def from_name(cls, cd):
@@ -174,7 +175,7 @@ class PTCD:
     def __init__(self, tbl, tr, match, lno):
         """
         tr: a fully-parsed transition statement
-        ptcd: a output specifier
+        ptcd: an output specifier
         variables: global dict of variables
         
         output specifiers can be
@@ -225,7 +226,7 @@ class PTCD:
                     break
                 new_initial = copy_to[result[0]:]
                 transitions.append(self._make_transition(cd_idx, cd_to, new_initial, map_to[idx-1]))
-                self.vars[VarName.random()] = new_initial
+                self.tbl.vars[VarName.random()] = new_initial
                 break
             transitions.append(self._make_transition(cd_idx, cd_to, initial, result))
         return transitions
@@ -310,7 +311,7 @@ class PTCD:
             idx = m[4] != '0' and self.tbl.cardinals[m[4]]
             return (m[1], m[4], *[self.tr[idx]]*2)
         _map_to = []
-        for idx, state in enumerate(self.tbl._parse_variable(m[4], self.lno, tr=self.tr, ptcd=True)):
+        for idx, state in enumerate(self.tbl.parse_variable(m[4], self.lno, tr=self.tr, ptcd=True)):
             if state == '_':  # Leave as is (indicated by a None value)
                 state = None
             if state == '...':  # Fill out with preceding element (this should be generalized to all mappings actually)
@@ -320,7 +321,7 @@ class PTCD:
             _map_to.append(state)
         if len(copy_to) > sum(len(i) if isinstance(i, range) else 1 for i in _map_to):
             raise TabelValueError(
-              lno,
+              self.lno,
               f"Variable at index {int(m[1] != '0') and self.tbl.cardinals[m[1]]} in output specifier (direction {m[1]})"
               " mapped to a smaller variable. Maybe add a '...' to fill the latter out?"
               )
@@ -340,5 +341,5 @@ class PTCD:
             tr[idx] = current
         try:
             return tr, current, cur_idx
-        except UnboundLocalError as e:
+        except UnboundLocalError:
             raise ValueError  # fffffffff

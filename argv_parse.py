@@ -71,7 +71,7 @@ def neighborhood(value):
 
 @preview.flag(short='o', default='?')
 def states(num):
-    """Number of states to include in transition (default guess)"""
+    """Number of states to include in transition (default: guess)"""
     if not num.isdigit() and num != '?':
         raise ValueError('Preview n_states must be ? or an integer')
     return str(num)
