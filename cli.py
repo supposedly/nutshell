@@ -47,12 +47,19 @@ def find(transition):
     return tuple(s if s == '*' else int(s) for s in map(str.strip, transition.split(',')))
 
 
-@parser.flag('verbosity', short='v', namespace={'count': 0}, default=0)
+@parser.clump(XOR='v')
+@parser.flag('verbosity', namespace={'count': 0}, default=0)
 def verbose(nsp):
     """Repeat for more verbosity; max x4"""
     if nsp.count < 4:
         nsp.count += 1
     return nsp.count
+
+
+@parser.clump(XOR='v')
+@parser.flag(default=False)
+def quiet():
+    return True
 
 
 @preview.arg(required=True)

@@ -5,7 +5,7 @@ from itertools import cycle, islice, zip_longest
 import bidict
 
 from ...common.errors import *
-from ...common.utils import print_verbose
+from ...common.utils import printv, printq
 from . import _napkins as napkins, _utils as utils
 from ._classes import TabelRange, SpecialVar, VarName, PTCD
 
@@ -76,28 +76,28 @@ class AbstractTable:
         self.cardinals = self._parse_directives()
         
         _transition_start = self._extract_initial_vars(_assignment_start)
-        print_verbose(
+        printv(
           '\b'*4 + 'PARSED directives & var assignments',
           ['\b\bdirectives:', self.directives, '\b\bvars:', self.vars],
           pre='    ', sep='\n', end='\n'
           )
         
         self._parse_transitions(_transition_start)
-        print_verbose(
+        printv(
           '\b'*4 + 'PARSED transitions & output specifiers',
           ['\b\btransitions (before binding):', *self.transitions, '\b\bvars:', self.vars],
           pre='    ', sep='\n', end='\n'
           )
         
         self._disambiguate()
-        print_verbose(
+        printv(
           '\b'*4 + 'DISAMBIGUATED variables',
           ['\b\btransitions (after binding):', *self.transitions, '\b\bvars:', self.vars],
           pre='    ', sep='\n', end='\n\n'
           )
         
         self._expand_mappings()
-        print_verbose(
+        printv(
           '\b'*4 + 'EXPANDED mappings',
           ['\b\btransitions (after expanding):', *self.transitions, '\b\bvars:', self.vars],
           pre='    ', sep='\n', end='\n\n'
@@ -118,7 +118,7 @@ class AbstractTable:
         """
         Finds the first transition in self.transitions matching tr.
         """
-        print('Complete!\n\nSearching for match...')
+        printq('Complete!\n\nSearching for match...')
         sym_cls = napkins.NAMES[self.directives['symmetries']]
         input_tr = utils.unbind_vars(tr, rebind=False)
         start, end = input_tr.pop(0), input_tr.pop(-1)
@@ -270,7 +270,7 @@ class AbstractTable:
           for line in self[start:]
           for match in r_int.finditer(line.split('#')[0])
           )
-        print_verbose(['Found n_states:', self.directives['states']])
+        printv(['Found n_states:', self.directives['states']])
     
     def _extract_directives(self, start=0):
         """
@@ -441,9 +441,9 @@ class AbstractTable:
         Properly disambiguate variables in transitions, then resolve
         [bracketed bindings] and convert mappings to Python tuples.
         """
-        print_verbose(None, None, '...disambiguating variables...', pre='')
+        printv(None, None, '...disambiguating variables...', pre='')
         for idx, (lno, tr) in enumerate(self.transitions):
-            print_verbose(*[None]*3, [tr, '->'], start='', sep='', end='')
+            printv(*[None]*3, [tr, '->'], start='', sep='', end='')
             try:
                 reps, tr = utils.bind_vars(
                   self.vars.inv[val].name
@@ -480,7 +480,7 @@ class AbstractTable:
                       )
                 self.transitions[idx][1][i] = (tr_idx, tuple(map_from), tuple(map_to))
             
-            print_verbose(*[None]*3, [tr, '->', self.transitions[idx], '\n  reps:', reps], sep='', end='\n\n')
+            printv(*[None]*3, [tr, '->', self.transitions[idx], '\n  reps:', reps], sep='', end='\n\n')
             for name, rep in reps.items():
                 var = self.vars[name]
                 if rep > self.vars.inv[var].rep:
@@ -491,7 +491,7 @@ class AbstractTable:
         Iteratively expand mappings in self.transitions, starting from
         earlier ones and going down the branches.
         """
-        print_verbose(None, None, '...expanding mappings...', pre='')
+        printv(None, None, '...expanding mappings...', pre='')
         for tr_idx, (lno, tr) in enumerate(self.transitions):
             try:
                 # The only tuples left are mappings because we replaced var values w their names
@@ -501,7 +501,7 @@ class AbstractTable:
                 sub_idx, (idx, froms, tos) = next((i, t) for i, t in enumerate(tr) if isinstance(t, tuple))
             except StopIteration:
                 continue
-            print_verbose(*[None]*3, [tr, '\n', '->'], start='', sep='', end='\n')
+            printv(*[None]*3, [tr, '\n', '->'], start='', sep='', end='\n')
             new = []
             for map_from, map_to in zip(froms, tos):
                 reps, built = utils.bind_vars(
@@ -513,7 +513,7 @@ class AbstractTable:
                     var = self.vars[name]
                     if rep > self.vars.inv[var].rep:
                         self.vars.inv[var].rep = rep
-            print_verbose(*[None]*3, new, start='', sep='\n', end='\n\n')
+            printv(*[None]*3, new, start='', sep='\n', end='\n\n')
             # We need to add an extraneous pre-value in order for the loop to catch the next "new"
             # because we're mutating the list while we iterate over it
             # (awful, I know)

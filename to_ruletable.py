@@ -5,19 +5,20 @@ from inspect import cleandoc
 
 from cli import ARGS
 from magic import parser, compiler
+from magic.common.utils import printq
 
 
 def transpile(fp, *, preview=False):
     """
     Parses and compiles the given ruelfile into an equivalent .rule.
     """
-    print('\nParsing...')
+    printq('\nParsing...')
     parsed = parser.parse(fp)
     if preview:
         return '\n'.join(', '.join(map(str, tr)) for _, tr in parsed['@TABEL'].transitions)
     if ARGS.find:
         raise SystemExit(parsed['@TABEL'].match(ARGS.find) + '\n')
-    print('Complete!', 'Compiling...', sep='\n\n')
+    printq('Complete!', 'Compiling...', sep='\n\n')
     return compiler.compile(parsed)
 
 
@@ -50,4 +51,4 @@ if __name__ == '__main__':
         res = _preview(ARGS.preview)
     else:
         res = _transpile(ARGS)
-    print(*res, sep='\n')
+    printq(*res, sep='\n')

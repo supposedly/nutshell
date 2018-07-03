@@ -5,7 +5,7 @@ from itertools import count
 from math import ceil
 
 from . import _classes as classes, _napkins as napkins
-from ...common.utils import print_verbose
+from ...common.utils import printv, printq
 
 rSHORTHAND = re.compile(r'(\d+\s*\.\.\s*\d+)\s+(.+)')
 rRANGE = re.compile(r'\d+(?:\+\d+)?\s*\.\.\s*\d+')
@@ -198,10 +198,10 @@ def desym(transitions, sym_lines):
     """
     if len(sym_lines) < 2:
         return transitions, sym_lines[0][1]
-    print('Complete!\n\nNormalizing symmetries...')
+    printq('Complete!\n\nNormalizing symmetries...')
     built = []
     lowest_sym, lowest_sym_cls = min(((sym, napkins.NAMES[sym]) for _, sym in sym_lines), key=lambda sym__cls: sym__cls[1].order)
-    print_verbose(f'lowest symmetry: {lowest_sym}\n')
+    printv(f'lowest symmetry: {lowest_sym}\n')
     for sym_idx, (after, cur_sym) in enumerate(sym_lines):
         try:
             before = sym_lines[1+sym_idx][0]
@@ -209,7 +209,7 @@ def desym(transitions, sym_lines):
             before = 1 + transitions[-1][0]
         cur_sym_cls = napkins.NAMES[cur_sym]
         trs = [tr for tr in transitions if after < tr[0] < before]
-        print_verbose(
+        printv(
             f'...{cur_sym}...',
             None,
             [f'after: line {after}', f'before: line {before}'],
@@ -221,10 +221,10 @@ def desym(transitions, sym_lines):
             continue
         for lno, tr in trs:
             cur = cur_sym_cls(map(str, tr[1:-1]))
-            print_verbose(None, ['converting...', f'  {cur}', f'...to {lowest_sym}'], sep='\n', start='\n', end='\n\n')
+            printv(None, ['converting...', f'  {cur}', f'...to {lowest_sym}'], sep='\n', start='\n', end='\n\n')
             exp = set(map(lowest_sym_cls, cur.expand()))
-            print_verbose(None, None, f'(1 transition -> {len(exp)} transitions)\n', start='\n')
+            printv(None, None, f'(1 transition -> {len(exp)} transitions)\n', start='\n')
             built.extend((lno, [tr[0], *new_tr, tr[-1]]) for new_tr in exp)
         napkins.Permute.clear()
-    print_verbose([f'FROM {len(transitions)} original transitions\n', f'\bTO {len(built)} transitions total\n'], start='')
+    printv([f'FROM {len(transitions)} original transitions\n', f'\bTO {len(built)} transitions total\n'], start='')
     return built, lowest_sym
