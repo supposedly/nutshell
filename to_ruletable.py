@@ -3,7 +3,7 @@ import os
 import sys
 from inspect import cleandoc
 
-from argv_parse import ARGS
+from cli import ARGS
 from magic import parser, compiler
 
 

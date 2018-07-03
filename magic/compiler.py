@@ -1,4 +1,4 @@
-from argv_parse import ARGS
+from cli import ARGS
 
 
 def _handle_rule(rulefile, seg):
