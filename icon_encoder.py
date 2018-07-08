@@ -1,28 +1,30 @@
 """
 Helps encode Golly-style XPM icons into rueltabel's RLE-icon format.
 """
-import pathlib
 import sys
 import traceback
 from collections import defaultdict
 from itertools import chain, groupby, takewhile
+from pathlib import Path
 from math import ceil
 
-from ergo import Parser
+from ergo import CLI
+
 
 SYMBOL_MAP = [
   '.',
   *(chr(64+num) for num in range(1, 25)),
   *(chr(110 + ceil(num/24)) + chr(64 + (num % 24 or 24)) for num in range(25, 256))
   ]
-parser = Parser()
+
+cli = CLI()
 
 
 class _StreamProxy:
     def __init__(self, path, *, alternate=None, use_alternate=False):
         self.path = path
-        self._using_alternate = use_alternate
         self._opened = alternate if use_alternate else None
+        self._using_alternate = use_alternate
     
     def __enter__(self):
         if self._opened is None:
@@ -38,20 +40,20 @@ class _StreamProxy:
             raise etype(value)  # from None
 
 
-@parser.arg(required=True)
-def infile(path):
+@cli.arg(required=True)
+def infile(path: Path):
     """Path to a file that defines @ICONS. Hyphen for stdin."""
-    with _StreamProxy(path, alternate=sys.stdin, use_alternate=(path == '-')) as f:
+    with _StreamProxy(path, alternate=sys.stdin, use_alternate=(path.name == '-')) as f:
         return [i.strip() for i in f if i]
 
 
-@parser.arg(required=True)
-def outdir(path):
+@cli.arg(required=True)
+def outdir(path: Path):
     """Directory to place output file in. Hyphen for stdout."""
     # TODO: Once the awaitable shenanigans are implemented in ergo,
     # make this `await ctx.arg('infile')` to be used in the output filename
     # (could be done after parsing ofc but that's more annoying)
-    return _StreamProxy(pathlib.Path(path) / 'conv_icons.txt', alternate=sys.stdout, use_alternate=(path == '-'))
+    return _StreamProxy(path / 'conv_icons.txt', alternate=sys.stdout, use_alternate=(path.name == '-'))
 
 
 def encode(strs):
@@ -70,28 +72,25 @@ def encode(strs):
        )
      return encode([ret]) if '$$' in ret else ret.rstrip('$23456789') + '!'
 
-args = parser.parse()
+args = cli.parse()
 infile = args.infile[args.infile.index('@ICONS'):]
 icons = [
   i[i.startswith('"') : -i.endswith('"') or None]
   for i in takewhile(lambda s: not s.startswith('@'), infile[1:])
   if not i.startswith('/*')
   ]
-
 if icons[0] != 'XPM':
-    raise ValueError('Bad XPM icon descriptor')
+    raise ValueError('Bad XPM segment descriptor')
 
-width, height, n_colors, chars_per = map(int, icons[1].split())  # after the XPM thing
-# start icons[...] at 2 to skip XPM and the above
-# add 2 to n_colors (end) for same reason
+width, height, n_colors, chars_per = map(int, icons[1].split())  # immediately after the XPM descriptor thing
+# similarly, start icons[...] slice at 2 to skip XPM and the above line
+# add 2 to n_colors (slice's stop) for the same reason
 symbols = {symbol: color for symbol, _, color, *_ in map(str.split, icons[2:n_colors+2])}
 new_colors = {color: symbol for color, symbol in zip(symbols.values(), SYMBOL_MAP)}
 icons = icons[n_colors+2:]
 
-
 if not all(map(chars_per.__eq__, map(len, symbols))):
     raise ValueError('Bad XPM chars-per-color value')
-    # chars per color is now going to be 2
 
 if len(symbols) > 255:
     raise ValueError(
@@ -100,7 +99,6 @@ if len(symbols) > 255:
       'icons within a rueltabel with the segment header '
       '"@ICONS #golly" instead of "@ICONS".'
       )
-
 
 with args.outdir as out:
     out.write('@ICONS\n')
@@ -117,16 +115,24 @@ with args.outdir as out:
         [new_colors[symbols[symbol]] for symbol in map(''.join, zip(*[iter(line)] * chars_per))]
         for line in icon
       ]
-      # Each iteration will expose one single icon block
+      # Each iteration exposes one single icon block
       # (because the XPM data is w/ zip() split up into
       # equal `height`-sized chunks, each of which of
       # course contains an icon)
       for icon in zip(*[iter(icons)] * width)
       ]
-    inv_icons = defaultdict(list)
+    inv_icons = defaultdict(set)
     # Find duplicate icons and consolidate them
-    for state_no, new_icon in enumerate(map(encode, new_icons), 1):  # Start at 1 because state 0 can't be given an icon in Golly
-        inv_icons[new_icon].append(state_no)
+    for state_no, new_icon in enumerate(map(encode, new_icons), 1):  # Start at 1, because state 0 can't be given an icon in Golly
+        inv_icons[new_icon].add(state_no)
+    all_states = list(chain.from_iterable(inv_icons.values()))
+    for states in inv_icons.values():
+        if len(states) > 2:
+            states[:] = {states[0], *chain.from_iterable((a, b) for a, b in zip(states, states[1:]) if b-a > 1), states[-1]}
+        if 1 + max(states) in all_states:
+            # Golly automatically assigns the last defined icon to undefined states
+            # so we don't need to explicitly name them all
+            states.remove[max(states)]
     for new_icon, states in inv_icons.items():
         out.write(f"#C {' '.join(map(str, states))}\n")  # states to be assigned this icon
         out.write(f'x={height}, y={height}, rule=//{n_colors}\n')  # icon's height/width info

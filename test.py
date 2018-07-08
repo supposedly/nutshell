@@ -3,10 +3,10 @@ import os
 import sys
 sys.argv = 3 * ['-'] + ['-q']  # just to shut the CLI up
 
-import to_ruletable as rueltabel
+from to_ruletable import transpile
 
 
 def test_codecov():
-    for path in list(os.walk('./examples/rueltabels'))[0][2]:
-        with open('./examples/rueltabels/' + path) as fp:
-            rueltabel.transpile(fp)
+    for file in list(os.walk('./examples/rueltabels'))[0][2]:
+        with open('./examples/rueltabels/' + file) as fp:
+            transpile(fp)

@@ -1,4 +1,4 @@
-from ergo import Parser, Group
+from ergo import CLI, Group
 
 
 DEFAULT_HEADER = '''\
@@ -8,47 +8,47 @@ DEFAULT_HEADER = '''\
 '''
 
 
-parser = Parser()
-parser.grp_0 = Group(XOR=0)
-preview = parser.command('preview', XOR=0, OR=0)
+cli = CLI()
+cli.grp_0 = Group(XOR='find|preview|normal')
+preview = cli.command('preview', XOR='find|preview|normal', OR='preview|normal')
 
 
-@parser.grp_0.clump(AND=0)
-@parser.arg()
+@cli.grp_0.clump(AND='infile|outdir')
+@cli.arg()
 def infile(path):
     """rueltabel-formatted input file"""
     return path
 
 
-@parser.clump(OR=0)
-@parser.grp_0.clump(AND=0)
-@parser.grp_0.arg()
+@cli.clump(OR='preview|normal')
+@cli.grp_0.clump(AND='infile|outdir')
+@cli.grp_0.arg()
 def outdir(path):
     """Directory to create output file in"""
     return path
 
 
-@parser.grp_0.flag(short='t', default=DEFAULT_HEADER)
+@cli.grp_0.flag(short='t', default=DEFAULT_HEADER)
 def header(text=''):
     """Change or hide 'COMPILED FROM RUELTABEL' header"""
     return text or DEFAULT_HEADER
 
 
-@parser.grp_0.flag(short='s', default=False)
+@cli.grp_0.flag(short='s', default=False)
 def comment_src():
     """Comment each tabel source line above the final table line(s) it transpiles to"""
     return True
 
 
-@parser.clump(XOR=0)
-@parser.flag(short='f', default=None)
+@cli.clump(XOR='find|preview|normal')
+@cli.flag(short='f', default=None)
 def find(transition):
     """Locate first transition in `infile` that matches"""
     return tuple(s if s == '*' else int(s) for s in map(str.strip, transition.split(',')))
 
 
-@parser.clump(XOR='v')
-@parser.flag('verbosity', namespace={'count': 0}, default=0)
+@cli.clump(XOR='verbose|quiet')
+@cli.flag('verbosity', namespace={'count': 0}, default=0)
 def verbose(nsp):
     """Repeat for more verbosity; max x4"""
     if nsp.count < 4:
@@ -56,8 +56,8 @@ def verbose(nsp):
     return nsp.count
 
 
-@parser.clump(XOR='v')
-@parser.flag(default=False)
+@cli.clump(XOR='verbose|quiet')
+@cli.flag(default=False)
 def quiet():
     return True
 
@@ -84,4 +84,4 @@ def states(num):
     return str(num)
 
 
-ARGS = parser.parse(strict=True)
+ARGS = cli.parse(strict=True)
