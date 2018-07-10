@@ -9,11 +9,11 @@ DEFAULT_HEADER = '''\
 
 
 cli = CLI()
-cli.grp_0 = Group(XOR='find|preview|normal')
+cli.main_grp = Group(XOR='find|preview|normal')
 preview = cli.command('preview', XOR='find|preview|normal', OR='preview|normal')
 
 
-@cli.grp_0.clump(AND='infile|outdir')
+@cli.main_grp.clump(AND='infile|outdir')
 @cli.arg()
 def infile(path):
     """rueltabel-formatted input file"""
@@ -21,20 +21,20 @@ def infile(path):
 
 
 @cli.clump(OR='preview|normal')
-@cli.grp_0.clump(AND='infile|outdir')
-@cli.grp_0.arg()
+@cli.main_grp.clump(AND='infile|outdir')
+@cli.main_grp.arg()
 def outdir(path):
     """Directory to create output file in"""
     return path
 
 
-@cli.grp_0.flag(short='t', default=DEFAULT_HEADER)
+@cli.main_grp.flag(short='t', default=DEFAULT_HEADER)
 def header(text=''):
     """Change or hide 'COMPILED FROM RUELTABEL' header"""
     return text or DEFAULT_HEADER
 
 
-@cli.grp_0.flag(short='s', default=False)
+@cli.main_grp.flag(short='s', default=False)
 def comment_src():
     """Comment each tabel source line above the final table line(s) it transpiles to"""
     return True

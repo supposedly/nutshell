@@ -1,4 +1,4 @@
-## What the heck is a ruel? A rule? What?
+### What the heck is a ruel? A rule? What?
 
 So you've likely heard of Conway's Game of Life at some point or other, yes? In case that's a "no", let's define some terms real quick:
 
@@ -32,7 +32,7 @@ have gotten together (as they tend to) and created a cellular-automata explorer 
 the de-facto tool for exploring these types of CA; more importantly, they've also given it a whole domain-specific language for declaring different
 kinds of non-standard CA rules, ones that can't be expressed via the sort of concise notations seen above.
 
-## Ruletables
+### Ruletables
 
 ```py
 @RULE Life
@@ -62,16 +62,16 @@ there are "segments" to the file denoted by @ and then a label; we'll call these
 is the first word after the header (whether it be on the same line or the next) -- this is the rule's *name*, used to refer to it from within Golly, but
 anything after it in this segment is ignored (making it handy for comments or explanations!).
 
-Next, the `@TABLE` segment, It starts off with three sorts of directives: first, the number of cell states in our rule (two: on/"alive" and off/"dead"), then
-the neighborhood (Moore, meaning eight cells surrounding a given one), and finally symmetries, going into which isn't too important but suffice it to say that
-they specify what "supplementary" transitions can be inferred from those declared explicitly below.
+Next, the `@TABLE` segment. It starts off with three sorts of directives: first, the number of cell states in our rule (2, being on/"alive" and off/"dead"), then
+the neighborhood (Moore, meaning all eight cells surrounding a given one), and finally symmetries, going into which isn't too important but suffice it to say that
+they specify what "supplementary" transitions can be inferred from the ones declared explicitly below.
 
-After these directives come variable declarations; a variable is a container for more than one cell
-state, which will make sense as soon as the transitions are explained.
+After these directives come variable declarations; a variable is a container for more than one cell state, but that'll make more sense as soon as
+transitions are explained; they're the long comma-delimited segments at the very bottom.
 
-Finally, transitions. These are declared in the form `center cell, northern cell, northeastern cell, eastern cell, ..., northwestern cell, new center cell`,
+Transitions are declared in the form `center cell, northern cell, northeastern cell, eastern cell, ..., northwestern cell, new center cell`,
 or less-verbosely ``C, N, NE, E, SE, S, SW, W, NW, C` ``. For example, the second transition -- `1,1,1,0,0,0,0,0,0,1` -- says that the center cell in this
-configuration:
+configuration...
 
 ```
 . o o
@@ -79,28 +79,30 @@ configuration:
 . . .
 ```
 
-Where `o` represents a live cell (1) and `.` a dead cell (0), will survive to the next generation (because the transition ends in a 1). But! Since we specified
-`symmetries: permute` in the directives up top, what this actually does is apply the transition to *all permutations* of a neighborhood containing two live cells
-and six dead cells... so, in effect, this fulfills the `S2` part of CGoL's `B3/S23`.
+...where `o` represents a live cell ('1') and `.` a dead cell ('0'), will survive to the next generation (i.e. remain a '1' cell). But! Since we specified
+`symmetries: permute` in the directives up top, what this actually does is apply the specified transition to *all permutations* of a neighborhood containing two '1' cells
+and six '0' cells... so, in effect, this fulfills the `S2` part of CGoL's `B3/S23`.
 
-Survival is in fact the default behavior in a ruletable, but specifying it here explicitly serves to override the very next line,
-`anyA,anyB,anyC,anyD,anyE,anyF,anyG,anyH,anyI,0`; the `anyX` variables contain states 0 and 1 both, so this effectively says that *any* cell with *any* configuration
-of live/dead neighbors will die (become state `0`) -- **unless** its specific configuration was already covered by an earlier transition.
+Survival is actually the default behavior in a ruletable, but specifying it here explicitly serves to override the very next line,
+`anyA,anyB,anyC,anyD,anyE,anyF,anyG,anyH,anyI,0`; the `anyX` variables contain states 0 and 1 both, so the line effectively says that *any* cell
+with *any* configuration of live/dead neighbors will die (become state `0`) -- **unless** its specific configuration was already covered in an earlier transition.
 
 So that was transitions and variables in a nutshell. But why does the same variable need to be reassigned so many times in a row, as in `anyA`/`anyB`/`anyC`/.../`anyI`?
 That is because the format's designers chose to make variables "bound", or more-specifically "name-bound": once a variable name appears once in a transition, it can only
-refer to the same value from then on -- much like how back-referring to a regex group matches the exact same text rather than applying the group's pattern anew. So if the
-rule-writer desires that a single variable appear multiple times in a transition *while* retaining its "variability", they must assign its value to multiple distinct names
-and use a new name for each separate desired occurrence.
+refer to the same value from then on, much like how back-referring to a regex group matches the exact same text rather than applying the group's pattern anew. So if the
+rule-writer desires that a single variable appear multiple times in a transition *while* retaining the var's "variability", they must assign its value to multiple
+distinct names, using a new var name for each separate desired occurrence.
 
 This format is powerful, clearly, and works well enough for many cases. But it's rather primitive alongside its being powerful, and while this generally can be tolerated
-(because not much is needed in most cases) there are times when it gets *tedious* to keep track of identical variables while declaring ever-so-slightly-repetitive transitions
-one after the other in a complex rule, or so I found. Enter this project.
+(because not much is needed a lot of the time) there are times when it gets *tedious* to keep track of identical variables while declaring the ever-so-slightly-repetitive
+transitions one after another in a complex rule, or so I found.
 
-# rueltabel
+Enter this whole project.
 
-I'm not going to go as far in depth as I did above, because this repo's README up front explains the major changes very clearly -- but, just for comparison, here's the same
-rule as above defined as a rueltabel:
+### rueltabel
+
+I'm not going to go as far in depth as I did above, because the repo's README explains the major changes quite clearly -- but, just for comparison, here's the same
+rule as above in "rueltabel" form:
 
 ```py
 @RUEL cgol
@@ -115,7 +117,7 @@ any, any, 0
 ```
 
 
-Or even this, if you want to go all-out with compression:
+Or even this, if you want to go hard:
 
 ```py
 @RUEL cgol
@@ -128,7 +130,8 @@ any, 1 * 2, [0: (0, 1)], 0 * 5, 1
 any, any, 0
 ```
 
-Much easier on the eyes! Note in particular the compression achieved by allowing a variable under one name to be reused in a transition (with a different syntax
-for "binding"), and by other things like the `*` shorthand for permutate-symmetry transitions and a "mapping" syntax to complement binding. That may sound a bit
-abstruse, but this repo's main README.md does again contain an in-depth explanation of the additions and their uses which will hopefully be understandable after
-this brief intro here.
+A bit easier on the eyes! Note in particular the compression achieved by allowing a single variable name to be used multiple times in a transition (with a different
+syntax for "binding" to a previous value), and other things like the `*` shorthand for permutate-symmetry transitions and a "mapping" syntax to complement the new way
+of binding.
+That may sound a bit abstruse, but this repo's main README.md does again contain an in-depth explanation of the additions and their uses -- which will hopefully be
+more-understandable or at least accessible after reading this intro.
