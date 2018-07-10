@@ -17,7 +17,7 @@ SYMBOL_MAP = [
   *(chr(110 + ceil(num/24)) + chr(64 + (num % 24 or 24)) for num in range(25, 256))
   ]
 
-cli = CLI()
+cli = CLI('Golly-XPM-icon-to-rueltabel-RLE-icon converter')
 
 
 class _StreamProxy:
@@ -83,8 +83,8 @@ if icons[0] != 'XPM':
     raise ValueError('Bad XPM segment descriptor')
 
 width, height, n_colors, chars_per = map(int, icons[1].split())  # immediately after the XPM descriptor thing
-# similarly, start icons[...] slice at 2 to skip XPM and the above line
-# add 2 to n_colors (slice's stop) for the same reason
+# similarly, start the icons[...] slice at 2 to skip "XPM" and the above line
+# add 2 to n_colors (the slice's stop) for the same reason
 symbols = {symbol: color for symbol, _, color, *_ in map(str.split, icons[2:n_colors+2])}
 new_colors = {color: symbol for color, symbol in zip(symbols.values(), SYMBOL_MAP)}
 icons = icons[n_colors+2:]
