@@ -1,13 +1,13 @@
-"""Facilitates parsing of a rueltabel file into an abstract, compiler.py-readable format."""
+"""Facilitates parsing of a nutshell rule into an abstract, compiler.py-readable format."""
 import re
 from itertools import cycle, islice, zip_longest
 
 import bidict
 
-from ...common.errors import *
-from ...common.utils import printv, printq
 from . import _napkins as napkins, _utils as utils
-from ._classes import TabelRange, SpecialVar, VarName, PTCD
+from ._classes import TableRange, SpecialVar, VarName, PTCD
+from ...common.utils import printv, printq
+from ...common.errors import *
 
 
 class Bidict(bidict.bidict):
@@ -17,7 +17,7 @@ class Bidict(bidict.bidict):
 
 class AbstractTable:
     """
-    An abstract, Golly-transferrable representation of a ruelfile's @TABEL section.
+    An abstract, Golly-transferrable representation of a nutshell's @TABLE section.
     """
     __rCARDINALS = 'NE|NW|SE|SW|N|E|S|W'
     __rRANGE = r'\d+(?:\+\d+)?\s*\.\.\s*\d+'
@@ -57,7 +57,7 @@ class AbstractTable:
       'hexagonal': {'N': 1, 'E': 2, 'SE': 3, 'S': 4, 'W': 5, 'NW': 6}
       }
     
-    def __init__(self, tbl, start=0, *, dep: '@RUEL'):
+    def __init__(self, tbl, start=0, *, dep: ['@NUTSHELL']):
         self._src = tbl
         self._start = start
         
@@ -68,7 +68,7 @@ class AbstractTable:
         self._constants = {}
         
         if dep is not None:
-            self._extract_constants(dep)
+            self._extract_constants(*dep)
         
         _assignment_start = self._extract_directives()
         if self.directives['states'] == '?':
@@ -181,10 +181,10 @@ class AbstractTable:
                 new.append(int(state))
             elif self._rRANGE.match(state):
                 try:
-                    new.extend(TabelRange(state))
+                    new.extend(TableRange(state))
                 except ValueError as e:
                     bound = str(e).split("'")[1]
-                    raise TabelSyntaxError(lno, f"Bound '{bound}' of range {state} is not an integer")
+                    raise TableSyntaxError(lno, f"Bound '{bound}' of range {state} is not an integer")
             elif (mapping or ptcd) and state in ('...', '_'):  # should maybe restrict '_' to only ptcd?
                 new.append(state)
                 continue
@@ -193,7 +193,7 @@ class AbstractTable:
                 new.extend('_' * int(b) if b.isdigit() else len(self.parse_variable(b, lno)))
             elif (mapping or ptcd) and self._rBINDMAP.match(state):
                 if ':' in state:
-                    raise TabelFeatureUnsupported(
+                    raise TableFeatureUnsupported(
                         lno,
                         f"Nested mappings (as with '{state}' in '{var}') "
                         'are not currently supported. Use multiple transitions '
@@ -202,7 +202,7 @@ class AbstractTable:
                 try:
                     new.append(tr[int(state.strip('[]'))])
                 except IndexError:
-                    raise TabelValueError(lno,
+                    raise TableValueError(lno,
                         f'Nested binding {state} does not refer to a previous index'
                         )
             elif state in self._constants:
@@ -222,7 +222,7 @@ class AbstractTable:
                     new.extend(self.vars[state])
                 except KeyError as e:
                     current = 'Output specifier' if ptcd else 'Transition'
-                    raise TabelReferenceError(lno, f"{current} references undefined name '{e}'")
+                    raise TableReferenceError(lno, f"{current} references undefined name '{e}'")
         return new
     
     def _cardinal_sub(self, match):
@@ -248,7 +248,7 @@ class AbstractTable:
             match = tuple(i for i in subt if i not in self.parse_variable(minuend, lno))
         else:
             if match > int(self.directives['n_states']):
-                raise TabelValueError(lno, f'Minuend -{match} greater than n_states')
+                raise TableValueError(lno, f'Minuend -{match} greater than n_states')
             match = tuple(i for i in subt if i != match)
         return match
     
@@ -274,7 +274,7 @@ class AbstractTable:
     
     def _extract_directives(self, start=0):
         """
-        Get directives from top of ruelfile.
+        Get directives from top of rulefile.
         
         return: the line number at which var assignment starts.
         """
@@ -303,22 +303,22 @@ class AbstractTable:
             self.vars[VarName('any')] = SpecialVar(range(int(self.directives['states'])))
             cardinals = self.CARDINALS.get(self.directives['neighborhood'])
             if cardinals is None:
-                raise TabelValueError(None, f"Invalid neighborhood {self.directives['neighborhood']!r} declared")
+                raise TableValueError(None, f"Invalid neighborhood {self.directives['neighborhood']!r} declared")
         except KeyError as e:
             name = str(e).split("'")[1]
-            raise TabelReferenceError(None, f'{name!r} directive not declared')
+            raise TableReferenceError(None, f'{name!r} directive not declared')
         self.vars[VarName('live')] = SpecialVar(self.vars['any'][1:])
         self.directives['n_states'] = self.directives.pop('states')
         return cardinals
     
     def _extract_constants(self, dep):
         """
-        Extract constants from @RUEL section, defined as follows:
+        Extract constants from @RULE section, defined as follows:
 
             <state>: <...> {<name>} <...>
         
         Where <name> is the constant's name.
-        Additionally, {<name>} is removed from final @RUEL output.
+        Additionally, {<name>} is removed from final @RULE output.
         """
         r_const = re.compile(r'(\s*)(\d+):(.*?)\s*\{\s*(.+)\s*}(.*)')
         found = False
@@ -351,7 +351,7 @@ class AbstractTable:
             if not decl:
                 continue
             if not self._rASSIGNMENT.fullmatch(decl):
-                raise TabelSyntaxError(lno, f'Invalid syntax in variable declaration')
+                raise TableSyntaxError(lno, f'Invalid syntax in variable declaration')
             name, value = map(str.strip, decl.split('='))
             
             if value.isdigit():
@@ -360,22 +360,22 @@ class AbstractTable:
             
             try:
                 var = self.parse_variable(value, lno)
-            except TabelReferenceError as e:
+            except TableReferenceError as e:
                 bad = str(e).split("'")[1]
                 if not bad:  # Means two consecutive commas, or a comma at the end of a literal
-                    raise TabelSyntaxError(lno, 'Invalid comma placement in variable declaration')
+                    raise TableSyntaxError(lno, 'Invalid comma placement in variable declaration')
                 adjective = 'undefined' if bad.isalpha() else 'invalid'
-                raise TabelReferenceError(lno, f'Declaration of variable {name!r} references {adjective} name {bad!r}')
+                raise TableReferenceError(lno, f'Declaration of variable {name!r} references {adjective} name {bad!r}')
             
             if not name.isalpha():
-                raise TabelSyntaxError(
+                raise TableSyntaxError(
                   lno,
                   f'Variable name {name!r} contains nonalphabetical character {next(i for i in name if not i.isalpha())!r}',
                   )
             try:
                 self.vars[VarName(name)] = var
             except bidict.ValueDuplicationError:  # Deprecated currently
-                raise TabelValueError(lno, f"Value {value} is already assigned to variable '{self.vars.inv[var]}'")
+                raise TableValueError(lno, f"Value {value} is already assigned to variable '{self.vars.inv[var]}'")
         # bidict devs, between the start of this project and 5 May 2018,
         # decided to make bidict().on_dup_val a read-only property
         # so this was formerly just `self.vars.on_dup_val = bidict.IGNORE`
@@ -386,7 +386,7 @@ class AbstractTable:
         """
         start: line number to start on
         
-        Parse all the ruel's transitions into a list in self.transitions.
+        Parse all the rule's transitions into a list in self.transitions.
         """
         # They can change, but an initial set of symmetries needs to be declared before transitions
         try:
@@ -395,7 +395,7 @@ class AbstractTable:
             # No transitions
             return
         if self.directives['symmetries'] is None:
-            raise TabelSyntaxError(start, "Transition before initial declaration of 'symmetries' directive")
+            raise TableSyntaxError(start, "Transition before initial declaration of 'symmetries' directive")
         lno = start
         for lno, line in enumerate((i.split('#')[0].strip() for i in self[start:]), start):
             if line.startswith('symmetries:'):
@@ -406,14 +406,14 @@ class AbstractTable:
             if not line:
                 continue
             if self._rASSIGNMENT.match(line):
-                raise TabelSyntaxError(lno, 'Variable declaration after first transition')
+                raise TableSyntaxError(lno, 'Variable declaration after first transition')
             napkin, ptcds = map(str.strip, line.partition('->')[::2])
             if self.directives['symmetries'] == 'permute':
                 napkin = utils.conv_permute(napkin, len(self.cardinals))
             try:
                 napkin = [self._rCARDINAL.sub(self._cardinal_sub, i.strip()) for i, _ in self._rTRANSITION.findall(napkin)]
             except KeyError as e:
-                raise TabelValueError(
+                raise TableValueError(
                   lno,
                   f"Invalid cardinal direction {e} for {self.directives['neighborhood']!r} neighborhood"
                   )
@@ -421,7 +421,7 @@ class AbstractTable:
                 napkin = utils.expand_tr(napkin)
             except ValueError as e:
                 group, expected, got = e.args
-                raise TabelValueError(lno, f'Expected lower value of {expected} in group {group}, got {got}')
+                raise TableValueError(lno, f'Expected lower value of {expected} in group {group}, got {got}')
             # Parse napkin into proper range of ints
             for idx, elem in enumerate(napkin):
                 if elem.isdigit():
@@ -432,7 +432,7 @@ class AbstractTable:
                     try:
                         napkin[idx] = self.vars[elem] if elem in self.vars else self._constants[elem]
                     except KeyError:
-                        raise TabelReferenceError(lno, f'Transition references undefined name {elem!r}')
+                        raise TableReferenceError(lno, f'Transition references undefined name {elem!r}')
             ptcds = [(lno, tr) for ptcd in self._rPTCD.finditer(ptcds) for tr in PTCD(self, napkin, ptcd, lno=lno)]
             self.transitions.extend([(lno, napkin), *ptcds])
     
@@ -452,9 +452,9 @@ class AbstractTable:
                   for val in tr
                   )
             except SyntaxError as e:
-                raise TabelSyntaxError(lno, e.msg)
+                raise TableSyntaxError(lno, e.msg)
             except ValueError as e:
-                raise TabelValueError(lno, e.args[0])
+                raise TableValueError(lno, e.args[0])
             
             self.transitions[idx] = lno, [
               # list() because we're need to mutate it if it has an ellipsis
@@ -473,7 +473,7 @@ class AbstractTable:
                     self.vars[VarName.random()] = new = tuple(map_from[len(map_to)-2:])
                     map_from[len(map_to)-2:] = [self.vars.inv[new].name]
                 if len(map_from) > len(map_to):
-                    raise TabelValueError(
+                    raise TableValueError(
                       lno,
                       f"Variable with value {map_from} mapped to a smaller variable with "
                       f"value {tuple(map_to)}. Maybe add a '...' to fill the latter out?"

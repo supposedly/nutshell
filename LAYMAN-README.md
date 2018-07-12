@@ -99,10 +99,10 @@ transitions one after another in a complex rule, or so I found.
 
 Enter this whole project.
 
-### rueltabel
+### Nutshell
 
 I'm not going to go as far in depth as I did above, because the repo's README explains the major changes quite clearly -- but, just for comparison, here's the same
-rule as above in "rueltabel" form:
+rule as above in "nutshell" form:
 
 ```py
 @RUEL cgol

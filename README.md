@@ -1,4 +1,4 @@
-# rueltabel
+# CA rules “in a nutshell”
 A transpiler from a reimagined Golly ruletable language to the traditional format. See [`examples/`](/examples) for examples.
 
 ## Setup
@@ -7,7 +7,7 @@ A transpiler from a reimagined Golly ruletable language to the traditional forma
 3. Using Python's bundled *pip* package manager, execute the terminal command `pip install -r requirements.txt` (or
    any of its variations -- you may need to try `python -m pip install`, `python3 -m pip install`, `py -m pip install`
    on Windows, ...)
-4. Write your own rueltabel, then continue with the **Usage** section below.
+4. Write your own "nutshell" rule file, then continue with the **Usage** section below.
 
 ## Usage
 ```bash
@@ -17,15 +17,15 @@ $ python to_ruletable.py preview [transition] [flags...]
 The output file will be written to `outdir` with a .rule extension and the same filename as `infile`.  
 Supported flags:
   - `-v`: Verbose. Can be repeated up to four times, causing more info to be displayed each time.
-  - `-s`: Source. Writes each original rueltabel line, as a comment, above the line(s) it compiles
+  - `-s`: Source. Writes each original nutshell line, as a comment, above the line(s) it compiles
           to in the final ruletable output.
-  - `-c`: Compile. "Compiles" a single rueltabel transition, and prints the Golly-
+  - `-c`: Compile. "Compiles" a single nutshell transition, and prints the Golly-
           preview. Flag is mutually-exclusive with `-t`, `-f`, and `outdir`.
-  - `-t [HEADER]`: Change the "COMPILED FROM RUELTABEL" header that is added by default to transpiled
+  - `-t [HEADER]`: Change the "COMPILED FROM NUTSHELL" header that is added by default to transpiled
                    rules. (If `-t` is given no argument the header will be removed)
-  - `-f TRANSITION`: Find a certain transition defined within a tabel section; requires, of course, that
-                     the rule have a `@TABEL` segment to search within. If a certain cell isn't behaving
-                     the way it's supposed to, you can `-f` the transition it's undergoing and rueltabel
+  - `-f TRANSITION`: Find a certain transition defined within a table section; requires, of course, that
+                     the rule have a `@TABLE` segment to search within. If a certain cell isn't behaving
+                     the way it's supposed to, you can `-f` the transition it's undergoing, and nutshell
                      will find the offending transition for you (rather than you having to guess at what
                      you typo'd).  
                      Transition should be given in the standard Golly form `C,N,...,C'` -- that is, state of the
@@ -131,40 +131,41 @@ foo, N..NW bar, baz -> S:2  E[(2, 3)]  SE[wutz]  N[NE: (2, 3)]  NE[E]
 symmetry type specified overall.)
 
 ## Non-table-related changes
-- Comments in every segment (barring `@RUEL`, where everything after the first word is a comment) start with `#` and stretch to the end of a line.
-- The `@COLORS` segment in a ruelfile allows multiple states with the same color to be defined
+- The preferred file extension is `.ruel`, both a holdover from when this project was named `rueltabel` and a simple-but-still-recognizable variant
+  of "rule" to distinguish nutshell files from standard `.rule` files. This obviously isn't enforced anywhere, however, and might be subject to change
+  as well.
+- Comments in every segment (barring `@NUTSHELL`, where everything after the first word is a comment) start with `#` and stretch to the end of a line.
+- The `@COLORS` segment in a nutshell file allows multiple states with the same color to be defined
   on the same line as each other, and for a color to be written as either a hexadecimal color code or a
   group of base-10 `R G B` values. `1 10: FFF`, for instance, says to assign the color `#FFFFFF` to states 1 and
   10, and can also be written as `1 10: FFFFFF` or `1 10: 255 255 255` (or as two separate lines for each of `1` and `10`, although
   the colon remains mandatory).
 - The `@ICONS` segment is based around RLEs instead of Gollyesque XPM data. See [this post](http://conwaylife.com/forums/viewtopic.php?f=7&t=3361&p=59944#p59944)
   for an explanation + example.
-- The `@RUEL` segment allows *constants*, which carry over to and are usable in the `@TABEL` segment, to be
+- The `@NUTSHELL` segment allows *constants*, which carry over to and are usable in the `@TABLE` segment, to be
   defined alongside a description of each state. Take the following example:
 
 ```rb
-@RUEL foo
+@NUTSHELL foo
 
 1: Stationary data {DATA}
 3: Signal over data
 4: Signal over vacuum {SIGNAL}
 
-@TABEL
+@TABLE
 ...
 ```
-  The names `DATA` and `SIGNAL` will be usable within the `@TABEL` section as aliases for, respectively, states `1` and `4`.  
-  It is recommended but nowhere required that constant names be written in `UPPERCASE` and normal variable names in `lowercase` or `camelCase`;
-  the capital letters help visually distinguish constants from multi-state variables.  
-  For the actual registering of a constant, all that matters is that its line in `@RUEL` start with `<number>:` and contain anywhere a pair
+  The names `DATA` and `SIGNAL` will be usable within the `@TABLE` segment as aliases for, respectively, states `1` and `4`.  
+  It is recommended but nowhere required that constant names be written in `UPPERCASE` or at least `PascalCase` and normal
+  variable names in `lowercase` or `camelCase`; the initial capitals help visually distinguish constants from multi-state variables.  
+  For the actual registering of a constant, all that matters is that its line in `@NUTSHELL` start with `<number>:` and contain anywhere a pair
   of `{braces}` that enclose the constant's name. The braced part and any whitespace separating it from the previous word will be removed
   from the final `@RULE` segment in the output file.
 - **All segments are optional**. The parser will in addition transcribe "non-special" segments *as is*, meaning that
-  a file can have a `@TABLE` segment (under which can be written a normal Golly ruletable) rather than
-  `@TABEL` and it will not be touched by the parser but appear in the final output; same with writing
-  `@RULE` rather than `@RUEL`.
-- "Special" rueltabel segments whose names are not respellings, like `@ICONS` and `@COLORS`, will still be
-  ignored by the parser if their header is immediately followed by the comment `#golly` -- either on the same line
-  (after whitespace) or on the line immediately below.
+  a file can have a `@RULE` segment rather than `@NUTSHELL` and it will be transcribed into the output file untouched.
+- The other "special" nutshell segments like `@TABLE` and `@ICONS` and `@COLORS`, none of whose names differ from
+  their Golly-format counterparts, will still be   ignored by the parser if their header is immediately followed by
+  the comment `#golly` -- either on the same line (after whitespace) or on the line immediately below.
 
 ## To do
 - DOCS! Or at least a proper introductory writeup.

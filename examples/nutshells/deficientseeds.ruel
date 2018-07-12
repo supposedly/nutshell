@@ -1,4 +1,4 @@
-@RUEL DeficientSeeds
+@NUTSHELL DeficientSeeds
 1 c
 2 e
 3 k
@@ -6,7 +6,7 @@
 5 i
 6 n
 
-@TABEL
+@TABLE
 states: 7
 neighborhood: Moore
 symmetries: rotate4 reflect

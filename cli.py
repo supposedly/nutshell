@@ -2,13 +2,13 @@ from ergo import CLI, Group
 
 
 DEFAULT_HEADER = '''\
-*********************************
-**** COMPILED FROM RUELTABEL ****
-*********************************\
+********************************
+**** COMPILED FROM NUTSHELL ****
+********************************\
 '''
 
 
-cli = CLI()
+cli = CLI("Transpiler from 'nutshell' rule-table format to the Golly format")
 cli.main_grp = Group(XOR='find|preview|normal')
 preview = cli.command('preview', XOR='find|preview|normal', OR='preview|normal')
 
@@ -16,7 +16,7 @@ preview = cli.command('preview', XOR='find|preview|normal', OR='preview|normal')
 @cli.main_grp.clump(AND='infile|outdir')
 @cli.arg()
 def infile(path):
-    """rueltabel-formatted input file"""
+    """nutshell-formatted input file"""
     return path
 
 
@@ -30,7 +30,7 @@ def outdir(path):
 
 @cli.main_grp.flag(short='t', default=DEFAULT_HEADER)
 def header(text=''):
-    """Change or hide 'COMPILED FROM RUELTABEL' header"""
+    """Change or hide 'COMPILED FROM NUTSHELL' header"""
     return text or DEFAULT_HEADER
 
 
@@ -64,7 +64,7 @@ def quiet():
 
 @preview.arg(required=True)
 def transition(tr):
-    """rueltabel-formatted transition to preview"""
+    """nutshell-formatted transition to preview"""
     return tr
 
 

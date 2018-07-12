@@ -1,8 +1,8 @@
-from ...common.classes import ColorMixin
+from ...common.classes import ColorMixin, TableRange
 
 class ColorSegment(ColorMixin):
     """
-    Parse a ruelfile's color format into something abstract &
+    Parse a rulefile's color format into something abstract &
     transferrable into Golly syntax.
     """
     
@@ -10,7 +10,7 @@ class ColorSegment(ColorMixin):
         self._packed_dict = None
         self._src = colors
         self.colors = [k.split('#')[0].split(':' if ':' in k else None, 1) for k in self._src if k]
-        self.states = {int(j.lstrip('*')): self._unpack(color.strip()) for state, color in self.colors for j in state.split()}
+        self.states = {int(state.lstrip('*')): self._unpack(color.strip()) for color, states in self.colors for state in self._ranges(states)}
     
     def __iter__(self):
         return (f"{state} {r} {g} {b}" for state, (r, g, b) in self.states.items())
@@ -22,8 +22,17 @@ class ColorSegment(ColorMixin):
             # over icon fill gradient, but the formers will not bc it's kept str
             # and so won't be accessible by ColorSegment[int-type cellstate])
             self._packed_dict = {
-              int(j) if j.isdigit() else j.lstrip('*'): self._pack(color.strip())
-              for state, color in self.colors
+              int(j) if j.isdigit() else j.lstrip('*'):
+              self._pack(color.strip())
+              for color, state in self.colors
               for j in state.split()
               }
         return self._packed_dict[item]
+    
+    @staticmethod
+    def _ranges(states):
+        for state in states.split():
+            if TableRange.check(state):
+                yield from map(str, TableRange(state))
+            else:
+                yield state

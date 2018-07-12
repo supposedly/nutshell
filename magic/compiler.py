@@ -37,11 +37,11 @@ def _handle_table(rulefile, tbl):
 def compile(parsed):
     rulefile = []
     try:
-        _handle_rule(rulefile, parsed.pop('@RUEL'))
+        _handle_rule(rulefile, parsed.pop('@NUTSHELL'))
     except KeyError:
         pass
     try:
-        _handle_table(rulefile, parsed.pop('@TABEL'))
+        _handle_table(rulefile, parsed.pop('@TABLE'))
     except KeyError:
         pass
     for label, segment in parsed.items():

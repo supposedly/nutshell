@@ -65,10 +65,10 @@ class IconArray:
     _rDIMS = re.compile(r'\s*x\s*=\s*(\d+),\s*y\s*=\s*(\d+)')
     _rCOLOR = re.compile(r'(\d+:\s*|[.A-Z]|[p-y][A-O]\s+)([0-9A-F]{6}|[0-9A-F]{3}).*')
     
-    def __init__(self, seg, start=0, *, dep: ['@COLORS', '@TABEL']):
+    def __init__(self, seg, start=0, *, dep: ['@COLORS', '@TABLE']):
         self._src = seg
-        self._parsed_color_segment, _tabel = dep
-        self._n_states = _tabel and _tabel.directives['n_states']
+        self._parsed_color_segment, _table = dep
+        self._n_states = _table and _table.directives['n_states']
         self._set_states = None
         self._fill_gradient = None
         
@@ -101,7 +101,7 @@ class IconArray:
         lno = start
         for lno, line in enumerate(map(str.strip, self._src)):
             if line.startswith('?'):
-                # Can put n_states in a comment if no TABEL section to grab it from
+                # Can put n_states in a comment if no TABLE section to grab it from
                 pre, *post = line.split('#', 1)
                 # Below *_ allows for an arbitrary separator like `000 ... FFF` between the two colors
                 _, start, *_, end = pre.split()
@@ -131,9 +131,9 @@ class IconArray:
             if line.startswith('#'):
                 cur_states = {int(i) for split in map(str.split, line.split(',')) for i in split if i.isdigit()}
                 if not all(0 < state < 256 for state in cur_states):
-                    raise TabelValueError(lno, f'Icon declared for invalid state {next(i for i in cur_states if not 0 < i < 256)}')
+                    raise TableValueError(lno, f'Icon declared for invalid state {next(i for i in cur_states if not 0 < i < 256)}')
                 if cur_states.intersection(states):
-                    raise TabelValueError(lno, f'States {cur_states.intersection(states)} were already assigned an icon')
+                    raise TableValueError(lno, f'States {cur_states.intersection(states)} were already assigned an icon')
                 _last_comment = lno
                 continue
             for state in cur_states:
@@ -148,7 +148,7 @@ class IconArray:
                 color = self._parsed_color_segment[state]
             except (KeyError, TypeError):  # (not present, no @COLORS)
                 if self._fill_gradient is None:
-                    raise TabelReferenceError(None,
+                    raise TableReferenceError(None,
                       f'No icon available for state {state}. '
                       'To change this, either (a) define an icon for it in @ICONS, '
                       '(b) define a color for it in non-golly @COLORS to be filled in as a solid square, '

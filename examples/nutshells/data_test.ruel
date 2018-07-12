@@ -1,4 +1,4 @@
-@RUEL data_test
+@NUTSHELL data_test
 
  1: {Data} Data
 
@@ -17,7 +17,7 @@ x = 15, y = 15, rule = data_test
 .A$2.A$3.A2.A$4.A.2A$A.A2.A.2A$.A.2A.4A2.A$.2A.7A.2A$2.13A$9.B2$8.B2$
 10.G2$12.I!
 
-@TABEL
+@TABLE
 states: ?
 neighborhood: Moore
 symmetries: none

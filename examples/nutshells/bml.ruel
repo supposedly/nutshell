@@ -1,4 +1,4 @@
-@RUEL bml
+@NUTSHELL bml
 The Biham–Middleton–Levine traffic model.
 
 0: Road
@@ -9,7 +9,7 @@ The Biham–Middleton–Levine traffic model.
 
 Generation 0 will consist only of states 0, 2, 3.
 
-@TABEL
+@TABLE
 states: 5
 neighborhood: von Neumann
 symmetries: none
@@ -26,6 +26,6 @@ wait, N..W any, [0: move]
 2, N..W any, [E: (0, 4, ...)] -> E[(4, _, ...)]
 
 @COLORS
-  0: FFF
-1 3: 0000FF
-2 4: FF0000
+FFF:    0
+0000FF: 1 3
+FF0000: 2 4

@@ -1,4 +1,4 @@
-"""Utility functions to be used during rueltabel parsing."""
+"""Utility functions to be used during nutshell parsing."""
 import re
 from collections import defaultdict
 from itertools import count
@@ -61,7 +61,7 @@ def suffix_num(num):
 
 def bind_vars(tr: (list, tuple), *, second_pass=False, return_reps=True):
     """
-    Given an unbound ruel transition like the following:
+    Given an unbound rule transition like the following:
         a,1,2,[0],a,a,6,7,8,[4]
     Bind its variables in Golly style:
         a_0,1,2,a_0,a_1,a_2,6,7,8,a_1
@@ -142,7 +142,7 @@ def expand_tr(tr: (list, tuple)):
             idx += 1
             cop.append(state)
             continue
-        lower, upper = classes.TabelRange(group).bounds
+        lower, upper = classes.TableRange(group).bounds
         if lower != idx:
             raise ValueError(group, lower, idx)
         span = upper - lower
@@ -194,7 +194,7 @@ def globalmatch(regex: re.compile, string: str, start: int = 0) -> bool:
 
 def desym(transitions, sym_lines):
     """
-    Normalize symmetries if a tabel has multiple.
+    Normalize symmetries if a table has multiple.
     """
     if len(sym_lines) < 2:
         return transitions, sym_lines[0][1]

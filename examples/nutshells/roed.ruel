@@ -1,4 +1,4 @@
-@RUEL roed
+@NUTSHELL roed
 
 http://esolangs.org/wiki/Roie
 (sans i, plus a [d]elay instruction)
@@ -73,7 +73,7 @@ http://esolangs.org/wiki/Roie
     52: s {D_S1}
     53: w {D_W1}
     
-@TABEL
+@TABLE
 states: ?
 neighborhood: Moore
 symmetries: none
@@ -160,12 +160,12 @@ west, N..SW any, W east, NW any, 0
 (O_N1, O_E1, O_S1, O_W1), N..NW any, O  ->  N[0: (_, P_E1, _, P_W1)]  E[0: (P_N1, _, P_S1, _)]  S[0: (_, P_E1, _, P_W1)]  W[0: (P_N1, _, P_S1, _)]
 
 @COLORS
-1: FF0011  # e, reddish
-2 3 4 5: 00AAFF  # pointer, light blue
-6 7 8 9: 0055BB  # 1 pointer, darker blue
-10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27: A50000  # o, darker red
-28 29 30 31 32 33 34 35 36: 008A00  # r, green
-37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53: FF6000  # d, yellow
+FF0011: 1  # e, reddish
+00AAFF: 2..5  # pointer, light blue
+0055BB: 6..9  # 1 pointer, darker blue
+A50000: 10..27  # o, darker red
+008A00: 28..36  # r, green
+FF6000: 37..53  # d, yellow
 
 
 @ICONS

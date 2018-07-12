@@ -3,7 +3,8 @@ import random
 import bidict
 
 from . import _utils as utils
-from ...common.errors import TabelValueError
+from ...common.errors import TableValueError
+from ...common.classes import TableRange  # this is exposed externally, I guess
 
 class CoordOutOfBoundsError(Exception):
     """
@@ -92,8 +93,7 @@ class _MaybeCallableCW(Coord):
     (The former will still work, however.)
     """
     def __call__(self, num):
-        new = self.cw(num-1) if num > 1 else self
-        return Coord(new)
+        return Coord(self.cw(num-1) if num > 1 else self)
 
 
 class _MaybeCallableCCW(Coord):
@@ -101,8 +101,7 @@ class _MaybeCallableCCW(Coord):
     Ditto above, but counterclockwise.
     """
     def __call__(self, num):
-        new = self.ccw(num-1) if num > 1 else self
-        return Coord(new)
+        return Coord(self.ccw(num-1) if num > 1 else self)
 
 
 class VarName:
@@ -147,28 +146,6 @@ class SpecialVar(tuple):
         return super().__hash__()
     def __repr__(self):
         return f'SpecialVar({super().__repr__()})'
-
-
-class TabelRange:
-    """Proxy for a range object."""
-    def __init__(self, span, *, shift=0, step=1):
-        lower, upper = map(str.strip, span.split('..'))
-        if '+' in lower:
-            lower, step = map(int, map(str.strip, lower.split('+')))
-        self.bounds = (shift+int(lower), 1+shift+int(upper))
-        self._range = range(*self.bounds, step)
-    
-    def __iter__(self):
-        yield from self._range
-    
-    def __contains__(self, item):
-        return item in self._range
-    
-    def __getitem__(self, item):
-        return self._range[item]
-    
-    def __repr__(self):
-        return repr(self._range).replace('range', 'TabelRange')
 
 
 class PTCD:
@@ -320,7 +297,7 @@ class PTCD:
                 break
             _map_to.append(state)
         if len(copy_to) > sum(len(i) if isinstance(i, range) else 1 for i in _map_to):
-            raise TabelValueError(
+            raise TableValueError(
               self.lno,
               f"Variable at index {int(m[1] != '0') and self.tbl.cardinals[m[1]]} in output specifier (direction {m[1]})"
               " mapped to a smaller variable. Maybe add a '...' to fill the latter out?"

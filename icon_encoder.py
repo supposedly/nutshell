@@ -1,5 +1,5 @@
 """
-Helps encode Golly-style XPM icons into rueltabel's RLE-icon format.
+Helps encode Golly-style XPM icons into nutshell's RLE-icon format.
 """
 import sys
 import traceback
@@ -17,7 +17,7 @@ SYMBOL_MAP = [
   *(chr(110 + ceil(num/24)) + chr(64 + (num % 24 or 24)) for num in range(25, 256))
   ]
 
-cli = CLI('Golly-XPM-icon-to-rueltabel-RLE-icon converter')
+cli = CLI('Golly-XPM-icon-to-nutshell-RLE-icon converter')
 
 
 class _StreamProxy:
@@ -96,7 +96,7 @@ if len(symbols) > 255:
     raise ValueError(
       'Too many colors to be represented via RLE. '
       'If you cannot remove any, you may still use your '
-      'icons within a rueltabel with the segment header '
+      'icons within a nutshell file via the segment header '
       '"@ICONS #golly" instead of "@ICONS".'
       )
 

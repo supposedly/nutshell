@@ -1,8 +1,8 @@
-@RUEL RockPaperScissors
+@NUTSHELL RockPaperScissors
 
 From "RockScissorsPaperLife" by Dave Greene.
 
-@TABEL
+@TABLE
 states: 4
 neighborhood: Moore
 symmetries: permute

@@ -1,4 +1,4 @@
-"""Facilitates conversion of a ruelfile into a Golly-compatible .rule file."""
+"""Facilitates conversion of a nutshell file into a Golly-compatible .rule file."""
 import os
 import sys
 from inspect import cleandoc
@@ -10,7 +10,7 @@ from magic.common.utils import printq
 
 def transpile(fp, *, preview=False):
     """
-    Parses and compiles the given ruelfile into an equivalent .rule.
+    Parses and compiles the given nutshell file into an equivalent .rule.
     """
     printq('\nParsing...')
     parsed = parser.parse(fp)
@@ -39,16 +39,15 @@ def _transpile(args):
         return ('', transpile(sys.stdin.read().splitlines(True)))
     with open(args.infile) as infp:
         finished = transpile(infp)
+    fname = os.path.split(args.infile)[-1].split('.')[0]
     with open(f'{os.path.join(args.outdir, fname)}.rule', 'w') as outfp:
         outfp.write(finished)
         return ('Complete!', '', f'Created {os.path.realpath(outfp.name)}')
 
 
 if __name__ == '__main__':
-    try:
-        fname, *_ = os.path.split(ARGS.infile)[-1].split('.')
-    except AttributeError:
-        res = _preview(ARGS.preview)
-    else:
+    if hasattr(ARGS, 'infile'):
         res = _transpile(ARGS)
+    else:
+        res = _preview(ARGS.preview)
     printq(*res, sep='\n')

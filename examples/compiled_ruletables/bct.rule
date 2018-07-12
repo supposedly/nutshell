@@ -1,36 +1,36 @@
 @RULE bct
-*********************************
-**** COMPILED FROM RUELTABEL ****
-*********************************
+********************************
+**** COMPILED FROM NUTSHELL ****
+********************************
 An implementation of bitwise cyclic tag.
 
-state 0: Vacuum.
+0: Vacuum.
 
-state 1: Data-tape 0.
-state 2: Data-tape 1.
+1: Data-tape 0.
+2: Data-tape 1.
 
-state 3: Program-tape 0.
-state 4: Program-tape 1.
+3: Program-tape 0.
+4: Program-tape 1.
 
-state 5: Shifter. Moves both itself and the data tape one unit down to render program execution cyclic.
+5: Shifter. Moves both itself and the data tape one unit down to render program execution cyclic.
 
-state 6: Transitory program-tape 0.
-state 7: Transitory program-tape 1.
+6: Transitory program-tape 0.
+7: Transitory program-tape 1.
 
-state 8: Pre-copying program-tape 0. (Used when a prgm-tape bit is the x in a 1x instruction)
-state 9: Pre-copying program-tape 1. (Ditto)
+8: Pre-copying program-tape 0. (Used when a prgm-tape bit is the x in a 1x instruction)
+9: Pre-copying program-tape 1. (Ditto)
 
-state 10: Transitory program-tape 0.
-state 11: Transitory program-tape 1.
+10: Transitory program-tape 0.
+11: Transitory program-tape 1.
 
-state 12: Rightward-moving data-tape 0.
-state 13: Rightward-moving data-tape 1.
+12: Rightward-moving data-tape 0.
+13: Rightward-moving data-tape 1.
 
-state 14: Transitory reflector.
-state 15: Ditto but about to turn into normal reflector.
+14: Transitory reflector.
+15: Ditto but about to turn into normal reflector.
 
-state 16: To-be-moved-down data-tape 0.
-state 17: To-be-moved-down data-tape 1.
+16: To-be-moved-down data-tape 0.
+17: To-be-moved-down data-tape 1.
 
 @TABLE
 neighborhood: Moore
@@ -54,9 +54,9 @@ var vacdata_0 = {0, 1, 2}
 var vacdata_1 = vacdata_0
 var vacrdata_0 = {0, 12, 13}
 var vacddata_0 = {0, 16, 17}
-var _875157253292172_0 = {14, 15}
-var _111824807740821_0 = {3, 4}
-var _304460645959139_0 = {10, 11}
+var _734088397498802_0 = {14, 15}
+var _558033879609660_0 = {3, 4}
+var _944863257319286_0 = {10, 11}
 
 vacddata_0, 1, any_0, any_1, any_2, any_3, any_4, any_5, 5, 16
 vacddata_0, 2, any_0, any_1, any_2, any_3, any_4, any_5, 5, 17
@@ -69,7 +69,7 @@ vacrdata_0, any_0, any_1, any_2, any_3, any_4, any_5, rdata_0, any_6, rdata_0
 rdata_0, any_0, any_1, any_2, any_3, any_4, any_5, 0, any_6, 0
 0, 5, any_0, any_1, any_2, any_3, any_4, 0, rdata_0, 14
 0, 5, data_0, 0, any_0, any_1, any_2, any_3, any_4, 14
-_875157253292172_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
+_734088397498802_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
 any_0, 14, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 15
 any_0, 15, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 5
 5, 0, 0, 0, ddata_0, 0, 0, 0, 0, 0
@@ -88,7 +88,7 @@ data_0, any_0, any_1, 5, any_2, any_3, any_4, any_5, any_6, 0
 0, 8, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 10
 9, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 2
 0, 9, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 11
-_304460645959139_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
+_944863257319286_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
 any_0, 10, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 3
 any_0, 11, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 4
 data_0, any_0, any_1, 0, any_2, data_1, any_3, any_4, any_5, data_1

@@ -1,4 +1,4 @@
-@RUEL bf
+@NUTSHELL bf
 
  0: Vacuum
  
@@ -88,7 +88,7 @@
     The input tape will be stacked vertically in unary, with one state-0 cell separating successive input segments.
     The prgm-tape head will at every execution step send a signal cell downward (by turning the prgm cell below it into a state
 
-@TABEL
+@TABLE
 states: ?
 neighborhood: Moore
 symmetries: none

@@ -1,42 +1,42 @@
-@RUEL bct
+@NUTSHELL bct
 An implementation of bitwise cyclic tag.
 
-state 0: Vacuum.
+0: Vacuum.
 
-state 1: Data-tape 0.
-state 2: Data-tape 1.
+1: Data-tape 0.
+2: Data-tape 1.
 
-state 3: Program-tape 0.
-state 4: Program-tape 1.
+3: Program-tape 0.
+4: Program-tape 1.
 
-state 5: Shifter. Moves both itself and the data tape one unit down to render program execution cyclic.
+5: Shifter. Moves both itself and the data tape one unit down to render program execution cyclic.
 
-state 6: Transitory program-tape 0.
-state 7: Transitory program-tape 1.
+6: Transitory program-tape 0.
+7: Transitory program-tape 1.
 
-state 8: Pre-copying program-tape 0. (Used when a prgm-tape bit is the x in a 1x instruction)
-state 9: Pre-copying program-tape 1. (Ditto)
+8: Pre-copying program-tape 0. (Used when a prgm-tape bit is the x in a 1x instruction)
+9: Pre-copying program-tape 1. (Ditto)
 
-state 10: Transitory program-tape 0.
-state 11: Transitory program-tape 1.
+10: Transitory program-tape 0.
+11: Transitory program-tape 1.
 
-state 12: Rightward-moving data-tape 0.
-state 13: Rightward-moving data-tape 1.
+12: Rightward-moving data-tape 0.
+13: Rightward-moving data-tape 1.
 
-state 14: Transitory reflector.
-state 15: Ditto but about to turn into normal reflector.
+14: Transitory reflector.
+15: Ditto but about to turn into normal reflector.
 
-state 16: To-be-moved-down data-tape 0.
-state 17: To-be-moved-down data-tape 1.
+16: To-be-moved-down data-tape 0.
+17: To-be-moved-down data-tape 1.
 
 @COLORS
-      3: C8C8C8  # light gray
-      4: 5A5A5A  # dark gray
-1 12 16: EBEBEB  # lighter gray
-2 13 17: 1E1E1E  # darker gray
-5 14 15: 00FFFF  # cyan
+C8C8C8: 3        # light gray
+5A5A5A: 4        # dark gray
+EBEBEB: 1 12 16  # lighter gray
+1E1E1E: 2 13 17  # darker gray
+00FFFF: 5 14 15  # cyan
 
-@TABEL
+@TABLE
 states: 18
 neighborhood: Moore
 symmetries: none

@@ -1,4 +1,4 @@
-@RUEL NewTons
+@NUTSHELL NewTons
 By BlinkerSpawn
 0 vacuum
 1 wall
@@ -8,7 +8,7 @@ By BlinkerSpawn
 5 down
 6 left
 
-@TABEL
+@TABLE
 states: 7
 neighborhood: Moore
 symmetries: none

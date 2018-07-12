@@ -1,10 +1,10 @@
-"""Errors to be raised during rueltabel parsing."""
-class TabelException(SystemExit):
+"""Errors to be raised during nutshell parsing."""
+class TableException(SystemExit):
     def __init__(self, lno: int, msg: str, seg_name: str = None, segment: list = None, shift: int = 0):
         """
         lno: line number error occurred on
         msg: error message
-        seg: segment of ruelfile error occurred in
+        seg: segment of rulefile error occurred in
         shift: line number seg starts on
         """
         start = f'\n  {self.__class__.__name__} in {seg_name}'
@@ -15,17 +15,17 @@ class TabelException(SystemExit):
             self.code = f'{start}, line {1+shift+lno}:\n      {segment[lno]}\n  {msg}\n'
 
 
-class TabelReferenceError(TabelException):
+class TableReferenceError(TableException):
     pass
 
 
-class TabelSyntaxError(TabelException):
+class TableSyntaxError(TableException):
     pass
 
 
-class TabelValueError(TabelException):
+class TableValueError(TableException):
     pass
 
 
-class TabelFeatureUnsupported(TabelException):
+class TableFeatureUnsupported(TableException):
     pass

@@ -24,3 +24,34 @@ class ColorMixin:
                 return color if len(color) == 6 else color * 2
             color = map(int, m.groups())
         return struct.pack('BBB', *color).hex().upper()
+
+
+class TableRange:
+    """Proxy for a range object."""
+    def __init__(self, span, *, shift=0, step=1):
+        lower, upper = map(str.strip, span.split('..'))
+        if '+' in lower:
+            lower, step = map(int, map(str.strip, lower.split('+')))
+        self.bounds = (shift+int(lower), 1+shift+int(upper))
+        self._range = range(*self.bounds, step)
+    
+    def __iter__(self):
+        yield from self._range
+    
+    def __contains__(self, item):
+        return item in self._range
+    
+    def __getitem__(self, item):
+        return self._range[item]
+    
+    def __repr__(self):
+        return repr(self._range).replace('range', 'TabelRange')
+    
+    @classmethod
+    def check(cls, string):
+        # return string.fullmatch(r'\d+(?:\+\d+)?\s*\.\.\s*\d+')
+        try:
+            cls(string)
+        except Exception:
+            return False
+        return True
