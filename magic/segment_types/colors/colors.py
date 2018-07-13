@@ -10,7 +10,12 @@ class ColorSegment(ColorMixin):
         self._packed_dict = None
         self._src = colors
         self.colors = [k.split('#')[0].split(':' if ':' in k else None, 1) for k in self._src if k]
-        self.states = {int(state.lstrip('*')): self._unpack(color.strip()) for color, states in self.colors for state in self._ranges(states)}
+        self.states = {
+          int(state.lstrip('*')):
+          self._unpack(color.strip())
+          for color, states in self.colors
+          for state in TableRange.try_iter(states.split())
+          }
     
     def __iter__(self):
         return (f"{state} {r} {g} {b}" for state, (r, g, b) in self.states.items())
@@ -28,11 +33,3 @@ class ColorSegment(ColorMixin):
               for j in state.split()
               }
         return self._packed_dict[item]
-    
-    @staticmethod
-    def _ranges(states):
-        for state in states.split():
-            if TableRange.check(state):
-                yield from map(str, TableRange(state))
-            else:
-                yield state

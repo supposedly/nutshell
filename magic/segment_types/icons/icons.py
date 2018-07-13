@@ -6,7 +6,7 @@ from itertools import chain, filterfalse, takewhile
 import bidict
 
 from ...common.errors import *
-from ._classes import ColorRange
+from ._classes import ColorRange, TableRange
 from ._utils import lazylen, maybe_double, SAFE_CHARS, SYMBOL_MAP
 
 
@@ -120,7 +120,7 @@ class IconArray:
                 color *= 2
             colormap[SYMBOL_MAP[int(state)] if state.isdigit() else maybe_double(state)] = color.upper()
         return colormap, lno
-
+    
     def _sep_states(self, start) -> dict:
         states = defaultdict(list)
         used_states = set()
@@ -129,7 +129,7 @@ class IconArray:
             if not line:
                 continue
             if line.startswith('#'):
-                cur_states = {int(i) for split in map(str.split, line.split(',')) for i in split if i.isdigit()}
+                cur_states = {int(state) for split in map(str.split, line.split(',')) for state in TableRange.try_iter(split) if state.isdigit()}
                 if not all(0 < state < 256 for state in cur_states):
                     raise TableValueError(lno, f'Icon declared for invalid state {next(i for i in cur_states if not 0 < i < 256)}')
                 if cur_states.intersection(states):

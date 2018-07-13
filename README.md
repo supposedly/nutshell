@@ -37,7 +37,7 @@ Supported flags:
 - Support for `{}` literals, usable directly in transitions, as 'on-the-spot' variables. (Parentheses are also allowed. I personally prefer them to braces.)
 - Support for cellstate *ranges* in variables, via double..dots as in `(0..8)` -- interspersible with state-by-state specification,
   so you can do `(0, 1, 4..6, 9)` to mean `(0, 1, 4, 5, 6, 9)`.  
-  Ranges also accept a step, so you can also do `(0, 1+10..50, 102)` to mean `(0, 1, 11, 21, 31, 41, 102)`.
+  Ranges also accept a step, so you can also do `(0, 1-10..50, 102)` to mean `(0, 1, 11, 21, 31, 41, 102)`.
 - A variable is made 'bound' by referring to its *index* in the transition, wrapped in [brackets]:  
 ```py
 # current (barC repeats)
@@ -98,9 +98,9 @@ or (b) using the `...` operator to say *"fill the rest out with whatever value p
   length matches the right-hand operand's -- if the latter is a variable -- or until the former's length equals the right-hand operand itself
   if the latter is a number.  
   - `0*5` expands to `(0, 0, 0, 0, 0)`
-  - `any*5` assuming `any = (0, 1, 2)` expands to `(0, 1, 2, 0, 1)` -- note the new length, 5
-  - `5*any` assuming the same expands to `(5, 5, 5)`
-  - `live*any` assuming as well that `live = (1, 2)` expands to `(1, 2, 1)`
+  - `any*5`, assuming `any = (0, 1, 2)`, expands to `(0, 1, 2, 0, 1)` -- note the new length, 5
+  - `5*any`, assuming the same, expands to `(5, 5, 5)`
+  - `live*any`, assuming as well that `live = (1, 2)`, expands to `(1, 2, 1)`
 - Live cells can be treated as moving objects: a cardinal direction to travel in and resultant cell state are specifiable post transition.
 ```py
 foo, N..NW bar, baz -> S:2  E[(2, 3)]  SE[wutz]  N[NE: (2, 3)]  NE[E]
@@ -122,9 +122,9 @@ foo, N..NW bar, baz -> S:2  E[(2, 3)]  SE[wutz]  N[NE: (2, 3)]  NE[E]
 - Within these "output specifiers", the `_` keyword says "leave the cell as is".   
     - (formerly "PTCDs", from "**p**ost-**t**ransition **c**ompass-**d**irection specifier**s**")
 - Transitions under permutational symmetry can make use of a shorthand syntax, specifying only the quantity of cells in each state. For example, `0,2,2,2,1,1,1,0,0,1`
-  in a Moore+permute rule can be compacted to `0, 2*3, 1*3, 0*2, 1`.  
+  in a Moore+permute rule can be compacted to `0, 2 * 3, 1 * 3, 0 * 2, 1`.  
   Unmarked states will be filled in to match the number of cells in the transition's neighborhood, meaning
-  that this transition can also be written as `0, 0*2, 1, 2, 1` or `0, 1*3, 2*3, 0, 1`.  
+  that this transition can also be written as `0, 0 * 2, 1, 2, 1` or `0, 1 * 3, 2 * 3, 0, 1`.  
   - If the number of cells to fill is not divisible by the number of unmarked states, precedence will
     be given to those that appear earlier; `2,1,0`, for instance, will also expand into `2,2,2,1,1,1,0,0`, but `0,1,2` will expand into `0,0,0,1,1,1,2,2`.
 - You're allowed to switch symmetries partway through via the `symmetries:` directive. (When parsing, this results in all transitions being expanded to the 'lowest'
@@ -135,13 +135,14 @@ symmetry type specified overall.)
   of "rule" to distinguish nutshell files from standard `.rule` files. This obviously isn't enforced anywhere, however, and might be subject to change
   as well.
 - Comments in every segment (barring `@NUTSHELL`, where everything after the first word is a comment) start with `#` and stretch to the end of a line.
-- The `@COLORS` segment in a nutshell file allows multiple states with the same color to be defined
+- The `@COLORS` segment in nutshells allows multiple states with the same color to be defined
   on the same line as each other, and for a color to be written as either a hexadecimal color code or a
-  group of base-10 `R G B` values. `1 10: FFF`, for instance, says to assign the color `#FFFFFF` to states 1 and
-  10, and can also be written as `1 10: FFFFFF` or `1 10: 255 255 255` (or as two separate lines for each of `1` and `10`, although
-  the colon remains mandatory).
+  group of base-10 `R G B` values. As a result of its allowing multiple colors, the "key/value" order, if you will, has been switched: the color now
+  goes first on a line, followed by all the states it's assigned to. A range can be used here identically to that found in variable literals.  
+  For instance: `FFF: 1 10` says to assign the color `#FFFFFF` to states 1 and
+  10, and can also be written as `FFFFFF: 1 10` or `255 255 255: 1 10`.
 - The `@ICONS` segment is based around RLEs instead of Gollyesque XPM data. See [this post](http://conwaylife.com/forums/viewtopic.php?f=7&t=3361&p=59944#p59944)
-  for an explanation + example.
+  for an explanation + example. Ranges are also supported in icon state specifiers.
 - The `@NUTSHELL` segment allows *constants*, which carry over to and are usable in the `@TABLE` segment, to be
   defined alongside a description of each state. Take the following example:
 
@@ -164,7 +165,7 @@ symmetry type specified overall.)
 - **All segments are optional**. The parser will in addition transcribe "non-special" segments *as is*, meaning that
   a file can have a `@RULE` segment rather than `@NUTSHELL` and it will be transcribed into the output file untouched.
 - The other "special" nutshell segments like `@TABLE` and `@ICONS` and `@COLORS`, none of whose names differ from
-  their Golly-format counterparts, will still be   ignored by the parser if their header is immediately followed by
+  their Golly-format counterparts, will still be ignored by the parser if their header is immediately followed by
   the comment `#golly` -- either on the same line (after whitespace) or on the line immediately below.
 
 ## To do

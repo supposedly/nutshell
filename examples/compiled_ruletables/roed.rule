@@ -102,22 +102,22 @@ var north_0 = {33, 2, 6, 12, 46, 14, 17, 50, 19, 20, 23, 24, 27, 29}
 var east_0 = {34, 3, 7, 11, 13, 47, 16, 18, 51, 20, 21, 24, 25, 30}
 var south_0 = {35, 4, 8, 12, 14, 48, 17, 19, 52, 21, 22, 25, 26, 31}
 var west_0 = {32, 36, 5, 9, 11, 13, 16, 49, 18, 53, 22, 23, 26, 27}
-var _290605540783145_0 = {38, 39, 40, 41, 42, 43, 44, 45}
-var _131209723406655_0 = {0, 32, 36, 5, 9, 11, 13, 16, 49, 18, 53, 22, 23, 26, 27}
-var _81556318930497_0 = {2, 3, 4, 5}
-var _132395379618_0 = {8, 9, 6, 7}
-var _24959142615461_0 = {32, 29, 30, 31}
-var _662885735216997_0 = {33, 34, 35, 36}
-var _165513783233009_0 = {48, 49, 46, 47}
-var _628234249729190_0 = {50, 51, 52, 53}
-var _749468182787906_0 = {20, 21, 22, 23}
-var _840315378937964_0 = {24, 25, 26, 27}
-var _192019019709824_0 = {16, 17, 18, 19}
-var _109470221037406_0 = {11, 12, 13, 14}
-var _676770954547175_0 = {35, 8, 12, 14, 52, 25, 26}
-var _511735266131065_0 = {36, 9, 11, 13, 53, 26, 27}
-var _104049810079680_0 = {33, 6, 12, 14, 50, 24, 27}
-var _827849923813781_0 = {34, 7, 11, 13, 51, 24, 25}
+var _729848226699090_0 = {38, 39, 40, 41, 42, 43, 44, 45}
+var _369207552983113_0 = {0, 32, 36, 5, 9, 11, 13, 16, 49, 18, 53, 22, 23, 26, 27}
+var _419727991138936_0 = {2, 3, 4, 5}
+var _911977485291586_0 = {8, 9, 6, 7}
+var _222302237712092_0 = {32, 29, 30, 31}
+var _616523765909864_0 = {33, 34, 35, 36}
+var _249849657760731_0 = {48, 49, 46, 47}
+var _646018092908181_0 = {50, 51, 52, 53}
+var _301083092704062_0 = {20, 21, 22, 23}
+var _679790719824480_0 = {24, 25, 26, 27}
+var _646328154455473_0 = {16, 17, 18, 19}
+var _491109459361378_0 = {11, 12, 13, 14}
+var _472590076061425_0 = {35, 8, 12, 14, 52, 25, 26}
+var _95396483881451_0 = {36, 9, 11, 13, 53, 26, 27}
+var _117793690413473_0 = {33, 6, 12, 14, 50, 24, 27}
+var _252136604098637_0 = {34, 7, 11, 13, 51, 24, 25}
 
 1, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 1
 anyO_0, southZero_0, any_0, any_1, any_2, any_3, any_4, eastZero_0, any_5, 21
@@ -135,7 +135,7 @@ anyO_0, 17, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 13
 anyO_0, 19, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 13
 anyO_0, 22, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 13
 anyO_0, 21, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 13
-anyO_0, _676770954547175_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 18
+anyO_0, _472590076061425_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 18
 anyO_0, any_0, any_1, 5, any_2, any_3, any_4, any_5, any_6, 14
 anyO_0, any_0, any_1, 32, any_2, any_3, any_4, any_5, any_6, 14
 anyO_0, any_0, any_1, 49, any_2, any_3, any_4, any_5, any_6, 14
@@ -143,7 +143,7 @@ anyO_0, any_0, any_1, 16, any_2, any_3, any_4, any_5, any_6, 14
 anyO_0, any_0, any_1, 18, any_2, any_3, any_4, any_5, any_6, 14
 anyO_0, any_0, any_1, 23, any_2, any_3, any_4, any_5, any_6, 14
 anyO_0, any_0, any_1, 22, any_2, any_3, any_4, any_5, any_6, 14
-anyO_0, any_0, any_1, _511735266131065_0, any_2, any_3, any_4, any_5, any_6, 19
+anyO_0, any_0, any_1, _95396483881451_0, any_2, any_3, any_4, any_5, any_6, 19
 anyO_0, any_0, any_1, any_2, any_3, 2, any_4, any_5, any_6, 11
 anyO_0, any_0, any_1, any_2, any_3, 29, any_4, any_5, any_6, 11
 anyO_0, any_0, any_1, any_2, any_3, 46, any_4, any_5, any_6, 11
@@ -151,7 +151,7 @@ anyO_0, any_0, any_1, any_2, any_3, 17, any_4, any_5, any_6, 11
 anyO_0, any_0, any_1, any_2, any_3, 19, any_4, any_5, any_6, 11
 anyO_0, any_0, any_1, any_2, any_3, 23, any_4, any_5, any_6, 11
 anyO_0, any_0, any_1, any_2, any_3, 20, any_4, any_5, any_6, 11
-anyO_0, any_0, any_1, any_2, any_3, _104049810079680_0, any_4, any_5, any_6, 16
+anyO_0, any_0, any_1, any_2, any_3, _117793690413473_0, any_4, any_5, any_6, 16
 anyO_0, any_0, any_1, any_2, any_3, any_4, any_5, 3, any_6, 12
 anyO_0, any_0, any_1, any_2, any_3, any_4, any_5, 30, any_6, 12
 anyO_0, any_0, any_1, any_2, any_3, any_4, any_5, 47, any_6, 12
@@ -159,7 +159,7 @@ anyO_0, any_0, any_1, any_2, any_3, any_4, any_5, 16, any_6, 12
 anyO_0, any_0, any_1, any_2, any_3, any_4, any_5, 18, any_6, 12
 anyO_0, any_0, any_1, any_2, any_3, any_4, any_5, 20, any_6, 12
 anyO_0, any_0, any_1, any_2, any_3, any_4, any_5, 21, any_6, 12
-anyO_0, any_0, any_1, any_2, any_3, any_4, any_5, _827849923813781_0, any_6, 17
+anyO_0, any_0, any_1, any_2, any_3, any_4, any_5, _252136604098637_0, any_6, 17
 anyR_0, 4, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 32
 anyR_0, 31, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 32
 anyR_0, 48, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 32
@@ -167,7 +167,7 @@ anyR_0, 17, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 32
 anyR_0, 19, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 32
 anyR_0, 22, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 32
 anyR_0, 21, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 32
-anyR_0, _676770954547175_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 34
+anyR_0, _472590076061425_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 34
 anyR_0, any_0, any_1, 5, any_2, any_3, any_4, any_5, any_6, 29
 anyR_0, any_0, any_1, 32, any_2, any_3, any_4, any_5, any_6, 29
 anyR_0, any_0, any_1, 49, any_2, any_3, any_4, any_5, any_6, 29
@@ -175,7 +175,7 @@ anyR_0, any_0, any_1, 16, any_2, any_3, any_4, any_5, any_6, 29
 anyR_0, any_0, any_1, 18, any_2, any_3, any_4, any_5, any_6, 29
 anyR_0, any_0, any_1, 23, any_2, any_3, any_4, any_5, any_6, 29
 anyR_0, any_0, any_1, 22, any_2, any_3, any_4, any_5, any_6, 29
-anyR_0, any_0, any_1, _511735266131065_0, any_2, any_3, any_4, any_5, any_6, 35
+anyR_0, any_0, any_1, _95396483881451_0, any_2, any_3, any_4, any_5, any_6, 35
 anyR_0, any_0, any_1, any_2, any_3, 2, any_4, any_5, any_6, 30
 anyR_0, any_0, any_1, any_2, any_3, 29, any_4, any_5, any_6, 30
 anyR_0, any_0, any_1, any_2, any_3, 46, any_4, any_5, any_6, 30
@@ -183,7 +183,7 @@ anyR_0, any_0, any_1, any_2, any_3, 17, any_4, any_5, any_6, 30
 anyR_0, any_0, any_1, any_2, any_3, 19, any_4, any_5, any_6, 30
 anyR_0, any_0, any_1, any_2, any_3, 23, any_4, any_5, any_6, 30
 anyR_0, any_0, any_1, any_2, any_3, 20, any_4, any_5, any_6, 30
-anyR_0, any_0, any_1, any_2, any_3, _104049810079680_0, any_4, any_5, any_6, 36
+anyR_0, any_0, any_1, any_2, any_3, _117793690413473_0, any_4, any_5, any_6, 36
 anyR_0, any_0, any_1, any_2, any_3, any_4, any_5, 3, any_6, 31
 anyR_0, any_0, any_1, any_2, any_3, any_4, any_5, 30, any_6, 31
 anyR_0, any_0, any_1, any_2, any_3, any_4, any_5, 47, any_6, 31
@@ -191,7 +191,7 @@ anyR_0, any_0, any_1, any_2, any_3, any_4, any_5, 16, any_6, 31
 anyR_0, any_0, any_1, any_2, any_3, any_4, any_5, 18, any_6, 31
 anyR_0, any_0, any_1, any_2, any_3, any_4, any_5, 20, any_6, 31
 anyR_0, any_0, any_1, any_2, any_3, any_4, any_5, 21, any_6, 31
-anyR_0, any_0, any_1, any_2, any_3, any_4, any_5, _827849923813781_0, any_6, 33
+anyR_0, any_0, any_1, any_2, any_3, any_4, any_5, _252136604098637_0, any_6, 33
 anyD_0, 4, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 40
 anyD_0, 31, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 40
 anyD_0, 48, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 40
@@ -199,7 +199,7 @@ anyD_0, 17, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 40
 anyD_0, 19, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 40
 anyD_0, 22, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 40
 anyD_0, 21, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 40
-anyD_0, _676770954547175_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 44
+anyD_0, _472590076061425_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 44
 anyD_0, any_0, any_1, 5, any_2, any_3, any_4, any_5, any_6, 41
 anyD_0, any_0, any_1, 32, any_2, any_3, any_4, any_5, any_6, 41
 anyD_0, any_0, any_1, 49, any_2, any_3, any_4, any_5, any_6, 41
@@ -207,7 +207,7 @@ anyD_0, any_0, any_1, 16, any_2, any_3, any_4, any_5, any_6, 41
 anyD_0, any_0, any_1, 18, any_2, any_3, any_4, any_5, any_6, 41
 anyD_0, any_0, any_1, 23, any_2, any_3, any_4, any_5, any_6, 41
 anyD_0, any_0, any_1, 22, any_2, any_3, any_4, any_5, any_6, 41
-anyD_0, any_0, any_1, _511735266131065_0, any_2, any_3, any_4, any_5, any_6, 45
+anyD_0, any_0, any_1, _95396483881451_0, any_2, any_3, any_4, any_5, any_6, 45
 anyD_0, any_0, any_1, any_2, any_3, 2, any_4, any_5, any_6, 38
 anyD_0, any_0, any_1, any_2, any_3, 29, any_4, any_5, any_6, 38
 anyD_0, any_0, any_1, any_2, any_3, 46, any_4, any_5, any_6, 38
@@ -215,7 +215,7 @@ anyD_0, any_0, any_1, any_2, any_3, 17, any_4, any_5, any_6, 38
 anyD_0, any_0, any_1, any_2, any_3, 19, any_4, any_5, any_6, 38
 anyD_0, any_0, any_1, any_2, any_3, 23, any_4, any_5, any_6, 38
 anyD_0, any_0, any_1, any_2, any_3, 20, any_4, any_5, any_6, 38
-anyD_0, any_0, any_1, any_2, any_3, _104049810079680_0, any_4, any_5, any_6, 42
+anyD_0, any_0, any_1, any_2, any_3, _117793690413473_0, any_4, any_5, any_6, 42
 anyD_0, any_0, any_1, any_2, any_3, any_4, any_5, 3, any_6, 39
 anyD_0, any_0, any_1, any_2, any_3, any_4, any_5, 30, any_6, 39
 anyD_0, any_0, any_1, any_2, any_3, any_4, any_5, 47, any_6, 39
@@ -223,7 +223,7 @@ anyD_0, any_0, any_1, any_2, any_3, any_4, any_5, 16, any_6, 39
 anyD_0, any_0, any_1, any_2, any_3, any_4, any_5, 18, any_6, 39
 anyD_0, any_0, any_1, any_2, any_3, any_4, any_5, 20, any_6, 39
 anyD_0, any_0, any_1, any_2, any_3, any_4, any_5, 21, any_6, 39
-anyD_0, any_0, any_1, any_2, any_3, any_4, any_5, _827849923813781_0, any_6, 43
+anyD_0, any_0, any_1, any_2, any_3, any_4, any_5, _252136604098637_0, any_6, 43
 38, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 46
 39, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 47
 40, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 48
@@ -268,37 +268,37 @@ west_0, any_0, any_1, any_2, any_3, any_4, any_5, east_0, any_6, 0
 0, any_0, any_1, 0, any_2, north_0, any_3, 24, any_4, 0
 0, any_0, any_1, 0, any_2, north_0, any_3, 25, any_4, 0
 0, any_0, any_1, west_0, any_2, north_0, any_3, 0, any_4, 0
-_81556318930497_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
+_419727991138936_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
 any_0, any_1, any_2, any_3, any_4, 2, any_5, any_6, any_7, 2
 any_0, any_1, any_2, any_3, any_4, any_5, any_6, 3, any_7, 3
 any_0, 4, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 4
 any_0, any_1, any_2, 5, any_3, any_4, any_5, any_6, any_7, 5
-_132395379618_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
+_911977485291586_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
 any_0, any_1, any_2, any_3, any_4, 6, any_5, any_6, any_7, 6
 any_0, any_1, any_2, any_3, any_4, any_5, any_6, 7, any_7, 7
 any_0, 8, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 8
 any_0, any_1, any_2, 9, any_3, any_4, any_5, any_6, any_7, 9
-_24959142615461_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 28
+_222302237712092_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 28
 any_0, any_1, any_2, any_3, any_4, 29, any_5, any_6, any_7, 2
 any_0, any_1, any_2, any_3, any_4, any_5, any_6, 30, any_7, 3
 any_0, 31, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 4
 any_0, any_1, any_2, 32, any_3, any_4, any_5, any_6, any_7, 5
-_662885735216997_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 28
+_616523765909864_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 28
 any_0, any_1, any_2, any_3, any_4, 33, any_5, any_6, any_7, 6
 any_0, any_1, any_2, any_3, any_4, any_5, any_6, 34, any_7, 7
 any_0, 35, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 8
 any_0, any_1, any_2, 36, any_3, any_4, any_5, any_6, any_7, 9
-_165513783233009_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 37
+_249849657760731_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 37
 any_0, any_1, any_2, any_3, any_4, 46, any_5, any_6, any_7, 2
 any_0, any_1, any_2, any_3, any_4, any_5, any_6, 47, any_7, 3
 any_0, 48, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 4
 any_0, any_1, any_2, 49, any_3, any_4, any_5, any_6, any_7, 5
-_628234249729190_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 37
+_646018092908181_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 37
 any_0, any_1, any_2, any_3, any_4, 50, any_5, any_6, any_7, 6
 any_0, any_1, any_2, any_3, any_4, any_5, any_6, 51, any_7, 7
 any_0, 52, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 8
 any_0, any_1, any_2, 53, any_3, any_4, any_5, any_6, any_7, 9
-_749468182787906_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 10
+_301083092704062_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 10
 any_0, any_1, any_2, any_3, any_4, 20, any_5, any_6, any_7, 2
 any_0, any_1, any_2, any_3, any_4, 23, any_5, any_6, any_7, 2
 any_0, any_1, any_2, any_3, any_4, any_5, any_6, 20, any_7, 3
@@ -307,7 +307,7 @@ any_0, 21, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 4
 any_0, 22, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 4
 any_0, any_1, any_2, 22, any_3, any_4, any_5, any_6, any_7, 5
 any_0, any_1, any_2, 23, any_3, any_4, any_5, any_6, any_7, 5
-_840315378937964_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 10
+_679790719824480_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 10
 any_0, any_1, any_2, any_3, any_4, 24, any_5, any_6, any_7, 6
 any_0, any_1, any_2, any_3, any_4, 27, any_5, any_6, any_7, 6
 any_0, any_1, any_2, any_3, any_4, any_5, any_6, 24, any_7, 7
@@ -316,7 +316,7 @@ any_0, 25, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 8
 any_0, 26, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 8
 any_0, any_1, any_2, 26, any_3, any_4, any_5, any_6, any_7, 9
 any_0, any_1, any_2, 27, any_3, any_4, any_5, any_6, any_7, 9
-_192019019709824_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 10
+_646328154455473_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 10
 any_0, any_1, any_2, any_3, any_4, 17, any_5, any_6, any_7, 3
 any_0, any_1, any_2, any_3, any_4, 19, any_5, any_6, any_7, 5
 any_0, any_1, any_2, any_3, any_4, any_5, any_6, 16, any_7, 2
@@ -325,7 +325,7 @@ any_0, 17, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 3
 any_0, 19, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 5
 any_0, any_1, any_2, 16, any_3, any_4, any_5, any_6, any_7, 2
 any_0, any_1, any_2, 18, any_3, any_4, any_5, any_6, any_7, 4
-_109470221037406_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 10
+_491109459361378_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 10
 any_0, any_1, any_2, any_3, any_4, 12, any_5, any_6, any_7, 7
 any_0, any_1, any_2, any_3, any_4, 14, any_5, any_6, any_7, 9
 any_0, any_1, any_2, any_3, any_4, any_5, any_6, 11, any_7, 6
@@ -401,32 +401,32 @@ XPM
 "CC c #1400BB"
 "DD c #008A00"
 "EE c #FF6000"
-")& c #494949"
-"t> c #505050"
-";g c #575757"
-"^% c #5D5D5D"
-"36 c #646464"
-"/b c #6B6B6B"
-"+e c #727272"
-"#6 c #787878"
-")r c #7F7F7F"
-")# c #868686"
-"*' c #8C8C8C"
-"q6 c #939393"
-"9\ c #9A9A9A"
-"vu c #A1A1A1"
-"/c c #A7A7A7"
-"41 c #AEAEAE"
-"x" c #B5B5B5"
-"k} c #C2C2C2"
-"3d c #C9C9C9"
-"og c #D0D0D0"
-"?+ c #D6D6D6"
-"#{ c #DDDDDD"
-"a7 c #E4E4E4"
-"u3 c #EAEAEA"
-""a c #F1F1F1"
-"|\ c #FFFFFF"
+"wm c #494949"
+"7v c #505050"
+""t c #575757"
+"dg c #5D5D5D"
+"@\ c #646464"
+":c c #6B6B6B"
+"i$ c #727272"
+",u c #787878"
+"=8 c #7F7F7F"
+"xp c #868686"
+"l1 c #8C8C8C"
+"xy c #939393"
+"0a c #9A9A9A"
+"\a c #A1A1A1"
+"`/ c #A7A7A7"
+"w( c #AEAEAE"
+"&[ c #B5B5B5"
+"qb c #C2C2C2"
+"wq c #C9C9C9"
+"8& c #D0D0D0"
+"t- c #D6D6D6"
+"9= c #DDDDDD"
+"|> c #E4E4E4"
+"pu c #EAEAEA"
+""d c #F1F1F1"
+"># c #FFFFFF"
 "..........AAAAAAAAAA.........."
 "..........AAAAAAAAAA.........."
 "......AAAA..........AAAA......"
@@ -577,261 +577,261 @@ XPM
 "..........AAAAAAAAAA.........."
 "..........AAAAAAAAAA.........."
 ".............."
-")&)&)&)&)&)&)&)&)&)&)&)&)&)&)&"
-")&)&)&)&)&)&)&)&)&)&)&)&)&)&)&"
-")&)&)&)&)&)&)&)&)&)&)&)&)&)&)&"
-")&)&)&)&)&)&)&)&)&)&)&)&)&)&)&"
-")&)&)&)&)&)&)&)&)&)&)&)&)&)&)&"
-")&)&)&)&)&)&)&)&)&)&)&)&)&)&)&"
-")&)&)&)&)&)&)&)&)&)&)&)&)&)&)&"
-")&)&)&)&)&)&)&)&)&)&)&)&)&)&)&"
-")&)&)&)&)&)&)&)&)&)&)&)&)&)&)&"
-")&)&)&)&)&)&)&)&)&)&)&)&)&)&)&"
-")&)&)&)&)&)&)&)&)&)&)&)&)&)&)&"
-")&)&)&)&)&)&)&)&)&)&)&)&)&)&)&"
-")&)&)&)&)&)&)&)&)&)&)&)&)&)&)&"
-")&)&)&)&)&)&)&)&)&)&)&)&)&)&)&"
-")&)&)&)&)&)&)&)&)&)&)&)&)&)&)&"
-"t>t>t>t>t>t>t>t>t>t>t>t>t>t>t>"
-"t>t>t>t>t>t>t>t>t>t>t>t>t>t>t>"
-"t>t>t>t>t>t>t>t>t>t>t>t>t>t>t>"
-"t>t>t>t>t>t>t>t>t>t>t>t>t>t>t>"
-"t>t>t>t>t>t>t>t>t>t>t>t>t>t>t>"
-"t>t>t>t>t>t>t>t>t>t>t>t>t>t>t>"
-"t>t>t>t>t>t>t>t>t>t>t>t>t>t>t>"
-"t>t>t>t>t>t>t>t>t>t>t>t>t>t>t>"
-"t>t>t>t>t>t>t>t>t>t>t>t>t>t>t>"
-"t>t>t>t>t>t>t>t>t>t>t>t>t>t>t>"
-"t>t>t>t>t>t>t>t>t>t>t>t>t>t>t>"
-"t>t>t>t>t>t>t>t>t>t>t>t>t>t>t>"
-"t>t>t>t>t>t>t>t>t>t>t>t>t>t>t>"
-"t>t>t>t>t>t>t>t>t>t>t>t>t>t>t>"
-"t>t>t>t>t>t>t>t>t>t>t>t>t>t>t>"
-";g;g;g;g;g;g;g;g;g;g;g;g;g;g;g"
-";g;g;g;g;g;g;g;g;g;g;g;g;g;g;g"
-";g;g;g;g;g;g;g;g;g;g;g;g;g;g;g"
-";g;g;g;g;g;g;g;g;g;g;g;g;g;g;g"
-";g;g;g;g;g;g;g;g;g;g;g;g;g;g;g"
-";g;g;g;g;g;g;g;g;g;g;g;g;g;g;g"
-";g;g;g;g;g;g;g;g;g;g;g;g;g;g;g"
-";g;g;g;g;g;g;g;g;g;g;g;g;g;g;g"
-";g;g;g;g;g;g;g;g;g;g;g;g;g;g;g"
-";g;g;g;g;g;g;g;g;g;g;g;g;g;g;g"
-";g;g;g;g;g;g;g;g;g;g;g;g;g;g;g"
-";g;g;g;g;g;g;g;g;g;g;g;g;g;g;g"
-";g;g;g;g;g;g;g;g;g;g;g;g;g;g;g"
-";g;g;g;g;g;g;g;g;g;g;g;g;g;g;g"
-";g;g;g;g;g;g;g;g;g;g;g;g;g;g;g"
-"^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%"
-"^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%"
-"^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%"
-"^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%"
-"^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%"
-"^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%"
-"^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%"
-"^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%"
-"^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%"
-"^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%"
-"^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%"
-"^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%"
-"^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%"
-"^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%"
-"^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%"
-"363636363636363636363636363636"
-"363636363636363636363636363636"
-"363636363636363636363636363636"
-"363636363636363636363636363636"
-"363636363636363636363636363636"
-"363636363636363636363636363636"
-"363636363636363636363636363636"
-"363636363636363636363636363636"
-"363636363636363636363636363636"
-"363636363636363636363636363636"
-"363636363636363636363636363636"
-"363636363636363636363636363636"
-"363636363636363636363636363636"
-"363636363636363636363636363636"
-"363636363636363636363636363636"
-"/b/b/b/b/b/b/b/b/b/b/b/b/b/b/b"
-"/b/b/b/b/b/b/b/b/b/b/b/b/b/b/b"
-"/b/b/b/b/b/b/b/b/b/b/b/b/b/b/b"
-"/b/b/b/b/b/b/b/b/b/b/b/b/b/b/b"
-"/b/b/b/b/b/b/b/b/b/b/b/b/b/b/b"
-"/b/b/b/b/b/b/b/b/b/b/b/b/b/b/b"
-"/b/b/b/b/b/b/b/b/b/b/b/b/b/b/b"
-"/b/b/b/b/b/b/b/b/b/b/b/b/b/b/b"
-"/b/b/b/b/b/b/b/b/b/b/b/b/b/b/b"
-"/b/b/b/b/b/b/b/b/b/b/b/b/b/b/b"
-"/b/b/b/b/b/b/b/b/b/b/b/b/b/b/b"
-"/b/b/b/b/b/b/b/b/b/b/b/b/b/b/b"
-"/b/b/b/b/b/b/b/b/b/b/b/b/b/b/b"
-"/b/b/b/b/b/b/b/b/b/b/b/b/b/b/b"
-"/b/b/b/b/b/b/b/b/b/b/b/b/b/b/b"
-"+e+e+e+e+e+e+e+e+e+e+e+e+e+e+e"
-"+e+e+e+e+e+e+e+e+e+e+e+e+e+e+e"
-"+e+e+e+e+e+e+e+e+e+e+e+e+e+e+e"
-"+e+e+e+e+e+e+e+e+e+e+e+e+e+e+e"
-"+e+e+e+e+e+e+e+e+e+e+e+e+e+e+e"
-"+e+e+e+e+e+e+e+e+e+e+e+e+e+e+e"
-"+e+e+e+e+e+e+e+e+e+e+e+e+e+e+e"
-"+e+e+e+e+e+e+e+e+e+e+e+e+e+e+e"
-"+e+e+e+e+e+e+e+e+e+e+e+e+e+e+e"
-"+e+e+e+e+e+e+e+e+e+e+e+e+e+e+e"
-"+e+e+e+e+e+e+e+e+e+e+e+e+e+e+e"
-"+e+e+e+e+e+e+e+e+e+e+e+e+e+e+e"
-"+e+e+e+e+e+e+e+e+e+e+e+e+e+e+e"
-"+e+e+e+e+e+e+e+e+e+e+e+e+e+e+e"
-"+e+e+e+e+e+e+e+e+e+e+e+e+e+e+e"
-"#6#6#6#6#6#6#6#6#6#6#6#6#6#6#6"
-"#6#6#6#6#6#6#6#6#6#6#6#6#6#6#6"
-"#6#6#6#6#6#6#6#6#6#6#6#6#6#6#6"
-"#6#6#6#6#6#6#6#6#6#6#6#6#6#6#6"
-"#6#6#6#6#6#6#6#6#6#6#6#6#6#6#6"
-"#6#6#6#6#6#6#6#6#6#6#6#6#6#6#6"
-"#6#6#6#6#6#6#6#6#6#6#6#6#6#6#6"
-"#6#6#6#6#6#6#6#6#6#6#6#6#6#6#6"
-"#6#6#6#6#6#6#6#6#6#6#6#6#6#6#6"
-"#6#6#6#6#6#6#6#6#6#6#6#6#6#6#6"
-"#6#6#6#6#6#6#6#6#6#6#6#6#6#6#6"
-"#6#6#6#6#6#6#6#6#6#6#6#6#6#6#6"
-"#6#6#6#6#6#6#6#6#6#6#6#6#6#6#6"
-"#6#6#6#6#6#6#6#6#6#6#6#6#6#6#6"
-"#6#6#6#6#6#6#6#6#6#6#6#6#6#6#6"
-")r)r)r)r)r)r)r)r)r)r)r)r)r)r)r"
-")r)r)r)r)r)r)r)r)r)r)r)r)r)r)r"
-")r)r)r)r)r)r)r)r)r)r)r)r)r)r)r"
-")r)r)r)r)r)r)r)r)r)r)r)r)r)r)r"
-")r)r)r)r)r)r)r)r)r)r)r)r)r)r)r"
-")r)r)r)r)r)r)r)r)r)r)r)r)r)r)r"
-")r)r)r)r)r)r)r)r)r)r)r)r)r)r)r"
-")r)r)r)r)r)r)r)r)r)r)r)r)r)r)r"
-")r)r)r)r)r)r)r)r)r)r)r)r)r)r)r"
-")r)r)r)r)r)r)r)r)r)r)r)r)r)r)r"
-")r)r)r)r)r)r)r)r)r)r)r)r)r)r)r"
-")r)r)r)r)r)r)r)r)r)r)r)r)r)r)r"
-")r)r)r)r)r)r)r)r)r)r)r)r)r)r)r"
-")r)r)r)r)r)r)r)r)r)r)r)r)r)r)r"
-")r)r)r)r)r)r)r)r)r)r)r)r)r)r)r"
-")#)#)#)#)#)#)#)#)#)#)#)#)#)#)#"
-")#)#)#)#)#)#)#)#)#)#)#)#)#)#)#"
-")#)#)#)#)#)#)#)#)#)#)#)#)#)#)#"
-")#)#)#)#)#)#)#)#)#)#)#)#)#)#)#"
-")#)#)#)#)#)#)#)#)#)#)#)#)#)#)#"
-")#)#)#)#)#)#)#)#)#)#)#)#)#)#)#"
-")#)#)#)#)#)#)#)#)#)#)#)#)#)#)#"
-")#)#)#)#)#)#)#)#)#)#)#)#)#)#)#"
-")#)#)#)#)#)#)#)#)#)#)#)#)#)#)#"
-")#)#)#)#)#)#)#)#)#)#)#)#)#)#)#"
-")#)#)#)#)#)#)#)#)#)#)#)#)#)#)#"
-")#)#)#)#)#)#)#)#)#)#)#)#)#)#)#"
-")#)#)#)#)#)#)#)#)#)#)#)#)#)#)#"
-")#)#)#)#)#)#)#)#)#)#)#)#)#)#)#"
-")#)#)#)#)#)#)#)#)#)#)#)#)#)#)#"
-"*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'"
-"*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'"
-"*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'"
-"*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'"
-"*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'"
-"*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'"
-"*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'"
-"*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'"
-"*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'"
-"*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'"
-"*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'"
-"*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'"
-"*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'"
-"*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'"
-"*'*'*'*'*'*'*'*'*'*'*'*'*'*'*'"
-"q6q6q6q6q6q6q6q6q6q6q6q6q6q6q6"
-"q6q6q6q6q6q6q6q6q6q6q6q6q6q6q6"
-"q6q6q6q6q6q6q6q6q6q6q6q6q6q6q6"
-"q6q6q6q6q6q6q6q6q6q6q6q6q6q6q6"
-"q6q6q6q6q6q6q6q6q6q6q6q6q6q6q6"
-"q6q6q6q6q6q6q6q6q6q6q6q6q6q6q6"
-"q6q6q6q6q6q6q6q6q6q6q6q6q6q6q6"
-"q6q6q6q6q6q6q6q6q6q6q6q6q6q6q6"
-"q6q6q6q6q6q6q6q6q6q6q6q6q6q6q6"
-"q6q6q6q6q6q6q6q6q6q6q6q6q6q6q6"
-"q6q6q6q6q6q6q6q6q6q6q6q6q6q6q6"
-"q6q6q6q6q6q6q6q6q6q6q6q6q6q6q6"
-"q6q6q6q6q6q6q6q6q6q6q6q6q6q6q6"
-"q6q6q6q6q6q6q6q6q6q6q6q6q6q6q6"
-"q6q6q6q6q6q6q6q6q6q6q6q6q6q6q6"
-"9\9\9\9\9\9\9\9\9\9\9\9\9\9\9\"
-"9\9\9\9\9\9\9\9\9\9\9\9\9\9\9\"
-"9\9\9\9\9\9\9\9\9\9\9\9\9\9\9\"
-"9\9\9\9\9\9\9\9\9\9\9\9\9\9\9\"
-"9\9\9\9\9\9\9\9\9\9\9\9\9\9\9\"
-"9\9\9\9\9\9\9\9\9\9\9\9\9\9\9\"
-"9\9\9\9\9\9\9\9\9\9\9\9\9\9\9\"
-"9\9\9\9\9\9\9\9\9\9\9\9\9\9\9\"
-"9\9\9\9\9\9\9\9\9\9\9\9\9\9\9\"
-"9\9\9\9\9\9\9\9\9\9\9\9\9\9\9\"
-"9\9\9\9\9\9\9\9\9\9\9\9\9\9\9\"
-"9\9\9\9\9\9\9\9\9\9\9\9\9\9\9\"
-"9\9\9\9\9\9\9\9\9\9\9\9\9\9\9\"
-"9\9\9\9\9\9\9\9\9\9\9\9\9\9\9\"
-"9\9\9\9\9\9\9\9\9\9\9\9\9\9\9\"
-"vuvuvuvuvuvuvuvuvuvuvuvuvuvuvu"
-"vuvuvuvuvuvuvuvuvuvuvuvuvuvuvu"
-"vuvuvuvuvuvuvuvuvuvuvuvuvuvuvu"
-"vuvuvuvuvuvuvuvuvuvuvuvuvuvuvu"
-"vuvuvuvuvuvuvuvuvuvuvuvuvuvuvu"
-"vuvuvuvuvuvuvuvuvuvuvuvuvuvuvu"
-"vuvuvuvuvuvuvuvuvuvuvuvuvuvuvu"
-"vuvuvuvuvuvuvuvuvuvuvuvuvuvuvu"
-"vuvuvuvuvuvuvuvuvuvuvuvuvuvuvu"
-"vuvuvuvuvuvuvuvuvuvuvuvuvuvuvu"
-"vuvuvuvuvuvuvuvuvuvuvuvuvuvuvu"
-"vuvuvuvuvuvuvuvuvuvuvuvuvuvuvu"
-"vuvuvuvuvuvuvuvuvuvuvuvuvuvuvu"
-"vuvuvuvuvuvuvuvuvuvuvuvuvuvuvu"
-"vuvuvuvuvuvuvuvuvuvuvuvuvuvuvu"
-"/c/c/c/c/c/c/c/c/c/c/c/c/c/c/c"
-"/c/c/c/c/c/c/c/c/c/c/c/c/c/c/c"
-"/c/c/c/c/c/c/c/c/c/c/c/c/c/c/c"
-"/c/c/c/c/c/c/c/c/c/c/c/c/c/c/c"
-"/c/c/c/c/c/c/c/c/c/c/c/c/c/c/c"
-"/c/c/c/c/c/c/c/c/c/c/c/c/c/c/c"
-"/c/c/c/c/c/c/c/c/c/c/c/c/c/c/c"
-"/c/c/c/c/c/c/c/c/c/c/c/c/c/c/c"
-"/c/c/c/c/c/c/c/c/c/c/c/c/c/c/c"
-"/c/c/c/c/c/c/c/c/c/c/c/c/c/c/c"
-"/c/c/c/c/c/c/c/c/c/c/c/c/c/c/c"
-"/c/c/c/c/c/c/c/c/c/c/c/c/c/c/c"
-"/c/c/c/c/c/c/c/c/c/c/c/c/c/c/c"
-"/c/c/c/c/c/c/c/c/c/c/c/c/c/c/c"
-"/c/c/c/c/c/c/c/c/c/c/c/c/c/c/c"
-"414141414141414141414141414141"
-"414141414141414141414141414141"
-"414141414141414141414141414141"
-"414141414141414141414141414141"
-"414141414141414141414141414141"
-"414141414141414141414141414141"
-"414141414141414141414141414141"
-"414141414141414141414141414141"
-"414141414141414141414141414141"
-"414141414141414141414141414141"
-"414141414141414141414141414141"
-"414141414141414141414141414141"
-"414141414141414141414141414141"
-"414141414141414141414141414141"
-"414141414141414141414141414141"
-"x"x"x"x"x"x"x"x"x"x"x"x"x"x"x""
-"x"x"x"x"x"x"x"x"x"x"x"x"x"x"x""
-"x"x"x"x"x"x"x"x"x"x"x"x"x"x"x""
-"x"x"x"x"x"x"x"x"x"x"x"x"x"x"x""
-"x"x"x"x"x"x"x"x"x"x"x"x"x"x"x""
-"x"x"x"x"x"x"x"x"x"x"x"x"x"x"x""
-"x"x"x"x"x"x"x"x"x"x"x"x"x"x"x""
-"x"x"x"x"x"x"x"x"x"x"x"x"x"x"x""
-"x"x"x"x"x"x"x"x"x"x"x"x"x"x"x""
-"x"x"x"x"x"x"x"x"x"x"x"x"x"x"x""
-"x"x"x"x"x"x"x"x"x"x"x"x"x"x"x""
-"x"x"x"x"x"x"x"x"x"x"x"x"x"x"x""
-"x"x"x"x"x"x"x"x"x"x"x"x"x"x"x""
-"x"x"x"x"x"x"x"x"x"x"x"x"x"x"x""
-"x"x"x"x"x"x"x"x"x"x"x"x"x"x"x""
+"wmwmwmwmwmwmwmwmwmwmwmwmwmwmwm"
+"wmwmwmwmwmwmwmwmwmwmwmwmwmwmwm"
+"wmwmwmwmwmwmwmwmwmwmwmwmwmwmwm"
+"wmwmwmwmwmwmwmwmwmwmwmwmwmwmwm"
+"wmwmwmwmwmwmwmwmwmwmwmwmwmwmwm"
+"wmwmwmwmwmwmwmwmwmwmwmwmwmwmwm"
+"wmwmwmwmwmwmwmwmwmwmwmwmwmwmwm"
+"wmwmwmwmwmwmwmwmwmwmwmwmwmwmwm"
+"wmwmwmwmwmwmwmwmwmwmwmwmwmwmwm"
+"wmwmwmwmwmwmwmwmwmwmwmwmwmwmwm"
+"wmwmwmwmwmwmwmwmwmwmwmwmwmwmwm"
+"wmwmwmwmwmwmwmwmwmwmwmwmwmwmwm"
+"wmwmwmwmwmwmwmwmwmwmwmwmwmwmwm"
+"wmwmwmwmwmwmwmwmwmwmwmwmwmwmwm"
+"wmwmwmwmwmwmwmwmwmwmwmwmwmwmwm"
+"7v7v7v7v7v7v7v7v7v7v7v7v7v7v7v"
+"7v7v7v7v7v7v7v7v7v7v7v7v7v7v7v"
+"7v7v7v7v7v7v7v7v7v7v7v7v7v7v7v"
+"7v7v7v7v7v7v7v7v7v7v7v7v7v7v7v"
+"7v7v7v7v7v7v7v7v7v7v7v7v7v7v7v"
+"7v7v7v7v7v7v7v7v7v7v7v7v7v7v7v"
+"7v7v7v7v7v7v7v7v7v7v7v7v7v7v7v"
+"7v7v7v7v7v7v7v7v7v7v7v7v7v7v7v"
+"7v7v7v7v7v7v7v7v7v7v7v7v7v7v7v"
+"7v7v7v7v7v7v7v7v7v7v7v7v7v7v7v"
+"7v7v7v7v7v7v7v7v7v7v7v7v7v7v7v"
+"7v7v7v7v7v7v7v7v7v7v7v7v7v7v7v"
+"7v7v7v7v7v7v7v7v7v7v7v7v7v7v7v"
+"7v7v7v7v7v7v7v7v7v7v7v7v7v7v7v"
+"7v7v7v7v7v7v7v7v7v7v7v7v7v7v7v"
+""t"t"t"t"t"t"t"t"t"t"t"t"t"t"t"
+""t"t"t"t"t"t"t"t"t"t"t"t"t"t"t"
+""t"t"t"t"t"t"t"t"t"t"t"t"t"t"t"
+""t"t"t"t"t"t"t"t"t"t"t"t"t"t"t"
+""t"t"t"t"t"t"t"t"t"t"t"t"t"t"t"
+""t"t"t"t"t"t"t"t"t"t"t"t"t"t"t"
+""t"t"t"t"t"t"t"t"t"t"t"t"t"t"t"
+""t"t"t"t"t"t"t"t"t"t"t"t"t"t"t"
+""t"t"t"t"t"t"t"t"t"t"t"t"t"t"t"
+""t"t"t"t"t"t"t"t"t"t"t"t"t"t"t"
+""t"t"t"t"t"t"t"t"t"t"t"t"t"t"t"
+""t"t"t"t"t"t"t"t"t"t"t"t"t"t"t"
+""t"t"t"t"t"t"t"t"t"t"t"t"t"t"t"
+""t"t"t"t"t"t"t"t"t"t"t"t"t"t"t"
+""t"t"t"t"t"t"t"t"t"t"t"t"t"t"t"
+"dgdgdgdgdgdgdgdgdgdgdgdgdgdgdg"
+"dgdgdgdgdgdgdgdgdgdgdgdgdgdgdg"
+"dgdgdgdgdgdgdgdgdgdgdgdgdgdgdg"
+"dgdgdgdgdgdgdgdgdgdgdgdgdgdgdg"
+"dgdgdgdgdgdgdgdgdgdgdgdgdgdgdg"
+"dgdgdgdgdgdgdgdgdgdgdgdgdgdgdg"
+"dgdgdgdgdgdgdgdgdgdgdgdgdgdgdg"
+"dgdgdgdgdgdgdgdgdgdgdgdgdgdgdg"
+"dgdgdgdgdgdgdgdgdgdgdgdgdgdgdg"
+"dgdgdgdgdgdgdgdgdgdgdgdgdgdgdg"
+"dgdgdgdgdgdgdgdgdgdgdgdgdgdgdg"
+"dgdgdgdgdgdgdgdgdgdgdgdgdgdgdg"
+"dgdgdgdgdgdgdgdgdgdgdgdgdgdgdg"
+"dgdgdgdgdgdgdgdgdgdgdgdgdgdgdg"
+"dgdgdgdgdgdgdgdgdgdgdgdgdgdgdg"
+"@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\"
+"@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\"
+"@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\"
+"@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\"
+"@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\"
+"@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\"
+"@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\"
+"@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\"
+"@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\"
+"@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\"
+"@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\"
+"@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\"
+"@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\"
+"@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\"
+"@\@\@\@\@\@\@\@\@\@\@\@\@\@\@\"
+":c:c:c:c:c:c:c:c:c:c:c:c:c:c:c"
+":c:c:c:c:c:c:c:c:c:c:c:c:c:c:c"
+":c:c:c:c:c:c:c:c:c:c:c:c:c:c:c"
+":c:c:c:c:c:c:c:c:c:c:c:c:c:c:c"
+":c:c:c:c:c:c:c:c:c:c:c:c:c:c:c"
+":c:c:c:c:c:c:c:c:c:c:c:c:c:c:c"
+":c:c:c:c:c:c:c:c:c:c:c:c:c:c:c"
+":c:c:c:c:c:c:c:c:c:c:c:c:c:c:c"
+":c:c:c:c:c:c:c:c:c:c:c:c:c:c:c"
+":c:c:c:c:c:c:c:c:c:c:c:c:c:c:c"
+":c:c:c:c:c:c:c:c:c:c:c:c:c:c:c"
+":c:c:c:c:c:c:c:c:c:c:c:c:c:c:c"
+":c:c:c:c:c:c:c:c:c:c:c:c:c:c:c"
+":c:c:c:c:c:c:c:c:c:c:c:c:c:c:c"
+":c:c:c:c:c:c:c:c:c:c:c:c:c:c:c"
+"i$i$i$i$i$i$i$i$i$i$i$i$i$i$i$"
+"i$i$i$i$i$i$i$i$i$i$i$i$i$i$i$"
+"i$i$i$i$i$i$i$i$i$i$i$i$i$i$i$"
+"i$i$i$i$i$i$i$i$i$i$i$i$i$i$i$"
+"i$i$i$i$i$i$i$i$i$i$i$i$i$i$i$"
+"i$i$i$i$i$i$i$i$i$i$i$i$i$i$i$"
+"i$i$i$i$i$i$i$i$i$i$i$i$i$i$i$"
+"i$i$i$i$i$i$i$i$i$i$i$i$i$i$i$"
+"i$i$i$i$i$i$i$i$i$i$i$i$i$i$i$"
+"i$i$i$i$i$i$i$i$i$i$i$i$i$i$i$"
+"i$i$i$i$i$i$i$i$i$i$i$i$i$i$i$"
+"i$i$i$i$i$i$i$i$i$i$i$i$i$i$i$"
+"i$i$i$i$i$i$i$i$i$i$i$i$i$i$i$"
+"i$i$i$i$i$i$i$i$i$i$i$i$i$i$i$"
+"i$i$i$i$i$i$i$i$i$i$i$i$i$i$i$"
+",u,u,u,u,u,u,u,u,u,u,u,u,u,u,u"
+",u,u,u,u,u,u,u,u,u,u,u,u,u,u,u"
+",u,u,u,u,u,u,u,u,u,u,u,u,u,u,u"
+",u,u,u,u,u,u,u,u,u,u,u,u,u,u,u"
+",u,u,u,u,u,u,u,u,u,u,u,u,u,u,u"
+",u,u,u,u,u,u,u,u,u,u,u,u,u,u,u"
+",u,u,u,u,u,u,u,u,u,u,u,u,u,u,u"
+",u,u,u,u,u,u,u,u,u,u,u,u,u,u,u"
+",u,u,u,u,u,u,u,u,u,u,u,u,u,u,u"
+",u,u,u,u,u,u,u,u,u,u,u,u,u,u,u"
+",u,u,u,u,u,u,u,u,u,u,u,u,u,u,u"
+",u,u,u,u,u,u,u,u,u,u,u,u,u,u,u"
+",u,u,u,u,u,u,u,u,u,u,u,u,u,u,u"
+",u,u,u,u,u,u,u,u,u,u,u,u,u,u,u"
+",u,u,u,u,u,u,u,u,u,u,u,u,u,u,u"
+"=8=8=8=8=8=8=8=8=8=8=8=8=8=8=8"
+"=8=8=8=8=8=8=8=8=8=8=8=8=8=8=8"
+"=8=8=8=8=8=8=8=8=8=8=8=8=8=8=8"
+"=8=8=8=8=8=8=8=8=8=8=8=8=8=8=8"
+"=8=8=8=8=8=8=8=8=8=8=8=8=8=8=8"
+"=8=8=8=8=8=8=8=8=8=8=8=8=8=8=8"
+"=8=8=8=8=8=8=8=8=8=8=8=8=8=8=8"
+"=8=8=8=8=8=8=8=8=8=8=8=8=8=8=8"
+"=8=8=8=8=8=8=8=8=8=8=8=8=8=8=8"
+"=8=8=8=8=8=8=8=8=8=8=8=8=8=8=8"
+"=8=8=8=8=8=8=8=8=8=8=8=8=8=8=8"
+"=8=8=8=8=8=8=8=8=8=8=8=8=8=8=8"
+"=8=8=8=8=8=8=8=8=8=8=8=8=8=8=8"
+"=8=8=8=8=8=8=8=8=8=8=8=8=8=8=8"
+"=8=8=8=8=8=8=8=8=8=8=8=8=8=8=8"
+"xpxpxpxpxpxpxpxpxpxpxpxpxpxpxp"
+"xpxpxpxpxpxpxpxpxpxpxpxpxpxpxp"
+"xpxpxpxpxpxpxpxpxpxpxpxpxpxpxp"
+"xpxpxpxpxpxpxpxpxpxpxpxpxpxpxp"
+"xpxpxpxpxpxpxpxpxpxpxpxpxpxpxp"
+"xpxpxpxpxpxpxpxpxpxpxpxpxpxpxp"
+"xpxpxpxpxpxpxpxpxpxpxpxpxpxpxp"
+"xpxpxpxpxpxpxpxpxpxpxpxpxpxpxp"
+"xpxpxpxpxpxpxpxpxpxpxpxpxpxpxp"
+"xpxpxpxpxpxpxpxpxpxpxpxpxpxpxp"
+"xpxpxpxpxpxpxpxpxpxpxpxpxpxpxp"
+"xpxpxpxpxpxpxpxpxpxpxpxpxpxpxp"
+"xpxpxpxpxpxpxpxpxpxpxpxpxpxpxp"
+"xpxpxpxpxpxpxpxpxpxpxpxpxpxpxp"
+"xpxpxpxpxpxpxpxpxpxpxpxpxpxpxp"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"xyxyxyxyxyxyxyxyxyxyxyxyxyxyxy"
+"xyxyxyxyxyxyxyxyxyxyxyxyxyxyxy"
+"xyxyxyxyxyxyxyxyxyxyxyxyxyxyxy"
+"xyxyxyxyxyxyxyxyxyxyxyxyxyxyxy"
+"xyxyxyxyxyxyxyxyxyxyxyxyxyxyxy"
+"xyxyxyxyxyxyxyxyxyxyxyxyxyxyxy"
+"xyxyxyxyxyxyxyxyxyxyxyxyxyxyxy"
+"xyxyxyxyxyxyxyxyxyxyxyxyxyxyxy"
+"xyxyxyxyxyxyxyxyxyxyxyxyxyxyxy"
+"xyxyxyxyxyxyxyxyxyxyxyxyxyxyxy"
+"xyxyxyxyxyxyxyxyxyxyxyxyxyxyxy"
+"xyxyxyxyxyxyxyxyxyxyxyxyxyxyxy"
+"xyxyxyxyxyxyxyxyxyxyxyxyxyxyxy"
+"xyxyxyxyxyxyxyxyxyxyxyxyxyxyxy"
+"xyxyxyxyxyxyxyxyxyxyxyxyxyxyxy"
+"0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a"
+"0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a"
+"0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a"
+"0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a"
+"0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a"
+"0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a"
+"0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a"
+"0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a"
+"0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a"
+"0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a"
+"0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a"
+"0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a"
+"0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a"
+"0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a"
+"0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a"
+"\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a"
+"\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a"
+"\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a"
+"\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a"
+"\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a"
+"\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a"
+"\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a"
+"\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a"
+"\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a"
+"\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a"
+"\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a"
+"\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a"
+"\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a"
+"\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a"
+"\a\a\a\a\a\a\a\a\a\a\a\a\a\a\a"
+"`/`/`/`/`/`/`/`/`/`/`/`/`/`/`/"
+"`/`/`/`/`/`/`/`/`/`/`/`/`/`/`/"
+"`/`/`/`/`/`/`/`/`/`/`/`/`/`/`/"
+"`/`/`/`/`/`/`/`/`/`/`/`/`/`/`/"
+"`/`/`/`/`/`/`/`/`/`/`/`/`/`/`/"
+"`/`/`/`/`/`/`/`/`/`/`/`/`/`/`/"
+"`/`/`/`/`/`/`/`/`/`/`/`/`/`/`/"
+"`/`/`/`/`/`/`/`/`/`/`/`/`/`/`/"
+"`/`/`/`/`/`/`/`/`/`/`/`/`/`/`/"
+"`/`/`/`/`/`/`/`/`/`/`/`/`/`/`/"
+"`/`/`/`/`/`/`/`/`/`/`/`/`/`/`/"
+"`/`/`/`/`/`/`/`/`/`/`/`/`/`/`/"
+"`/`/`/`/`/`/`/`/`/`/`/`/`/`/`/"
+"`/`/`/`/`/`/`/`/`/`/`/`/`/`/`/"
+"`/`/`/`/`/`/`/`/`/`/`/`/`/`/`/"
+"w(w(w(w(w(w(w(w(w(w(w(w(w(w(w("
+"w(w(w(w(w(w(w(w(w(w(w(w(w(w(w("
+"w(w(w(w(w(w(w(w(w(w(w(w(w(w(w("
+"w(w(w(w(w(w(w(w(w(w(w(w(w(w(w("
+"w(w(w(w(w(w(w(w(w(w(w(w(w(w(w("
+"w(w(w(w(w(w(w(w(w(w(w(w(w(w(w("
+"w(w(w(w(w(w(w(w(w(w(w(w(w(w(w("
+"w(w(w(w(w(w(w(w(w(w(w(w(w(w(w("
+"w(w(w(w(w(w(w(w(w(w(w(w(w(w(w("
+"w(w(w(w(w(w(w(w(w(w(w(w(w(w(w("
+"w(w(w(w(w(w(w(w(w(w(w(w(w(w(w("
+"w(w(w(w(w(w(w(w(w(w(w(w(w(w(w("
+"w(w(w(w(w(w(w(w(w(w(w(w(w(w(w("
+"w(w(w(w(w(w(w(w(w(w(w(w(w(w(w("
+"w(w(w(w(w(w(w(w(w(w(w(w(w(w(w("
+"&[&[&[&[&[&[&[&[&[&[&[&[&[&[&["
+"&[&[&[&[&[&[&[&[&[&[&[&[&[&[&["
+"&[&[&[&[&[&[&[&[&[&[&[&[&[&[&["
+"&[&[&[&[&[&[&[&[&[&[&[&[&[&[&["
+"&[&[&[&[&[&[&[&[&[&[&[&[&[&[&["
+"&[&[&[&[&[&[&[&[&[&[&[&[&[&[&["
+"&[&[&[&[&[&[&[&[&[&[&[&[&[&[&["
+"&[&[&[&[&[&[&[&[&[&[&[&[&[&[&["
+"&[&[&[&[&[&[&[&[&[&[&[&[&[&[&["
+"&[&[&[&[&[&[&[&[&[&[&[&[&[&[&["
+"&[&[&[&[&[&[&[&[&[&[&[&[&[&[&["
+"&[&[&[&[&[&[&[&[&[&[&[&[&[&[&["
+"&[&[&[&[&[&[&[&[&[&[&[&[&[&[&["
+"&[&[&[&[&[&[&[&[&[&[&[&[&[&[&["
+"&[&[&[&[&[&[&[&[&[&[&[&[&[&[&["
 ".............."
 "......DDDDDDDDDDDDDDDD........"
 "......DDDDDDDDDDDDDDDDDD......"
@@ -847,126 +847,126 @@ XPM
 "......DDDD...................."
 ".............."
 ".............."
-"k}k}k}k}k}k}k}k}k}k}k}k}k}k}k}"
-"k}k}k}k}k}k}k}k}k}k}k}k}k}k}k}"
-"k}k}k}k}k}k}k}k}k}k}k}k}k}k}k}"
-"k}k}k}k}k}k}k}k}k}k}k}k}k}k}k}"
-"k}k}k}k}k}k}k}k}k}k}k}k}k}k}k}"
-"k}k}k}k}k}k}k}k}k}k}k}k}k}k}k}"
-"k}k}k}k}k}k}k}k}k}k}k}k}k}k}k}"
-"k}k}k}k}k}k}k}k}k}k}k}k}k}k}k}"
-"k}k}k}k}k}k}k}k}k}k}k}k}k}k}k}"
-"k}k}k}k}k}k}k}k}k}k}k}k}k}k}k}"
-"k}k}k}k}k}k}k}k}k}k}k}k}k}k}k}"
-"k}k}k}k}k}k}k}k}k}k}k}k}k}k}k}"
-"k}k}k}k}k}k}k}k}k}k}k}k}k}k}k}"
-"k}k}k}k}k}k}k}k}k}k}k}k}k}k}k}"
-"k}k}k}k}k}k}k}k}k}k}k}k}k}k}k}"
-"3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d"
-"3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d"
-"3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d"
-"3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d"
-"3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d"
-"3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d"
-"3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d"
-"3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d"
-"3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d"
-"3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d"
-"3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d"
-"3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d"
-"3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d"
-"3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d"
-"3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d"
-"ogogogogogogogogogogogogogogog"
-"ogogogogogogogogogogogogogogog"
-"ogogogogogogogogogogogogogogog"
-"ogogogogogogogogogogogogogogog"
-"ogogogogogogogogogogogogogogog"
-"ogogogogogogogogogogogogogogog"
-"ogogogogogogogogogogogogogogog"
-"ogogogogogogogogogogogogogogog"
-"ogogogogogogogogogogogogogogog"
-"ogogogogogogogogogogogogogogog"
-"ogogogogogogogogogogogogogogog"
-"ogogogogogogogogogogogogogogog"
-"ogogogogogogogogogogogogogogog"
-"ogogogogogogogogogogogogogogog"
-"ogogogogogogogogogogogogogogog"
-"?+?+?+?+?+?+?+?+?+?+?+?+?+?+?+"
-"?+?+?+?+?+?+?+?+?+?+?+?+?+?+?+"
-"?+?+?+?+?+?+?+?+?+?+?+?+?+?+?+"
-"?+?+?+?+?+?+?+?+?+?+?+?+?+?+?+"
-"?+?+?+?+?+?+?+?+?+?+?+?+?+?+?+"
-"?+?+?+?+?+?+?+?+?+?+?+?+?+?+?+"
-"?+?+?+?+?+?+?+?+?+?+?+?+?+?+?+"
-"?+?+?+?+?+?+?+?+?+?+?+?+?+?+?+"
-"?+?+?+?+?+?+?+?+?+?+?+?+?+?+?+"
-"?+?+?+?+?+?+?+?+?+?+?+?+?+?+?+"
-"?+?+?+?+?+?+?+?+?+?+?+?+?+?+?+"
-"?+?+?+?+?+?+?+?+?+?+?+?+?+?+?+"
-"?+?+?+?+?+?+?+?+?+?+?+?+?+?+?+"
-"?+?+?+?+?+?+?+?+?+?+?+?+?+?+?+"
-"?+?+?+?+?+?+?+?+?+?+?+?+?+?+?+"
-"#{#{#{#{#{#{#{#{#{#{#{#{#{#{#{"
-"#{#{#{#{#{#{#{#{#{#{#{#{#{#{#{"
-"#{#{#{#{#{#{#{#{#{#{#{#{#{#{#{"
-"#{#{#{#{#{#{#{#{#{#{#{#{#{#{#{"
-"#{#{#{#{#{#{#{#{#{#{#{#{#{#{#{"
-"#{#{#{#{#{#{#{#{#{#{#{#{#{#{#{"
-"#{#{#{#{#{#{#{#{#{#{#{#{#{#{#{"
-"#{#{#{#{#{#{#{#{#{#{#{#{#{#{#{"
-"#{#{#{#{#{#{#{#{#{#{#{#{#{#{#{"
-"#{#{#{#{#{#{#{#{#{#{#{#{#{#{#{"
-"#{#{#{#{#{#{#{#{#{#{#{#{#{#{#{"
-"#{#{#{#{#{#{#{#{#{#{#{#{#{#{#{"
-"#{#{#{#{#{#{#{#{#{#{#{#{#{#{#{"
-"#{#{#{#{#{#{#{#{#{#{#{#{#{#{#{"
-"#{#{#{#{#{#{#{#{#{#{#{#{#{#{#{"
-"a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7"
-"a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7"
-"a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7"
-"a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7"
-"a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7"
-"a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7"
-"a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7"
-"a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7"
-"a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7"
-"a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7"
-"a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7"
-"a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7"
-"a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7"
-"a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7"
-"a7a7a7a7a7a7a7a7a7a7a7a7a7a7a7"
-"u3u3u3u3u3u3u3u3u3u3u3u3u3u3u3"
-"u3u3u3u3u3u3u3u3u3u3u3u3u3u3u3"
-"u3u3u3u3u3u3u3u3u3u3u3u3u3u3u3"
-"u3u3u3u3u3u3u3u3u3u3u3u3u3u3u3"
-"u3u3u3u3u3u3u3u3u3u3u3u3u3u3u3"
-"u3u3u3u3u3u3u3u3u3u3u3u3u3u3u3"
-"u3u3u3u3u3u3u3u3u3u3u3u3u3u3u3"
-"u3u3u3u3u3u3u3u3u3u3u3u3u3u3u3"
-"u3u3u3u3u3u3u3u3u3u3u3u3u3u3u3"
-"u3u3u3u3u3u3u3u3u3u3u3u3u3u3u3"
-"u3u3u3u3u3u3u3u3u3u3u3u3u3u3u3"
-"u3u3u3u3u3u3u3u3u3u3u3u3u3u3u3"
-"u3u3u3u3u3u3u3u3u3u3u3u3u3u3u3"
-"u3u3u3u3u3u3u3u3u3u3u3u3u3u3u3"
-"u3u3u3u3u3u3u3u3u3u3u3u3u3u3u3"
-""a"a"a"a"a"a"a"a"a"a"a"a"a"a"a"
-""a"a"a"a"a"a"a"a"a"a"a"a"a"a"a"
-""a"a"a"a"a"a"a"a"a"a"a"a"a"a"a"
-""a"a"a"a"a"a"a"a"a"a"a"a"a"a"a"
-""a"a"a"a"a"a"a"a"a"a"a"a"a"a"a"
-""a"a"a"a"a"a"a"a"a"a"a"a"a"a"a"
-""a"a"a"a"a"a"a"a"a"a"a"a"a"a"a"
-""a"a"a"a"a"a"a"a"a"a"a"a"a"a"a"
-""a"a"a"a"a"a"a"a"a"a"a"a"a"a"a"
-""a"a"a"a"a"a"a"a"a"a"a"a"a"a"a"
-""a"a"a"a"a"a"a"a"a"a"a"a"a"a"a"
-""a"a"a"a"a"a"a"a"a"a"a"a"a"a"a"
-""a"a"a"a"a"a"a"a"a"a"a"a"a"a"a"
-""a"a"a"a"a"a"a"a"a"a"a"a"a"a"a"
-""a"a"a"a"a"a"a"a"a"a"a"a"a"a"a"
+"qbqbqbqbqbqbqbqbqbqbqbqbqbqbqb"
+"qbqbqbqbqbqbqbqbqbqbqbqbqbqbqb"
+"qbqbqbqbqbqbqbqbqbqbqbqbqbqbqb"
+"qbqbqbqbqbqbqbqbqbqbqbqbqbqbqb"
+"qbqbqbqbqbqbqbqbqbqbqbqbqbqbqb"
+"qbqbqbqbqbqbqbqbqbqbqbqbqbqbqb"
+"qbqbqbqbqbqbqbqbqbqbqbqbqbqbqb"
+"qbqbqbqbqbqbqbqbqbqbqbqbqbqbqb"
+"qbqbqbqbqbqbqbqbqbqbqbqbqbqbqb"
+"qbqbqbqbqbqbqbqbqbqbqbqbqbqbqb"
+"qbqbqbqbqbqbqbqbqbqbqbqbqbqbqb"
+"qbqbqbqbqbqbqbqbqbqbqbqbqbqbqb"
+"qbqbqbqbqbqbqbqbqbqbqbqbqbqbqb"
+"qbqbqbqbqbqbqbqbqbqbqbqbqbqbqb"
+"qbqbqbqbqbqbqbqbqbqbqbqbqbqbqb"
+"wqwqwqwqwqwqwqwqwqwqwqwqwqwqwq"
+"wqwqwqwqwqwqwqwqwqwqwqwqwqwqwq"
+"wqwqwqwqwqwqwqwqwqwqwqwqwqwqwq"
+"wqwqwqwqwqwqwqwqwqwqwqwqwqwqwq"
+"wqwqwqwqwqwqwqwqwqwqwqwqwqwqwq"
+"wqwqwqwqwqwqwqwqwqwqwqwqwqwqwq"
+"wqwqwqwqwqwqwqwqwqwqwqwqwqwqwq"
+"wqwqwqwqwqwqwqwqwqwqwqwqwqwqwq"
+"wqwqwqwqwqwqwqwqwqwqwqwqwqwqwq"
+"wqwqwqwqwqwqwqwqwqwqwqwqwqwqwq"
+"wqwqwqwqwqwqwqwqwqwqwqwqwqwqwq"
+"wqwqwqwqwqwqwqwqwqwqwqwqwqwqwq"
+"wqwqwqwqwqwqwqwqwqwqwqwqwqwqwq"
+"wqwqwqwqwqwqwqwqwqwqwqwqwqwqwq"
+"wqwqwqwqwqwqwqwqwqwqwqwqwqwqwq"
+"8&8&8&8&8&8&8&8&8&8&8&8&8&8&8&"
+"8&8&8&8&8&8&8&8&8&8&8&8&8&8&8&"
+"8&8&8&8&8&8&8&8&8&8&8&8&8&8&8&"
+"8&8&8&8&8&8&8&8&8&8&8&8&8&8&8&"
+"8&8&8&8&8&8&8&8&8&8&8&8&8&8&8&"
+"8&8&8&8&8&8&8&8&8&8&8&8&8&8&8&"
+"8&8&8&8&8&8&8&8&8&8&8&8&8&8&8&"
+"8&8&8&8&8&8&8&8&8&8&8&8&8&8&8&"
+"8&8&8&8&8&8&8&8&8&8&8&8&8&8&8&"
+"8&8&8&8&8&8&8&8&8&8&8&8&8&8&8&"
+"8&8&8&8&8&8&8&8&8&8&8&8&8&8&8&"
+"8&8&8&8&8&8&8&8&8&8&8&8&8&8&8&"
+"8&8&8&8&8&8&8&8&8&8&8&8&8&8&8&"
+"8&8&8&8&8&8&8&8&8&8&8&8&8&8&8&"
+"8&8&8&8&8&8&8&8&8&8&8&8&8&8&8&"
+"t-t-t-t-t-t-t-t-t-t-t-t-t-t-t-"
+"t-t-t-t-t-t-t-t-t-t-t-t-t-t-t-"
+"t-t-t-t-t-t-t-t-t-t-t-t-t-t-t-"
+"t-t-t-t-t-t-t-t-t-t-t-t-t-t-t-"
+"t-t-t-t-t-t-t-t-t-t-t-t-t-t-t-"
+"t-t-t-t-t-t-t-t-t-t-t-t-t-t-t-"
+"t-t-t-t-t-t-t-t-t-t-t-t-t-t-t-"
+"t-t-t-t-t-t-t-t-t-t-t-t-t-t-t-"
+"t-t-t-t-t-t-t-t-t-t-t-t-t-t-t-"
+"t-t-t-t-t-t-t-t-t-t-t-t-t-t-t-"
+"t-t-t-t-t-t-t-t-t-t-t-t-t-t-t-"
+"t-t-t-t-t-t-t-t-t-t-t-t-t-t-t-"
+"t-t-t-t-t-t-t-t-t-t-t-t-t-t-t-"
+"t-t-t-t-t-t-t-t-t-t-t-t-t-t-t-"
+"t-t-t-t-t-t-t-t-t-t-t-t-t-t-t-"
+"9=9=9=9=9=9=9=9=9=9=9=9=9=9=9="
+"9=9=9=9=9=9=9=9=9=9=9=9=9=9=9="
+"9=9=9=9=9=9=9=9=9=9=9=9=9=9=9="
+"9=9=9=9=9=9=9=9=9=9=9=9=9=9=9="
+"9=9=9=9=9=9=9=9=9=9=9=9=9=9=9="
+"9=9=9=9=9=9=9=9=9=9=9=9=9=9=9="
+"9=9=9=9=9=9=9=9=9=9=9=9=9=9=9="
+"9=9=9=9=9=9=9=9=9=9=9=9=9=9=9="
+"9=9=9=9=9=9=9=9=9=9=9=9=9=9=9="
+"9=9=9=9=9=9=9=9=9=9=9=9=9=9=9="
+"9=9=9=9=9=9=9=9=9=9=9=9=9=9=9="
+"9=9=9=9=9=9=9=9=9=9=9=9=9=9=9="
+"9=9=9=9=9=9=9=9=9=9=9=9=9=9=9="
+"9=9=9=9=9=9=9=9=9=9=9=9=9=9=9="
+"9=9=9=9=9=9=9=9=9=9=9=9=9=9=9="
+"|>|>|>|>|>|>|>|>|>|>|>|>|>|>|>"
+"|>|>|>|>|>|>|>|>|>|>|>|>|>|>|>"
+"|>|>|>|>|>|>|>|>|>|>|>|>|>|>|>"
+"|>|>|>|>|>|>|>|>|>|>|>|>|>|>|>"
+"|>|>|>|>|>|>|>|>|>|>|>|>|>|>|>"
+"|>|>|>|>|>|>|>|>|>|>|>|>|>|>|>"
+"|>|>|>|>|>|>|>|>|>|>|>|>|>|>|>"
+"|>|>|>|>|>|>|>|>|>|>|>|>|>|>|>"
+"|>|>|>|>|>|>|>|>|>|>|>|>|>|>|>"
+"|>|>|>|>|>|>|>|>|>|>|>|>|>|>|>"
+"|>|>|>|>|>|>|>|>|>|>|>|>|>|>|>"
+"|>|>|>|>|>|>|>|>|>|>|>|>|>|>|>"
+"|>|>|>|>|>|>|>|>|>|>|>|>|>|>|>"
+"|>|>|>|>|>|>|>|>|>|>|>|>|>|>|>"
+"|>|>|>|>|>|>|>|>|>|>|>|>|>|>|>"
+"pupupupupupupupupupupupupupupu"
+"pupupupupupupupupupupupupupupu"
+"pupupupupupupupupupupupupupupu"
+"pupupupupupupupupupupupupupupu"
+"pupupupupupupupupupupupupupupu"
+"pupupupupupupupupupupupupupupu"
+"pupupupupupupupupupupupupupupu"
+"pupupupupupupupupupupupupupupu"
+"pupupupupupupupupupupupupupupu"
+"pupupupupupupupupupupupupupupu"
+"pupupupupupupupupupupupupupupu"
+"pupupupupupupupupupupupupupupu"
+"pupupupupupupupupupupupupupupu"
+"pupupupupupupupupupupupupupupu"
+"pupupupupupupupupupupupupupupu"
+""d"d"d"d"d"d"d"d"d"d"d"d"d"d"d"
+""d"d"d"d"d"d"d"d"d"d"d"d"d"d"d"
+""d"d"d"d"d"d"d"d"d"d"d"d"d"d"d"
+""d"d"d"d"d"d"d"d"d"d"d"d"d"d"d"
+""d"d"d"d"d"d"d"d"d"d"d"d"d"d"d"
+""d"d"d"d"d"d"d"d"d"d"d"d"d"d"d"
+""d"d"d"d"d"d"d"d"d"d"d"d"d"d"d"
+""d"d"d"d"d"d"d"d"d"d"d"d"d"d"d"
+""d"d"d"d"d"d"d"d"d"d"d"d"d"d"d"
+""d"d"d"d"d"d"d"d"d"d"d"d"d"d"d"
+""d"d"d"d"d"d"d"d"d"d"d"d"d"d"d"
+""d"d"d"d"d"d"d"d"d"d"d"d"d"d"d"
+""d"d"d"d"d"d"d"d"d"d"d"d"d"d"d"
+""d"d"d"d"d"d"d"d"d"d"d"d"d"d"d"
+""d"d"d"d"d"d"d"d"d"d"d"d"d"d"d"
 ".............."
 "....................EEEE......"
 "....................EEEE......"
@@ -982,18 +982,18 @@ XPM
 "..........EEEEEEEEEEEEEE......"
 ".............."
 ".............."
-"|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\"
-"|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\"
-"|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\"
-"|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\"
-"|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\"
-"|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\"
-"|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\"
-"|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\"
-"|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\"
-"|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\"
-"|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\"
-"|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\"
-"|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\"
-"|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\"
-"|\|\|\|\|\|\|\|\|\|\|\|\|\|\|\"
+">#>#>#>#>#>#>#>#>#>#>#>#>#>#>#"
+">#>#>#>#>#>#>#>#>#>#>#>#>#>#>#"
+">#>#>#>#>#>#>#>#>#>#>#>#>#>#>#"
+">#>#>#>#>#>#>#>#>#>#>#>#>#>#>#"
+">#>#>#>#>#>#>#>#>#>#>#>#>#>#>#"
+">#>#>#>#>#>#>#>#>#>#>#>#>#>#>#"
+">#>#>#>#>#>#>#>#>#>#>#>#>#>#>#"
+">#>#>#>#>#>#>#>#>#>#>#>#>#>#>#"
+">#>#>#>#>#>#>#>#>#>#>#>#>#>#>#"
+">#>#>#>#>#>#>#>#>#>#>#>#>#>#>#"
+">#>#>#>#>#>#>#>#>#>#>#>#>#>#>#"
+">#>#>#>#>#>#>#>#>#>#>#>#>#>#>#"
+">#>#>#>#>#>#>#>#>#>#>#>#>#>#>#"
+">#>#>#>#>#>#>#>#>#>#>#>#>#>#>#"
+">#>#>#>#>#>#>#>#>#>#>#>#>#>#>#"
