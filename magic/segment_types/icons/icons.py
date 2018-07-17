@@ -11,20 +11,18 @@ from ._utils import lazylen, maybe_double, SAFE_CHARS, SYMBOL_MAP
 
 
 class IShouldntHaveToDoThisBidict(bidict.bidict):
-    """Why isn't this an __init__ parameter"""
+    """Why is this not an __init__ parameter"""
     on_dup_val = bidict.OVERWRITE
 
 
 class Icon:
     HEIGHT = None
-    _FILL = None
     _rRUNS = re.compile(r'(\d*)([$.A-Z]|[p-y][A-O])')
     
     def __init__(self, rle):
         if self.HEIGHT not in (7, 15, 31):
             raise ValueError(f"Need to declare valid height (not '{self.HEIGHT!r}')")
-        if self._FILL is None:
-            self.__class__._FILL = ['..' * self.HEIGHT]
+        self._fill = ['..' * self.HEIGHT]
         self._rle = rle
         self._split = ''.join(
           maybe_double(val) * int(run_length or 1)
@@ -34,7 +32,7 @@ class Icon:
         self.ascii = self._pad()
     
     def __iter__(self):
-        return iter(self.ascii)
+        yield from self.ascii
 
     @classmethod
     def set_height(cls, dims):
@@ -58,7 +56,7 @@ class Icon:
         # Vertical padding
         pre = (self.HEIGHT - len(self._split)) // 2
         post = (self.HEIGHT - len(self._split)) - pre
-        return self._FILL * pre + [self._fix_two(f"{f'{line[earliest:]:.<{max_len}}':.^{2*self.HEIGHT}}") for line in self._split] + self._FILL * post
+        return self._fill * pre + [self._fix_two(f"{f'{line[earliest:]:.<{max_len}}':.^{2*self.HEIGHT}}") for line in self._split] + self._fill * post
 
 
 class IconArray:

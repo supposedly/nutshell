@@ -105,7 +105,7 @@ I'm not going to go as far in depth as I did above, because the repo's README ex
 rule as above in "nutshell" form:
 
 ```py
-@RUEL cgol
+@NUTSHELL Life
 @TABEL
 states: 2
 symmetries: permute
@@ -120,7 +120,7 @@ any, any, 0
 Or even this, if you want to go hard:
 
 ```py
-@RUEL cgol
+@NUTSHELL Life
 @TABEL
 states: 2
 symmetries: permute
@@ -133,5 +133,5 @@ any, any, 0
 A bit easier on the eyes! Note in particular the compression achieved by allowing a single variable name to be used multiple times in a transition (with a different
 syntax for "binding" to a previous value), and other things like the `*` shorthand for permutate-symmetry transitions and a "mapping" syntax to complement the new way
 of binding.
-That may sound a bit abstruse, but this repo's main README.md does again contain an in-depth explanation of the additions and their uses -- which will hopefully be
-more-understandable or at least accessible after reading this intro.
+That may look a bit abstruse, but this repo's main README.md does again contain an in-depth explanation of the additions and their uses -- which will hopefully be
+more-understandable or at least -accessible after reading this intro.
