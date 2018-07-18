@@ -1,7 +1,5 @@
 import random
 
-import bidict
-
 from . import _utils as utils
 from magic.common.errors import TableValueError
 
@@ -28,6 +26,7 @@ class Coord(tuple):
        'W': (-1, 0),
       'NW': (-1, 1)
       }
+    _DIRMAP = dict(zip(_DIRS, range(1, 9)))
     _NAMES = {v: k for k, v in _OFFSETS.items()}
     
     def __init__(self, _):
@@ -51,12 +50,12 @@ class Coord(tuple):
     
     @property
     def cw(self):
-        idx = 1 + self._DIRS.index(self.name)
-        return _MaybeCallableCW(self._OFFSETS[self._DIRS[idx % 8]])
+        idx = self._DIRMAP[self.name] % 8
+        return _MaybeCallableCW(self._OFFSETS[self._DIRS[idx]])
     
     @property
     def ccw(self):
-        idx = self._DIRS.index(self.name) - 1
+        idx = self._DIRMAP[self.name]
         return _MaybeCallableCCW(self._OFFSETS[self._DIRS[idx]])
     
     def diagonal(self):
