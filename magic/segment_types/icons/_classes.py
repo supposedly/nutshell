@@ -1,4 +1,4 @@
-from ...common.classes import ColorMixin, TableRange  # TableRange is exposed
+from magic.common.classes import ColorMixin
 
 class ColorRange(ColorMixin):
     def __init__(self, n_states, start=(255, 0, 0), end=(255, 255, 0)):

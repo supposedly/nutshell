@@ -3,8 +3,8 @@ import random
 import bidict
 
 from . import _utils as utils
-from ...common.errors import TableValueError
-from ...common.classes import TableRange  # this is exposed externally, I guess
+from magic.common.errors import TableValueError
+
 
 class CoordOutOfBoundsError(Exception):
     """
@@ -17,17 +17,18 @@ class Coord(tuple):
     """
     Represents a 'unit coordinate' of a cell.
     """
-    _NAMES = bidict.bidict({
-      'N': (0, 1),
-      'NE': (1, 1),
-      'E': (1, 0),
-      'SE': (1, -1),
-      'S': (0, -1),
-      'SW': (-1, -1),
-      'W': (-1, 0),
-      'NW': (-1, 1)
-      })
     _DIRS = ('N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW')
+    _OFFSETS = {
+       'N': (0, 1),
+      'NE': (1, 1),
+       'E': (1, 0),
+      'SE': (1, -1),
+       'S': (0, -1),
+      'SW': (-1, -1),
+       'W': (-1, 0),
+      'NW': (-1, 1)
+      }
+    _NAMES = {v: k for k, v in _OFFSETS.items()}
     
     def __init__(self, _):
         if not all(-2 < i < 2 for i in self):
@@ -38,53 +39,37 @@ class Coord(tuple):
     
     @classmethod
     def from_name(cls, cd):
-        return cls(cls._NAMES[cd])
-    def diagonal(self):
-        return all(self)
-    def center(self):
-        return not any(self)
-    def move(self, cd):
-        return getattr(self, cd.lower())
+        return cls(cls._OFFSETS[cd])
     
     @property
     def name(self):
-        return self._NAMES.inv[self]
+        return self._NAMES[self]
+    
     @property
     def inv(self):
         return Coord(-i for i in self)
+    
     @property
     def cw(self):
-        idx = (1 + self._DIRS.index(self.name)) % 8
-        return _MaybeCallableCW(self._NAMES[self._DIRS[idx]])
+        idx = 1 + self._DIRS.index(self.name)
+        return _MaybeCallableCW(self._OFFSETS[self._DIRS[idx % 8]])
+    
     @property
     def ccw(self):
         idx = self._DIRS.index(self.name) - 1
-        return _MaybeCallableCCW(self._NAMES[self._DIRS[idx]])
+        return _MaybeCallableCCW(self._OFFSETS[self._DIRS[idx]])
     
-    @property
-    def n(self):
-        return Coord((self[0], 1+self[1]))
-    @property
-    def ne(self):
-        return Coord((1+self[0], 1+self[1]))
-    @property
-    def e(self):
-        return Coord((1+self[0], self[1]))
-    @property
-    def se(self):
-        return Coord((1+self[0], self[1]-1))
-    @property
-    def s(self):
-        return Coord((self[0], self[1]-1))
-    @property
-    def sw(self):
-        return Coord((self[0]-1, self[1]-1))
-    @property
-    def w(self):
-        return Coord((self[0]-1, self[1]))
-    @property
-    def nw(self):
-        return Coord((self[0]-1, 1+self[1]))
+    def diagonal(self):
+        return all(self)
+    
+    def center(self):
+        return self == (0, 0)
+    
+    def toward(self, cd):
+        return self.move(*self._OFFSETS[cd.upper()])
+    
+    def move(self, x=0, y=0):
+        return Coord((x+self[0], y+self[1]))
 
 
 class _MaybeCallableCW(Coord):
@@ -219,11 +204,11 @@ class PTCD:
         except KeyError:
             pass
         try:
-            new_tr[self.tbl.cardinals[orig.cw.name]] = utils.of(self.tr, self.tbl.cardinals[orig.cw.move(source_cd).name])
+            new_tr[self.tbl.cardinals[orig.cw.name]] = utils.of(self.tr, self.tbl.cardinals[orig.cw.toward(source_cd).name])
         except KeyError:
             pass
         try:
-            new_tr[self.tbl.cardinals[orig.ccw.name]] = utils.of(self.tr, self.tbl.cardinals[orig.ccw.move(source_cd).name])
+            new_tr[self.tbl.cardinals[orig.ccw.name]] = utils.of(self.tr, self.tbl.cardinals[orig.ccw.toward(source_cd).name])
         except KeyError:
             pass
         # If we're orthogonal to orig, we have to count for the cells adjacent to us too
@@ -260,7 +245,7 @@ class PTCD:
             new_tr[0] = self.tr[self.tbl.cardinals[cur.name]]
         except KeyError:
             pass
-        new_relative = orig if cd_to == '0' else orig.move(cd_to)  # position of "copy_to" cell relative to current
+        new_relative = orig if cd_to == '0' else orig.toward(cd_to)  # position of "copy_to" cell relative to current
         # new_relative == South (which is West moved SouthEast) | [CENTER] (which is West moved East)
         if new_relative.center():
             return new_tr

@@ -1,4 +1,4 @@
-from ...common.classes import ColorMixin, TableRange
+from magic.common.classes import ColorMixin, TableRange
 
 class ColorSegment(ColorMixin):
     """

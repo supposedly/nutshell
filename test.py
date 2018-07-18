@@ -15,7 +15,13 @@ def test_codecov():
             transpile(fp)
 
 
-if __name__ == '__main__' and ARGV[1] == 'run':
-    for fname in list(os.walk('./examples/nutshells'))[0][2]:
-        if len(ARGV) < 3 or fname.split('.')[0] in ARGV[2:]:
-            write_rule(SimpleNamespace(infile='./examples/nutshells/' + fname, outdir='./examples/compiled_ruletables/'))
+if __name__ == '__main__' and ARGV[1] in ('run', 'test'):
+    if ARGV[1] == 'run':
+        for fname in list(os.walk('./examples/nutshells'))[0][2]:
+            if len(ARGV) < 3 or fname.split('.')[0] in ARGV[2:]:
+                write_rule(SimpleNamespace(infile='./examples/nutshells/' + fname, outdir='./examples/compiled_ruletables/'))
+    else:
+        for fname in list(os.walk('./examples/nutshells'))[0][2]:
+            if len(ARGV) < 3 or fname.split('.')[0] in ARGV[2:]:
+                with open('./examples/nutshells/' + fname) as fp:
+                    transpile(fp)

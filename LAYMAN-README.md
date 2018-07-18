@@ -106,7 +106,7 @@ rule as above in "nutshell" form:
 
 ```py
 @NUTSHELL Life
-@TABEL
+@TABLE
 states: 2
 symmetries: permute
 neighborhood: Moore
@@ -121,7 +121,7 @@ Or even this, if you want to go hard:
 
 ```py
 @NUTSHELL Life
-@TABEL
+@TABLE
 states: 2
 symmetries: permute
 neighborhood: Moore

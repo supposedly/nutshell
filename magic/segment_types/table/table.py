@@ -5,9 +5,10 @@ from itertools import cycle, islice, zip_longest
 import bidict
 
 from . import _napkins as napkins, _utils as utils
-from ._classes import TableRange, SpecialVar, VarName, PTCD
-from ...common.utils import printv, printq
-from ...common.errors import *
+from ._classes import SpecialVar, VarName, PTCD
+from magic.common.classes import TableRange
+from magic.common.utils import printv, printq
+from magic.common.errors import *
 
 
 class Bidict(bidict.bidict):
@@ -56,6 +57,7 @@ class AbstractTable:
       'vonNeumann': {'N': 1, 'E': 2, 'S': 3, 'W': 4},
       'hexagonal': {'N': 1, 'E': 2, 'SE': 3, 'S': 4, 'W': 5, 'NW': 6}
       }
+    TRLEN = {'moore': 8, 'hexagonal': 6, 'vonneumann': 4}
     
     def __init__(self, tbl, start=0, *, dep: ['@NUTSHELL']):
         self._src = tbl
@@ -74,6 +76,7 @@ class AbstractTable:
         if self.directives['states'] == '?':
             self._resolve_n_states(_assignment_start)
         self.cardinals = self._parse_directives()
+        self._expected_states = 2 + self.TRLEN[self.directives['neighborhood'].lower()]
         
         _transition_start = self._extract_initial_vars(_assignment_start)
         printv(
@@ -185,7 +188,7 @@ class AbstractTable:
                 except ValueError as e:
                     bound = str(e).split("'")[1]
                     raise TableSyntaxError(lno, f"Bound '{bound}' of range {state} is not an integer")
-            elif (mapping or ptcd) and state in ('...', '_'):  # should maybe restrict '_' to only ptcd?
+            elif (mapping or ptcd) and state in ('...', '_'):  # maybe restrict '_' to only ptcd?
                 new.append(state)
                 continue
             elif ptcd and '_' == state.split('*')[0].strip():  # eh
@@ -264,7 +267,7 @@ class AbstractTable:
         Absolutely disgusting.
         But sorta neatish.
         """
-        r_int = re.compile(r'(?<!\w|\[)\d+(?!\w|])')  # Fails if the user decides to put [ 0 ] spaces inside their binding brackets...
+        r_int = re.compile(r'(?<!\[)\b\d+\b(?!])')  # Fails if the user decides to put spaces inside their binding brackets...
         self.directives['states'] = 1 + max(
           int(match.group().strip())
           for line in self[start:]
@@ -422,6 +425,13 @@ class AbstractTable:
             except ValueError as e:
                 group, expected, got = e.args
                 raise TableValueError(lno, f'Expected lower value of {expected} in group {group}, got {got}')
+            if len(napkin) != self._expected_states:
+                raise TableSyntaxError(
+                  lno,
+                  f"    (expanded: {', '.join(napkin)})\n  "
+                  f"Bad transition length for {self.directives['neighborhood']} neighborhood -- "
+                  f'expected {self._expected_states} states total, got {len(napkin)}'
+                  )
             # Parse napkin into proper range of ints
             for idx, elem in enumerate(napkin):
                 if elem.isdigit():
@@ -457,7 +467,7 @@ class AbstractTable:
                 raise TableValueError(lno, e.args[0])
             
             self.transitions[idx] = lno, [
-              # list() because we're need to mutate it if it has an ellipsis
+              # list() because we'll need to mutate it if it has an ellipsis
               (val[0], list(self.parse_variable(val[1], lno)), list(self.parse_variable(val[2], lno, tr=tr, mapping=True)))
               if isinstance(val, tuple)
               else val

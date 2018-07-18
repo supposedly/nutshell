@@ -5,7 +5,8 @@ from itertools import count
 from math import ceil
 
 from . import _classes as classes, _napkins as napkins
-from ...common.utils import printv, printq
+from magic.common.classes import TableRange
+from magic.common.utils import printv, printq
 
 rSHORTHAND = re.compile(r'(\d+\s*\.\.\s*\d+)\s+(.+)')
 rRANGE = re.compile(r'\d+(?:\+\d+)?\s*\.\.\s*\d+')
@@ -142,7 +143,7 @@ def expand_tr(tr: (list, tuple)):
             idx += 1
             cop.append(state)
             continue
-        lower, upper = classes.TableRange(group).bounds
+        lower, upper = TableRange(group).bounds
         if lower != idx:
             raise ValueError(group, lower, idx)
         span = upper - lower

@@ -5,9 +5,10 @@ from itertools import chain, filterfalse, takewhile
 
 import bidict
 
-from ...common.errors import *
-from ._classes import ColorRange, TableRange
+from ._classes import ColorRange
 from ._utils import lazylen, maybe_double, SAFE_CHARS, SYMBOL_MAP
+from magic.common.classes import TableRange
+from magic.common.errors import *
 
 
 class IShouldntHaveToDoThisBidict(bidict.bidict):
