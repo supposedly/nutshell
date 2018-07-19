@@ -1,5 +1,6 @@
 # CA rules “in a nutshell”
-A transpiler from a reimagined Golly ruletable language to the traditional format. See [`examples/`](/examples) for examples.
+A transpiler from a reimagined Golly ruletable language to the traditional format. See [`examples/`](/examples) for examples, and if none
+of this makes any sense to you and you aren't sure how you got here, check out the [layman's README](LAYMAN-README.md).
 
 ## Setup
 1. [Download & install Python 3.6](https://www.python.org/downloads/release/python-365/) or higher (support for < 3.6 hopefully coming soon)
@@ -131,7 +132,7 @@ foo, N..NW bar, baz -> S:2  E[(2, 3)]  SE[wutz]  N[NE: (2, 3)]  NE[E]
 symmetry type specified overall.)
 
 ## Non-table-related changes
-- The preferred file extension is `.ruel`, both a holdover from when this project was named `rueltabel` and a simple-but-still-recognizable variant
+- The preferred file extension is `.ruel`, both a holdover from when this project was named `rueltabel` and a simple-but-recognizable variant
   of "rule" to distinguish nutshell files from standard `.rule` files. This obviously isn't enforced anywhere, however, and might be subject to change
   as well.
 - Comments in every segment (barring `@NUTSHELL`, where everything after the first word is a comment) start with `#` and stretch to the end of a line.

@@ -93,21 +93,23 @@ Survival is actually the default behavior in a ruletable, but specifying it expl
 `anyA,anyB,anyC,anyD,anyE,anyF,anyG,anyH,anyI,0`. The `anyX` variables contain states 0 and 1 both, so this line effectively says that *any* cell
 with *any* configuration of live/dead neighbors will die (become state `0`) -- **unless** its specific configuration was already covered in an earlier transition.
 
-So that was transitions and variables in a nutshell (ha). But why does the same variable need to be reassigned so many times in a row, as in `anyA`/`anyB`/`anyC`/.../`anyI`?
+So that was transitions and variables in a... nutshell. But why does the same variable need to be reassigned so many times in a row, as in `anyA`/`anyB`/`anyC`/.../`anyI`?
 That'd be because the format's designers chose to make variables "bound", or more-specifically "name-bound": once a variable name appears once in a transition, it can only
 refer to the same value from then on, much like how back-referring to a regex group matches the exact same text rather than reapplying the group's pattern. So if the
 rule-writer desires that a single variable appear multiple times in a transition *while* retaining its "variability", they must assign its value to multiple distinct
 names, using a different name for each separate desired occurrence.
+More info can be found [here](GollyGang/ruletablerepository/wiki/TheFormat) and [here](http://golly.sourceforge.net/Help/formats.html#table).
 
 This format is powerful, clearly, and works well enough for many cases. But it's rather primitive alongside its being powerful, and while this generally can be tolerated
-or worked around, there are times when it gets *tedious* to keep track of its inherent repetition -- as well as times when certain abstractions can be desirable, I've found.
+or worked around, there are times when it gets *tedious* to keep track of the repetition it imposes -- as well as times when certain abstractions would be quite handy,
+I've found.
 
 Enter this project.
 
 ### Nutshell
 
-I'm not going to go as far in depth as I did above, because the repo's README explains the major changes quite clearly -- but, just for comparison, here's the same
-CGoL rule as above but in "nutshell" form:
+I won't go as far in depth as I did above, because this repo's README explains the major additions in good detail -- but, for comparison, here's the same
+CGoL rule as above as a "nutshell" file:
 
 ```py
 @NUTSHELL Life
@@ -134,7 +136,7 @@ symmetries: permute
 neighborhood: Moore
 
 # Birth, survival on 3 neighbors
-# ...and survival on 2
+# and survival on 2
 any, 1 * 2, [0: (0, 1)], 0 * 5, 1
 # Death in all other cases
 any, any, 0
@@ -142,6 +144,6 @@ any, any, 0
 
 A bit easier on the eyes! Note in particular the compression achieved by allowing a single variable name to be used multiple times in a transition (with a different
 syntax for "binding" to a previous value), and other things like the `*` shorthand for permutate-symmetry transitions and a "mapping" syntax to complement the new way
-of binding.
+of binding.  
 That may sound a bit abstruse, but this repo's main README.md does again contain an in-depth explanation of the additions and their uses -- which will hopefully be
 more-understandable or at least -accessible after reading this intro.
