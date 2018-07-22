@@ -26,7 +26,7 @@ class Coord(tuple):
        'W': (-1, 0),
       'NW': (-1, 1)
       }
-    _DIRMAP = dict(zip(_DIRS, range(1, 9)))
+    _DIRMAP = dict(zip(_DIRS, range(8)))
     _NAMES = {v: k for k, v in _OFFSETS.items()}
     
     def __init__(self, _):
@@ -50,13 +50,13 @@ class Coord(tuple):
     
     @property
     def cw(self):
-        idx = self._DIRMAP[self.name] % 8
-        return _MaybeCallableCW(self._OFFSETS[self._DIRS[idx]])
+        idx = 1 + self._DIRMAP[self.name]
+        return _MaybeCallableCW(self._OFFSETS[self._DIRS[idx % 8]])
     
     @property
     def ccw(self):
         idx = self._DIRMAP[self.name]
-        return _MaybeCallableCCW(self._OFFSETS[self._DIRS[idx]])
+        return _MaybeCallableCCW(self._OFFSETS[self._DIRS[idx - 1]])
     
     def diagonal(self):
         return all(self)

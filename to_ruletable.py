@@ -17,7 +17,8 @@ def transpile(fp, *, preview=False):
     if preview:
         return '\n'.join(', '.join(map(str, tr)) for _, tr in parsed['@TABEL'].transitions)
     if ARGS.find:
-        raise SystemExit(parsed['@TABEL'].match(ARGS.find) + '\n')
+        print(parsed['@TABEL'].match(ARGS.find) + '\n')
+        return
     printq('Complete!', 'Compiling...', sep='\n\n')
     return compiler.compile(parsed)
 
@@ -31,23 +32,35 @@ def _preview(args):
       {args.transition}
     '''
     parsed = transpile(cleandoc(mock).splitlines(), preview=True)
-    return ('Complete! Transpiled preview:\n', parsed, '')
+    yield ('Complete! Transpiled preview:\n', parsed, '')
 
 
 def _transpile(args):
-    if args.infile == '-':
-        return ('', transpile(sys.stdin.read().splitlines(True)))
-    with open(args.infile) as infp:
-        finished = transpile(infp)
-    fname = os.path.split(args.infile)[-1].split('.')[0]
-    with open(f'{os.path.join(args.outdir, fname)}.rule', 'w') as outfp:
-        outfp.write(finished)
-        return ('Complete!', '', f'Created {os.path.realpath(outfp.name)}')
+    for infile in args.infiles:
+        if infile == '-':
+            finished = transpile(sys.stdin.read().splitlines(True))
+        else:
+            with open(infile) as infp:
+                finished = transpile(infp)
+        fname = os.path.split(infile)[-1].split('.')[0]
+        for directory in args.outdirs:
+            if directory == '-':
+                yield finished.splitlines()
+                continue
+            with open(f'{os.path.join(directory, fname)}.rule', 'w') as outfp:
+                outfp.write(finished)
+                yield ('Complete!', '', f'Created {os.path.realpath(outfp.name)}')
+
+
+def write_rule(args):
+    for _ in _transpile(args):
+        pass
 
 
 if __name__ == '__main__':
-    if hasattr(ARGS, 'infile'):
+    if hasattr(ARGS, 'infiles'):
         res = _transpile(ARGS)
     else:
         res = _preview(ARGS.preview)
-    printq(*res, sep='\n')
+    for val in res:
+        printq(*val, sep='\n')

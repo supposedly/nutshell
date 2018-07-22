@@ -39,24 +39,24 @@ var vacdata_0 = {0, 1}
 var up_0 = {2, 3}
 var out_0 = {3, 4}
 var signal_0 = {9, 2, 7}
-var _866614767822956_0 = {2}
-var _330616320289183_0 = {5, 6}
-var _573259321013760_0 = {2, 3, 4, 5, 6, 7, 8, 9, 10}
-var _540087126766171_0 = {8, 10}
-var _345489144268326_0 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+var _456524693245815_0 = {2}
+var _31546837631628_0 = {5, 6}
+var _706447407578371_0 = {2, 3, 4, 5, 6, 7, 8, 9, 10}
+var _874791563677402_0 = {8, 10}
+var _929791563674497_0 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
 signal_0, 0, live_0, 0, 0, 0, 0, 0, live_1, 0
 0, any_0, any_1, live_0, 0, 7, 0, live_1, any_2, 1
 0, any_0, any_1, live_0, 0, 9, 0, live_1, any_2, 0
-0, any_0, any_1, live_0, 0, _866614767822956_0, 0, live_1, any_2, 0
+0, any_0, any_1, live_0, 0, _456524693245815_0, 0, live_1, any_2, 0
 2, 0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 0
 0, any_0, any_1, any_2, any_3, 2, any_4, any_5, any_6, 2
 0, any_0, any_1, any_2, any_3, up_0, any_4, 0, any_5, 6
 1, any_0, any_1, any_2, any_3, up_0, any_4, 0, any_5, 5
 6, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
 5, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 1
-0, any_0, any_1, any_2, any_3, _330616320289183_0, any_4, any_5, any_6, 6
-1, any_0, any_1, any_2, any_3, _330616320289183_0, any_4, any_5, any_6, 5
+0, any_0, any_1, any_2, any_3, _31546837631628_0, any_4, any_5, any_6, 6
+1, any_0, any_1, any_2, any_3, _31546837631628_0, any_4, any_5, any_6, 5
 2, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
 3, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 1
 0, any_0, any_1, any_2, any_3, up_0, any_4, any_5, any_6, 4
@@ -69,20 +69,20 @@ signal_0, 0, live_0, 0, 0, 0, 0, 0, live_1, 0
 7, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
 0, any_0, any_1, any_2, any_3, 7, any_4, any_5, any_6, 7
 1, any_0, any_1, any_2, any_3, 7, any_4, any_5, any_6, 8
-_573259321013760_0, any_0, any_1, any_2, any_3, 7, any_4, any_5, any_6, 8
+_706447407578371_0, any_0, any_1, any_2, any_3, 7, any_4, any_5, any_6, 8
 9, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
 0, any_0, any_1, any_2, any_3, 9, any_4, any_5, any_6, 9
 1, any_0, any_1, any_2, any_3, 9, any_4, any_5, any_6, 10
-_573259321013760_0, any_0, any_1, any_2, any_3, 9, any_4, any_5, any_6, 10
+_706447407578371_0, any_0, any_1, any_2, any_3, 9, any_4, any_5, any_6, 10
 1, any_0, any_1, any_2, 10, any_3, any_4, any_5, 0, 0
-1, any_0, any_1, any_2, 10, any_3, any_4, any_5, _345489144268326_0, 10
+1, any_0, any_1, any_2, 10, any_3, any_4, any_5, _929791563674497_0, 10
 0, any_0, any_1, any_2, 8, any_3, any_4, any_5, any_6, 1
 1, any_0, any_1, any_2, 8, any_3, any_4, any_5, any_6, 8
 0, any_0, any_1, any_2, 8, any_3, any_4, any_5, 0, 1
-0, any_0, any_1, any_2, 8, any_3, any_4, any_5, _345489144268326_0, 8
+0, any_0, any_1, any_2, 8, any_3, any_4, any_5, _929791563674497_0, 8
 10, any_0, any_1, any_2, 0, any_3, any_4, any_5, 0, 0
-10, any_0, any_1, any_2, 0, any_3, any_4, any_5, _345489144268326_0, 1
-_540087126766171_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 1
+10, any_0, any_1, any_2, 0, any_3, any_4, any_5, _929791563674497_0, 1
+_874791563677402_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 1
 
 
 @ICONS
@@ -91,20 +91,20 @@ XPM
 ".. c #303030"
 "AA c #FFFFFF"
 "BB c #00A0FF"
-"f1 c #19E5E5"
-"x& c #4CB2B2"
-"z= c #669999"
-"1r c #7F7F7F"
-"+! c #996666"
-"rt c #CC3333"
-"8" c #FF0000"
-"f1f1f1f1f1f1f1"
-"f1f1f1f1f1f1f1"
-"f1f1f1f1f1f1f1"
-"f1f1f1f1f1f1f1"
-"f1f1f1f1f1f1f1"
-"f1f1f1f1f1f1f1"
-"f1f1f1f1f1f1f1"
+"0^ c #19E5E5"
+"^z c #4CB2B2"
+"bu c #669999"
+"^! c #7F7F7F"
+"^a c #996666"
+"w4 c #CC3333"
+"o7 c #FF0000"
+"0^0^0^0^0^0^0^"
+"0^0^0^0^0^0^0^"
+"0^0^0^0^0^0^0^"
+"0^0^0^0^0^0^0^"
+"0^0^0^0^0^0^0^"
+"0^0^0^0^0^0^0^"
+"0^0^0^0^0^0^0^"
 "AAAA....AAAA.."
 "AA..AA..AA..AA"
 "AA..AA..AA..AA"
@@ -112,34 +112,34 @@ XPM
 "AA..AA..AA..AA"
 "AA..AA..AAAA.."
 ".............."
-"x&x&x&x&x&x&x&"
-"x&x&x&x&x&x&x&"
-"x&x&x&x&x&x&x&"
-"x&x&x&x&x&x&x&"
-"x&x&x&x&x&x&x&"
-"x&x&x&x&x&x&x&"
-"x&x&x&x&x&x&x&"
-"z=z=z=z=z=z=z="
-"z=z=z=z=z=z=z="
-"z=z=z=z=z=z=z="
-"z=z=z=z=z=z=z="
-"z=z=z=z=z=z=z="
-"z=z=z=z=z=z=z="
-"z=z=z=z=z=z=z="
-"1r1r1r1r1r1r1r"
-"1r1r1r1r1r1r1r"
-"1r1r1r1r1r1r1r"
-"1r1r1r1r1r1r1r"
-"1r1r1r1r1r1r1r"
-"1r1r1r1r1r1r1r"
-"1r1r1r1r1r1r1r"
-"+!+!+!+!+!+!+!"
-"+!+!+!+!+!+!+!"
-"+!+!+!+!+!+!+!"
-"+!+!+!+!+!+!+!"
-"+!+!+!+!+!+!+!"
-"+!+!+!+!+!+!+!"
-"+!+!+!+!+!+!+!"
+"^z^z^z^z^z^z^z"
+"^z^z^z^z^z^z^z"
+"^z^z^z^z^z^z^z"
+"^z^z^z^z^z^z^z"
+"^z^z^z^z^z^z^z"
+"^z^z^z^z^z^z^z"
+"^z^z^z^z^z^z^z"
+"bububububububu"
+"bububububububu"
+"bububububububu"
+"bububububububu"
+"bububububububu"
+"bububububububu"
+"bububububububu"
+"^!^!^!^!^!^!^!"
+"^!^!^!^!^!^!^!"
+"^!^!^!^!^!^!^!"
+"^!^!^!^!^!^!^!"
+"^!^!^!^!^!^!^!"
+"^!^!^!^!^!^!^!"
+"^!^!^!^!^!^!^!"
+"^a^a^a^a^a^a^a"
+"^a^a^a^a^a^a^a"
+"^a^a^a^a^a^a^a"
+"^a^a^a^a^a^a^a"
+"^a^a^a^a^a^a^a"
+"^a^a^a^a^a^a^a"
+"^a^a^a^a^a^a^a"
 "....BBBB......"
 "....BBBB......"
 "BBBBBBBBBBBB.."
@@ -147,13 +147,13 @@ XPM
 "....BBBB......"
 "....BBBB......"
 ".............."
-"rtrtrtrtrtrtrt"
-"rtrtrtrtrtrtrt"
-"rtrtrtrtrtrtrt"
-"rtrtrtrtrtrtrt"
-"rtrtrtrtrtrtrt"
-"rtrtrtrtrtrtrt"
-"rtrtrtrtrtrtrt"
+"w4w4w4w4w4w4w4"
+"w4w4w4w4w4w4w4"
+"w4w4w4w4w4w4w4"
+"w4w4w4w4w4w4w4"
+"w4w4w4w4w4w4w4"
+"w4w4w4w4w4w4w4"
+"w4w4w4w4w4w4w4"
 ".............."
 ".............."
 "BBBBBBBBBBBB.."
@@ -161,10 +161,10 @@ XPM
 ".............."
 ".............."
 ".............."
-"8"8"8"8"8"8"8""
-"8"8"8"8"8"8"8""
-"8"8"8"8"8"8"8""
-"8"8"8"8"8"8"8""
-"8"8"8"8"8"8"8""
-"8"8"8"8"8"8"8""
-"8"8"8"8"8"8"8""
+"o7o7o7o7o7o7o7"
+"o7o7o7o7o7o7o7"
+"o7o7o7o7o7o7o7"
+"o7o7o7o7o7o7o7"
+"o7o7o7o7o7o7o7"
+"o7o7o7o7o7o7o7"
+"o7o7o7o7o7o7o7"

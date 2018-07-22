@@ -13,18 +13,32 @@ cli.main_grp = Group(XOR='find|preview|normal')
 preview = cli.command('preview', XOR='find|preview|normal', OR='preview|normal')
 
 
-@cli.main_grp.clump(AND='infile|outdir')
+@cli.main_grp.clump(AND='infiles|outdirs')
 @cli.arg()
-def infile(path):
-    """nutshell-formatted input file"""
+def infiles(path: str.split):
+    """
+    Nutshell-formatted input file(s)
+    Separate different files with a space, and use - (no more than once) for stdin.
+    If you have a file in the current directory named -, use ./- instead.
+    """
+    if '-' in path:
+        hyphen_idx = 1 + path.index('-')
+        return path[:hyphen_idx] + [i for i in path[hyphen_idx:] if i != '-']
     return path
 
 
 @cli.clump(OR='preview|normal')
-@cli.main_grp.clump(AND='infile|outdir')
+@cli.main_grp.clump(AND='infiles|outdirs')
 @cli.main_grp.arg()
-def outdir(path):
-    """Directory to create output file in"""
+def outdirs(path: str.split):
+    """
+    Directory/ies to create output file in
+    Separate dirnames with a space, and use - (no more than once) for stdout.
+    If you have a directory under the current one named -, use -/ instead.
+    """
+    if '-' in path:
+        hyphen_idx = 1 + path.index('-')
+        return path[:hyphen_idx] + [i for i in path[hyphen_idx:] if i != '-']
     return path
 
 
