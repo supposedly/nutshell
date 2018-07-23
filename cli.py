@@ -8,7 +8,7 @@ DEFAULT_HEADER = '''\
 '''
 
 
-cli = CLI("Transpiler from 'nutshell' rule-table format to the Golly format")
+cli = CLI("A transpiler from the 'Nutshell' rule-table format to Golly's")
 cli.main_grp = Group(XOR='find|preview|normal')
 preview = cli.command('preview', XOR='find|preview|normal', OR='preview|normal')
 

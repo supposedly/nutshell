@@ -51,8 +51,8 @@ def conv_permute(tr: str, total: int):
     # filler algo courtesy of Thomas Russell on math.stackexchange
     # https://math.stackexchange.com/a/1081084
     filler = (ceil((tally-k+1)/empties) for k in range(1, 1+empties))
-    gen = ((val, num or str(next(filler))) for val, num in seq)
-    return f"{start[0]},{','.join(AdditiveDict(gen))},{end[0]}"
+    result = ','.join(AdditiveDict((val, num or str(next(filler))) for val, num in seq))
+    return f"{start[0]},{result},{end[0]}"
 
 
 def suffix_num(num):

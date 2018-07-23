@@ -143,18 +143,18 @@ class AbstractTable:
                         if cur_len == target_len:
                             return (
                               'No match\n\n'
-                              f'Impossible match; overridden on line {1+self._start+lno} by "{self[lno]}"\n'
-                              f'(compiled line "{", ".join(map(str, self.transitions[idx][1]))}")'
+                              f'Impossible match!\nOverridden on line {1+self._start+lno} by:\n  {self[lno]}\n'
+                              f'Specifically (compiled line):\n  {", ".join(map(str, self.transitions[idx][1]))}'
                               )
                         break
                 else:
                     return (
                       'Found!\n\n'
-                      f'Line {1+self._start+lno}: "{self[lno]}"\n'
-                      f'(compiled line "{", ".join(map(str, self.transitions[idx][1]))}")'
+                      f'Line {1+self._start+lno}:\n  {self[lno]}\n'
+                      f'Compiled line:\n  {", ".join(map(str, self.transitions[idx][1]))}'
                       )
         if start == end:
-            return 'No match\nThis transition is the result of default behavior'
+            return 'No match\n\nThis transition is the result of unspecified default behavior.'
         return 'No match'
     
     def parse_variable(self, var: str, lno: int, **kwargs):

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3.6
 """Facilitates conversion of a nutshell file into a Golly-compatible .rule file."""
 import os
 import sys
@@ -15,9 +16,9 @@ def transpile(fp, *, preview=False):
     printq('\nParsing...')
     parsed = parser.parse(fp)
     if preview:
-        return '\n'.join(', '.join(map(str, tr)) for _, tr in parsed['@TABEL'].transitions)
+        return '\n'.join(', '.join(map(str, tr)) for _, tr in parsed['@TABLE'].transitions)
     if ARGS.find:
-        print(parsed['@TABEL'].match(ARGS.find) + '\n')
+        print(parsed['@TABLE'].match(ARGS.find) + '\n')
         return
     printq('Complete!', 'Compiling...', sep='\n\n')
     return compiler.compile(parsed)
@@ -25,7 +26,7 @@ def transpile(fp, *, preview=False):
 
 def _preview(args):
     mock = f'''
-      @TABEL
+      @TABLE
       states: {args.states}
       symmetries: none
       neighborhood: {args.neighborhood}
@@ -43,7 +44,7 @@ def _transpile(args):
             with open(infile) as infp:
                 finished = transpile(infp)
         fname = os.path.split(infile)[-1].split('.')[0]
-        for directory in args.outdirs:
+        for directory in args.__.get('outdirs', ()):
             if directory == '-':
                 yield finished.splitlines()
                 continue
