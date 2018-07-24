@@ -113,6 +113,9 @@ class VarName:
     def __repr__(self):
         return f'{type(self).__name__}({self.name!r}, rep={self.rep})'
     
+    def __getattr__(self, attr):
+        return getattr(self.name, attr)
+    
     @classmethod
     def random(cls):
         """

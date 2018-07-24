@@ -39,7 +39,7 @@ class AbstractTable:
     _rCARDINAL = re.compile(rf'\b(\[)?({__rCARDINALS})((?(1)\]))\b')
     _rPTCD = re.compile(rf'\b({__rCARDINALS})(?::(\d+)\b|:?\[(?:(0|{__rCARDINALS})\s*:)?\s*(\w+|{__rVAR})\s*]\B)')
     _rTRANSITION = re.compile(
-       r'(?<!-)'                                     # To avoid minuends being counted as segments (regardless of comma's presence)
+       r'(?<!-)'                                     # To avoid minuends being counted as segments (regardless of separator's presence)
       rf'((?:(?:\d|{__rCARDINALS})'                  # Purely-cosmetic cardinal direction before state (like ", NW 2,")
       rf'(?:\s*\.\.\s*(?:\d|{__rCARDINALS}))?\s+)?'  # Range of cardinal directions (like ", N..NW 2,")
       rf'(?:(?:{__rSMALLVAR}'                        # Variable literal (like ", (1, 2..3, 4),") with no ellipsis allowed at end
@@ -47,7 +47,7 @@ class AbstractTable:
       rf'|\[(?:(?:\d|{__rCARDINALS})\s*:\s*)?'       # Or a mapping, which starts with either a number or the equivalent cardinal direction
       rf'(?:{__rVAR}|[0A-Za-z\-]+)]))'               # ...and then has (or only has, in which case it's a binding) either a variable name or literal (like ", [S: (1, 2, ...)]," or ", [0],")
        r'(?:\s*\*\s*[1-8])?'                         # Optional permute-symmetry shorthand...
-       r'(,)?\s*'                                    # Then finally, an optional comma + whitespace after it. (Optional because last term has no comma.)
+      rf'([,;])?\s*'                                 # Then finally, an optional separator + whitespace after it. (Optional because last term has no separator after it.)
       )
     _rRANGE = re.compile(__rRANGE)
     _rVAR = re.compile(__rVAR)
@@ -432,6 +432,7 @@ class AbstractTable:
                   f"Bad transition length for {self.directives['neighborhood']} neighborhood -- "
                   f'expected {self._expected_states} states total, got {len(napkin)}'
                   )
+            old_final = napkin[-1]
             # Parse napkin into proper range of ints
             for idx, elem in enumerate(napkin):
                 if elem.isdigit():
@@ -443,6 +444,12 @@ class AbstractTable:
                         napkin[idx] = self.vars[elem] if elem in self.vars else self._constants[elem]
                     except KeyError:
                         raise TableReferenceError(lno, f'Transition references undefined name {elem!r}')
+            if isinstance(napkin[-1], tuple):
+                raise TableValueError(
+                  lno,
+                  f"Final (resultant) cellstate cannot be a variable {old_final}; "
+                  'must be either a single state, a mapping, or a binding'
+                  )
             ptcds = [(lno, tr) for ptcd in self._rPTCD.finditer(ptcds) for tr in PTCD(self, napkin, ptcd, lno=lno)]
             self.transitions.extend([(lno, napkin), *ptcds])
     

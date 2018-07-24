@@ -27,26 +27,26 @@ up = (2, 3)
 out = (4, 3)
 signal = (IncSignal, DecSignal, 2)
 
-signal, 0, live, E..W 0, live, 0 -> N[0: (1, 0, ...)]
+signal, 0, live, E..W 0, live; 0 -> N[0: (1, 0, ...)]
 
-Prompt, 0, NE..NW any, 0 -> N:Prompt
+Prompt, 0, NE..NW any; 0 -> N:Prompt
 
-vacdata, N..SE any, S up, any, W 0, NW any, [0: (6, 5)]
-{6, 5}, N..NW any, [0: vacdata] -> N[(6, 5, _, ...)]
+vacdata, N..SE any, S up, any, W 0, NW any; [0: (6, 5)]
+{6, 5}, N..NW any; [0: vacdata] -> N[(6, 5, _, ...)]
 
-up, N..NW any, [0: vacdata] -> N[(4, 3, _, ...)]
+up, N..NW any; [0: vacdata] -> N[(4, 3, _, ...)]
 
-out, N..NW any, [0: vacdata] -> N[(4, 3, _, ...)]  NW[(_, 3, _, ...)]
+out, N..NW any; [0: vacdata] -> N[(4, 3, _, ...)]  NW[(_, 3, _, ...)]
 
-IncSignal, N..NW any, 0 -> N[(IncSignal, IncData, ...)]
-DecSignal, N..NW any, 0 -> N[(DecSignal, DecData, ...)]
+IncSignal, N..NW any; 0 -> N[(IncSignal, IncData, ...)]
+DecSignal, N..NW any; 0 -> N[(DecSignal, DecData, ...)]
 
-Data, N..E any, SE DecData, S..NW any, [NW: (0, DecData, ...)]
-vacdata, N..E any, SE IncData, S..NW any, [0: (1, IncData)]
-0, N..E any, SE IncData, S..NW any, [NW: (Data, IncData, ...)]
+Data, N..E any, SE DecData, S..NW any; [NW: (0, DecData, ...)]
+vacdata, N..E any, SE IncData, S..NW any; [0: (1, IncData)]
+0, N..E any, SE IncData, S..NW any; [NW: (Data, IncData, ...)]
 
-DecData, N..E any, SE 0, S..NW any, [NW: (vacdata, ...)]
-{IncData, DecData}, N..NW any, Data
+DecData, N..E any, SE 0, S..NW any; [NW: (vacdata, ...)]
+{IncData, DecData}, N..NW any; Data
 
 
 @ICONS

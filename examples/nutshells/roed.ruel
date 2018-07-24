@@ -93,71 +93,71 @@ east = (eastZero, P_E1, R_E1, D_E1, O_N1, O_S1, O_NE1, O_SE1)
 south = (southZero, P_S1, R_S1, D_S1, O_E1, O_W1, O_SW1, O_SE1)
 west = (westZero, P_W1, R_W1, D_W1, O_N1, O_S1, O_NW1, O_SW1)
 
-E_, N..NW any, E_
+E_, N..NW any; E_
 
 # OR instruction setup
 # output-0 cases first to override later ones
-anyO, N southZero, NE any, E any, SE..SW any, W eastZero, NW any, O_SE0
-anyO, N southZero, NE any, E westZero, SE..SW any, W any, NW any, O_SW0
-anyO, N..NE any, E any, SE any, S northZero, SW any, W eastZero, NW any, O_NE0
-anyO, N..NE any, E P_W0, SE any, S northZero, SW any, W any, NW any, O_NW0
+anyO; N southZero, NE any, E any, SE..SW any, W eastZero, NW any; O_SE0
+anyO; N southZero, NE any, E westZero, SE..SW any, W any, NW any; O_SW0
+anyO; N..NE any, E any, SE any, S northZero, SW any, W eastZero, NW any; O_NE0
+anyO; N..NE any, E P_W0, SE any, S northZero, SW any, W any, NW any; O_NW0
 # the rest (output-1 cases)
-anyO, N south, NE..SW any, W east, NW any, O_SE1
-anyO, N south, NE any, E west, SE..NW any, O_SW1
-anyO, N..SE any, S north, SW any, W east, NW any, O_NE1
-anyO, N..NE any, E west, SE any, S north, SW..NW any, O_NW1
+anyO; N south, NE..SW any, W east, NW any; O_SE1
+anyO; N south, NE any, E west, SE..NW any; O_SW1
+anyO; N..SE any, S north, SW any, W east, NW any; O_NE1
+anyO; N..NE any, E west, SE any, S north, SW..NW any; O_NW1
 
 # NOT instruction setup
-anyO, N south, NE..NW any, [N: (O_S1 * southZero, O_S0, ...)]
-anyO, N..NE any, E west, SE..NW any, [E: (O_W1 * westZero, O_W0, ...)]
-anyO, N..SE any, S north, SW..NW any, [S: (O_N1 * northZero, O_N0, ...)]
-anyO, N..SW any, W east, NW any, [W: (O_E1 * eastZero, O_E0, ...)]
+anyO; N south, NE..NW any; [N: (O_S1 * southZero, O_S0, ...)]
+anyO; N..NE any, E west, SE..NW any; [E: (O_W1 * westZero, O_W0, ...)]
+anyO; N..SE any, S north, SW..NW any; [S: (O_N1 * northZero, O_N0, ...)]
+anyO; N..SW any, W east, NW any; [W: (O_E1 * eastZero, O_E0, ...)]
 
 # Rotation setup
-anyR, N south, NE..NW any, [N: (R_W0 * southZero, R_E1, ...)]
-anyR, N..NE any, E west, SE..NW any, [E: (R_N0 * westZero, R_S1, ...)]
-anyR, N..SE any, S north, SW..NW any, [S: (R_E0 * northZero, R_W1, ...)]
-anyR, N..SW any, W east, NW any, [W: (R_S0 * eastZero, R_N1, ...)]
+anyR; N south, NE..NW any; [N: (R_W0 * southZero, R_E1, ...)]
+anyR; N..NE any, E west, SE..NW any; [E: (R_N0 * westZero, R_S1, ...)]
+anyR; N..SE any, S north, SW..NW any; [S: (R_E0 * northZero, R_W1, ...)]
+anyR; N..SW any, W east, NW any; [W: (R_S0 * eastZero, R_N1, ...)]
 
 # Delay setup
-anyD, N south, NE..NW any, [N: (D_PRE_S0 * southZero, D_PRE_S1, ...)]
-anyD, N..NE any, E west, SE..NW any, [E: (D_PRE_W0 * westZero, D_PRE_W1, ...)]
-anyD, N..SE any, S north, SW..NW any, [S: (D_PRE_N0 * northZero, D_PRE_N1, ...)]
-anyD, N..SW any, W east, NW any, [W: (D_PRE_E0 * eastZero, D_PRE_E1, ...)]
+anyD; N south, NE..NW any; [N: (D_PRE_S0 * southZero, D_PRE_S1, ...)]
+anyD; N..NE any, E west, SE..NW any; [E: (D_PRE_W0 * westZero, D_PRE_W1, ...)]
+anyD; N..SE any, S north, SW..NW any; [S: (D_PRE_N0 * northZero, D_PRE_N1, ...)]
+anyD; N..SW any, W east, NW any; [W: (D_PRE_E0 * eastZero, D_PRE_E1, ...)]
 # actually delay
-(D_PRE_N0 .. D_PRE_W1), N..NW any, [0: (D_N0 .. D_W1)]
+(D_PRE_N0 .. D_PRE_W1); N..NW any; [0: (D_N0 .. D_W1)]
 
 # Pointers annihilate mutually on collision
 # even
-north, N south, NE..NW any, 0
-east, N..NE any, E west, SE..NW any, 0
-south, N..SE any, S north, SW..NW any, 0
-west, N..SW any, W east, NW any, 0
+north; N south, NE..NW any; 0
+east; N..NE any, E west, SE..NW any; 0
+south; N..SE any, S north, SW..NW any; 0
+west; N..SW any, W east, NW any; 0
 # odd (meh)
-0, N south, NE..SE any, S north, SW..NW any, 0
-0, N..NE any, E west, SE..SW any, W east, NW any, 0
-0, N south, NE any, E (0 * west, west), SE..SW any, W [E: (east, 0, ...)], NW any, 0
-0, N..NE any, E (0 * west, west), SE any, S north, SW any, W [E: (east, 0, ...)], NW any, 0
+0; N south, NE..SE any, S north, SW..NW any; 0
+0; N..NE any, E west, SE..SW any, W east, NW any; 0
+0; N south, NE any, E (0 * west, west), SE..SW any, W [E: (east, 0, ...)], NW any; 0
+0; N..NE any, E (0 * west, west), SE any, S north, SW any, W [E: (east, 0, ...)], NW any; 0
 
 # Pointer movement
-(P_N0, P_E0, P_S0, P_W0), N..NW any, 0  ->  N[0: (P_N0, _, ...)]  E[0: (_, P_E0, _, _)]  S[0: (_, _, P_S0, _)]  W[0: (_, _, _, P_W0)]
-(P_N1, P_E1, P_S1, P_W1), N..NW any, 0  ->  N[0: (P_N1, _, ...)]  E[0: (_, P_E1, _, _)]  S[0: (_, _, P_S1, _)]  W[0: (_, _, _, P_W1)]
+(P_N0, P_E0, P_S0, P_W0); N..NW any; 0  ->  N[0: (P_N0, _, ...)]  E[0: (_, P_E0, _, _)]  S[0: (_, _, P_S0, _)]  W[0: (_, _, _, P_W0)]
+(P_N1, P_E1, P_S1, P_W1); N..NW any; 0  ->  N[0: (P_N1, _, ...)]  E[0: (_, P_E1, _, _)]  S[0: (_, _, P_S1, _)]  W[0: (_, _, _, P_W1)]
 
 # Output from rotation
-(R_N0, R_E0, R_S0, R_W0), N..NW any, R  ->  N[0: (P_N0, _, ...)]  E[0: (_, P_E0, _, _)]  S[0: (_, _, P_S0, _)]  W[0: (_, _, _, P_W0)]
-(R_N1, R_E1, R_S1, R_W1), N..NW any, R  ->  N[0: (P_N1, _, ...)]  E[0: (_, P_E1, _, _)]  S[0: (_, _, P_S1, _)]  W[0: (_, _, _, P_W1)]
+(R_N0, R_E0, R_S0, R_W0); N..NW any; R  ->  N[0: (P_N0, _, ...)]  E[0: (_, P_E0, _, _)]  S[0: (_, _, P_S0, _)]  W[0: (_, _, _, P_W0)]
+(R_N1, R_E1, R_S1, R_W1); N..NW any; R  ->  N[0: (P_N1, _, ...)]  E[0: (_, P_E1, _, _)]  S[0: (_, _, P_S1, _)]  W[0: (_, _, _, P_W1)]
 
 # Output from delay
-(D_N0, D_E0, D_S0, D_W0), N..NW any, D  ->  N[0: (P_N0, _, ...)]  E[0: (_, P_E0, _, _)]  S[0: (_, _, P_S0, _)]  W[0: (_, _, _, P_W0)]
-(D_N1, D_E1, D_S1, D_W1), N..NW any, D  ->  N[0: (P_N1, _, ...)]  E[0: (_, P_E1, _, _)]  S[0: (_, _, P_S1, _)]  W[0: (_, _, _, P_W1)]
+(D_N0, D_E0, D_S0, D_W0); N..NW any; D  ->  N[0: (P_N0, _, ...)]  E[0: (_, P_E0, _, _)]  S[0: (_, _, P_S0, _)]  W[0: (_, _, _, P_W0)]
+(D_N1, D_E1, D_S1, D_W1); N..NW any; D  ->  N[0: (P_N1, _, ...)]  E[0: (_, P_E1, _, _)]  S[0: (_, _, P_S1, _)]  W[0: (_, _, _, P_W1)]
 
 # Doubled output from OR
-(O_NE0, O_SE0, O_SW0, O_NW0), N..NW any, O  ->  N[0: (P_N0, _, _, P_N0)]  E[0: (P_E0, P_E0, _, _)]  S[0: (_, P_S0, P_S0, _)]  W[0: (_, _, P_W0, P_W0)]
-(O_NE1, O_SE1, O_SW1, O_NW1), N..NW any, O  ->  N[0: (P_N1, _, _, P_N1)]  E[0: (P_E1, P_E1, _, _)]  S[0: (_, P_S1, P_S1, _)]  W[0: (_, _, P_W1, P_W1)]
+(O_NE0, O_SE0, O_SW0, O_NW0); N..NW any; O  ->  N[0: (P_N0, _, _, P_N0)]  E[0: (P_E0, P_E0, _, _)]  S[0: (_, P_S0, P_S0, _)]  W[0: (_, _, P_W0, P_W0)]
+(O_NE1, O_SE1, O_SW1, O_NW1); N..NW any; O  ->  N[0: (P_N1, _, _, P_N1)]  E[0: (P_E1, P_E1, _, _)]  S[0: (_, P_S1, P_S1, _)]  W[0: (_, _, P_W1, P_W1)]
 
 # Doubled output from NOT
-(O_N0, O_E0, O_S0, O_W0), N..NW any, O  ->  N[0: (_, P_E0, _, P_W0)]  E[0: (P_N0, _, P_S0, _)]  S[0: (_, P_E0, _, P_W0)]  W[0: (P_N0, _, P_S0, _)]
-(O_N1, O_E1, O_S1, O_W1), N..NW any, O  ->  N[0: (_, P_E1, _, P_W1)]  E[0: (P_N1, _, P_S1, _)]  S[0: (_, P_E1, _, P_W1)]  W[0: (P_N1, _, P_S1, _)]
+(O_N0, O_E0, O_S0, O_W0); N..NW any; O  ->  N[0: (_, P_E0, _, P_W0)]  E[0: (P_N0, _, P_S0, _)]  S[0: (_, P_E0, _, P_W0)]  W[0: (P_N0, _, P_S0, _)]
+(O_N1, O_E1, O_S1, O_W1); N..NW any; O  ->  N[0: (_, P_E1, _, P_W1)]  E[0: (P_N1, _, P_S1, _)]  S[0: (_, P_E1, _, P_W1)]  W[0: (P_N1, _, P_S1, _)]
 
 @COLORS
 FF0011: 1  # e, reddish

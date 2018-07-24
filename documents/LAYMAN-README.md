@@ -1,6 +1,6 @@
 ### What the heck is a ruel? A rule? What?
 
-So you've likely heard of Conway's Game of Life at some point or other, yes? In case that's a "no", let's define some terms real quick:
+So you've likely heard of Conway's Game of Life at some point or other, yes? In case that's a "no", google it and then let's define some terms real quick:
 
 - Generation: One discrete step of time, during which a bunch of interactions can happen between different "cells"
 - Cell: A discrete point on a regular grid

@@ -1,6 +1,6 @@
 # CA rules “in a nutshell”
 A transpiler from a reimagined Golly ruletable language to the traditional format. See [`examples/`](/examples) for examples, and if none
-of this makes any sense to you and you aren't sure how you got here, check out the [layman's README](LAYMAN-README.md).
+of this makes any sense to you and you aren't sure how you got here, check out the [layman's README](documents/LAYMAN-README.md).
 
 ## Setup
 1. [Download & install Python 3.6](https://www.python.org/downloads/release/python-365/) or higher (support for < 3.6 hopefully coming soon)
@@ -118,7 +118,8 @@ foo, N..NW bar, baz -> S:2  E[(2, 3)]  SE[wutz]  N[NE: (2, 3)]  NE[E]
 # north of me."
 
 # Be careful with the syntax presented in these last two bits! You cannot, for example, write
-# NW[S] or N[SE: (2, 3)] -- these imply a violation of the speed of light.
+# NW[S] or N[SE: (2, 3)] -- these imply a violation of the speed of light, and will raise an eror
+# (or, if you're unlucky, fail silently)
 ```
 - Within these "output specifiers", the `_` keyword says "leave the cell as is".   
     - (formerly "PTCDs", from "**p**ost-**t**ransition **c**ompass-**d**irection specifier**s**")
@@ -133,8 +134,8 @@ symmetry type specified overall.)
 
 ## Non-table-related changes
 - The preferred file extension is `.ruel`, both a holdover from when this project was named `rueltabel` and a simple-but-recognizable variant
-  of "rule" to distinguish nutshell files from standard `.rule` files. This obviously isn't enforced anywhere, however, and might be subject to change
-  as well.
+  of "rule" to distinguish nutshell files from standard `.rule` files. This obviously isn't enforced anywhere, however, and might also be subject to
+  change later.
 - Comments in every segment (barring `@NUTSHELL`, where everything after the first word is a comment) start with `#` and stretch to the end of a line.
 - The `@COLORS` segment in nutshells allows multiple states with the same color to be defined
   on the same line as each other, and for a color to be written as either a hexadecimal color code or a

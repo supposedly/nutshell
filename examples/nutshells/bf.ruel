@@ -86,7 +86,7 @@
 
 + Input
     The input tape will be stacked vertically in unary, with one state-0 cell separating successive input segments.
-    The prgm-tape head will at every execution step send a signal cell downward (by turning the prgm cell below it into a state
+    The prgm-tape head will at every execution step send a signal cell downward (by turning the prgm cell below it into a state)
 
 @TABLE
 states: ?
@@ -103,39 +103,39 @@ northbound = (NORTH_PLUS..NORTH_COMMA)-NORTH_L_BRACK
 ##### INITIAL TELESCOPING OF BRACKET-ENCLOSED STUFF #####
 
 # move program cell down if it has a closing bracket to its east
-(prgm, R_BRACK), 0, 0, R_BRACK, SE..NW vac, 0 -> S[0]
+(prgm, R_BRACK), 0, 0, R_BRACK, SE..NW vac; 0 -> S[0]
 
 # move program cell down if the cell to its east is below it
-(prgm, R_BRACK), N..E vac, anyPrgm, S..NW vac, 0 -> S[0]
+(prgm, R_BRACK), N..E vac, anyPrgm, S..NW vac; 0 -> S[0]
 
 ## (NOTE: The above two groups aren't even necessary but symmetry finishes sooner) ##
 
 # move program cell down if it has an opening bracket to its west
-(prgm, L_BRACK), 0, NE..SW vac, L_BRACK, vac, 0 -> S[0]
+(prgm, L_BRACK), 0, NE..SW vac, L_BRACK, vac; 0 -> S[0]
 
 # move program cell down if the cell to its west is below it
-(prgm, L_BRACK), N..S vac, anyPrgm, W..NW vac, 0 -> S[0]
+(prgm, L_BRACK), N..S vac, anyPrgm, W..NW vac; 0 -> S[0]
 
 # special-casing for ][ cases. could probably be handled above, hm
-L_BRACK, 0, 0, vac, vac, 0, R_BRACK, 0, 0, 0 -> S:L_BRACK
-R_BRACK, 0, 0, 0, L_BRACK, 0, vac, vac, 0, 0 -> S:R_BRACK
+L_BRACK, 0, 0, vac, vac, 0, R_BRACK, 0, 0; 0 -> S:L_BRACK
+R_BRACK, 0, 0, 0, L_BRACK, 0, vac, vac, 0; 0 -> S:R_BRACK
 
 # if a bracket has nothing in its mouth, assume it needs to travel south
 # to catch up to a different level
 # In the same vein, spawn a cell if in an empty cell between a bracket (N) and
 # a prgm tape bit (SW/SE)
-L_BRACK, N..SW 0, vac, vac, 0 -> S:L_BRACK
-R_BRACK, 0, vac, vac, SE..NW 0, 0 -> S:R_BRACK
+L_BRACK, N..SW 0, vac, vac; 0 -> S:L_BRACK
+R_BRACK, 0, vac, vac, SE..NW 0; 0 -> S:R_BRACK
 
 # if the above happens,  move the now-hanging-one-lvl-too-high prgm tape data south
-prgm, 0, 0, prgm, 0, 0, R_BRACK, 0, 0, 0 -> S[0]  # ]x
-prgm, 0, 0, 0, L_BRACK, 0, 0, prgm, 0, 0 -> S[0]  # x[
+prgm, 0, 0, prgm, 0, 0, R_BRACK, 0, 0; 0 -> S[0]  # ]x
+prgm, 0, 0, 0, L_BRACK, 0, 0, prgm, 0; 0 -> S[0]  # x[
 
 
 ##### POINTER MOVEMENT #####
-(POINTER, pointerOp), any, 0, vac, prgm, prgm, vac, vac, any, 0 -> N[0: (_, northbound)]  E[SE: pointerOp]
+(POINTER, pointerOp), any, 0, vac, prgm, prgm, vac, vac, any; 0 -> N[0: (_, northbound)]  E[SE: pointerOp]
 
-northbound, N..NW any, 0 -> N[0]
+northbound, N..NW any; 0 -> N[0]
 
 
 @ICONS

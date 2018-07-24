@@ -1,3 +1,4 @@
+#!/usr/bin/env python3.6
 """With the pytest-cov plugin installed, run this using `py.test test.py --cov=magic/ --cov-report html`"""
 import os
 import sys
