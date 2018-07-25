@@ -1,5 +1,8 @@
 from cli import ARGS
 
+RAND_SEED = 83_523
+
+
 def _printv(*stuff, pre='  ', **kwargs):
     """
     val: Thing to print.

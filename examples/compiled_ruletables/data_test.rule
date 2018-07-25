@@ -39,24 +39,24 @@ var vacdata_0 = {0, 1}
 var up_0 = {2, 3}
 var out_0 = {3, 4}
 var signal_0 = {9, 2, 7}
-var _296743068097329_0 = {2}
-var _188105074199993_0 = {5, 6}
-var _871214629955334_0 = {2, 3, 4, 5, 6, 7, 8, 9, 10}
-var _40348454599960_0 = {8, 10}
-var _224784449298944_0 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+var _716888888775130_0 = {2}
+var _188603385896403_0 = {5, 6}
+var _172129488626172_0 = {2, 3, 4, 5, 6, 7, 8, 9, 10}
+var _688398911390223_0 = {8, 10}
+var _537895657608921_0 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
 signal_0, 0, live_0, 0, 0, 0, 0, 0, live_1, 0
 0, any_0, any_1, live_0, 0, 7, 0, live_1, any_2, 1
 0, any_0, any_1, live_0, 0, 9, 0, live_1, any_2, 0
-0, any_0, any_1, live_0, 0, _296743068097329_0, 0, live_1, any_2, 0
+0, any_0, any_1, live_0, 0, _716888888775130_0, 0, live_1, any_2, 0
 2, 0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 0
 0, any_0, any_1, any_2, any_3, 2, any_4, any_5, any_6, 2
 0, any_0, any_1, any_2, any_3, up_0, any_4, 0, any_5, 6
 1, any_0, any_1, any_2, any_3, up_0, any_4, 0, any_5, 5
 6, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
 5, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 1
-0, any_0, any_1, any_2, any_3, _188105074199993_0, any_4, any_5, any_6, 6
-1, any_0, any_1, any_2, any_3, _188105074199993_0, any_4, any_5, any_6, 5
+0, any_0, any_1, any_2, any_3, _188603385896403_0, any_4, any_5, any_6, 6
+1, any_0, any_1, any_2, any_3, _188603385896403_0, any_4, any_5, any_6, 5
 2, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
 3, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 1
 0, any_0, any_1, any_2, any_3, up_0, any_4, any_5, any_6, 4
@@ -69,20 +69,20 @@ signal_0, 0, live_0, 0, 0, 0, 0, 0, live_1, 0
 7, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
 0, any_0, any_1, any_2, any_3, 7, any_4, any_5, any_6, 7
 1, any_0, any_1, any_2, any_3, 7, any_4, any_5, any_6, 8
-_871214629955334_0, any_0, any_1, any_2, any_3, 7, any_4, any_5, any_6, 8
+_172129488626172_0, any_0, any_1, any_2, any_3, 7, any_4, any_5, any_6, 8
 9, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
 0, any_0, any_1, any_2, any_3, 9, any_4, any_5, any_6, 9
 1, any_0, any_1, any_2, any_3, 9, any_4, any_5, any_6, 10
-_871214629955334_0, any_0, any_1, any_2, any_3, 9, any_4, any_5, any_6, 10
+_172129488626172_0, any_0, any_1, any_2, any_3, 9, any_4, any_5, any_6, 10
 1, any_0, any_1, any_2, 10, any_3, any_4, any_5, 0, 0
-1, any_0, any_1, any_2, 10, any_3, any_4, any_5, _224784449298944_0, 10
+1, any_0, any_1, any_2, 10, any_3, any_4, any_5, _537895657608921_0, 10
 0, any_0, any_1, any_2, 8, any_3, any_4, any_5, any_6, 1
 1, any_0, any_1, any_2, 8, any_3, any_4, any_5, any_6, 8
 0, any_0, any_1, any_2, 8, any_3, any_4, any_5, 0, 1
-0, any_0, any_1, any_2, 8, any_3, any_4, any_5, _224784449298944_0, 8
+0, any_0, any_1, any_2, 8, any_3, any_4, any_5, _537895657608921_0, 8
 10, any_0, any_1, any_2, 0, any_3, any_4, any_5, 0, 0
-10, any_0, any_1, any_2, 0, any_3, any_4, any_5, _224784449298944_0, 1
-_40348454599960_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 1
+10, any_0, any_1, any_2, 0, any_3, any_4, any_5, _537895657608921_0, 1
+_688398911390223_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 1
 
 @ICONS
 XPM
@@ -90,20 +90,20 @@ XPM
 ".. c #303030"
 "AA c #FFFFFF"
 "BB c #00A0FF"
-"'m c #19E5E5"
-"j& c #4CB2B2"
-"=l c #669999"
-"{e c #7F7F7F"
-"1) c #996666"
-"6q c #CC3333"
-"mv c #FF0000"
-"'m'm'm'm'm'm'm"
-"'m'm'm'm'm'm'm"
-"'m'm'm'm'm'm'm"
-"'m'm'm'm'm'm'm"
-"'m'm'm'm'm'm'm"
-"'m'm'm'm'm'm'm"
-"'m'm'm'm'm'm'm"
+"vc c #19E5E5"
+"t+ c #4CB2B2"
+"_? c #669999"
+"/7 c #7F7F7F"
+""\ c #996666"
+"re c #CC3333"
+"$u c #FF0000"
+"vcvcvcvcvcvcvc"
+"vcvcvcvcvcvcvc"
+"vcvcvcvcvcvcvc"
+"vcvcvcvcvcvcvc"
+"vcvcvcvcvcvcvc"
+"vcvcvcvcvcvcvc"
+"vcvcvcvcvcvcvc"
 "AAAA....AAAA.."
 "AA..AA..AA..AA"
 "AA..AA..AA..AA"
@@ -111,34 +111,34 @@ XPM
 "AA..AA..AA..AA"
 "AA..AA..AAAA.."
 ".............."
-"j&j&j&j&j&j&j&"
-"j&j&j&j&j&j&j&"
-"j&j&j&j&j&j&j&"
-"j&j&j&j&j&j&j&"
-"j&j&j&j&j&j&j&"
-"j&j&j&j&j&j&j&"
-"j&j&j&j&j&j&j&"
-"=l=l=l=l=l=l=l"
-"=l=l=l=l=l=l=l"
-"=l=l=l=l=l=l=l"
-"=l=l=l=l=l=l=l"
-"=l=l=l=l=l=l=l"
-"=l=l=l=l=l=l=l"
-"=l=l=l=l=l=l=l"
-"{e{e{e{e{e{e{e"
-"{e{e{e{e{e{e{e"
-"{e{e{e{e{e{e{e"
-"{e{e{e{e{e{e{e"
-"{e{e{e{e{e{e{e"
-"{e{e{e{e{e{e{e"
-"{e{e{e{e{e{e{e"
-"1)1)1)1)1)1)1)"
-"1)1)1)1)1)1)1)"
-"1)1)1)1)1)1)1)"
-"1)1)1)1)1)1)1)"
-"1)1)1)1)1)1)1)"
-"1)1)1)1)1)1)1)"
-"1)1)1)1)1)1)1)"
+"t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+"
+"_?_?_?_?_?_?_?"
+"_?_?_?_?_?_?_?"
+"_?_?_?_?_?_?_?"
+"_?_?_?_?_?_?_?"
+"_?_?_?_?_?_?_?"
+"_?_?_?_?_?_?_?"
+"_?_?_?_?_?_?_?"
+"/7/7/7/7/7/7/7"
+"/7/7/7/7/7/7/7"
+"/7/7/7/7/7/7/7"
+"/7/7/7/7/7/7/7"
+"/7/7/7/7/7/7/7"
+"/7/7/7/7/7/7/7"
+"/7/7/7/7/7/7/7"
+""\"\"\"\"\"\"\"
+""\"\"\"\"\"\"\"
+""\"\"\"\"\"\"\"
+""\"\"\"\"\"\"\"
+""\"\"\"\"\"\"\"
+""\"\"\"\"\"\"\"
+""\"\"\"\"\"\"\"
 "....BBBB......"
 "....BBBB......"
 "BBBBBBBBBBBB.."
@@ -146,13 +146,13 @@ XPM
 "....BBBB......"
 "....BBBB......"
 ".............."
-"6q6q6q6q6q6q6q"
-"6q6q6q6q6q6q6q"
-"6q6q6q6q6q6q6q"
-"6q6q6q6q6q6q6q"
-"6q6q6q6q6q6q6q"
-"6q6q6q6q6q6q6q"
-"6q6q6q6q6q6q6q"
+"rerererererere"
+"rerererererere"
+"rerererererere"
+"rerererererere"
+"rerererererere"
+"rerererererere"
+"rerererererere"
 ".............."
 ".............."
 "BBBBBBBBBBBB.."
@@ -160,10 +160,10 @@ XPM
 ".............."
 ".............."
 ".............."
-"mvmvmvmvmvmvmv"
-"mvmvmvmvmvmvmv"
-"mvmvmvmvmvmvmv"
-"mvmvmvmvmvmvmv"
-"mvmvmvmvmvmvmv"
-"mvmvmvmvmvmvmv"
-"mvmvmvmvmvmvmv"
+"$u$u$u$u$u$u$u"
+"$u$u$u$u$u$u$u"
+"$u$u$u$u$u$u$u"
+"$u$u$u$u$u$u$u"
+"$u$u$u$u$u$u$u"
+"$u$u$u$u$u$u$u"
+"$u$u$u$u$u$u$u"

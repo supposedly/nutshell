@@ -2,6 +2,7 @@ import random
 
 from . import _utils as utils
 from magic.common.errors import TableValueError
+from magic.common.utils import RAND_SEED
 
 
 class CoordOutOfBoundsError(Exception):
@@ -97,6 +98,8 @@ class VarName:
     allow a Variable in a dict to be referred to by its name.
     """
     __slots__ = 'name', 'rep'
+    _rand = random.Random(x=RAND_SEED)
+    
     def __init__(self, name, rep=0):
         self.name = str(name)
         self.rep = rep
@@ -122,7 +125,7 @@ class VarName:
         Generates a Variable with a random name.
         Method of random generation liable to change.
         """
-        return cls(f'_{random.randrange(10**15)}')
+        return cls(f'_{cls._rand.randrange(10**15)}')
 
 
 class SpecialVar(tuple):

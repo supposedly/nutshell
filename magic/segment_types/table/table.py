@@ -5,7 +5,7 @@ from itertools import cycle, islice, zip_longest
 import bidict
 
 from . import _napkins as napkins, _utils as utils
-from ._classes import SpecialVar, VarName, PTCD
+from ._classes import SpecialVar, PTCD, VarName
 from magic.common.classes import TableRange
 from magic.common.utils import printv, printq
 from magic.common.errors import *
@@ -65,15 +65,15 @@ class AbstractTable:
         self._src = tbl
         self._start = start
         
+        if self.hush:
+            global printv, printq
+            printv = printq = utils.printv = utils.printq = lambda *_, **__: None
+        
         self.vars = Bidict()  # {Variable(name) | str(name) :: tuple(value)}
         self.directives = {}
         self.transitions = []
         self._symmetry_lines = []
         self._constants = {}
-        
-        if self.hush:
-            global printv, printq
-            printv = printq = utils.printv = utils.printq = lambda *_, **__: None
         
         if dep is not None:
             self._extract_constants(*dep)
