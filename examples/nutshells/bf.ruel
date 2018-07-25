@@ -94,11 +94,11 @@ neighborhood: Moore
 symmetries: none
 
 anyPrgm = (PLUS..COMMA)
-prgm = anyPrgm-(L_BRACK, R_BRACK)
+prgm = anyPrgm - (L_BRACK, R_BRACK)
 vac = (0, anyPrgm)
 
-pointerOp = (POINTER_PLUS..POINTER_COMMA)-POINTER_L_BRACK
-northbound = (NORTH_PLUS..NORTH_COMMA)-NORTH_L_BRACK
+pointerOp = (POINTER_PLUS..POINTER_COMMA) - POINTER_L_BRACK
+northbound = (NORTH_PLUS..NORTH_COMMA) - NORTH_L_BRACK
 
 ##### INITIAL TELESCOPING OF BRACKET-ENCLOSED STUFF #####
 
@@ -111,7 +111,7 @@ northbound = (NORTH_PLUS..NORTH_COMMA)-NORTH_L_BRACK
 ## (NOTE: The above two groups aren't even necessary but symmetry finishes sooner) ##
 
 # move program cell down if it has an opening bracket to its west
-(prgm, L_BRACK), 0, NE..SW vac, L_BRACK, vac; 0 -> S[0]
+(prgm, L_BRACK), 0, NE..SW vac, L_BRACK, any; 0 -> S[0]
 
 # move program cell down if the cell to its west is below it
 (prgm, L_BRACK), N..S vac, anyPrgm, W..NW vac; 0 -> S[0]
@@ -133,14 +133,20 @@ prgm, 0, 0, 0, L_BRACK, 0, 0, prgm, 0; 0 -> S[0]  # x[
 
 
 ##### POINTER MOVEMENT #####
-(POINTER, pointerOp), any, 0, vac, prgm, prgm, vac, vac, any; 0 -> N[0: (_, northbound)]  E[SE: pointerOp]
 
+pointerOp, N..NE any, E R_BRACK, SE..NW any; POINTER
+(POINTER, pointerOp), any, 0, vac, SE (L_BRACK, prgm), S..SW vac, (L_BRACK, vac), any; 0 -> N[0: (_, northbound)]  E[SE: (POINTER, pointerOp)]
+L_BRACK, N POINTER, NE..E 0, SE (L_BRACK, prgm), S..NW any; L_BRACK -> N:0  E[SE: (POINTER, pointerOp)]
+
+# move signals up
 northbound, N..NW any; 0 -> N[0]
 
+@COLORS
+D8D8D8: 0
 
 @ICONS
-? FFFF00 .. FF0000
-0: 303030
+?  FFFF00 .. FF0000
+0: D8D8D8
 1: D0D0D0
 2: 007FFF
 3: 535353

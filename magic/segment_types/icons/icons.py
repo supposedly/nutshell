@@ -7,7 +7,7 @@ import bidict
 
 from ._classes import ColorRange
 from ._utils import lazylen, maybe_double, SAFE_CHARS, SYMBOL_MAP
-from magic.common.classes import TableRange
+from magic.common.classes import TableRange, ColorMixin
 from magic.common.errors import *
 
 
@@ -62,14 +62,16 @@ class Icon:
 
 class IconArray:
     _rDIMS = re.compile(r'\s*x\s*=\s*(\d+),\s*y\s*=\s*(\d+)')
-    _rCOLOR = re.compile(r'(\d+:\s*|[.A-Z]|[p-y][A-O]\s+)([0-9A-F]{6}|[0-9A-F]{3}).*')
+    _rCOLOR = re.compile(r'(\d+:\s*|[.A-Z]|[p-y][A-O]\s+)(\d{0,3}\s+\d{0,3}\s+\d{0,3}|[0-9A-F]{6}|[0-9A-F]{3}).*')
     
-    def __init__(self, seg, start=0, *, dep: ['@COLORS', '@TABLE']):
-        self._src = seg
-        self._parsed_color_segment, _table = dep
-        self._n_states = _table and _table.directives['n_states']
+    def __init__(self, segment, start=0, *, dep: ['@COLORS', '@TABLE'] = None):
+        self._src = segment
         self._set_states = None
         self._fill_gradient = None
+        
+        _colors, _table = dep
+        self._n_states = _table and _table.directives['n_states']
+        self._color_segment = None if isinstance(_colors, list) else _colors
         
         self.colormap, _start_state_def = self._parse_colors()
         self._states = self._sep_states(_start_state_def)
@@ -100,12 +102,12 @@ class IconArray:
         lno = start
         for lno, line in enumerate(map(str.strip, self._src)):
             if line.startswith('?'):
-                # Can put n_states in a comment if no TABLE section to grab it from
-                pre, *post = line.split('#', 1)
+                # Can put n_states in brackets if no TABLE section to grab it from
+                pre, *post = map(str.strip, line.split('[', 1))
                 # Below *_ allows for an arbitrary separator like `000 ... FFF` between the two colors
                 _, start, *_, end = pre.split()
                 # If available, get n_states from said n_states-containing comment
-                self._set_states = int(''.join(filter(str.isdigit, post[0]))) if post else self._n_states
+                self._set_states = int(post[0].strip(']').strip()) if post else self._n_states
                 # Construct ColorRange from states and start/end values
                 self._fill_gradient = ColorRange(int(self._set_states), start, end)
                 continue
@@ -114,10 +116,8 @@ class IconArray:
                 if line:
                     break
                 continue
-            color, state = match[2], match[1].strip().strip(':')
-            if len(color) < 6:
-                color *= 2
-            colormap[SYMBOL_MAP[int(state)] if state.isdigit() else maybe_double(state)] = color.upper()
+            state, color = match[1].strip().strip(':'), match[2]
+            colormap[SYMBOL_MAP[int(state)] if state.isdigit() else maybe_double(state)] = ColorMixin.pack(color).upper()
         return colormap, lno
     
     def _sep_states(self, start) -> dict:
@@ -144,8 +144,8 @@ class IconArray:
         max_state = 1 + (self._set_states or max(SYMBOL_MAP.inv.get(state, state) for state in self.icons))
         for state in filterfalse(self.icons.__contains__, range(1, max_state)):
             try:
-                color = self._parsed_color_segment[state]
-            except (KeyError, TypeError):  # (not present, no @COLORS)
+                color = self._color_segment[state]
+            except (KeyError, TypeError):  # (state not present, @COLORS is None)
                 if self._fill_gradient is None:
                     raise TableReferenceError(None,
                       f'No icon available for state {state}. '

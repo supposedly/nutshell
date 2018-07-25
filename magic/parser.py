@@ -4,6 +4,7 @@ from .segment_types import AbstractTable, ColorSegment, IconArray
 from .common.errors import TableException
 
 
+AbstractTable.hush = False  # a little bit eh but :shrug:
 CONVERTERS = {
   '@TABLE': AbstractTable,
   '@COLORS': ColorSegment,
@@ -24,7 +25,7 @@ def parse(fp):
     for lno, line in enumerate(map(str.strip, fp), 1):
         if line.startswith('@'):
             # @NUTSHELL, @TABLE, @COLORS, ...
-            segment, *name = line.split()
+            segment, *name = line.split(None, 1)
             parts[segment], lines[segment] = name, lno
             continue
         parts[segment].append(line)

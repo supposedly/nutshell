@@ -50,7 +50,7 @@ DecData, N..E any, SE 0, S..NW any; [NW: (vacdata, ...)]
 
 
 @ICONS
-? 00FFFF .. FF0000  # 10
+?  00FFFF .. FF0000 [10]
 0: 303030
 1: FFF
 2: 00A0FF

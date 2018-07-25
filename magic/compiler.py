@@ -26,8 +26,8 @@ def _handle_table(rulefile, tbl):
     rulefile.append('')
     
     for var, value in tbl.vars.items():
-        value = set(value)  # Removes duplicates and gives braces
-        rulefile.append(f'var {var.name}_0 = {value}')
+        # set() removes duplicates and gives braces
+        rulefile.append(f'var {var.name}_0 = {set(value)}')
         for suf in range(1, 1+var.rep):
             rulefile.append(f'var {var.name}_{suf} = {var.name}_0')
     rulefile.append('')
@@ -45,5 +45,5 @@ def compile(parsed):
     except KeyError:
         pass
     for label, segment in parsed.items():
-        rulefile.extend(('', '', label, *segment))
+        rulefile.extend(('', label, *segment))
     return '\n'.join(rulefile) + '\n'

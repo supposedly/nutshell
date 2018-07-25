@@ -1,4 +1,4 @@
-### What the heck is a ruel? A rule? What?
+## What the heck is a ruel? A rule? What?
 
 So you've likely heard of Conway's Game of Life at some point or other, yes? In case that's a "no", google it and then let's define some terms real quick:
 
@@ -34,7 +34,7 @@ have gotten together (as they do) and created a cellular-automata explorer named
 for exploring many types of CA; more importantly, they've also given it a whole domain-specific language for describing different kinds of
 non-standard CA rules, ones that can't be expressed via the sort of concise notations seen above.
 
-### Ruletables
+## Ruletables
 
 ```py
 @RULE Life
@@ -106,7 +106,7 @@ I've found.
 
 Enter this project.
 
-### Nutshell
+## Nutshell
 
 I won't go as far in depth as I did above, because this repo's README explains the major additions in good detail -- but, for comparison, here's the same
 CGoL rule as above as a "nutshell" file:
@@ -119,9 +119,9 @@ symmetries: permute
 neighborhood: Moore
 
 # Survival on 2 neighbors
-1, 1 * 2, 0, 1
+1, 1 * 2, 0; 1
 # Birth, survival on 3 neighbors
-any, 1 * 3, 0, 1
+any, 1 * 3, 0; 1
 # Death in all other cases
 any, any, 0
 ```
@@ -137,7 +137,7 @@ neighborhood: Moore
 
 # Birth, survival on 3 neighbors
 # and survival on 2
-any, 1 * 2, [0: (0, 1)], 0 * 5, 1
+any, 1 * 2, [0: (0, 1)], 0 * 5; 1
 # Death in all other cases
 any, any, 0
 ```

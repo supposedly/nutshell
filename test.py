@@ -27,7 +27,8 @@ if __name__ == '__main__':
         if main == 'run':
             for fname in walk:
                 if len(ARGV) < 3 or fname.split('.')[0] in ARGV[2:]:
-                    write_rule(SimpleNamespace(infiles=['./examples/nutshells/' + fname], outdirs=['./examples/compiled_ruletables/']))
+                    d = {'infiles': ['./examples/nutshells/' + fname], 'outdirs': ['./examples/compiled_ruletables/']}
+                    write_rule(SimpleNamespace(**d, __=d))
         else:
             for fname in walk:
                 if len(ARGV) < 3 or fname.split('.')[0] in ARGV[2:]:

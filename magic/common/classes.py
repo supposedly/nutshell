@@ -25,7 +25,7 @@ class TableRange:
     
     @classmethod
     def check(cls, string):
-        # return string.fullmatch(r'\d+(?:\+\d+)?\s*\.\.\s*\d+')
+        # return re.fullmatch(r'\d+(?:\+\d+)?\s*\.\.\s*\d+', string)
         try:
             cls(string)
         except Exception:
@@ -41,25 +41,31 @@ class TableRange:
                 yield state
 
 
-class ColorMixin:
+class ColorMixin:  # XXX: this feels weird being a class? But it's also a mixin, so (????)
     _rGOLLY_COLOR = re.compile(r'\s*(\d{0,3})\s+(\d{0,3})\s+(\d{0,3})\s*.*')
     
-    def _unpack(self, color):
+    @staticmethod
+    def expand(color):
+        if len(color) == 6:
+            return color
+        return ''.join([f'{c}{c}' for c in color])  # fwiw, measurably faster than c * 2
+    
+    @classmethod
+    def unpack(cls, color):
         if isinstance(color, (list, tuple)):
             return color
-        m = self._rGOLLY_COLOR.fullmatch(color)
+        m = cls._rGOLLY_COLOR.fullmatch(color)
         if m is not None:
             # Color is already golly
             return m.groups()
-        if len(color) == 3:  # three-char shorthand
-            color *= 2
-        return struct.unpack('BBB', bytes.fromhex(color))
+        return struct.unpack('BBB', bytes.fromhex(cls.expand(color)))
     
-    def _pack(self, color):
+    @classmethod
+    def pack(cls, color):
         if isinstance(color, str):
-            m = self._rGOLLY_COLOR.fullmatch(color)
+            m = cls._rGOLLY_COLOR.fullmatch(color)
             if m is None:
                 # Color is already hex
-                return color if len(color) == 6 else color * 2
+                return cls.expand(color)
             color = map(int, m.groups())
         return struct.pack('BBB', *color).hex().upper()

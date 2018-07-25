@@ -1,22 +1,26 @@
-# Nutshell style guide
+# Guide to the style guide
 
 There are five degrees of approval indicated in the examples below.
 - **Yes**: This is always acceptable and furthermore is actually the best way to do this. Knock yourself out.
 - **Sure**: If written after a **Yes**, isn't *always* preferable but it's still adequate;
   otherwise, means that this is just one of a few perfectly-acceptable ways to write this.
 - **OK**: Neither good nor bad. If there are **Sure**s or **Yes**es listed, prefer them to this.
-- **Perhaps not**: This isn't plain awful, but do try to avoid it if it makes things look worse.
+- **Meh**: This isn't plain awful, but do try to avoid it if it makes things look worse.
 - **No**: No.
 
 Also, feel free not to follow anything in this document.
 It's just here for reference, and perhaps eventually to establish consistency if Nutshell does manage to find a foothold.
 
-## The guidelines
+# The guidelines
 
 ### General
 
 - `@NUTSHELL` or `@RULE` can technically go anywhere, but they really should always be at the top of your file.
 - Separate different segments with at least one newline -- maybe two.
+- Hash signs for comments should be preceded by one or two spaces and followed by one fewer.
+  - **Yes**: `[...]  # Helpful comment`
+  - **OK**: `[...] #Helpful comment`
+  - **No**: `[...]#Helpful comment`
 
 ### @NUTSHELL, @TABLE
 
@@ -25,41 +29,40 @@ It's just here for reference, and perhaps eventually to establish consistency if
   - One space should be used after commas/semicolons in a variable or transition, and after the colon in a mapping.
     - **Yes**: `0, any, (3, 4), [E: (5, 6)]; 1`
     - **No**: `0,any,(3,4),[E:(5,6)];1`
-  - No whitespace, however, should be used immediately adjacent to parenthesis/square bracket nor before a comma/(semi-)colon, though.
-    (In some cases this also might not be parsed correctly)
+  - No whitespace, however, should be used immediately inside the "mouth" of a parenthesis/square bracket nor before a comma/(semi-)colon, though.
+    (In some cases this also might not be correctly-parsable)
     - **No**: `0 , any ,( 3 ,4 ) ,[ E :( 5 ,6 ) ] ;1`
-    - **No**: `x = (1 , 2 ,3)`
-  - Hash signs for comments should be preceded by one or two spaces and followed by one fewer.
-    - **Yes**: `(...); 1  # Helpful comment`  (Some markdown renderers, strangely, coalesce multiple spaces into one inside an `inline codeblock`... be aware that there are two spaces before the # here)
-    - **OK**: `(...); 1 #Helpful comment`
-    - **No**: `(...); 1#Helpful comment`
+    - **No**: `x = ( 1 , 2 ,3 )`
   - The output-specifier arrow, `->`, should be surrounded by one or two spaces (same amount) on each side,
     and individual compass-direction specifiers after it should be separated by two spaces.
-    - **Yes**: `(...); 1 -> S:3  N[aVariable]  SE[anotherVar]` (Same note as above about spaces being coalesced)
+    - **Yes**: `(...); 1 -> S:3  N[aVariable]  SE[anotherVar]`
     - **No**: `(...); 1->S:3 N[aVariable] SE[anotherVar]`
+  - Multiple output specifiers on one line should be ordered clockwise from north to northwest.
+    - **Yes**: `-> N[var]  SE:0  NW[N]`
+    - **No**: `-> SE:0  NW[N]  N[var]`
   - "Operators" -- currently, `-` for "subtraction" and `*` for "multiplication" -- should be surrounded by one space if at the "top level"
     of a transition or var assignment, and preferably-but-not-mandatorily surrounded by the same if located within a variable literal.
     - **Yes**: `varA - varB, [0: (2, varC * 3)], (varD - varE) * 3; 1`
     - **Sure**: `varA - varB, [0: (2, varC*3)], (varD-varE) * 3; 1`
-    - **Perhaps not**: `varA-varB, [0: (2, varC*3)], (varD-varE)*3; 1`
+    - **Meh**: `varA-varB, [0: (2, varC*3)], (varD-varE)*3; 1`
   - The double dots `..` signifying a range should be flanked by whitespace only if their two "operands" are long-ish constant names.
     - **Yes**: `(1..3)`
     - **Yes**: `(LONG_CONSTANT_NAME_1 .. LONG_CONSTANT_NAME_2)`
     - **Sure**: `(LONG_CONSTANT_NAME_1..LONG_CONSTANT_NAME_2)`
-    - **Perhaps not**: `(1 .. 3)`
+    - **Meh**: `(1 .. 3)`
 - Semicolons should be preferred as a separator preceding the final cellstate in a transition, and perhaps following the input state as well.
   - **Sure**: `0, 1, 2, 3; 4`
   - **Sure**: `0; 1, 2, 3; 4`
   - **OK**: `0, 1, 2, 3, 4`
-  - **Perhaps not**: `0; 1, 2, 3, 4`
+  - **Meh**: `0; 1, 2, 3, 4`
 - Use the compass-direction cellstate prefix for clarity when a transition is complex or maybe when the cellstate in question
   is long. Consider omitting it otherwise, especially when the prefix clarifies nothing or can be inferred easily by the reader.
-  - **Sure**: `0, N..S 1, W 2; 3`
+  - **Sure**: `0, N..S 1, W 2; 3` (Referring to the `W` specifically)
   - **Sure**: `0, N (1, 2, 3), 2, E [N: (2, 3, 4)], 4, 1`
-  - **Perhaps not**: `0, N 1, E 2, S 3, W 4, 1`
+  - **Meh**: `0, N 1, E 2, S 3, W 4, 1`
 - For consistency's sake: constants, whether declared in the `@NUTSHELL` of a file or as single-cellstate "variable" assignments,
-  should at the very least start with a capital letter (with the rest of the name in PascalCase) and furthermore should perhaps
-  also be in full SCREAMING\_SNAKE\_CASE.  
+  should at the very least start with a capital letter (with the rest of the name in `PascalCase`) and furthermore should perhaps
+  also be in full `SCREAMING_SNAKE_CASE`.  
   Normal variables should start with a lowercase letter and be either in camelCase or lowercase.
   - **Sure**:
   ```py

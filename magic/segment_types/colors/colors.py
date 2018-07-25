@@ -12,7 +12,7 @@ class ColorSegment(ColorMixin):
         self.colors = [k.split('#')[0].split(':' if ':' in k else None, 1) for k in self._src if k]
         self.states = {
           int(state.lstrip('*')):
-          self._unpack(color.strip())
+          self.unpack(color.strip())
           for color, states in self.colors
           for state in TableRange.try_iter(states.split())
           }
@@ -28,7 +28,7 @@ class ColorSegment(ColorMixin):
             # and so won't be accessible by ColorSegment[int-type cellstate])
             self._packed_dict = {
               int(j) if j.isdigit() else j.lstrip('*'):
-              self._pack(color.strip())
+              self.pack(color.strip())
               for color, state in self.colors
               for j in state.split()
               }

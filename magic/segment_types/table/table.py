@@ -20,6 +20,8 @@ class AbstractTable:
     """
     An abstract, Golly-transferrable representation of a nutshell's @TABLE section.
     """
+    hush = True
+    
     __rCARDINALS = 'NE|NW|SE|SW|N|E|S|W'
     __rRANGE = r'\d+(?:\+\d+)?\s*\.\.\s*\d+'
     __rVAR = (
@@ -34,7 +36,7 @@ class AbstractTable:
       r'[})]'
       )
     
-    _rASSIGNMENT = re.compile(rf'\w+?\s*=\s*-?-?(?:{__rSMALLVAR}|\d+|[A-Za-z]+)(?:--?-?(?:[A-Za-z]+|\d+|{__rSMALLVAR}))?')
+    _rASSIGNMENT = re.compile(rf'\w+?\s*=\s*-?-?(?:{__rSMALLVAR}|\d+|[A-Za-z]+)(?:\s*-\s*-?-?(?:[A-Za-z]+|\d+|{__rSMALLVAR}))?')
     _rBINDMAP = re.compile(rf'\[[0-8](?::\s*?(?:{__rVAR}|[^_][\w\-]+?))?\]')
     _rCARDINAL = re.compile(rf'\b(\[)?({__rCARDINALS})((?(1)\]))\b')
     _rPTCD = re.compile(rf'\b({__rCARDINALS})(?::(\d+)\b|:?\[(?:(0|{__rCARDINALS})\s*:)?\s*(\w+|{__rVAR})\s*]\B)')
@@ -57,9 +59,9 @@ class AbstractTable:
       'vonNeumann': {'N': 1, 'E': 2, 'S': 3, 'W': 4},
       'hexagonal': {'N': 1, 'E': 2, 'SE': 3, 'S': 4, 'W': 5, 'NW': 6}
       }
-    TRLEN = {'moore': 8, 'hexagonal': 6, 'vonneumann': 4}
+    TRLENS = {'moore': 8, 'hexagonal': 6, 'vonneumann': 4}
     
-    def __init__(self, tbl, start=0, *, dep: ['@NUTSHELL']):
+    def __init__(self, tbl, start=0, *, dep: ['@NUTSHELL'] = None):
         self._src = tbl
         self._start = start
         
@@ -69,6 +71,10 @@ class AbstractTable:
         self._symmetry_lines = []
         self._constants = {}
         
+        if self.hush:
+            global printv, printq
+            printv = printq = utils.printv = utils.printq = lambda *_, **__: None
+        
         if dep is not None:
             self._extract_constants(*dep)
         
@@ -76,7 +82,7 @@ class AbstractTable:
         if self.directives['states'] == '?':
             self._resolve_n_states(_assignment_start)
         self.cardinals = self._parse_directives()
-        self._expected_states = 2 + self.TRLEN[self.directives['neighborhood'].lower()]
+        self._expected_states = 2 + self.TRLENS[self.directives['neighborhood'].lower()]
         
         _transition_start = self._extract_initial_vars(_assignment_start)
         printv(
@@ -137,24 +143,24 @@ class AbstractTable:
         for idx, (lno, tr) in _trs_no_names:
             for in_tr in ((start, *napkin, end) for napkin in in_napkins.expand()):
                 for cur_len, (in_state, tr_state) in enumerate(zip(in_tr, tr), 1):
-                    while isinstance(tr_state, str):  # handle lingering bindings
+                    while isinstance(tr_state, str):  # handle lingering bindings, if any
                         tr_state = tr[int(tr_state)]
                     if in_state != '*' and not (in_state == tr_state if isinstance(tr_state, int) else in_state in tr_state):
                         if cur_len == target_len:
                             return (
                               'No match\n\n'
                               f'Impossible match!\nOverridden on line {1+self._start+lno} by:\n  {self[lno]}\n'
-                              f'Specifically (compiled line):\n  {", ".join(map(str, self.transitions[idx][1]))}'
+                              f"Specifically (compiled line):\n  {', '.join(map(str, self.transitions[idx][1]))}"
                               )
                         break
                 else:
                     return (
                       'Found!\n\n'
                       f'Line {1+self._start+lno}:\n  {self[lno]}\n'
-                      f'Compiled line:\n  {", ".join(map(str, self.transitions[idx][1]))}'
+                      f"Compiled line:\n  {', '.join(map(str, self.transitions[idx][1]))}"
                       )
         if start == end:
-            return 'No match\n\nThis transition is the result of unspecified default behavior.'
+            return 'No match\n\nThis transition is the result of unspecified default behavior'
         return 'No match'
     
     def parse_variable(self, var: str, lno: int, **kwargs):
@@ -172,7 +178,7 @@ class AbstractTable:
             return self._subtract_var(self.vars['any'], var[2:], lno)
         if '-' in var and not self._rVAR.fullmatch(var):  # top-level subtraction
             # Subtraction & negation (from live states)
-            subt, minuend = var.split('-', 1)
+            subt, minuend = map(str.strip, var.split('-', 1))
             subt = self.parse_variable(subt, lno) if subt else self.vars['live']
             return self._subtract_var(subt, minuend, lno)
         return tuple(self.__var_loop(var, lno, **kwargs))
@@ -182,7 +188,7 @@ class AbstractTable:
         for state in map(str.strip, var.strip('{()}').split(',')):
             if state.isdigit():
                 new.append(int(state))
-            elif self._rRANGE.match(state):
+            elif self._rRANGE.fullmatch(state):
                 try:
                     new.extend(TableRange(state))
                 except ValueError as e:
