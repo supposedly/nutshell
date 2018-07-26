@@ -124,7 +124,7 @@ anyD; N south, NE..NW any; [N: (D_PRE_S0 * southZero, D_PRE_S1, ...)]
 anyD; N..NE any, E west, SE..NW any; [E: (D_PRE_W0 * westZero, D_PRE_W1, ...)]
 anyD; N..SE any, S north, SW..NW any; [S: (D_PRE_N0 * northZero, D_PRE_N1, ...)]
 anyD; N..SW any, W east, NW any; [W: (D_PRE_E0 * eastZero, D_PRE_E1, ...)]
-# actually delay
+# Actual delay
 (D_PRE_N0 .. D_PRE_W1); N..NW any; [0: (D_N0 .. D_W1)]
 
 # Pointers annihilate mutually on collision
@@ -135,9 +135,9 @@ south; N..SE any, S north, SW..NW any; 0
 west; N..SW any, W east, NW any; 0
 # odd (meh)
 0; N south, NE..SE any, S north, SW..NW any; 0
-0; N..NE any, E west, SE..SW any, W east, NW any; 0
+0; NW..NE any, E west, SE..SW any, W east; 0
 0; N south, NE any, E (0 * west, west), SE..SW any, W [E: (east, 0, ...)], NW any; 0
-0; N..NE any, E (0 * west, west), SE any, S north, SW any, W [E: (east, 0, ...)], NW any; 0
+0; NW..NE any, E (0 * west, west), SE any, S north, SW any, W [E: (east, 0, ...)]; 0
 
 # Pointer movement
 (P_N0, P_E0, P_S0, P_W0); N..NW any; 0  ->  N[0: (P_N0, _, ...)]  E[0: (_, P_E0, _, _)]  S[0: (_, _, P_S0, _)]  W[0: (_, _, _, P_W0)]

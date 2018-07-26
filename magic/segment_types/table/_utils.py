@@ -14,7 +14,8 @@ rSEGMENT = re.compile(
   # ugh
   r'\s*(?:([0-8](?:\s*\.\.\s*[0-8])?)\s+)?(-?-?(?:[({](?:[\w\-*\s]*\s*(?:,|\.\.)\s*)*[\w\-*\s]+[})]|[\w\-]+)|\[(?:[0-8]\s*:\s*)?(?:[({](?:(?:\[?[\w\-]+]?(?:\s*\*\s*[\w\-])?|\d+(?:\+\d+)?\s*\.\.\s*\d+)*,\s*)*(?:\[?[\w\-]+]?|\d+(?:\+\d+)?\s*\.\.\s*\d+|(?:\.\.\.)?)[})]|[\w\-*\s]+)])(?:-(?:(?:\d+|(?:[({](?:[\w\-]*\s*(?:,|\.\.)\s*)*[\w\-]+[})]|[A-Za-z\-]+))))?(?:\s*\*\s*([1-8]))?'
   )
-rBINDING = re.compile(r'\[(\d+)')
+rBINDMAP = re.compile(r'\[(\d+).*]')
+rBINDING = re.compile(r'\[(\d+)]')
 rALREADY = re.compile(r'(.+)_(\d+)$')
 VERBOSITY = 0
 
@@ -119,7 +120,12 @@ def unbind_vars(tr: (list, tuple), rebind=True, bind_keep=False):
     return built
 
 
-def expand_tr(tr: (list, tuple)):
+def _add_mod(mod, idx, add, start=1):
+    idx += add - start
+    return idx % mod + start
+
+
+def expand_tr(tr: list, expected_len: int):
     """
     Given a transition like
       foo, 1..3 bar, baz, 5..8 wutz, kieu
@@ -130,45 +136,79 @@ def expand_tr(tr: (list, tuple)):
       0, 1..4 [a], 1
     Into this.
       0, a, [1], [1], [1], 1
+    
+    Also, if the first cellstate's number isn't omitted or 1,
+    reorder states to account for that.
     """
-    cop, idx = [], 0
+    add_mod = _add_mod.__get__(expected_len)
+    idx = 1
+    first_lower = None
+    initial, resultant = tr.pop(0), tr.pop(-1)
+    napkin = []
     for val in tr:
         match = rSEGMENT.fullmatch(val)
         if match is None:
-            idx += 1
-            cop.append(val)
+            if first_lower is None:
+                first_lower = 1
+            idx = add_mod(idx, 1)
+            napkin.append(val)
             continue
         group, state = match[1], match[2]
         if group is None or not rRANGE.fullmatch(group):
-            idx += 1
-            cop.append(state)
+            if first_lower is None:
+                if group is None:
+                    first_lower = 1
+                else:
+                    idx = first_lower = int(group)
+            idx = add_mod(idx, 1)
+            napkin.append(state)
             continue
         lower, upper = TableRange(group).bounds
+        if first_lower is None:
+            idx = first_lower = lower
         if lower != idx:
             raise ValueError(group, lower, idx)
-        span = upper - lower
-        if all((state.startswith('['), ':' not in state, state[1:-1].isalpha())):  # if it's a binding with a var name inside
-            group = [state[1:-1]]
+        span = upper - lower if upper > lower else expected_len - lower + upper  # else it wraps
+        if all((state.startswith('['), ':' not in state, state.strip('[]').isalpha())):  # if it's a binding with a var name inside
+            group = [state.strip('[]')]
             group.extend(f'[{idx}]' for _ in range(1, span))
         else:
             group = [state] * span
-        idx += span
-        cop.extend(group)
-    return cop
+        idx = add_mod(idx, span)
+        napkin.extend(group)
+    if first_lower > 1:
+        offset = expected_len - first_lower + 1
+        napkin = napkin[offset:] + napkin[:offset]
+        # Fix bindings that are now index errors
+        switch, noreplace = {}, set()
+        for i, v in enumerate(napkin):
+            current_bind = f'[{i+1}]'
+            if not rBINDING.match(v):
+                noreplace.add(current_bind)
+            elif v not in noreplace:
+                if v in switch:
+                    napkin[i] = switch[v]
+                else:
+                    napkin[i] = of(napkin, v, True)
+                    switch[v] = napkin[int(v[1:-1])-1] = current_bind
+                    noreplace.add(current_bind)
+    return [initial, *napkin, resultant]
 
 
-def of(tr, idx):
+def of(tr, idx, napkin=False):
     """
     Acts like tr[idx], but accounts for that the item
     at that index might be a binding reference to a previous
     index.
     XXX: Maybe put this in a class or something who knows
     """
-    val = tr[idx]
+    if isinstance(idx, str): # if it itself is a binding
+        idx = int(rBINDMAP.match(idx)[1])
+    val = tr[idx-napkin]
     if not isinstance(val, str):
         return val
     while isinstance(val, str) and val.startswith('['):
-        val = tr[int(rBINDING.match(val)[1])]
+        val = tr[int(rBINDMAP.match(val)[1])]
     return val
 
 

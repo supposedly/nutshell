@@ -6,21 +6,22 @@ from inspect import cleandoc
 
 from cli import ARGS
 from magic import parser, compiler
-from magic.common.utils import printq
+from magic.common import utils
+utils._VERBOSITY, utils._QUIET = ARGS.verbosity, ARGS.quiet
 
 
 def transpile(fp, *, preview=False):
     """
     Parses and compiles the given nutshell file into an equivalent .rule.
     """
-    printq('\nParsing...')
+    utils.printq('\nParsing...')
     parsed = parser.parse(fp)
     if preview:
         return '\n'.join(', '.join(map(str, tr)) for _, tr in parsed['@TABLE'].transitions)
     if ARGS.find:
         print(parsed['@TABLE'].match(ARGS.find) + '\n')
         return
-    printq('Complete!', 'Compiling...', sep='\n\n')
+    utils.printq('Complete!', 'Compiling...', sep='\n\n')
     return compiler.compile(parsed)
 
 
@@ -64,4 +65,4 @@ if __name__ == '__main__':
     else:
         res = _preview(ARGS.preview)
     for val in res:
-        printq(*val, sep='\n')
+        utils.printq(*val, sep='\n')

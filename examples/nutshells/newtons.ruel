@@ -15,7 +15,7 @@ symmetries: none
 
 # photon splitting
 0, (1, 5), NE..SE any, (1, 3), SW..NW any; 0 -> E[(4, _, ...)]  W[(6, _, ...)]
-0, any, any, (1, 6), SE..SW any, (1, 4), any; 0 -> N[(3, _, ...)]  S[(5, _, ...)]
+0, NW..NE any, (1, 6), SE..SW any, (1, 4); 0 -> N[(3, _, ...)]  S[(5, _, ...)]
 
 # photon moving
 0, --3, any, --4, any, 3, any, --6, any; 3

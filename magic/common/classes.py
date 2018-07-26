@@ -9,6 +9,7 @@ class TableRange:
         if '-' in lower:
             lower, step = map(int, map(str.strip, lower.split('-')))
         self.bounds = (shift+int(lower), 1+shift+int(upper))
+        self.lower, self.upper, self.step = lower, upper, step
         self._range = range(*self.bounds, step)
     
     def __iter__(self):
@@ -41,7 +42,7 @@ class TableRange:
                 yield state
 
 
-class ColorMixin:  # XXX: this feels weird being a class? But it's also a mixin, so (????)
+class ColorMixin:  # XXX: this feels weird being a class? ...but it's also a mixin, so (????)
     _rGOLLY_COLOR = re.compile(r'\s*(\d{0,3})\s+(\d{0,3})\s+(\d{0,3})\s*.*')
     
     @staticmethod

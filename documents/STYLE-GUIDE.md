@@ -50,6 +50,11 @@ It's just here for reference, and perhaps eventually to establish consistency if
     - **Yes**: `(LONG_CONSTANT_NAME_1 .. LONG_CONSTANT_NAME_2)`
     - **Sure**: `(LONG_CONSTANT_NAME_1..LONG_CONSTANT_NAME_2)`
     - **Meh**: `(1 .. 3)`
+  - In `@NUTSHELL`, make constant-value declarations clear by surrounding them with at least two spaces. Also, consider putting them at the
+    beginning or end of a line rather than in the middle.
+    - **Yes**: `1: Description of state 1  {CONSTANT_NAME}`
+    - **OK**: `1: Description of state 1 {CONSTANT_NAME}`
+    - **Meh**: `1: Description {CONSTANT_NAME} of state 1 `
 - Semicolons should be preferred as a separator preceding the final cellstate in a transition, and perhaps following the input state as well.
   - **Sure**: `0, 1, 2, 3; 4`
   - **Sure**: `0; 1, 2, 3; 4`
@@ -60,6 +65,13 @@ It's just here for reference, and perhaps eventually to establish consistency if
   - **Sure**: `0, N..S 1, W 2; 3` (Referring to the `W` specifically)
   - **Sure**: `0, N (1, 2, 3), 2, E [N: (2, 3, 4)], 4, 1`
   - **Meh**: `0, N 1, E 2, S 3, W 4, 1`
+- Do not start a transition on a direction other than north without a good reason to do so (e.g. significant compression).
+  - **Sure**: `1, E 3, SE..NE any, 0`
+  - **No**: `1, E 3, 4, 7, 6, 4, 2, 1, 9, 0`
+- Prefer leaving two identical states in a row uncompressed; start using compass-direction ranges when there are three or more
+  identical and consecutive states.
+  - **Yes**: `1, N..NW any, 0`
+  - **Meh**: `1, any, NE..E 3, ..., 0`
 - For consistency's sake: constants, whether declared in the `@NUTSHELL` of a file or as single-cellstate "variable" assignments,
   should at the very least start with a capital letter (with the rest of the name in `PascalCase`) and furthermore should perhaps
   also be in full `SCREAMING_SNAKE_CASE`.  

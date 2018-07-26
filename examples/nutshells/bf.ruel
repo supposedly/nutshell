@@ -4,8 +4,8 @@
  
  1: +  {PLUS}
  2: -  {MINUS}
- 3: [  {R_BRACK}
- 4: ]  {L_BRACK}
+ 3: ]  {R_BRACK}
+ 4: [  {L_BRACK}
  5: <  {R_ANGLE}
  6: >  {L_ANGLE}
  7: .  {DOT}
@@ -14,7 +14,7 @@
  9: Plain pointer  {POINTER}
 10: Pointer +  {POINTER_PLUS}
 11: Pointer -  {POINTER_MINUS}
-12: Pointer ]  {POINTER_L_BRACK}
+12: Pointer [  {POINTER_R_BRACK}
 13: Pointer <  {POINTER_R_ANGLE}
 14: Pointer >  {POINTER_L_ANGLE}
 15: Pointer .  {POINTER_DOT}
@@ -25,7 +25,7 @@
 
 19: Northbound +  {NORTH_PLUS}
 20: Northbound -  {NORTH_MINUS}
-21: Northbound ]  {NORTH_L_BRACK}
+21: Northbound [  {NORTH_R_BRACK}
 22: Northbound <  {NORTH_R_ANGLE}
 23: Northbound >  {NORTH_L_ANGLE}
 24: Northbound .  {NORTH_DOT}
@@ -33,7 +33,7 @@
 
 26: Westbound +  {WEST_PLUS}
 27: Westbound -  {WEST_MINUS}
-29: Westbound ]  {WEST_L_BRACK}
+29: Westbound [  {WEST_R_BRACK}
 30: Westbound <  {WEST_R_ANGLE}
 31: Westbound >  {WEST_L_ANGLE}
 32: Westbound .  {WEST_DOT}
@@ -41,7 +41,7 @@
 
 34: Eastbound +  {EAST_PLUS}
 35: Eastbound -  {EAST_MINUS}
-36: Eastbound ]  {EAST_L_BRACK}
+36: Eastbound [  {EAST_R_BRACK}
 37: Eastbound <  {EAST_R_ANGLE}
 38: Eastbound >  {EAST_L_ANGLE}
 39: Eastbound .  {EAST_DOT}
@@ -49,7 +49,7 @@
 
 41: Southbound +  {SOUTH_PLUS}
 42: Southbound -  {SOUTH_MINUS}
-43: Southbound ]  {SOUTH_l_BRACK}
+43: Southbound [  {SOUTH_R_BRACK}
 44: Southbound <  {SOUTH_R_ANGLE}
 45: Southbound >  {SOUTH_L_ANGLE}
 46: Southbound .  {SOUTH_DOT}
@@ -58,10 +58,12 @@
 48: Eastward-pointing shadow cell  {EAST_SHADOW}
 49: Westward-pointing shadow cell  {WEST_SHADOW}
 
+50: northbound no-op {NORTH_NOP}
+
 
 + Setup:
-    Data pointer is placed anywhere, and data is initalized as unary stacks one cell north of it it.
-    Program tape is placed so its west end is south and at least two cells east of the data pointer.
+    Data pointer is placed anywhere, and data is initalized as unary stacks one cell north of it.
+    Program tape is placed so its west end is one cell south and at least two cells east of the data pointer.
     A single state-49 shadow cell is placed directly north of this west end, exactly one row below the data pointer.
 
 + Post-setup initialization (autonomy starts here):
@@ -97,11 +99,10 @@ anyPrgm = (PLUS..COMMA)
 prgm = anyPrgm - (L_BRACK, R_BRACK)
 vac = (0, anyPrgm)
 
-pointerOp = (POINTER_PLUS..POINTER_COMMA) - POINTER_L_BRACK
-northbound = (NORTH_PLUS..NORTH_COMMA) - NORTH_L_BRACK
+pointerOp = (POINTER_PLUS..POINTER_COMMA) - POINTER_R_BRACK
+northbound = (NORTH_PLUS..NORTH_COMMA, NORTH_NOP) - NORTH_R_BRACK
 
 ##### INITIAL TELESCOPING OF BRACKET-ENCLOSED STUFF #####
-
 # move program cell down if it has a closing bracket to its east
 (prgm, R_BRACK), 0, 0, R_BRACK, SE..NW vac; 0 -> S[0]
 
@@ -131,33 +132,38 @@ R_BRACK, 0, vac, vac, SE..NW 0; 0 -> S:R_BRACK
 prgm, 0, 0, prgm, 0, 0, R_BRACK, 0, 0; 0 -> S[0]  # ]x
 prgm, 0, 0, 0, L_BRACK, 0, 0, prgm, 0; 0 -> S[0]  # x[
 
+##### SHADOW CELL #####
+# WEST_SHADOW, ...
 
 ##### POINTER MOVEMENT #####
-
-pointerOp, N..NE any, E R_BRACK, SE..NW any; POINTER
+# don't put out north-bound signals after hitting r_brack
+pointerOp, N..NE any, E R_BRACK, SE..NW any; POINTER -> NE:NORTH_R_BRACK
+# otherwise do
 (POINTER, pointerOp), any, 0, vac, SE (L_BRACK, prgm), S..SW vac, (L_BRACK, vac), any; 0 -> N[0: (_, northbound)]  E[SE: (POINTER, pointerOp)]
-L_BRACK, N POINTER, NE..E 0, SE (L_BRACK, prgm), S..NW any; L_BRACK -> N:0  E[SE: (POINTER, pointerOp)]
+L_BRACK, N POINTER, NE..E 0, SE (L_BRACK, prgm), S..NW any; L_BRACK -> N:NORTH_NOP  E[SE: (POINTER, pointerOp)]
 
+# make north_r_brack wait one generation before going up so it's in sync
+NORTH_R_BRACK, W northbound, NW..SW any; [0] -> N:0
 # move signals up
-northbound, N..NW any; 0 -> N[0]
+(NORTH_R_BRACK, northbound), N..NW any; 0 -> N[0]
 
 @COLORS
-D8D8D8: 0
+C8C8C8: 0
 
 @ICONS
-?  FFFF00 .. FF0000
-0: D8D8D8
-1: D0D0D0
-2: 007FFF
-3: 535353
-4: AD331D
-5: 1A1A1A
-6: C0C0C0
-7: 6077A0
-8: 405780
+?  00FFFF .. FFF
+0: C8C8C8
+1: DFFFFF
+2: CFFFFF
+3: EFFFFF
+4: AFFFFF
+5: 70FFFF
+6: 00FFFF
+7: FFFFFF
+8: FF00FF
 9: 0000FF
 
-#C empty space 18
+#C empty space; 18 48 49
 x = 13, y = 13, rule = //10
 5.3A$5.3A$2.9A$2.3A3.3A$2.3A3.3A$3A7.3A$3A7.3A$3A7.3A$2.3A3.3A$2.3A3.
 3A$2.9A$5.3A$5.3A!
@@ -196,7 +202,7 @@ x = 9, y = 11, rule = //10
 .7E$9E$9E$9E$9E$9E$.8E$5.4E$5.4E$4.4E$.6E!
  
 #C Period
-#C 7 24 32 49 46
+#C 7 24 32 46
 x = 9, y = 7, rule = //10
 .7E$9E$9E$9E$9E$9E$.7E!
 

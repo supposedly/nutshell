@@ -55,11 +55,11 @@ class AbstractTable:
     _rVAR = re.compile(__rVAR)
     
     CARDINALS = {
-      'Moore': {'N': 1, 'NE': 2, 'E': 3, 'SE': 4, 'S': 5, 'SW': 6, 'W': 7, 'NW': 8},
       'vonNeumann': {'N': 1, 'E': 2, 'S': 3, 'W': 4},
-      'hexagonal': {'N': 1, 'E': 2, 'SE': 3, 'S': 4, 'W': 5, 'NW': 6}
+      'hexagonal': {'N': 1, 'E': 2, 'SE': 3, 'S': 4, 'W': 5, 'NW': 6},
+      'Moore': {'N': 1, 'NE': 2, 'E': 3, 'SE': 4, 'S': 5, 'SW': 6, 'W': 7, 'NW': 8}
       }
-    TRLENS = {'moore': 8, 'hexagonal': 6, 'vonneumann': 4}
+    TRLENS = {'vonNeumann': 4, 'hexagonal': 6, 'Moore': 8}
     
     def __init__(self, tbl, start=0, *, dep: ['@NUTSHELL'] = None):
         self._src = tbl
@@ -82,7 +82,7 @@ class AbstractTable:
         if self.directives['states'] == '?':
             self._resolve_n_states(_assignment_start)
         self.cardinals = self._parse_directives()
-        self._expected_states = 2 + self.TRLENS[self.directives['neighborhood'].lower()]
+        self._trlen = self.TRLENS[self.directives['neighborhood']]
         
         _transition_start = self._extract_initial_vars(_assignment_start)
         printv(
@@ -418,7 +418,7 @@ class AbstractTable:
                 raise TableSyntaxError(lno, 'Variable declaration after first transition')
             napkin, ptcds = map(str.strip, line.partition('->')[::2])
             if self.directives['symmetries'] == 'permute':
-                napkin = utils.conv_permute(napkin, len(self.cardinals))
+                napkin = utils.conv_permute(napkin, self._trlen)
             try:
                 napkin = [self._rCARDINAL.sub(self._cardinal_sub, i.strip()) for i, _ in self._rTRANSITION.findall(napkin)]
             except KeyError as e:
@@ -427,16 +427,16 @@ class AbstractTable:
                   f"Invalid cardinal direction {e} for {self.directives['neighborhood']!r} neighborhood"
                   )
             try:
-                napkin = utils.expand_tr(napkin)
+                napkin = utils.expand_tr(napkin, self._trlen)
             except ValueError as e:
                 group, expected, got = e.args
                 raise TableValueError(lno, f'Expected lower value of {expected} in group {group}, got {got}')
-            if len(napkin) != self._expected_states:
+            if len(napkin) != self._trlen + 2:
                 raise TableSyntaxError(
                   lno,
                   f"    (expanded: {', '.join(napkin)})\n  "
                   f"Bad transition length for {self.directives['neighborhood']} neighborhood -- "
-                  f'expected {self._expected_states} states total, got {len(napkin)}'
+                  f'expected {self._trlen + 2} states total, got {len(napkin)}'
                   )
             old_final = napkin[-1]
             # Parse napkin into proper range of ints
