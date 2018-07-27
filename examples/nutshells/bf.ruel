@@ -1,7 +1,7 @@
 @NUTSHELL bf
 
  0: Vacuum
- 
+
  1: +  {PLUS}
  2: -  {MINUS}
  3: ]  {R_BRACK}
@@ -10,7 +10,7 @@
  6: >  {L_ANGLE}
  7: .  {DOT}
  8: ,  {COMMA}
- 
+
  9: Plain pointer  {POINTER}
 10: Pointer +  {POINTER_PLUS}
 11: Pointer -  {POINTER_MINUS}
@@ -19,13 +19,13 @@
 14: Pointer >  {POINTER_L_ANGLE}
 15: Pointer .  {POINTER_DOT}
 16: Pointer ,  {POINTER_COMMA}
-17: Pointer moving west {WEST_POINTER}
+17: Westbound backtracking pointer  {WEST_POINTER}
 
-18: Shadow  {SHADOW}
+18: Northbound no-op {NORTH_NOP}
 
 19: Northbound +  {NORTH_PLUS}
 20: Northbound -  {NORTH_MINUS}
-21: Northbound [  {NORTH_R_BRACK}
+21: Northbound ]  {NORTH_R_BRACK}
 22: Northbound <  {NORTH_R_ANGLE}
 23: Northbound >  {NORTH_L_ANGLE}
 24: Northbound .  {NORTH_DOT}
@@ -33,32 +33,32 @@
 
 26: Westbound +  {WEST_PLUS}
 27: Westbound -  {WEST_MINUS}
-29: Westbound [  {WEST_R_BRACK}
-30: Westbound <  {WEST_R_ANGLE}
-31: Westbound >  {WEST_L_ANGLE}
-32: Westbound .  {WEST_DOT}
-33: Westbound ,  {WEST_COMMA}
+28: Westbound ]  {WEST_R_BRACK}
+29: Westbound <  {WEST_R_ANGLE}
+30: Westbound >  {WEST_L_ANGLE}
+31: Westbound .  {WEST_DOT}
+32: Westbound ,  {WEST_COMMA}
 
-34: Eastbound +  {EAST_PLUS}
-35: Eastbound -  {EAST_MINUS}
-36: Eastbound [  {EAST_R_BRACK}
-37: Eastbound <  {EAST_R_ANGLE}
-38: Eastbound >  {EAST_L_ANGLE}
-39: Eastbound .  {EAST_DOT}
-40: Eastbound ,  {EAST_COMMA}
+33: Eastbound +  {EAST_PLUS}
+34: Eastbound -  {EAST_MINUS}
+35: Eastbound ]  {EAST_R_BRACK}
+36: Eastbound <  {EAST_R_ANGLE}
+37: Eastbound >  {EAST_L_ANGLE}
+38: Eastbound .  {EAST_DOT}
+39: Eastbound ,  {EAST_COMMA}
 
-41: Southbound +  {SOUTH_PLUS}
-42: Southbound -  {SOUTH_MINUS}
-43: Southbound [  {SOUTH_R_BRACK}
-44: Southbound <  {SOUTH_R_ANGLE}
-45: Southbound >  {SOUTH_L_ANGLE}
-46: Southbound .  {SOUTH_DOT}
-47: Southbound ,  {SOUTH_COMMA}
+40: Southbound +  {SOUTH_PLUS}
+41: Southbound -  {SOUTH_MINUS}
+42: Southbound ]  {SOUTH_R_BRACK}
+43: Southbound <  {SOUTH_R_ANGLE}
+44: Southbound >  {SOUTH_L_ANGLE}
+45: Southbound .  {SOUTH_DOT}
+46: Southbound ,  {SOUTH_COMMA}
 
-48: Eastward-pointing shadow cell  {EAST_SHADOW}
-49: Westward-pointing shadow cell  {WEST_SHADOW}
+47: Eastward-pointing shadow cell  {EAST_SHADOW}
+48: Westward-pointing shadow cell  {WEST_SHADOW}
 
-50: northbound no-op {NORTH_NOP}
+49: Data pointer {DATA_PTR}
 
 
 + Setup:
@@ -101,6 +101,9 @@ vac = (0, anyPrgm)
 
 pointerOp = (POINTER_PLUS..POINTER_COMMA) - POINTER_R_BRACK
 northbound = (NORTH_PLUS..NORTH_COMMA, NORTH_NOP) - NORTH_R_BRACK
+westbound = (WEST_PLUS..WEST_COMMA) - WEST_R_BRACK
+eastbound = (EAST_PLUS..EAST_COMMA) - EAST_R_BRACK
+
 
 ##### INITIAL TELESCOPING OF BRACKET-ENCLOSED STUFF #####
 # move program cell down if it has a closing bracket to its east
@@ -133,7 +136,10 @@ prgm, 0, 0, prgm, 0, 0, R_BRACK, 0, 0; 0 -> S[0]  # ]x
 prgm, 0, 0, 0, L_BRACK, 0, 0, prgm, 0; 0 -> S[0]  # x[
 
 ##### SHADOW CELL #####
-# WEST_SHADOW, ...
+WEST_SHADOW, SE (0, northbound), S..E any; [SE: ([0], westbound, 0)] -> E[SE: (_, [0], ...)]
+EAST_SHADOW, SW (0, northbound), W..S any; [SW: ([0], westbound, 0)] -> W[SW: (_, [0], ...)]
+WEST_SHADOW, S (0, northbound), SW..SE any; [0] -> W[S: (_, westbound, _)]
+EAST_SHADOW, S (0, northbound), SW..SE any; [0] -> E[S: (_, eastbound, _)]
 
 ##### POINTER MOVEMENT #####
 # don't put out north-bound signals after hitting r_brack
@@ -144,8 +150,10 @@ L_BRACK, N POINTER, NE..E 0, SE (L_BRACK, prgm), S..NW any; L_BRACK -> N:NORTH_N
 
 # make north_r_brack wait one generation before going up so it's in sync
 NORTH_R_BRACK, W northbound, NW..SW any; [0] -> N:0
-# move signals up
+# move signals
 (NORTH_R_BRACK, northbound), N..NW any; 0 -> N[0]
+(WEST_R_BRACK, westbound), N..NW any; 0 -> W[0]
+(EAST_R_BRACK, eastbound), N..NW any; 0 -> E[0]
 
 @COLORS
 C8C8C8: 0
@@ -163,7 +171,7 @@ C8C8C8: 0
 8: FF00FF
 9: 0000FF
 
-#C empty space; 18 48 49
+#C empty space; 18 47 48
 x = 13, y = 13, rule = //10
 5.3A$5.3A$2.9A$2.3A3.3A$2.3A3.3A$3A7.3A$3A7.3A$3A7.3A$2.3A3.3A$2.3A3.
 3A$2.9A$5.3A$5.3A!
@@ -177,32 +185,32 @@ x = 5, y = 11, rule = //10
 5B$5B$3.2B$3.2B$3.2B$3.2B$3.2B$3.2B$3.2B$5B$5B!
 
 #C Plus sign
-#C 1 19 26 34 41
+#C 1 19 26 33 40
 x = 11, y = 11, rule = //10
 4.3C$4.3C$4.3C$4.3C$11C$11C$11C$4.3C$4.3C$4.3C$4.3C!
 
 #C Minus sign
-#C 2 20 27 35 42
+#C 2 20 27 34 41
 x = 11, y = 3, rule = //10
 11C$11C$11C!
 
 #C Left angle bracket
-#C 6 23 31 38 45
+#C 6 23 30 37 44
 x = 11, y = 11, rule = //10
 9.2D$7.4D$5.4D$3.4D$.4D$3D$.4D$3.4D$5.4D$7.4D$9.2D!
 
 #C Right angle bracket
-#C 5 22 30 37 44
+#C 5 22 29 36 43
 x = 11, y = 11, rule = //10
 2D$4D$2.4D$4.4D$6.4D$8.3D$6.4D$4.4D$2.4D$4D$2D!
 
 #C Comma
-#C 8 25 33 40 47
+#C 8 25 32 39 46
 x = 9, y = 11, rule = //10
 .7E$9E$9E$9E$9E$9E$.8E$5.4E$5.4E$4.4E$.6E!
  
 #C Period
-#C 7 24 32 46
+#C 7 24 31 45
 x = 9, y = 7, rule = //10
 .7E$9E$9E$9E$9E$9E$.7E!
 
@@ -211,6 +219,6 @@ x = 9, y = 7, rule = //10
 x = 9, y = 9, rule = //10
 2G5.2G$2G5.2G$.2G3.2G$.2G3.2G$2.2G.2G$2.2G.2G$3.3G$3.3G$4.G!
 
-#C Data pointer
+#C Data pointer; 49
 x = 9, y = 9, rule = //10
 4.I$3.3I$3.3I$2.2I.2I$2.2I.2I$.2I3.2I$.2I3.2I$2I5.2I$2I5.2I!

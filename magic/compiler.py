@@ -1,5 +1,4 @@
-from cli import ARGS
-
+from to_ruletable import ARGS
 
 def _handle_rule(rulefile, seg):
     name = seg.pop(0)

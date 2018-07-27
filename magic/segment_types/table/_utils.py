@@ -17,7 +17,6 @@ rSEGMENT = re.compile(
 rBINDMAP = re.compile(r'\[(\d+).*]')
 rBINDING = re.compile(r'\[(\d+)]')
 rALREADY = re.compile(r'(.+)_(\d+)$')
-VERBOSITY = 0
 
 
 class AdditiveDict(dict):

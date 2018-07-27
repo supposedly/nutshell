@@ -5,11 +5,16 @@ from magic.common.errors import TableValueError
 from magic.common.utils import RAND_SEED
 
 
-class CoordOutOfBoundsError(Exception):
+class _CoordOutOfBoundsError(Exception):
     """
     Raised when |one of a coord's values| > 1
     """
-    pass
+
+
+class CoordOutOfBoundsError(TableValueError):
+    """
+    Raised when |one of a coord's values| > 1
+    """
 
 
 class Coord(tuple):
@@ -32,7 +37,7 @@ class Coord(tuple):
     
     def __init__(self, _):
         if not all(-2 < i < 2 for i in self):
-            raise CoordOutOfBoundsError(self)
+            raise _CoordOutOfBoundsError(self)
     
     def __repr__(self):
         return f'Coord({tuple(self)!r})'
@@ -154,13 +159,20 @@ class PTCD:
         
         return: output specifier expanded into its full transition(s)
         """
-        self.tbl = tbl
         self.match = match
+        self.tbl = tbl
         self.lno = lno
         self.tr = tr
         self._orig_tr = tr.copy()
-        
-        self.transitions = self._parse()
+        try:
+            self.transitions = self._parse()
+        except _CoordOutOfBoundsError as e:
+            raise CoordOutOfBoundsError(
+              self.lno,
+              f'Output specifier results in invalid transformation {super(Coord, e.args[0]).__repr__()}.\n  '
+              'This means that you tried to link two compass directions that are too\n  '
+              "far apart (more than one cell's difference), like N and S or SE and SW."
+              )
     
     def __iter__(self):
         yield from self.transitions

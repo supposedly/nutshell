@@ -1,7 +1,4 @@
-_VERBOSITY = 0  # modified by ../../to_ruletable.py because I'm not sure how else to handle changing these vars
-_QUIET = False  # (if I instead `from cli import ARGS` and use ARGS.verbosity/.quiet, it'll fail when some dependent file is imported outside of the CLI)
 RAND_SEED = 83_523
-
 
 def _printv(*stuff, pre='  ', **kwargs):
     """
@@ -17,22 +14,25 @@ def printv(*args, start='\n', end=None, accum=True, **kwargs):
     """
     *args: Things to print, ordered by level of verbosity. Group items using a list.
     start: What to print before anything else.
-    accum: Whether to print everything up to _VERBOSITY or just the item at _VERBOSITY
+    accum: Whether to print everything up to ARGS.verbosity or just the item at ARGS.verbosity
     **kwargs: Passed to _printv()
     """
-    if not _VERBOSITY:
+    if not ARGS.verbosity:
         return
-    if any(args[:_VERBOSITY]):
+    if any(args[:ARGS.verbosity]):
         printq(start, end='')
     if accum:
-        _printv(*args[:_VERBOSITY-1], **kwargs)
+        _printv(*args[:ARGS.verbosity-1], **kwargs)
     try:
-        _printv(args[_VERBOSITY-1], end=end, **kwargs)
+        _printv(args[ARGS.verbosity-1], end=end, **kwargs)
     except IndexError:
         pass
 
 
 def printq(*args, **kwargs):
-    if _QUIET:
+    if ARGS.quiet:
         return
     print(*args, **kwargs)
+
+
+from to_ruletable import ARGS  # yeah idunno

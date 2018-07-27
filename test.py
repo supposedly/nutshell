@@ -5,12 +5,10 @@ import sys
 
 import pytest
 
-ARGV = sys.argv.copy() + [None, None][len(sys.argv):]
-sys.argv = 3 * ['-'] + ['-q']  # just to shut the CLI up
-
 from types import SimpleNamespace
 from to_ruletable import transpile, write_rule
 
+ARGV = sys.argv + [None, None][len(sys.argv):]
 
 def test_codecov():
     for fname in list(os.walk('./examples/nutshells'))[0][2]:

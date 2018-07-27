@@ -359,6 +359,9 @@ class AbstractTable:
                 break
             if not decl:
                 continue
+            if decl.startswith('!'):
+                print(self.vars[decl[1:]])
+                continue
             if not self._rASSIGNMENT.fullmatch(decl):
                 raise TableSyntaxError(lno, f'Invalid syntax in variable declaration')
             name, value = map(str.strip, decl.split('='))
