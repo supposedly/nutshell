@@ -75,7 +75,7 @@ class AbstractTable:
         self._symmetry_lines = []
         self._constants = {}
         
-        if dep is not None:
+        if dep != [None]:
             self._extract_constants(*dep)
         
         _assignment_start = self._extract_directives()
@@ -355,7 +355,7 @@ class AbstractTable:
         tblines = ((idx, stmt.strip()) for idx, line in enumerate(self[start:], start) for stmt in line.split('#')[0].split(';'))
         _live, _any = self.vars['live'], self.vars['any']
         for lno, decl in tblines:
-            if utils.globalmatch(self._rTRANSITION, decl.split('->')[0].strip()):
+            if utils.globalmatch(self._rTRANSITION, decl.split('>')[0].strip(' ~-')):
                 break
             if not decl:
                 continue
@@ -419,7 +419,9 @@ class AbstractTable:
                 continue
             if self._rASSIGNMENT.match(line):
                 raise TableSyntaxError(lno, 'Variable declaration after first transition')
-            napkin, ptcds = map(str.strip, line.partition('->')[::2])
+            napkin, ptcds = map(str.strip, line.partition('>')[::2])
+            main_transition_first = napkin.endswith('~') or not ptcds
+            napkin = napkin.rstrip('-~').strip()
             if self.directives['symmetries'] == 'permute':
                 napkin = utils.conv_permute(napkin, self._trlen)
             try:
@@ -460,7 +462,7 @@ class AbstractTable:
                   'must be either a single state, a mapping, or a binding'
                   )
             ptcds = [(lno, tr) for ptcd in self._rPTCD.finditer(ptcds) for tr in PTCD(self, napkin, ptcd, lno=lno)]
-            self.transitions.extend([(lno, napkin), *ptcds])
+            self.transitions.extend([(lno, napkin), *ptcds] if main_transition_first else [*ptcds, (lno, napkin)])
     
     def _disambiguate(self):
         """

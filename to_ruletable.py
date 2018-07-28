@@ -6,7 +6,9 @@ from inspect import cleandoc
 
 from ergo import CLI, Group
 
-###### TWO EXTRA LOCAL IMPORTS DOWN AT THE BOTTOM ######
+from magic import __bad_python  # agh
+
+###### EXTRA LOCAL IMPORTS DOWN AT THE BOTTOM ######
 
 
 DEFAULT_HEADER = '''\
@@ -156,17 +158,26 @@ def write_rule(args):
 
 ARGS = cli.defaults
 
+if __name__ == '__main__' or __bad_python.is_main:
+    ARGS = cli.parse(strict=True)
+    __bad_python.is_main = True
+
 # If these aren't down here I'll get a "can't import name ARGS" because it'll be as-yet undefined
 # And I can't put them + the ARGS assignment up top because cli.defaults won't be anything until the CLI functions
 # are defined
 # AND THEN I can't even put them underneath the `if __name__ == '__main__'` (which would at least be somewhat
 # excusable) because they're used by the above importable functions so they need to be defined!
+#
+# Update: So turns out it had to get even worse. `__name__ == '__main__'` does NOT hold if this file is being imported
+# from compiler.py (even if it was the file called from the command line; in that case it gets loaded twice, the first
+# time `__main__` and the second time as `to_ruletable`); this means that at the time of compiler.py's importing, ARGS
+# was being given to its `from to_ruletable import ARGS` as the cli.defaults, not as cli.parse(strict=True)... all the
+# above therefore has to happen. It's absolutely disgusting and I hate it
 
-from magic.common import utils
 from magic import parser, compiler
+from magic.common import utils
 
 if __name__ == '__main__':
-    ARGS = cli.parse(strict=True)
     if hasattr(ARGS, 'infiles'):
         res = _transpile(ARGS)
     else:

@@ -61,7 +61,40 @@
 47: Eastward-pointing shadow cell
 48: Westward-pointing shadow cell
 
-49: Data pointer
+49: Westward shadow +
+50: Westward shadow -
+51: Westward shadow ]
+52: Westward shadow <
+53: Westward shadow >
+54: Westward shadow .
+55: Westward shadow ,
+
+56: Eastward shadow +
+57: Eastward shadow -
+58: Eastward shadow ]
+59: Eastward shadow <
+60: Eastward shadow >
+61: Eastward shadow .
+62: Eastward shadow ,
+
+63:
+64:
+65:
+66:
+67:
+68:
+69:
+70:
+71:
+72:
+73:
+74:
+75:
+76:
+77:
+78:
+79:
+80:
 
 
 + Setup:
@@ -93,12 +126,13 @@ The instruction pointer will at every step send two signals: one northward to te
 The input tape will be stacked vertically in unary, with one state-0 cell separating successive input segments.
 The prgm-tape head will at every execution step send a signal cell downward (by turning the prgm cell below it into a state)
 
+
 @TABLE
 neighborhood: Moore
 symmetries: none
-n_states: 49
+n_states: 63
 
-var any_0 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48}
+var any_0 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62}
 var any_1 = any_0
 var any_2 = any_0
 var any_3 = any_0
@@ -106,7 +140,7 @@ var any_4 = any_0
 var any_5 = any_0
 var any_6 = any_0
 var any_7 = any_0
-var live_0 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48}
+var live_0 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62}
 var anyPrgm_0 = {1, 2, 3, 4, 5, 6, 7, 8}
 var prgm_0 = {1, 2, 5, 6, 7, 8}
 var prgm_1 = prgm_0
@@ -118,91 +152,150 @@ var vac_4 = vac_0
 var vac_5 = vac_0
 var vac_6 = vac_0
 var pointerOp_0 = {10, 11, 13, 14, 15, 16}
-var northbound_0 = {18, 19, 20, 22, 23, 24, 25}
-var westbound_0 = {32, 26, 27, 29, 30, 31}
-var eastbound_0 = {33, 34, 36, 37, 38, 39}
-var _534132555559652_0 = {1, 2, 3, 5, 6, 7, 8}
-var _199180732666103_0 = {1, 2, 4, 5, 6, 7, 8}
-var _696631407689837_0 = {0, 18, 19, 20, 22, 23, 24, 25}
-var _906171528910000_0 = {18, 20, 22, 23, 24, 25}
-var _233947547755308_0 = {9, 10, 11, 13, 14, 15, 16}
-var _294543865263880_0 = {1, 2, 4, 5, 6, 7, 8}
-var _780857090664487_0 = {0, 1, 2, 3, 4, 5, 6, 7, 8}
-var _569764822756552_0 = {18, 19, 20, 21, 22, 23, 24, 25}
-var _231788401900752_0 = {32, 26, 27, 28, 29, 30, 31}
-var _681977325299943_0 = {33, 34, 35, 36, 37, 38, 39}
+var northbound_0 = {19, 20, 21, 22, 23, 24, 25}
+var northboundNOP_0 = {18, 19, 20, 21, 22, 23, 24, 25}
+var northboundOp_0 = {19, 20, 22, 23, 24, 25}
+var westbound_0 = {32, 26, 27, 28, 29, 30, 31}
+var eastbound_0 = {33, 34, 35, 36, 37, 38, 39}
+var westshadows_0 = {48, 49, 50, 51, 52, 53, 54, 55}
+var eastshadows_0 = {47, 56, 57, 58, 59, 60, 61, 62}
+var _716888888775130_0 = {1, 2, 3, 5, 6, 7, 8}
+var _172129488626172_0 = {1, 2, 4, 5, 6, 7, 8}
+var _688398911390223_0 = {48, 47}
+var _537895657608921_0 = {9, 10, 11, 13, 14, 15, 16}
+var _487705463628354_0 = {1, 2, 4, 5, 6, 7, 8}
+var _293966399727257_0 = {0, 1, 2, 3, 4, 5, 6, 7, 8}
+var _153693061857386_0 = {18, 19, 20, 21, 22, 23, 24, 25}
+var _672977476146232_0 = {32, 26, 27, 28, 29, 30, 31}
+var _677095602545038_0 = {33, 34, 35, 36, 37, 38, 39}
 
-_534132555559652_0, 0, 0, 3, vac_0, vac_1, vac_2, vac_3, vac_4, 0
-vac_0, _534132555559652_0, 3, vac_1, any_0, any_1, any_2, vac_2, vac_3, _534132555559652_0
-_534132555559652_0, vac_0, vac_1, vac_2, anyPrgm_0, vac_3, vac_4, vac_5, vac_6, 0
-vac_0, _534132555559652_0, vac_1, anyPrgm_0, any_0, any_1, any_2, vac_2, vac_3, _534132555559652_0
-_199180732666103_0, 0, vac_0, vac_1, vac_2, vac_3, vac_4, 4, any_0, 0
-vac_0, _199180732666103_0, vac_1, vac_2, any_0, any_1, any_2, vac_3, 4, _199180732666103_0
-_199180732666103_0, vac_0, vac_1, vac_2, vac_3, vac_4, anyPrgm_0, vac_5, vac_6, 0
-vac_0, _199180732666103_0, vac_1, vac_2, any_0, any_1, any_2, anyPrgm_0, vac_3, _199180732666103_0
-4, 0, 0, vac_0, vac_1, 0, 3, 0, 0, 0
+# (prgm, 3), E 3, SE..NW vac, N..NE 0; 0 -> S[0]
+vac_0, _716888888775130_0, 3, vac_1, any_0, any_1, any_2, vac_2, vac_3, _716888888775130_0
+_716888888775130_0, 0, 0, 3, vac_0, vac_1, vac_2, vac_3, vac_4, 0
+# (prgm, 3), SE anyPrgm, S..E vac; 0 -> S[0]
+vac_0, _716888888775130_0, vac_1, anyPrgm_0, any_0, any_1, any_2, vac_2, vac_3, _716888888775130_0
+_716888888775130_0, vac_0, vac_1, vac_2, anyPrgm_0, vac_3, vac_4, vac_5, vac_6, 0
+# (prgm, 4), W 4, any, 0, NE..SW vac; 0 -> S[0]
+vac_0, _172129488626172_0, vac_1, vac_2, any_0, any_1, any_2, vac_3, 4, _172129488626172_0
+_172129488626172_0, 0, vac_0, vac_1, vac_2, vac_3, vac_4, 4, any_0, 0
+# (prgm, 4), SW anyPrgm, W..S vac; 0 -> S[0]
+vac_0, _172129488626172_0, vac_1, vac_2, any_0, any_1, any_2, anyPrgm_0, vac_3, _172129488626172_0
+_172129488626172_0, vac_0, vac_1, vac_2, vac_3, vac_4, anyPrgm_0, vac_5, vac_6, 0
+# 4, E..SE vac, W 0, SW 3, W..NE 0; 0 -> S:4
 0, 4, vac_0, vac_1, any_0, any_1, any_2, 3, 0, 4
-3, 0, 0, 0, 4, 0, vac_0, vac_1, 0, 0
+4, 0, 0, vac_0, vac_1, 0, 3, 0, 0, 0
+# 3, SE 4, 0, vac, vac, NW..E 0; 0 -> S:3
 0, 3, 0, 4, any_0, any_1, any_2, vac_0, vac_1, 3
-4, 0, 0, 0, 0, 0, 0, vac_0, vac_1, 0
+3, 0, 0, 0, 4, 0, vac_0, vac_1, 0, 0
+# 4, N..SW 0, W vac, NW vac; 0 -> S:4
 0, 4, 0, 0, any_0, any_1, any_2, 0, vac_0, 4
-3, 0, vac_0, vac_1, 0, 0, 0, 0, 0, 0
+4, 0, 0, 0, 0, 0, 0, vac_0, vac_1, 0
+# 3, NE..E vac, SE..N 0; 0 -> S:3
 0, 3, vac_0, 0, any_0, any_1, any_2, 0, 0, 3
-prgm_0, 0, 0, prgm_1, 0, 0, 3, 0, 0, 0
+3, 0, vac_0, vac_1, 0, 0, 0, 0, 0, 0
+# prgm, E prgm, 0, 0, SW 3, 0, NW..NE 0; 0 -> S[0]  
 0, prgm_0, prgm_1, 0, any_0, any_1, any_2, 3, 0, prgm_0
-prgm_0, 0, 0, 0, 4, 0, 0, prgm_1, 0, 0
+prgm_0, 0, 0, prgm_1, 0, 0, 3, 0, 0, 0
+# prgm, SE 4, 0, 0, W prgm, NW..E 0; 0 -> S[0]  
 0, prgm_0, 0, 4, any_0, any_1, any_2, 0, prgm_1, prgm_0
-48, any_0, any_1, any_2, 0, any_3, any_4, any_5, any_6, 48
-48, any_0, any_1, any_2, 19, any_3, any_4, any_5, any_6, 26
-48, any_0, any_1, any_2, 20, any_3, any_4, any_5, any_6, 27
-48, any_0, any_1, any_2, 22, any_3, any_4, any_5, any_6, 29
-48, any_0, any_1, any_2, 23, any_3, any_4, any_5, any_6, 30
-48, any_0, any_1, any_2, 24, any_3, any_4, any_5, any_6, 31
-48, any_0, any_1, any_2, 25, any_3, any_4, any_5, any_6, 32
-48, any_0, any_1, any_2, 18, any_3, any_4, any_5, any_6, 0
-any_0, any_1, any_2, any_3, any_4, 19, any_5, 48, any_6, 48
-any_0, any_1, any_2, any_3, any_4, _906171528910000_0, any_5, 48, any_6, 48
-47, any_0, any_1, any_2, any_3, any_4, 0, any_5, any_6, 47
-47, any_0, any_1, any_2, any_3, any_4, 19, any_5, any_6, 26
-47, any_0, any_1, any_2, any_3, any_4, 20, any_5, any_6, 27
-47, any_0, any_1, any_2, any_3, any_4, 22, any_5, any_6, 29
-47, any_0, any_1, any_2, any_3, any_4, 23, any_5, any_6, 30
-47, any_0, any_1, any_2, any_3, any_4, 24, any_5, any_6, 31
-47, any_0, any_1, any_2, any_3, any_4, 25, any_5, any_6, 32
-47, any_0, any_1, any_2, any_3, any_4, 18, any_5, any_6, 0
-any_0, any_1, any_2, 47, any_3, 19, any_4, any_5, any_6, 47
-any_0, any_1, any_2, 47, any_3, _906171528910000_0, any_4, any_5, any_6, 47
-48, any_0, any_1, any_2, any_3, _696631407689837_0, any_4, any_5, any_6, 48
-any_0, any_1, any_2, 48, 19, any_3, any_4, any_5, any_6, 26
-any_0, any_1, any_2, 48, 20, any_3, any_4, any_5, any_6, 27
-any_0, any_1, any_2, 48, 22, any_3, any_4, any_5, any_6, 29
-any_0, any_1, any_2, 48, 23, any_3, any_4, any_5, any_6, 30
-any_0, any_1, any_2, 48, 24, any_3, any_4, any_5, any_6, 31
-any_0, any_1, any_2, 48, 25, any_3, any_4, any_5, any_6, 32
-47, any_0, any_1, any_2, any_3, _696631407689837_0, any_4, any_5, any_6, 47
-any_0, any_1, any_2, any_3, any_4, any_5, 19, 47, any_6, 33
-any_0, any_1, any_2, any_3, any_4, any_5, 20, 47, any_6, 34
-any_0, any_1, any_2, any_3, any_4, any_5, 22, 47, any_6, 36
-any_0, any_1, any_2, any_3, any_4, any_5, 23, 47, any_6, 37
-any_0, any_1, any_2, any_3, any_4, any_5, 24, 47, any_6, 38
-any_0, any_1, any_2, any_3, any_4, any_5, 25, 47, any_6, 39
-pointerOp_0, any_0, any_1, 3, any_2, any_3, any_4, any_5, any_6, 9
+prgm_0, 0, 0, 0, 4, 0, 0, prgm_1, 0, 0
+# eastshadows, SW northboundNOP, W..S any; 0 -> W[SW: eastshadows]
+any_0, any_1, any_2, eastshadows_0, any_3, 19, any_4, any_5, any_6, 56
+any_0, any_1, any_2, eastshadows_0, any_3, 20, any_4, any_5, any_6, 57
+any_0, any_1, any_2, eastshadows_0, any_3, 21, any_4, any_5, any_6, 58
+any_0, any_1, any_2, eastshadows_0, any_3, 22, any_4, any_5, any_6, 59
+any_0, any_1, any_2, eastshadows_0, any_3, 23, any_4, any_5, any_6, 60
+any_0, any_1, any_2, eastshadows_0, any_3, 24, any_4, any_5, any_6, 61
+any_0, any_1, any_2, eastshadows_0, any_3, 25, any_4, any_5, any_6, 62
+any_0, any_1, any_2, eastshadows_0, any_3, 18, any_4, any_5, any_6, 47
+eastshadows_0, any_0, any_1, any_2, any_3, any_4, northboundNOP_0, any_5, any_6, 0
+# westshadows, SW northboundNOP, W..S any; 0 -> W[SW: westshadows]
+any_0, any_1, any_2, westshadows_0, any_3, 19, any_4, any_5, any_6, 49
+any_0, any_1, any_2, westshadows_0, any_3, 20, any_4, any_5, any_6, 50
+any_0, any_1, any_2, westshadows_0, any_3, 21, any_4, any_5, any_6, 51
+any_0, any_1, any_2, westshadows_0, any_3, 22, any_4, any_5, any_6, 52
+any_0, any_1, any_2, westshadows_0, any_3, 23, any_4, any_5, any_6, 53
+any_0, any_1, any_2, westshadows_0, any_3, 24, any_4, any_5, any_6, 54
+any_0, any_1, any_2, westshadows_0, any_3, 25, any_4, any_5, any_6, 55
+any_0, any_1, any_2, westshadows_0, any_3, 18, any_4, any_5, any_6, 48
+westshadows_0, any_0, any_1, any_2, any_3, any_4, northboundNOP_0, any_5, any_6, 0
+# eastshadows, SE northboundNOP, S..E any; 0 -> E[SE: eastshadows]
+any_0, any_1, any_2, any_3, any_4, 19, any_5, eastshadows_0, any_6, 56
+any_0, any_1, any_2, any_3, any_4, 20, any_5, eastshadows_0, any_6, 57
+any_0, any_1, any_2, any_3, any_4, 21, any_5, eastshadows_0, any_6, 58
+any_0, any_1, any_2, any_3, any_4, 22, any_5, eastshadows_0, any_6, 59
+any_0, any_1, any_2, any_3, any_4, 23, any_5, eastshadows_0, any_6, 60
+any_0, any_1, any_2, any_3, any_4, 24, any_5, eastshadows_0, any_6, 61
+any_0, any_1, any_2, any_3, any_4, 25, any_5, eastshadows_0, any_6, 62
+any_0, any_1, any_2, any_3, any_4, 18, any_5, eastshadows_0, any_6, 47
+eastshadows_0, any_0, any_1, any_2, northboundNOP_0, any_3, any_4, any_5, any_6, 0
+# westshadows, SE northboundNOP, S..E any; 0 -> E[SE: westshadows]
+any_0, any_1, any_2, any_3, any_4, 19, any_5, westshadows_0, any_6, 49
+any_0, any_1, any_2, any_3, any_4, 20, any_5, westshadows_0, any_6, 50
+any_0, any_1, any_2, any_3, any_4, 21, any_5, westshadows_0, any_6, 51
+any_0, any_1, any_2, any_3, any_4, 22, any_5, westshadows_0, any_6, 52
+any_0, any_1, any_2, any_3, any_4, 23, any_5, westshadows_0, any_6, 53
+any_0, any_1, any_2, any_3, any_4, 24, any_5, westshadows_0, any_6, 54
+any_0, any_1, any_2, any_3, any_4, 25, any_5, westshadows_0, any_6, 55
+any_0, any_1, any_2, any_3, any_4, 18, any_5, westshadows_0, any_6, 48
+westshadows_0, any_0, any_1, any_2, northboundNOP_0, any_3, any_4, any_5, any_6, 0
+# eastshadows, S northboundNOP, SW..SE any; [S: eastshadows]
+eastshadows_0, any_0, any_1, any_2, any_3, 19, any_4, any_5, any_6, 56
+eastshadows_0, any_0, any_1, any_2, any_3, 20, any_4, any_5, any_6, 57
+eastshadows_0, any_0, any_1, any_2, any_3, 21, any_4, any_5, any_6, 58
+eastshadows_0, any_0, any_1, any_2, any_3, 22, any_4, any_5, any_6, 59
+eastshadows_0, any_0, any_1, any_2, any_3, 23, any_4, any_5, any_6, 60
+eastshadows_0, any_0, any_1, any_2, any_3, 24, any_4, any_5, any_6, 61
+eastshadows_0, any_0, any_1, any_2, any_3, 25, any_4, any_5, any_6, 62
+eastshadows_0, any_0, any_1, any_2, any_3, 18, any_4, any_5, any_6, 47
+# westshadows, S northboundNOP, SW..SE any; [S: westshadows]
+westshadows_0, any_0, any_1, any_2, any_3, 19, any_4, any_5, any_6, 49
+westshadows_0, any_0, any_1, any_2, any_3, 20, any_4, any_5, any_6, 50
+westshadows_0, any_0, any_1, any_2, any_3, 21, any_4, any_5, any_6, 51
+westshadows_0, any_0, any_1, any_2, any_3, 22, any_4, any_5, any_6, 52
+westshadows_0, any_0, any_1, any_2, any_3, 23, any_4, any_5, any_6, 53
+westshadows_0, any_0, any_1, any_2, any_3, 24, any_4, any_5, any_6, 54
+westshadows_0, any_0, any_1, any_2, any_3, 25, any_4, any_5, any_6, 55
+westshadows_0, any_0, any_1, any_2, any_3, 18, any_4, any_5, any_6, 48
+# eastshadows, N..NW any; 47 -> N[0: (eastbound, _)]
+any_0, any_1, any_2, any_3, any_4, 56, any_5, any_6, any_7, 33
+any_0, any_1, any_2, any_3, any_4, 57, any_5, any_6, any_7, 34
+any_0, any_1, any_2, any_3, any_4, 58, any_5, any_6, any_7, 35
+any_0, any_1, any_2, any_3, any_4, 59, any_5, any_6, any_7, 36
+any_0, any_1, any_2, any_3, any_4, 60, any_5, any_6, any_7, 37
+any_0, any_1, any_2, any_3, any_4, 61, any_5, any_6, any_7, 38
+any_0, any_1, any_2, any_3, any_4, 62, any_5, any_6, any_7, 39
+eastshadows_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 47
+# westshadows, N..NW any; 48 -> N[0: (westbound, _)]
+any_0, any_1, any_2, any_3, any_4, 49, any_5, any_6, any_7, 26
+any_0, any_1, any_2, any_3, any_4, 50, any_5, any_6, any_7, 27
+any_0, any_1, any_2, any_3, any_4, 51, any_5, any_6, any_7, 28
+any_0, any_1, any_2, any_3, any_4, 52, any_5, any_6, any_7, 29
+any_0, any_1, any_2, any_3, any_4, 53, any_5, any_6, any_7, 30
+any_0, any_1, any_2, any_3, any_4, 54, any_5, any_6, any_7, 31
+any_0, any_1, any_2, any_3, any_4, 55, any_5, any_6, any_7, 32
+westshadows_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 48
+# (47, 48), N..NW any; [0]
+_688398911390223_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, _688398911390223_0
+# pointerOp, N..NE any, E 3, SE..NW any; 9 -> NE:21
 any_0, any_1, any_2, any_3, any_4, 3, pointerOp_0, any_5, any_6, 21
-_233947547755308_0, any_0, 0, vac_0, _294543865263880_0, vac_1, vac_2, _780857090664487_0, any_1, 0
-any_0, any_1, any_2, 0, vac_0, 10, _780857090664487_0, any_3, any_4, 19
-any_0, any_1, any_2, 0, vac_0, 11, _780857090664487_0, any_3, any_4, 20
-any_0, any_1, any_2, 0, vac_0, 13, _780857090664487_0, any_3, any_4, 22
-any_0, any_1, any_2, 0, vac_0, 14, _780857090664487_0, any_3, any_4, 23
-any_0, any_1, any_2, 0, vac_0, 15, _780857090664487_0, any_3, any_4, 24
-any_0, any_1, any_2, 0, vac_0, 16, _780857090664487_0, any_3, any_4, 25
-vac_0, 0, any_0, any_1, any_2, 4, vac_1, _233947547755308_0, any_3, 9
-vac_0, 0, any_0, any_1, any_2, 1, vac_1, _233947547755308_0, any_3, 10
-vac_0, 0, any_0, any_1, any_2, 2, vac_1, _233947547755308_0, any_3, 11
-vac_0, 0, any_0, any_1, any_2, 5, vac_1, _233947547755308_0, any_3, 13
-vac_0, 0, any_0, any_1, any_2, 6, vac_1, _233947547755308_0, any_3, 14
-vac_0, 0, any_0, any_1, any_2, 7, vac_1, _233947547755308_0, any_3, 15
-vac_0, 0, any_0, any_1, any_2, 8, vac_1, _233947547755308_0, any_3, 16
-4, 9, 0, 0, _294543865263880_0, any_0, any_1, any_2, any_3, 4
+pointerOp_0, any_0, any_1, 3, any_2, any_3, any_4, any_5, any_6, 9
+# (9, pointerOp), any, 0, vac, SE (4, prgm), S..SW vac, (4, vac), any; 0 -> N[0: (_, northboundOp)]  E[SE: (9, pointerOp)]
+any_0, any_1, any_2, 0, vac_0, 10, _293966399727257_0, any_3, any_4, 19
+any_0, any_1, any_2, 0, vac_0, 11, _293966399727257_0, any_3, any_4, 20
+any_0, any_1, any_2, 0, vac_0, 13, _293966399727257_0, any_3, any_4, 22
+any_0, any_1, any_2, 0, vac_0, 14, _293966399727257_0, any_3, any_4, 23
+any_0, any_1, any_2, 0, vac_0, 15, _293966399727257_0, any_3, any_4, 24
+any_0, any_1, any_2, 0, vac_0, 16, _293966399727257_0, any_3, any_4, 25
+vac_0, 0, any_0, any_1, any_2, 4, vac_1, _537895657608921_0, any_3, 9
+vac_0, 0, any_0, any_1, any_2, 1, vac_1, _537895657608921_0, any_3, 10
+vac_0, 0, any_0, any_1, any_2, 2, vac_1, _537895657608921_0, any_3, 11
+vac_0, 0, any_0, any_1, any_2, 5, vac_1, _537895657608921_0, any_3, 13
+vac_0, 0, any_0, any_1, any_2, 6, vac_1, _537895657608921_0, any_3, 14
+vac_0, 0, any_0, any_1, any_2, 7, vac_1, _537895657608921_0, any_3, 15
+vac_0, 0, any_0, any_1, any_2, 8, vac_1, _537895657608921_0, any_3, 16
+_537895657608921_0, any_0, 0, vac_0, _487705463628354_0, vac_1, vac_2, _293966399727257_0, any_1, 0
+# 4, N 9, NE..E 0, SE (4, prgm), S..NW any; 4 -> N:18  E[SE: (9, pointerOp)]
 9, any_0, any_1, 0, 0, 4, any_2, any_3, any_4, 18
 0, 0, any_0, any_1, any_2, 4, any_3, 4, 9, 9
 0, 0, any_0, any_1, any_2, 1, any_3, 4, 9, 10
@@ -211,21 +304,26 @@ vac_0, 0, any_0, any_1, any_2, 8, vac_1, _233947547755308_0, any_3, 16
 0, 0, any_0, any_1, any_2, 6, any_3, 4, 9, 14
 0, 0, any_0, any_1, any_2, 7, any_3, 4, 9, 15
 0, 0, any_0, any_1, any_2, 8, any_3, 4, 9, 16
-21, any_0, any_1, any_2, any_3, any_4, any_5, northbound_0, any_6, 21
-any_0, any_1, any_2, any_3, any_4, 21, northbound_0, any_5, any_6, 0
-_569764822756552_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
-any_0, any_1, any_2, any_3, any_4, _569764822756552_0, any_5, any_6, any_7, _569764822756552_0
-_231788401900752_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
-any_0, any_1, any_2, _231788401900752_0, any_3, any_4, any_5, any_6, any_7, _231788401900752_0
-_681977325299943_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
-any_0, any_1, any_2, any_3, any_4, any_5, any_6, _681977325299943_0, any_7, _681977325299943_0
+4, 9, 0, 0, _487705463628354_0, any_0, any_1, any_2, any_3, 4
+# 21, W northboundNOP, NW..SW any; [0] -> N:0
+any_0, any_1, any_2, any_3, any_4, 21, northboundNOP_0, any_5, any_6, 0
+21, any_0, any_1, any_2, any_3, any_4, any_5, northboundNOP_0, any_6, 21
+# (21, northboundNOP), N..NW any; 0 ~> N[0]
+_153693061857386_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
+any_0, any_1, any_2, any_3, any_4, _153693061857386_0, any_5, any_6, any_7, _153693061857386_0
+# (28, westbound), N..NW any; 0 ~> W[0]
+_672977476146232_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
+any_0, any_1, any_2, _672977476146232_0, any_3, any_4, any_5, any_6, any_7, _672977476146232_0
+# (35, eastbound), N..NW any; 0 ~> E[0]
+_677095602545038_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
+any_0, any_1, any_2, any_3, any_4, any_5, any_6, _677095602545038_0, any_7, _677095602545038_0
 
 @COLORS
 0 200 200 200
 
 @ICONS
 XPM
-"15 735 15 2"
+"15 945 15 2"
 ".. c #C8C8C8"
 "AA c #DFFFFF"
 "BB c #CFFFFF"
@@ -236,11 +334,11 @@ XPM
 "GG c #FFFFFF"
 "HH c #FF00FF"
 "II c #0000FF"
-"vc c #6DFFFF"
-"t+ c #91FFFF"
-"_? c #B6FFFF"
-"/7 c #C5FFFF"
-""\ c #DAFFFF"
+"vc c #55FFFF"
+"t+ c #71FFFF"
+"_? c #8DFFFF"
+"/7 c #99FFFF"
+""\ c #AAFFFF"
 ".............................."
 ".............................."
 "............CCCCCC............"
@@ -962,17 +1060,227 @@ XPM
 "............AAAAAA............"
 ".............................."
 ".............................."
+"............AAAAAA............"
+"............AAAAAA............"
+"......AAAAAAAAAAAAAAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAAAAAAAAAAAAAA......"
+"............AAAAAA............"
+"............AAAAAA............"
 ".............................."
 ".............................."
-"..............II.............."
-"............IIIIII............"
-"............IIIIII............"
-"..........IIII..IIII.........."
-"..........IIII..IIII.........."
-"........IIII......IIII........"
-"........IIII......IIII........"
-"......IIII..........IIII......"
-"......IIII..........IIII......"
+"............AAAAAA............"
+"............AAAAAA............"
+"......AAAAAAAAAAAAAAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAAAAAAAAAAAAAA......"
+"............AAAAAA............"
+"............AAAAAA............"
 ".............................."
 ".............................."
+"............AAAAAA............"
+"............AAAAAA............"
+"......AAAAAAAAAAAAAAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAAAAAAAAAAAAAA......"
+"............AAAAAA............"
+"............AAAAAA............"
 ".............................."
+".............................."
+"............AAAAAA............"
+"............AAAAAA............"
+"......AAAAAAAAAAAAAAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAAAAAAAAAAAAAA......"
+"............AAAAAA............"
+"............AAAAAA............"
+".............................."
+".............................."
+"............AAAAAA............"
+"............AAAAAA............"
+"......AAAAAAAAAAAAAAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAAAAAAAAAAAAAA......"
+"............AAAAAA............"
+"............AAAAAA............"
+".............................."
+".............................."
+"............AAAAAA............"
+"............AAAAAA............"
+"......AAAAAAAAAAAAAAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAAAAAAAAAAAAAA......"
+"............AAAAAA............"
+"............AAAAAA............"
+".............................."
+".............................."
+"............AAAAAA............"
+"............AAAAAA............"
+"......AAAAAAAAAAAAAAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAAAAAAAAAAAAAA......"
+"............AAAAAA............"
+"............AAAAAA............"
+".............................."
+".............................."
+"............AAAAAA............"
+"............AAAAAA............"
+"......AAAAAAAAAAAAAAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAAAAAAAAAAAAAA......"
+"............AAAAAA............"
+"............AAAAAA............"
+".............................."
+".............................."
+"............AAAAAA............"
+"............AAAAAA............"
+"......AAAAAAAAAAAAAAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAAAAAAAAAAAAAA......"
+"............AAAAAA............"
+"............AAAAAA............"
+".............................."
+".............................."
+"............AAAAAA............"
+"............AAAAAA............"
+"......AAAAAAAAAAAAAAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAAAAAAAAAAAAAA......"
+"............AAAAAA............"
+"............AAAAAA............"
+".............................."
+".............................."
+"............AAAAAA............"
+"............AAAAAA............"
+"......AAAAAAAAAAAAAAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAAAAAAAAAAAAAA......"
+"............AAAAAA............"
+"............AAAAAA............"
+".............................."
+".............................."
+"............AAAAAA............"
+"............AAAAAA............"
+"......AAAAAAAAAAAAAAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAAAAAAAAAAAAAA......"
+"............AAAAAA............"
+"............AAAAAA............"
+".............................."
+".............................."
+"............AAAAAA............"
+"............AAAAAA............"
+"......AAAAAAAAAAAAAAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAAAAAAAAAAAAAA......"
+"............AAAAAA............"
+"............AAAAAA............"
+".............................."
+".............................."
+"............AAAAAA............"
+"............AAAAAA............"
+"......AAAAAAAAAAAAAAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"..AAAAAA..............AAAAAA.."
+"......AAAAAA......AAAAAA......"
+"......AAAAAA......AAAAAA......"
+"......AAAAAAAAAAAAAAAAAA......"
+"............AAAAAA............"
+"............AAAAAA............"
+".............................."
+"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGG"
+"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGG"
+"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGG"
+"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGG"
+"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGG"
+"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGG"
+"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGG"
+"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGG"
+"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGG"
+"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGG"
+"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGG"
+"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGG"
+"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGG"
+"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGG"
+"GGGGGGGGGGGGGGGGGGGGGGGGGGGGGG"

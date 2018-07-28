@@ -58,7 +58,40 @@
 47: Eastward-pointing shadow cell  {EAST_SHADOW}
 48: Westward-pointing shadow cell  {WEST_SHADOW}
 
-49: Data pointer {DATA_PTR}
+49: Westward shadow +  {WEST_SHADOW_PLUS}
+50: Westward shadow -  {WEST_SHADOW_MINUS}
+51: Westward shadow ]  {WEST_SHADOW_R_BRACK}
+52: Westward shadow <  {WEST_SHADOW_R_ANGLE}
+53: Westward shadow >  {WEST_SHADOW_L_ANGLE}
+54: Westward shadow .  {WEST_SHADOW_DOT}
+55: Westward shadow ,  {WEST_SHADOW_COMMA}
+
+56: Eastward shadow +  {EAST_SHADOW_PLUS}
+57: Eastward shadow -  {EAST_SHADOW_MINUS}
+58: Eastward shadow ]  {EAST_SHADOW_R_BRACK}
+59: Eastward shadow <  {EAST_SHADOW_R_ANGLE}
+60: Eastward shadow >  {EAST_SHADOW_L_ANGLE}
+61: Eastward shadow .  {EAST_SHADOW_DOT}
+62: Eastward shadow ,  {EAST_SHADOW_COMMA}
+
+63: 
+64: 
+65: 
+66: 
+67: 
+68: 
+69: 
+70: 
+71: 
+72: 
+73: 
+74: 
+75: 
+76: 
+77: 
+78: 
+79: 
+80: 
 
 
 + Setup:
@@ -90,73 +123,10 @@
     The input tape will be stacked vertically in unary, with one state-0 cell separating successive input segments.
     The prgm-tape head will at every execution step send a signal cell downward (by turning the prgm cell below it into a state)
 
-@TABLE
-states: ?
-neighborhood: Moore
-symmetries: none
-
-anyPrgm = (PLUS..COMMA)
-prgm = anyPrgm - (L_BRACK, R_BRACK)
-vac = (0, anyPrgm)
-
-pointerOp = (POINTER_PLUS..POINTER_COMMA) - POINTER_R_BRACK
-northbound = (NORTH_PLUS..NORTH_COMMA, NORTH_NOP) - NORTH_R_BRACK
-westbound = (WEST_PLUS..WEST_COMMA) - WEST_R_BRACK
-eastbound = (EAST_PLUS..EAST_COMMA) - EAST_R_BRACK
-
-
-##### INITIAL TELESCOPING OF BRACKET-ENCLOSED STUFF #####
-# move program cell down if it has a closing bracket to its east
-(prgm, R_BRACK), 0, 0, R_BRACK, SE..NW vac; 0 -> S[0]
-
-# move program cell down if the cell to its east is below it
-(prgm, R_BRACK), N..E vac, anyPrgm, S..NW vac; 0 -> S[0]
-
-## (NOTE: The above two groups aren't even necessary but symmetry finishes sooner) ##
-
-# move program cell down if it has an opening bracket to its west
-(prgm, L_BRACK), 0, NE..SW vac, L_BRACK, any; 0 -> S[0]
-
-# move program cell down if the cell to its west is below it
-(prgm, L_BRACK), N..S vac, anyPrgm, W..NW vac; 0 -> S[0]
-
-# special-casing for ][ cases. could probably be handled above, hm
-L_BRACK, 0, 0, vac, vac, 0, R_BRACK, 0, 0; 0 -> S:L_BRACK
-R_BRACK, 0, 0, 0, L_BRACK, 0, vac, vac, 0; 0 -> S:R_BRACK
-
-# if a bracket has nothing in its mouth, assume it needs to travel south
-# to catch up to a different level
-# In the same vein, spawn a cell if in an empty cell between a bracket (N) and
-# a prgm tape bit (SW/SE)
-L_BRACK, N..SW 0, vac, vac; 0 -> S:L_BRACK
-R_BRACK, 0, vac, vac, SE..NW 0; 0 -> S:R_BRACK
-
-# if the above happens,  move the now-hanging-one-lvl-too-high prgm tape data south
-prgm, 0, 0, prgm, 0, 0, R_BRACK, 0, 0; 0 -> S[0]  # ]x
-prgm, 0, 0, 0, L_BRACK, 0, 0, prgm, 0; 0 -> S[0]  # x[
-
-##### SHADOW CELL #####
-WEST_SHADOW, SE (0, northbound), S..E any; [SE: ([0], westbound, 0)] -> E[SE: (_, [0], ...)]
-EAST_SHADOW, SW (0, northbound), W..S any; [SW: ([0], westbound, 0)] -> W[SW: (_, [0], ...)]
-WEST_SHADOW, S (0, northbound), SW..SE any; [0] -> W[S: (_, westbound, _)]
-EAST_SHADOW, S (0, northbound), SW..SE any; [0] -> E[S: (_, eastbound, _)]
-
-##### POINTER MOVEMENT #####
-# don't put out north-bound signals after hitting r_brack
-pointerOp, N..NE any, E R_BRACK, SE..NW any; POINTER -> NE:NORTH_R_BRACK
-# otherwise do
-(POINTER, pointerOp), any, 0, vac, SE (L_BRACK, prgm), S..SW vac, (L_BRACK, vac), any; 0 -> N[0: (_, northbound)]  E[SE: (POINTER, pointerOp)]
-L_BRACK, N POINTER, NE..E 0, SE (L_BRACK, prgm), S..NW any; L_BRACK -> N:NORTH_NOP  E[SE: (POINTER, pointerOp)]
-
-# make north_r_brack wait one generation before going up so it's in sync
-NORTH_R_BRACK, W northbound, NW..SW any; [0] -> N:0
-# move signals
-(NORTH_R_BRACK, northbound), N..NW any; 0 -> N[0]
-(WEST_R_BRACK, westbound), N..NW any; 0 -> W[0]
-(EAST_R_BRACK, eastbound), N..NW any; 0 -> E[0]
 
 @COLORS
 C8C8C8: 0
+
 
 @ICONS
 ?  00FFFF .. FFF
@@ -171,7 +141,7 @@ C8C8C8: 0
 8: FF00FF
 9: 0000FF
 
-#C empty space; 18 47 48
+#C empty space; 18 47..62
 x = 13, y = 13, rule = //10
 5.3A$5.3A$2.9A$2.3A3.3A$2.3A3.3A$3A7.3A$3A7.3A$3A7.3A$2.3A3.3A$2.3A3.
 3A$2.9A$5.3A$5.3A!
@@ -208,7 +178,7 @@ x = 11, y = 11, rule = //10
 #C 8 25 32 39 46
 x = 9, y = 11, rule = //10
 .7E$9E$9E$9E$9E$9E$.8E$5.4E$5.4E$4.4E$.6E!
- 
+    
 #C Period
 #C 7 24 31 45
 x = 9, y = 7, rule = //10
@@ -219,6 +189,93 @@ x = 9, y = 7, rule = //10
 x = 9, y = 9, rule = //10
 2G5.2G$2G5.2G$.2G3.2G$.2G3.2G$2.2G.2G$2.2G.2G$3.3G$3.3G$4.G!
 
-#C Data pointer; 49
+#C Data pointer; none yet
 x = 9, y = 9, rule = //10
 4.I$3.3I$3.3I$2.2I.2I$2.2I.2I$.2I3.2I$.2I3.2I$2I5.2I$2I5.2I!
+
+
+@TABLE
+states: ?
+neighborhood: Moore
+symmetries: none
+
+anyPrgm = (PLUS..COMMA)
+prgm = anyPrgm - (L_BRACK, R_BRACK)
+vac = (0, anyPrgm)
+
+pointerOp = (POINTER_PLUS..POINTER_COMMA) - POINTER_R_BRACK
+northbound = (NORTH_PLUS..NORTH_COMMA)
+northboundNOP = (northbound, NORTH_NOP)
+northboundOp = northbound - NORTH_R_BRACK
+westbound = (WEST_PLUS..WEST_COMMA)
+eastbound = (EAST_PLUS..EAST_COMMA)
+
+westshadows = (WEST_SHADOW_PLUS..WEST_SHADOW_COMMA, WEST_SHADOW)
+eastshadows = (EAST_SHADOW_PLUS..EAST_SHADOW_COMMA, EAST_SHADOW)
+
+
+##### INITIAL TELESCOPING OF BRACKET-ENCLOSED STUFF #####
+# move program cell down if it has a closing bracket to its east
+(prgm, R_BRACK), E R_BRACK, SE..NW vac, N..NE 0; 0 -> S[0]
+
+# move program cell down if the cell to its east is below it
+(prgm, R_BRACK), SE anyPrgm, S..E vac; 0 -> S[0]
+
+## (NOTE: The above two groups aren't even necessary but symmetry finishes sooner) ##
+
+# move program cell down if it has an opening bracket to its west
+(prgm, L_BRACK), W L_BRACK, any, 0, NE..SW vac; 0 -> S[0]
+
+# move program cell down if the cell to its west is below it
+(prgm, L_BRACK), SW anyPrgm, W..S vac; 0 -> S[0]
+
+# special-casing for ][ cases. could probably be handled above, hm
+L_BRACK, E..SE vac, W 0, SW R_BRACK, W..NE 0; 0 -> S:L_BRACK
+R_BRACK, SE L_BRACK, 0, vac, vac, NW..E 0; 0 -> S:R_BRACK
+
+# if a bracket has nothing in its mouth, assume it needs to travel south
+# to catch up to a different level
+# In the same vein, spawn a cell if in an empty cell between a bracket (N) and
+# a prgm tape bit (SW/SE)
+L_BRACK, N..SW 0, W vac, NW vac; 0 -> S:L_BRACK
+R_BRACK, NE..E vac, SE..N 0; 0 -> S:R_BRACK
+
+# if the above happens,  move the now-hanging-one-lvl-too-high prgm tape data south
+prgm, E prgm, 0, 0, SW R_BRACK, 0, NW..NE 0; 0 -> S[0]  # ]x
+prgm, SE L_BRACK, 0, 0, W prgm, NW..E 0; 0 -> S[0]  # x[
+
+
+##### SHADOW CELL #####
+# If a northbound cell is coming at shadow from a corner, move toward it & load self with it
+eastshadows, SW northboundNOP, W..S any; 0 -> W[SW: eastshadows]
+westshadows, SW northboundNOP, W..S any; 0 -> W[SW: westshadows]
+
+eastshadows, SE northboundNOP, S..E any; 0 -> E[SE: eastshadows]
+westshadows, SE northboundNOP, S..E any; 0 -> E[SE: westshadows]
+
+# If it's coming from right below, just load without moving
+eastshadows, S northboundNOP, SW..SE any; [S: eastshadows]
+westshadows, S northboundNOP, SW..SE any; [S: westshadows]
+
+# If you're a "loaded" shadow cell, turn into a normal one and release your signal
+# (eastshadows, westshadows), N..NW any; [0: (EAST_SHADOW*eastshadows, WEST_SHADOW, ...)] -> N[0: (eastbound, _, westbound, _)]
+eastshadows, N..NW any; EAST_SHADOW -> N[0: (eastbound, _)]
+westshadows, N..NW any; WEST_SHADOW -> N[0: (westbound, _)]
+
+# override signal movement from next section
+(EAST_SHADOW, WEST_SHADOW), N..NW any; [0]
+
+
+##### POINTER MOVEMENT #####
+# don't put out north-bound signals after hitting r_brack
+pointerOp, N..NE any, E R_BRACK, SE..NW any; POINTER -> NE:NORTH_R_BRACK
+# otherwise do
+(POINTER, pointerOp), any, 0, vac, SE (L_BRACK, prgm), S..SW vac, (L_BRACK, vac), any; 0 -> N[0: (_, northboundOp)]  E[SE: (POINTER, pointerOp)]
+L_BRACK, N POINTER, NE..E 0, SE (L_BRACK, prgm), S..NW any; L_BRACK -> N:NORTH_NOP  E[SE: (POINTER, pointerOp)]
+
+# make north_r_brack wait one generation before going up so it's in sync
+NORTH_R_BRACK, W northboundNOP, NW..SW any; [0] -> N:0
+# move signals
+(NORTH_R_BRACK, northboundNOP), N..NW any; 0 ~> N[0]
+(WEST_R_BRACK, westbound), N..NW any; 0 ~> W[0]
+(EAST_R_BRACK, eastbound), N..NW any; 0 ~> E[0]
