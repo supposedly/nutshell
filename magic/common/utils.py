@@ -1,4 +1,7 @@
+from cli import ARGS
+
 RAND_SEED = 83_523
+
 
 def _printv(*stuff, pre='  ', **kwargs):
     """
@@ -14,7 +17,7 @@ def printv(*args, start='\n', end=None, accum=True, **kwargs):
     """
     *args: Things to print, ordered by level of verbosity. Group items using a list.
     start: What to print before anything else.
-    accum: Whether to print everything up to ARGS.verbosity or just the item at ARGS.verbosity
+    accum: Whether to print everything up to VERBOSITY or just the item at VERBOSITY
     **kwargs: Passed to _printv()
     """
     if not ARGS.verbosity:
@@ -33,6 +36,3 @@ def printq(*args, **kwargs):
     if ARGS.quiet:
         return
     print(*args, **kwargs)
-
-
-from to_ruletable import ARGS  # yeah idunno
