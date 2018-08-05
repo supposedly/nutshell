@@ -11,11 +11,11 @@ from magic.common.utils import printv, printq
 rSHORTHAND = re.compile(r'(\d+\s*\.\.\s*\d+)\s+(.+)')
 rRANGE = re.compile(r'\d+(?:\+\d+)?\s*\.\.\s*\d+')
 rSEGMENT = re.compile(
-  # ugh
+  # jesus christ
   r'\s*(?:([0-8](?:\s*\.\.\s*[0-8])?)\s+)?(-?-?(?:[({](?:[\w\-*\s]*\s*(?:,|\.\.)\s*)*[\w\-*\s]+[})]|[\w\-]+)|\[(?:[0-8]\s*:\s*)?(?:[({](?:(?:\[?[\w\-]+]?(?:\s*\*\s*[\w\-])?|\d+(?:\+\d+)?\s*\.\.\s*\d+)*,\s*)*(?:\[?[\w\-]+]?|\d+(?:\+\d+)?\s*\.\.\s*\d+|(?:\.\.\.)?)[})]|[\w\-*\s]+)])(?:-(?:(?:\d+|(?:[({](?:[\w\-]*\s*(?:,|\.\.)\s*)*[\w\-]+[})]|[A-Za-z\-]+))))?(?:\s*\*\s*([1-8]))?'
   )
-rBINDMAP = re.compile(r'\[(\d+).*]')
-rBINDING = re.compile(r'\[(\d+)]')
+rBINDMAP = re.compile(r'\[(\d+)')
+rBINDSTART = re.compile(r'\[\d+')
 rALREADY = re.compile(r'(.+)_(\d+)$')
 
 
@@ -119,9 +119,9 @@ def unbind_vars(tr: (list, tuple), rebind=True, bind_keep=False):
     return built
 
 
-def _add_mod(mod, idx, add, start=1):
-    idx += add - start
-    return idx % mod + start
+def _add_mod(modulus, index, add, start=1):
+    index += add - start
+    return index % modulus + start
 
 
 def expand_tr(tr: list, expected_len: int):
@@ -140,8 +140,7 @@ def expand_tr(tr: list, expected_len: int):
     reorder states to account for that.
     """
     add_mod = _add_mod.__get__(expected_len)
-    idx = 1
-    first_lower = None
+    cur_idx, first_lower = 1, None
     initial, resultant = tr.pop(0), tr.pop(-1)
     napkin = []
     for val in tr:
@@ -149,7 +148,7 @@ def expand_tr(tr: list, expected_len: int):
         if match is None:
             if first_lower is None:
                 first_lower = 1
-            idx = add_mod(idx, 1)
+            cur_idx = add_mod(cur_idx, 1)
             napkin.append(val)
             continue
         group, state = match[1], match[2]
@@ -158,39 +157,90 @@ def expand_tr(tr: list, expected_len: int):
                 if group is None:
                     first_lower = 1
                 else:
-                    idx = first_lower = int(group)
-            idx = add_mod(idx, 1)
+                    cur_idx = first_lower = int(group)
+            cur_idx = add_mod(cur_idx, 1)
             napkin.append(state)
             continue
-        lower, upper = TableRange(group).bounds
+        lower, upper = TableRange(group).bounds  # the actual tablerange isn't valid but luckily its bounds are stored independently of the range obj
         if first_lower is None:
-            idx = first_lower = lower
-        if lower != idx:
-            raise ValueError(group, lower, idx)
+            cur_idx = first_lower = lower
+        if lower != cur_idx:
+            raise ValueError(group, lower, cur_idx)
         span = upper - lower if upper > lower else expected_len - lower + upper  # else it wraps
-        if all((state.startswith('['), ':' not in state, state.strip('[]').isalpha())):  # if it's a binding with a var name inside
+        if all((state.startswith('['), ':' not in state, state.strip('[]').isalpha())):
+            # if it's a binding with a var name inside, then expand it
+            # as shown in the second 'paragraph' of the docstring above
             group = [state.strip('[]')]
-            group.extend(f'[{idx}]' for _ in range(1, span))
+            group.extend(f'[{cur_idx}]' for _ in range(1, span))
         else:
             group = [state] * span
-        idx = add_mod(idx, span)
+        cur_idx = add_mod(cur_idx, span)
         napkin.extend(group)
+    # Now, if the user decided to start on a direction other than north,
     if first_lower > 1:
+        # Rotate the napkin to put north at index 0,
         offset = expected_len - first_lower + 1
         napkin = napkin[offset:] + napkin[:offset]
-        # Fix bindings that are now index errors
-        switch, noreplace = {}, set()
+        # Then fix the bindings/mappings that are now index errors
+        # thanks to the rotation.
+        #
+        # In other words, the purpose of this bit of code is to resolve
+        # invalid *forward references* in bindings or mappings, because
+        # the rotation made it so that a previously-valid binding might
+        # now be invalid (as it may refer to something ahead of itself)
+        to_replace, no_replace = {}, set()
         for i, v in enumerate(napkin):
-            current_bind = f'[{i+1}]'
-            if not rBINDING.match(v):
-                noreplace.add(current_bind)
-            elif v not in noreplace:
-                if v in switch:
-                    napkin[i] = switch[v]
-                else:
-                    napkin[i] = of(napkin, v, True)
-                    switch[v] = napkin[int(v[1:-1])-1] = current_bind
-                    noreplace.add(current_bind)
+            # Both bindings and mappings start with a bracket + number
+            # so use that to compare both w/ one stone
+            cur_bind = f'[{i+1}'
+            match = rBINDSTART.match(v)
+            if match is None:
+                # If the current element is not a binding, we know that
+                # (a) said element itself is not a forward reference --
+                # or any manner of reference at all, i.e. neither a
+                # binding nor a mapping -- so we don't need to take any
+                # action on *it*... and that
+                # (b) any reference to the current element encountered
+                # later will necessarily be a valid backward reference,
+                # so no action will need to be taken thereon either.
+                #
+                # Thence, we add the current element's binding index to
+                # the "do not replace me" list (or set).
+                no_replace.add(cur_bind)
+                continue
+            cur_match = match[0]
+            if cur_match in no_replace:
+                # If the current element is in the above-mentioned set,
+                # do nothing to or with it.
+                continue
+            if cur_match in to_replace:
+                # If the current element is found in the "definitely
+                # replace me with this" hashmap, replace its /^\[\d+/
+                # with the one found in said hashmap.
+                napkin[i] = to_replace[cur_match] + v[len(cur_match):]
+            else:
+                # If the current element is in neither the "do not
+                # replace me" set nor the "definitely replace me" map,
+                # but it *is* a binding or mapping,
+                # assume it hasn't been encountered yet (it hasn't) and
+                # that it's also one of the dreaded forward references.
+                # That being so, we
+                # (a) replace it with the non-reference element it
+                # ultimately refers to,
+                napkin[i] = of(napkin, cur_match, True)
+                # (b) add its /^\[\d+/ to the "replace me" dict, mapped
+                # to the current index (so future occurrences of this
+                # same references can be replaced with the new valid
+                # reference index, being the current element's),
+                to_replace[cur_match] = cur_bind
+                # (c) after replacing it with the element it refers to,
+                # replace *that* element with a reference to it,
+                napkin[int(cur_match[1:])-1] = cur_bind + ']'
+                # (d) and finally, add that "reference to it" (it being
+                # the current element) to the "don't replace me" set so
+                # that, when it's encountered once again down the line,
+                # it won't be touched.
+                no_replace.add(cur_bind)
     return [initial, *napkin, resultant]
 
 
@@ -199,7 +249,7 @@ def of(tr, idx, napkin=False):
     Acts like tr[idx], but accounts for that the item
     at that index might be a binding reference to a previous
     index.
-    XXX: Maybe put this in a class or something who knows
+    XXX: Maybe put this in a class or something as a method
     """
     if isinstance(idx, str): # if it itself is a binding
         idx = int(rBINDMAP.match(idx)[1])

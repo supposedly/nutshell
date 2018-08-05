@@ -1,5 +1,4 @@
 import re
-import random
 from collections import defaultdict
 from itertools import chain, filterfalse, takewhile
 
@@ -8,7 +7,7 @@ import bidict
 from ._classes import ColorRange
 from ._utils import lazylen, maybe_double, SAFE_CHARS, SYMBOL_MAP
 from magic.common.classes import TableRange, ColorMixin
-from magic.common.utils import RAND_SEED
+from magic.common.utils import random
 from magic.common.errors import *
 
 
@@ -66,7 +65,6 @@ class IconArray:
     _rCOLOR = re.compile(r'(\d+:\s*|[.A-Z]|[p-y][A-O]\s+)(\d{0,3}\s+\d{0,3}\s+\d{0,3}|[0-9A-F]{6}|[0-9A-F]{3}).*')
     
     def __init__(self, segment, start=0, *, dep: ['@COLORS', '@TABLE'] = None):
-        self._rand = random.Random(x=RAND_SEED)
         self._src = segment
         self._set_states = None
         self._fill_gradient = None
@@ -94,9 +92,9 @@ class IconArray:
         yield from (f'"{line}"' for icon in (self.icons[key] for key in sorted(self.icons)) for line in icon)
     
     def _make_color_symbol(self):
-        name = ''.join(self._rand.sample(SAFE_CHARS, 2))
+        name = ''.join(random.sample(SAFE_CHARS, 2))
         while name in self.colormap.values():
-            name = ''.join(self._rand.sample(SAFE_CHARS, 2))
+            name = ''.join(random.sample(SAFE_CHARS, 2))
         return name
     
     def _parse_colors(self, start=0):

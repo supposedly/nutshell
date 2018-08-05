@@ -2,11 +2,12 @@
 """With the pytest-cov plugin installed, run this using `py.test test.py --cov=magic/ --cov-report html`"""
 import os
 import sys
+from types import SimpleNamespace
 
 import pytest
 
-from types import SimpleNamespace
 from to_ruletable import transpile, write_rule
+from magic.common.utils import RAND_SEED, random as nutshell_rand
 
 ARGV = sys.argv + [None, None][len(sys.argv):]
 
@@ -27,8 +28,10 @@ if __name__ == '__main__':
                 if len(ARGV) < 3 or fname.split('.')[0] in ARGV[2:]:
                     d = {'infiles': ['./examples/nutshells/' + fname], 'outdirs': ['./examples/compiled_ruletables/']}
                     write_rule(SimpleNamespace(**d, __=d))
+                nutshell_rand.seed(RAND_SEED)
         else:
             for fname in walk:
                 if len(ARGV) < 3 or fname.split('.')[0] in ARGV[2:]:
                     with open('./examples/nutshells/' + fname) as fp:
                         transpile(fp)
+                nutshell_rand.seed(RAND_SEED)

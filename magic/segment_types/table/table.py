@@ -231,7 +231,7 @@ class AbstractTable:
                     new.extend(self.vars[state])
                 except KeyError as e:
                     current = 'Output specifier' if ptcd else 'Transition'
-                    raise TableReferenceError(lno, f"{current} references undefined name '{e}'")
+                    raise TableReferenceError(lno, f"{current} references undefined name {e}")
         return new
     
     def _cardinal_sub(self, match):
@@ -420,7 +420,7 @@ class AbstractTable:
             if self._rASSIGNMENT.match(line):
                 raise TableSyntaxError(lno, 'Variable declaration after first transition')
             napkin, ptcds = map(str.strip, line.partition('>')[::2])
-            main_transition_first = napkin.endswith('~') or not ptcds
+            main_transition_first = napkin.endswith('-') or not ptcds
             napkin = napkin.rstrip('-~').strip()
             if self.directives['symmetries'] == 'permute':
                 napkin = utils.conv_permute(napkin, self._trlen)

@@ -74,16 +74,20 @@
 61: Eastward shadow .  {EAST_SHADOW_DOT}
 62: Eastward shadow ,  {EAST_SHADOW_COMMA}
 
-63: 
-64: 
-65: 
-66: 
-67: 
-68: 
-69: 
-70: 
-71: 
-72: 
+63: Pointer delay state  {DELAYED_POINTER}
+
+64: {DATA_POINTER}    Data pointer
+
+65: {DATA}            Data
+66: {DATA_PROMPT}     Data-output prompter
+67: {DATA_OUT}        Data turned output signal; reverts to data on next generation
+68: {FINAL_DATA_OUT}  Data-born output signal that will not extend westward anymore
+69: {ZERO_OUT}        Vacuum turned output signal; reverts to vacuum on next
+70: {FINAL_ZERO_OUT}  Vacuum-born output signal that will not extend westward anymore
+
+71: {DATA_PLUS}   Plus sign (incrementor) moving through data
+72: {DATA_MINUS}  Minus sign (decrementor) moving through data
+
 73: 
 74: 
 75: 
@@ -92,6 +96,25 @@
 78: 
 79: 
 80: 
+81: 
+82: 
+83: 
+84: 
+85: 
+86: 
+87: 
+88: 
+89: 
+90: 
+91: 
+92: 
+93: 
+94: 
+95: 
+96: 
+97: 
+98: 
+99: 
 
 
 + Setup:
@@ -127,19 +150,18 @@
 @COLORS
 C8C8C8: 0
 
-
 @ICONS
-?  00FFFF .. FFF
+?  0FF .. FFF
 0: C8C8C8
-1: DFFFFF
-2: CFFFFF
-3: EFFFFF
-4: AFFFFF
-5: 70FFFF
-6: 00FFFF
-7: FFFFFF
-8: FF00FF
-9: 0000FF
+1: DFF
+2: CFF
+3: EFF
+4: AFF
+5: 7FF
+6: 0FF
+7: FFF
+8: EEE
+9: 00F
 
 #C empty space; 18 47..62
 x = 13, y = 13, rule = //10
@@ -150,7 +172,7 @@ x = 13, y = 13, rule = //10
 x = 5, y = 11, rule = //10
 5B$5B$2B$2B$2B$2B$2B$2B$2B$5B$5B!
 
-#C Right bracket 3
+#C Right bracket, 3 21 28 35 42
 x = 5, y = 11, rule = //10
 5B$5B$3.2B$3.2B$3.2B$3.2B$3.2B$3.2B$3.2B$5B$5B!
 
@@ -184,12 +206,16 @@ x = 9, y = 11, rule = //10
 x = 9, y = 7, rule = //10
 .7E$9E$9E$9E$9E$9E$.7E!
 
-#C "V" shape (pointer)
+#C "V" shape; pointer
 #C 9..17
 x = 9, y = 9, rule = //10
 2G5.2G$2G5.2G$.2G3.2G$.2G3.2G$2.2G.2G$2.2G.2G$3.3G$3.3G$4.G!
 
-#C Data pointer; none yet
+#C Darker "V" shape; delayed pointer]]]]], 63
+x = 9, y = 9, rule = //10
+2H5.2H$2H5.2H$.2H3.2H$.2H3.2H$2.2H.2H$2.2H.2H$3.3H$3.3H$4.H!
+
+#C Data pointer; 64
 x = 9, y = 9, rule = //10
 4.I$3.3I$3.3I$2.2I.2I$2.2I.2I$.2I3.2I$.2I3.2I$2I5.2I$2I5.2I!
 
@@ -214,7 +240,10 @@ westshadows = (WEST_SHADOW_PLUS..WEST_SHADOW_COMMA, WEST_SHADOW)
 eastshadows = (EAST_SHADOW_PLUS..EAST_SHADOW_COMMA, EAST_SHADOW)
 
 
+#########################################################
 ##### INITIAL TELESCOPING OF BRACKET-ENCLOSED STUFF #####
+#########################################################
+
 # move program cell down if it has a closing bracket to its east
 (prgm, R_BRACK), E R_BRACK, SE..NW vac, N..NE 0; 0 -> S[0]
 
@@ -245,7 +274,17 @@ prgm, E prgm, 0, 0, SW R_BRACK, 0, NW..NE 0; 0 -> S[0]  # ]x
 prgm, SE L_BRACK, 0, 0, W prgm, NW..E 0; 0 -> S[0]  # x[
 
 
+#######################
 ##### SHADOW CELL #####
+#######################
+
+
+DATA_POINTER, N..NW any; [0]
+
+# If shadow is touching data pointer, flip direction before moving to it
+eastshadows, SE northboundNOP, S..NW any, N DATA_POINTER, NE..E any; 0 -> E[SE: westshadows]
+westshadows, SW northboundNOP, W..NW any, N DATA_POINTER, NE..S any; 0 -> W[SW: eastshadows]
+
 # If a northbound cell is coming at shadow from a corner, move toward it & load self with it
 eastshadows, SW northboundNOP, W..S any; 0 -> W[SW: eastshadows]
 westshadows, SW northboundNOP, W..S any; 0 -> W[SW: westshadows]
@@ -257,25 +296,53 @@ westshadows, SE northboundNOP, S..E any; 0 -> E[SE: westshadows]
 eastshadows, S northboundNOP, SW..SE any; [S: eastshadows]
 westshadows, S northboundNOP, SW..SE any; [S: westshadows]
 
-# If you're a "loaded" shadow cell, turn into a normal one and release your signal
-# (eastshadows, westshadows), N..NW any; [0: (EAST_SHADOW*eastshadows, WEST_SHADOW, ...)] -> N[0: (eastbound, _, westbound, _)]
+# A "loaded" shadow cell turns into a normal one and releases its signal
 eastshadows, N..NW any; EAST_SHADOW -> N[0: (eastbound, _)]
 westshadows, N..NW any; WEST_SHADOW -> N[0: (westbound, _)]
 
-# override signal movement from next section
+# override signal movement from ptr-movement section
 (EAST_SHADOW, WEST_SHADOW), N..NW any; [0]
 
 
+################
+##### DATA #####
+################
+
+# (+, -, DATA_PROMPT), N 0, NE live, E..W 0, NW live; 0 -> N[0: (DATA, 0, ...)]
+
+# (0, DATA), S (DATA_PROMPT, DATA_OUT), SE any, W 0, NW..SE any; [0: (FINAL_ZERO_OUT, FINAL_DATA_OUT)]
+# (FINAL_ZERO_OUT, FINAL_DATA_OUT), N..NW any; [0: (0, DATA)] -> N[(FINAL_ZERO_OUT, FINAL_DATA_OUT, _, ...)]
+
+# (DATA_PROMPT, DATA_OUT), N..NW any; [0: (0, DATA)] -> N[(ZERO_OUT, DATA_OUT, _, ...)]
+
+# (ZERO_OUT, DATA_OUT), N..NW any; [0: (0, DATA)] -> N[(ZERO_OUT, DATA_OUT, _, ...)]  NW[(_, DATA_OUT, _, ...)]
+
+# +, N..NW any; 0 -> N[(+, INC_DATA, ...)]
+# -, N..NW any; 0 -> N[(-, DEC_DATA, ...)]
+
+# DATA, SE DEC_DATA, S..E any; [NW: (0, DEC_DATA, ...)]
+# (0, DATA), SE INC_DATA, S..E any; [0: (DATA, INC_DATA)]
+# 0, SE INC_DATA, S..E any; [NW: (DATA, INC_DATA, ...)]
+
+# DEC_DATA, SE 0, S..E any; [NW: (0, DATA, ...)]
+# (INC_DATA, DEC_DATA), N..NW any; DATA
+
+
+############################
 ##### POINTER MOVEMENT #####
-# don't put out north-bound signals after hitting r_brack
+############################
+
+# Don't put out north-bound signals after hitting r_brack
 pointerOp, N..NE any, E R_BRACK, SE..NW any; POINTER -> NE:NORTH_R_BRACK
-# otherwise do
-(POINTER, pointerOp), any, 0, vac, SE (L_BRACK, prgm), S..SW vac, (L_BRACK, vac), any; 0 -> N[0: (_, northboundOp)]  E[SE: (POINTER, pointerOp)]
+# But do elsewhere
+(POINTER, pointerOp), any, 0, vac, SE (L_BRACK, prgm), S..SW vac, (L_BRACK, vac), any; DELAYED_POINTER -> N[0: (_, northboundOp)]
+DELAYED_POINTER, any, 0, vac, SE (L_BRACK, prgm), S..SW vac, (L_BRACK, vac), any; 0 -> E[SE: (POINTER, pointerOp)]
 L_BRACK, N POINTER, NE..E 0, SE (L_BRACK, prgm), S..NW any; L_BRACK -> N:NORTH_NOP  E[SE: (POINTER, pointerOp)]
 
-# make north_r_brack wait one generation before going up so it's in sync
+# Make north_r_brack wait two generations before going up so it's in sync
 NORTH_R_BRACK, W northboundNOP, NW..SW any; [0] -> N:0
-# move signals
+NORTH_R_BRACK, NW northboundNOP, N..W any; [0] -> N:0
+# Move signals
 (NORTH_R_BRACK, northboundNOP), N..NW any; 0 ~> N[0]
 (WEST_R_BRACK, westbound), N..NW any; 0 ~> W[0]
-(EAST_R_BRACK, eastbound), N..NW any; 0 ~> E[0]
+(EAST_R_BRACK, eastbound), N..NW any; 0 -> E[0]

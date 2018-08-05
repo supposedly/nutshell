@@ -140,7 +140,7 @@ It's just here for reference, and perhaps eventually to establish consistency if
 - Prefer the symbolic compass-direction constants (`N`, `NE`, `E`, ..., `NW`) over their raw numbers (`0`, ...). Within output specifiers, 
   in fact, the numbers cannot be used at all.
 
-### @COLORS/@ICONS
+### @COLORS, @ICONS
 
 - Avoid using ranges-with-step rather than specifying individual states unless there's a clear regularity or relationship in the states
   indicated by the range. (See [readme](../README) for "range with step")

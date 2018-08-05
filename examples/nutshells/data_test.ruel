@@ -22,27 +22,27 @@ states: ?
 neighborhood: Moore
 symmetries: none
 
-vacdata = (0, 1)
-up = (2, 3)
-out = (4, 3)
-signal = (IncSignal, DecSignal, 2)
+vacdata = (0, Data)
+up = (Prompt, DataOut)
+out = (ZeroOut, DataOut)
+signal = (IncSignal, DecSignal, Prompt)
 
-signal, 0, live, E..W 0, live; 0 -> N[0: (1, 0, ...)]
+signal, 0, live, E..W 0, live; 0 -> N[0: (Data, 0, ...)]
 
 Prompt, 0, NE..NW any; 0 -> N:Prompt
 
-vacdata, S up, SE any, W 0, NW..SE any; [0: (6, 5)]
-{6, 5}, N..NW any; [0: vacdata] -> N[(6, 5, _, ...)]
+vacdata, S up, SE any, W 0, NW..SE any; [0: (FinalZeroOut, FinalDataOut)]
+{FinalZeroOut, FinalDataOut}, N..NW any; [0: vacdata] -> N[(FinalZeroOut, FinalDataOut, _, ...)]
 
-up, N..NW any; [0: vacdata] -> N[(4, 3, _, ...)]
+up, N..NW any; [0: vacdata] -> N[(ZeroOut, DataOut, _, ...)]
 
-out, N..NW any; [0: vacdata] -> N[(4, 3, _, ...)]  NW[(_, 3, _, ...)]
+out, N..NW any; [0: vacdata] -> N[(ZeroOut, DataOut, _, ...)]  NW[(_, DataOut, _, ...)]
 
 IncSignal, N..NW any; 0 -> N[(IncSignal, IncData, ...)]
 DecSignal, N..NW any; 0 -> N[(DecSignal, DecData, ...)]
 
 Data, SE DecData, S..E any; [NW: (0, DecData, ...)]
-vacdata, SE IncData, S..E any; [0: (1, IncData)]
+vacdata, SE IncData, S..E any; [0: (Data, IncData)]
 0, SE IncData, S..E any; [NW: (Data, IncData, ...)]
 
 DecData, SE 0, S..E any; [NW: (vacdata, ...)]

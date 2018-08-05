@@ -82,7 +82,7 @@ or (b) using the `...` operator to say *"fill the rest out with whatever value p
   If the "map-to" is instead *larger* than its "map-from", extraneous values will simply be ignored.
 - Transitions can be started on a direction other than north if explicitly specified. Under vonNeumann, `0, W..E 1, S 0, 2` becomes `0, W 1, N 1, E 1, S 0, 2`
   which is equivalent to `0, 1, 1, 0, 1, 2` or `0, N..E 1, 0, 1, 2`. A single direction (`W`) rather than a range (`W..E`) can also be specified to the same effect.
-  Bindings to forward indices are automatically resolved when reordering these non-north-initial transitions, although mappings as of yet are not.
+  Bindings and mappings to "forward" indices are automatically resolved when reordering these non-north-initial transitions.
 - A Golly-ruletable transition such as von-Neumann `0,a,a,a,a,1` might be inefficiently compacted to `0, a, [N], [N], [N], 1`, or worse
   `0, a, E..W [N], 1`. In such cases, where successive variables need all to be bound to the first, the shorthand `direction..direction [var]` can be used.
   Here it would look like `0, N..W [a], 1`, expanding during transpilation to `0, a, [1], [1], [1], 1`.
@@ -126,6 +126,10 @@ foo, N..NW bar, baz -> S:2  E[(2, 3)]  SE[wutz]  N[NE: (2, 3)]  NE[E]
 ```
 - Within these "output specifiers", the `_` keyword says "leave the cell as is".   
     - (formerly "PTCDs", from "**p**ost-**t**ransition **c**ompass-**d**irection specifier**s**")
+- The `->` arrow here says to, during transpiling, place the "main" transition (the one preceding the arrow) *before* the ones created by the output specifiers.
+  This causes it to, when the transpiled result is interpreted by Golly, override their behavior should they conflict.  
+  If the opposite behavior is instead desired, where the main transition comes last and is overridden by the output-specifier transitions, one can use the `~>` arrow
+  (with a tilde rather than a hyphen) instead.
 - Transitions under permutational symmetry can make use of a shorthand syntax, specifying only the quantity of cells in each state. For example, `0,2,2,2,1,1,1,0,0,1`
   in a Moore+permute rule can be compacted to `0, 2 * 3, 1 * 3, 0 * 2, 1`.  
   Unmarked states will be filled in to match the number of cells in the transition's neighborhood, meaning
