@@ -53,7 +53,7 @@ vacddata = {0, 16, 17}
 # If a shifter is encountered, reflect + shift data tape down 2 cell
 # go right
 vacddata, (1, 2), NE..W any, 5; [N: (16, 17)]
-ddata, 0, NE..W any, 5, 0
+ddata, 0, NE..W any, 5; 0
 # pull down
 vacrdata, (16, 17), NE..NW any; [N: (12, 13)]
 # go left

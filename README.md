@@ -131,9 +131,9 @@ foo, N..NW bar, baz -> S:2  E[(2, 3)]  SE[wutz]  N[NE: (2, 3)]  NE[E]
   If the opposite behavior is instead desired, where the main transition comes last and is overridden by the output-specifier transitions, one can use the `~>` arrow
   (with a tilde rather than a hyphen) instead.
 - Transitions under permutational symmetry can make use of a shorthand syntax, specifying only the quantity of cells in each state. For example, `0,2,2,2,1,1,1,0,0,1`
-  in a Moore+permute rule can be compacted to `0, 2 * 3, 1 * 3, 0 * 2, 1`.  
+  in a Moore+permute rule can be compacted to `0, 2 ** 3, 1 ** 3, 0 ** 2, 1`.  
   Unmarked states will be filled in to match the number of cells in the transition's neighborhood, meaning
-  that this transition can also be written as `0, 0 * 2, 1, 2, 1` or `0, 1 * 3, 2 * 3, 0, 1`.  
+  that this transition can also be written as `0, 0 ** 2, 1, 2, 1` or `0, 1 ** 3, 2 ** 3, 0, 1`.  
   - If the number of cells to fill is not divisible by the number of unmarked states, precedence will
     be given to those that appear earlier; `2,1,0`, for instance, will also expand into `2,2,2,1,1,1,0,0`, but `0,1,2` will expand into `0,0,0,1,1,1,2,2`.
 - You're allowed to switch symmetries partway through via the `symmetries:` directive. (When parsing, this results in all transitions being expanded to the 'lowest'

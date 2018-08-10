@@ -1,0 +1,109 @@
+// Need three diff kinds of states:
+// initial (input) state cannot be a reference -- just a _var or number
+// napkin (neighbor, medial) states can be anything
+// resultant (final) state cannot be a varname -- just a number or reference
+// Neither initial nor resultant states can have compass directions, only medials
+
+table: (line | _NL)+
+
+line: VARNAME ":" /.+/                                     -> directive
+  | initial napkin _end final [ARROW ptcd (_WS ptcd)*]     -> transition
+  | VARNAME _WS? "=" _WS? _var  -> var_decl
+
+initial: INT | _var
+// Doing `napkin: (_sep medial permute_shorthand?)~1..8` invokes issue #190
+// (grammar-compilation time explodes)
+napkin: _napkin_transition~1..8
+_napkin_transition: permute_shorthand | _sep medial
+final: INT | reference
+permute_shorthand: _sep medial _AT INT
+_AT: _WS? "**" _WS?  // this has to be its own terminal, which I guess makes it function like an atom
+
+_end: ";" _WS?  // XXX: this should maybe include sep? although LALR can't seem to handle it sadly
+_sep: "," _WS?
+ARROW: _WS? ("~>" | "->") _WS?
+
+
+medial: COMPASS_DIR _WS (INT | _var | reference)
+  | crange? (INT | _var | reference)  -> medial_range
+  | crange? "[" _var "]"              -> medial_special_range
+// LALR bugs if this is a terminal rather than a rule
+crange: COMPASS_DIR _RANGE_SEP COMPASS_DIR _WS
+
+reference: "[" PREVIOUS_BIND "]"            -> binding
+  | "[" PREVIOUS_BIND ":" _WS? _map_var "]"  -> mapping
+
+ptcd: COMPASS_DIR ":" INT                                 -> ptcd_bare
+  | COMPASS_DIR "[" PREVIOUS_BIND ":" _WS? _ptcd_var "]"  -> ptcd_map_other
+  | COMPASS_DIR "[" _ptcd_var "]"                         -> ptcd_map_self
+
+PREVIOUS_BIND: /0|NE|SE|SW|NW|N|E|S|W/
+COMPASS_DIR: /NE|SE|SW|NW|N|E|S|W/
+
+///// NORMAL VAR /////
+_var: negation? _var_operation
+_var_expr: var_literal | VARNAME
+var_literal: _VAR_OPEN (((_var_element "," _WS?)+ _var_element) | range) _VAR_CLOSE
+
+_var_operation: var_mult | var_subt
+?var_mult: [_var_operation (_MULT | "*")] _var_expr  // same "dirty" trick as below
+?var_subt: _var_operation (_SUBT | "-") _var_expr
+
+_var_element: mult | subt                       // this can't be a single rule with aliases because the inlining needs to happen
+?mult: [_var_element (_MULT | "*")] _var_entry  // notice how only mult has the optional brackets, that's something dirty to get inlining to work for non-operations
+?subt: _var_element (_SUBT | "-") _var_entry
+_var_entry: INT | range | VARNAME | var_literal
+
+///// MAPPING /////
+_map_var: negation? _map_var_operation
+_map_var_expr: map_var_literal | VARNAME
+// phrasing the _var_entry segments this way avoids collision with var_literal, somehow
+map_var_literal: _VAR_OPEN ((_var_element ("," _WS? _var_element)+ ["," _WS? extend_last]) | range) _VAR_CLOSE
+
+_map_var_operation: map_var_mult | map_var_subt
+?map_var_mult: [_map_var_operation (_MULT | "*")] _map_var_expr  // same "dirty" trick as above
+?map_var_subt: _map_var_operation (_SUBT | "-") _map_var_expr
+
+///// PTCD /////
+_ptcd_var: negation? _ptcd_var_expr
+_ptcd_var_expr: ptcd_var_literal | VARNAME
+ptcd_var_literal: _VAR_OPEN ((_ptcd_var_element ("," _WS? _ptcd_var_element)+ ["," _WS? extend_last]) | range) _VAR_CLOSE
+
+_ptcd_var_operation: ptcd_var_mult | ptcd_var_subt
+?ptcd_var_mult: [_ptcd_var_operation (_MULT | "*")] _ptcd_var_expr  // same "dirty" trick as above
+?ptcd_var_subt: _ptcd_var_operation (_SUBT | "-") _ptcd_var_expr
+
+_ptcd_var_element: ptcd_mult | ptcd_subt                       // this can't be a single rule with aliases because the inlining needs to happen
+?ptcd_mult: [_ptcd_var_element (_MULT | "*")] _ptcd_var_entry  // notice how only mult has the optional brackets, that's something dirty to get inlining to work for non-operations
+?ptcd_subt: _ptcd_var_element (_SUBT | "-") _ptcd_var_entry
+_ptcd_var_entry: INT | range | VARNAME | no_transition | ptcd_var_literal
+
+
+operator: (_MULT | "*")  -> mult_op
+  | (_SUBT | "-")        -> subt_op
+// again, making these their own atoms(?) wards off the "no terminal defined" thing
+_MULT: _WS? "*" _WS?
+_SUBT: _WS? "-" _WS?
+
+negation: "-"  -> live_but
+  | "--"       -> any_but
+
+range_literal: _VAR_OPEN range _VAR_CLOSE
+
+extend_last: "..."
+no_transition: "_"
+_VAR_OPEN: /[({]/
+_VAR_CLOSE: /[)}]/
+// Match all alphabetical strings of text except capitalized compass directions (N, NE, E, SE, S, SW, W, NW)
+// Equivalent to /(?!NE|SE|SW|NW|N|E|S|W)[A-Za-z]+|(?:NE|SE|SW|NW)[A-Za-z]+|(?:N|E|S|W)(?!E|W)[A-Za-z]+/,
+// but takes fewer steps. Courtesy of Dr. Memes#1508 (138628718968045568) on Discord's "The Coding Den"
+VARNAME: /(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?![A-Za-z]))[A-Za-z]+/
+range: INT [_WS? "-"] _WS? _RANGE_SEP _WS? INT
+_RANGE_SEP: ".."
+
+_NL:  NEWLINE 
+%import common (INT, UCASE_LETTER, LCASE_LETTER, WORD, CNAME, NEWLINE)
+
+_WS: /\s+/
+COMMENT: /\s*#[^\n]*/
+%ignore COMMENT

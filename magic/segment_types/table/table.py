@@ -48,18 +48,19 @@ class AbstractTable:
        r'|[\w\-]+)+'                                 # Variable name (like ", aaaa,"), some subtraction operation, or a normal numeric state (ad indefiniteness bc subtraction)
       rf'|\[(?:(?:\d|{__rCARDINALS})\s*:\s*)?'       # Or a mapping, which starts with either a number or the equivalent cardinal direction
       rf'(?:{__rVAR}|[0A-Za-z\-]+)]))'               # ...and then has (or only has, in which case it's a binding) either a variable name or literal (like ", [S: (1, 2, ...)]," or ", [0],")
-       r'(?:\s*\*\s*[1-8])?'                         # Optional permute-symmetry shorthand...
+       r'(?:\s*\*\*\s*[1-8])?'                         # Optional permute-symmetry shorthand...
       rf'([,;])?\s*'                                 # Then finally, an optional separator + whitespace after it. (Optional because last term has no separator after it.)
       )
     _rRANGE = re.compile(__rRANGE)
     _rVAR = re.compile(__rVAR)
     
-    CARDINALS = {
-      'vonNeumann': {'N': 1, 'E': 2, 'S': 3, 'W': 4},
-      'hexagonal': {'N': 1, 'E': 2, 'SE': 3, 'S': 4, 'W': 5, 'NW': 6},
-      'Moore': {'N': 1, 'NE': 2, 'E': 3, 'SE': 4, 'S': 5, 'SW': 6, 'W': 7, 'NW': 8}
-      }
-    TRLENS = {'vonNeumann': 4, 'hexagonal': 6, 'Moore': 8}
+    CARDINALS = utils.generate_cardinals({
+      'oneDimensional': ('W', 'E'),
+      'vonNeumann': ('N', 'E', 'S', 'W'),
+      'hexagonal': ('N', 'E', 'SE', 'S', 'W', 'NW'),
+      'Moore': ('N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'),
+      })
+    TRLENS = {k: len(v) for k, v in CARDINALS.items()}
     
     def __init__(self, tbl, start=0, *, dep: ['@NUTSHELL'] = None):
         self._src = tbl

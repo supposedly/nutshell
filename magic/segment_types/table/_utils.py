@@ -12,11 +12,16 @@ rSHORTHAND = re.compile(r'(\d+\s*\.\.\s*\d+)\s+(.+)')
 rRANGE = re.compile(r'\d+(?:\+\d+)?\s*\.\.\s*\d+')
 rSEGMENT = re.compile(
   # jesus christ
-  r'\s*(?:([0-8](?:\s*\.\.\s*[0-8])?)\s+)?(-?-?(?:[({](?:[\w\-*\s]*\s*(?:,|\.\.)\s*)*[\w\-*\s]+[})]|[\w\-]+)|\[(?:[0-8]\s*:\s*)?(?:[({](?:(?:\[?[\w\-]+]?(?:\s*\*\s*[\w\-])?|\d+(?:\+\d+)?\s*\.\.\s*\d+)*,\s*)*(?:\[?[\w\-]+]?|\d+(?:\+\d+)?\s*\.\.\s*\d+|(?:\.\.\.)?)[})]|[\w\-*\s]+)])(?:-(?:(?:\d+|(?:[({](?:[\w\-]*\s*(?:,|\.\.)\s*)*[\w\-]+[})]|[A-Za-z\-]+))))?(?:\s*\*\s*([1-8]))?'
+  r'\s*(?:([0-8](?:\s*\.\.\s*[0-8])?)\s+)?(-?-?(?:[({](?:[\w\-*\s]*\s*(?:,|\.\.)\s*)*[\w\-*\s]+[})]|[\w\-]+)|\[(?:[0-8]\s*:\s*)?(?:[({](?:(?:\[?[\w\-]+]?(?:\s*\*\s*[\w\-])?|\d+(?:\+\d+)?\s*\.\.\s*\d+)*,\s*)*(?:\[?[\w\-]+]?|\d+(?:\+\d+)?\s*\.\.\s*\d+|(?:\.\.\.)?)[})]|[\w\-*\s]+)])(?:-(?:(?:\d+|(?:[({](?:[\w\-]*\s*(?:,|\.\.)\s*)*[\w\-]+[})]|[A-Za-z\-]+))))?(?:\s*\*\*\s*([1-8]))?'
   )
 rBINDMAP = re.compile(r'\[(\d+)')
 rBINDSTART = re.compile(r'\[\d+')
 rALREADY = re.compile(r'(.+)_(\d+)$')
+
+
+def generate_cardinals(d):
+    """{'name': ('N', 'E', ...)} >>> {'name': {'N': 1, 'E': 2, ...}}"""
+    return {k: dict(map(reversed, enumerate(v, 1))) for k, v in d.items()}
 
 
 class AdditiveDict(dict):
@@ -34,9 +39,9 @@ def conv_permute(tr: str, total: int):
         total=8 (Moore neighborhood)
         -------
         1,0
-        1*4,0*4
-        1*4,0
-        1*3,1,0,0
+        1**4,0**4
+        1**4,0
+        1**3,1,0,0
     Return its expanded representation:
         1,1,1,1,0,0,0,0
     Order is not preserved.
@@ -88,6 +93,8 @@ def bind_vars(tr: (list, tuple), *, second_pass=False, return_reps=True):
             try:
                 while isinstance(built[ref], tuple):
                     ref = built[ref][0]
+                if isinstance(built[ref], int) and ':' in val:
+                    raise ValueError("Can't map from a single cellstate")
                 built.append(
                   (ref, built[ref].rsplit('_', 1)[0], val[1+val.find(':'):].strip())
                   if ':' in val else
@@ -188,7 +195,7 @@ def expand_tr(tr: list, expected_len: int):
         # invalid *forward references* in bindings or mappings, because
         # the rotation made it so that a previously-valid binding might
         # now be invalid (as it may refer to something ahead of itself)
-        to_replace, no_replace = {}, set()
+        to_replace, no_replace = {}, {'[0'}  # we also never want to replace a reference to the input state, 0, as it won't have been changed
         for i, v in enumerate(napkin):
             # Both bindings and mappings start with a bracket + number
             # so use that to compare both w/ one stone

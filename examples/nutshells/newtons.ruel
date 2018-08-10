@@ -24,4 +24,4 @@ symmetries: none
 0, --3, any, 6, any, --5, any, --6, any; 6
 
 # photon dying
-(3..6), N..NW any, 0
+(3..6), N..NW any; 0

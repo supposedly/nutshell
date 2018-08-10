@@ -31,8 +31,8 @@ signal, 0, live, E..W 0, live; 0 -> N[0: (Data, 0, ...)]
 
 Prompt, 0, NE..NW any; 0 -> N:Prompt
 
-vacdata, S up, SE any, W 0, NW..SE any; [0: (FinalZeroOut, FinalDataOut)]
-{FinalZeroOut, FinalDataOut}, N..NW any; [0: vacdata] -> N[(FinalZeroOut, FinalDataOut, _, ...)]
+vacdata, S up, SW any, W 0, NW..SE any; [0: (FinalZeroOut, FinalDataOut)]
+(FinalZeroOut, FinalDataOut), N..NW any; [0: vacdata] -> N[(FinalZeroOut, FinalDataOut, _, ...)]
 
 up, N..NW any; [0: vacdata] -> N[(ZeroOut, DataOut, _, ...)]
 
@@ -46,7 +46,7 @@ vacdata, SE IncData, S..E any; [0: (Data, IncData)]
 0, SE IncData, S..E any; [NW: (Data, IncData, ...)]
 
 DecData, SE 0, S..E any; [NW: (vacdata, ...)]
-{IncData, DecData}, N..NW any; Data
+(IncData, DecData), N..NW any; Data
 
 
 @ICONS

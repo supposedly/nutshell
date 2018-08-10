@@ -18,8 +18,8 @@ symmetries: rotate4reflect
 
 # Survival
 symmetries: permute
-live, live * 2, 0; 1 # s2
-live, live * 3, 0; 1 # s3
+live, live ** 2, 0; 1 # s2
+live, live ** 3, 0; 1 # s3
 
 # Death otherwise
 any, any; 0

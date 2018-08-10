@@ -11,18 +11,22 @@ Below is an 8-state transition napkin starting on south that has unresolved refe
 
 ----
 
+no_replace = {'[0'}
+
+----
+
 ("1" 1), "2" 0, "3" [2], "4" [5], "5" 1, "6" 2, "7" 2, "8" 2
   > final 'else' branch
 to_replace = {'[5': '[1'}
 
 ("1" 1), "2" 0, "3" [2], "4" [5], "5" [1], "6" 2, "7" 2, "8" 2
-no_replace = {'[1'}
+no_replace = {'[0', '[1'}
 
 ----
 
 "1" 1, ("2" 0), "3" [2], "4" [5], "5" [1], "6" 2, "7" 2, "8" 2
   > 'match is None' branch
-no_replace = {'[1', '[2'}
+no_replace = {'[0', '[1', '[2'}
 
 ----
 
@@ -48,7 +52,7 @@ no_replace = {'[1', '[2'}
 
 "1" 1, "2" 0, "3" [2], "4" [1], "5" [1], ("6" 2), "7" 2, "8" 2
   > 'match is None' branch
-no_replace = {'[1', '[2', '[6'}
+no_replace = {'[0', '[1', '[2', '[6'}
 
 ---
 
