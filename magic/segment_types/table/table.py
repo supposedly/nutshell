@@ -4,7 +4,7 @@ from itertools import cycle, islice, zip_longest
 
 import bidict
 
-from . import _napkins as napkins, _utils as utils
+from . import _napkins as napkins, _utils as utils, _symmetries as symmetries
 from ._classes import SpecialVar, PTCD, VarName
 from magic.common.classes import TableRange
 from magic.common.utils import printv, printq
@@ -263,7 +263,7 @@ class AbstractTable:
         return match
     
     def _fix_symmetries(self):
-        transitions, self.directives['symmetries'] = utils.desym(
+        transitions, self.directives['symmetries'] = symmetries.desym(
           [(lno, utils.unbind_vars(tr, bind_keep=True)) for lno, tr in self.transitions],
           self._symmetry_lines
           )

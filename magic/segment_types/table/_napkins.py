@@ -1,24 +1,9 @@
 from itertools import permutations
 
+from magic.common.utils import LazyProperty
+
 
 __all__ = 'NAMES', 'NoSymmetry', 'ReflectHorizontal', 'Rotate2', 'Rotate3', 'Rotate4', 'Rotate4Reflect', 'Rotate6', 'Rotate6Reflect', 'Rotate8', 'Rotate8Reflect', 'Permute'
-
-
-class LazyProperty:
-    """
-    Allows definition of properties calculated once and once only.
-    From user Cyclone on StackOverflow; modified slightly to look more
-    coherent for my own benefit.
-    """
-    def __init__(self, method):
-        self.method = method
-    
-    def __get__(self, obj, cls):
-        if not obj:
-            return None
-        ret = self.method(obj)
-        setattr(obj, self.method.__name__, ret)
-        return ret
 
 
 class Napkin(tuple):
@@ -26,12 +11,12 @@ class Napkin(tuple):
     Term "napkin" by 83bismuth38.
     Represents the 'neighborhood' segment of a transition.
     """
-    def __init__(self, iterable):
+    def __init__(self, iterable=None):
         self.__unique_expanded = None
         self._hash = None
     
     def __eq__(self, other):
-        return isinstance(other, tuple) and any(i == other for i in self._expanded)
+        return isinstance(other, tuple) and any(i == other for i in self.expanded)
     
     def __hash__(self):
         if self._hash is None:
@@ -40,14 +25,14 @@ class Napkin(tuple):
     
     def __repr__(self):
         return f'{type(self).__name__}({super().__repr__()})'
-
+    
     def _rotate(self, i):
-        return self[i:]+self[:i]
+        return self[i:] + self[:i]
     
     @LazyProperty
     def _expanded_unique(self):
-        return set(self._expanded)
-
+        return set(self.expanded)
+    
     def expand(self):
         return map(type(self), self._expanded_unique)
 
@@ -86,6 +71,8 @@ class HexNapkin(Napkin):
 
 
 class NoSymmetry(tuple):
+    expanded = None
+    name = ['none']
     order = 0
     def expand(self):
         return self,
@@ -95,86 +82,88 @@ class NoSymmetry(tuple):
 class Rotate2(HexNapkin):
     order = 1
     @property
-    def _expanded(self):
+    def expanded(self):
         return self.rotate2()
 
 
 class Rotate3(HexNapkin):
     order = 2
     @property
-    def _expanded(self):
+    def expanded(self):
         return self.rotate3()
 
 
 class Rotate6(HexNapkin):
     order = 3
     @property
-    def _expanded(self):
+    def expanded(self):
         return self.rotate6()
 
 
 class Rotate6Reflect(HexNapkin):
     order = 4
     @property
-    def _expanded(self):
+    def expanded(self):
         return (tup for i in self.rotate6() for tup in HexNapkin.reflect(i))
 
 
 # Orthogonal napkins
 class ReflectHorizontal(OrthNapkin):
+    name = ['reflect', 'reflect_horizontal']
     order = 1
     @LazyProperty
-    def _expanded(self):
+    def expanded(self):
         return OrthNapkin.reflect(tuple(self))
 
 
 class Rotate4(OrthNapkin):
     order = 2
     @LazyProperty
-    def _expanded(self):
+    def expanded(self):
         return self.rotate4()
 
 
 class Rotate4Reflect(OrthNapkin):
     order = 3
     @property
-    def _expanded(self):
+    def expanded(self):
         return (tup for i in self.rotate4() for tup in OrthNapkin.reflect(i))
 
 
 class Rotate8(OrthNapkin):
     order = 4
     @LazyProperty
-    def _expanded(self):
+    def expanded(self):
         return self.rotate8()
 
 
 class Rotate8Reflect(OrthNapkin):
     order = 5
     @property
-    def _expanded(self):
+    def expanded(self):
         return (tup for i in self.rotate8() for tup in OrthNapkin.reflect(i))
 
 
 # General
 class Permute(Napkin):
-    order = 6
     RECENTS = {}
     HASHES = {}
-
+    order = 6
+    
     def __hash__(self):
         if self._hash is None:
             self._hash = self.HASHES[tuple(sorted(self))]
         return self._hash
-
+    
     @LazyProperty
-    def _expanded(self):
+    def expanded(self):
         t = tuple(sorted(self))
         if t in self.RECENTS:
+            self._hash = self.HASHES[t]
             return self.RECENTS[t]
-        self.RECENTS[t] = list(permutations(sorted(self)))
-        self.HASHES[t] = hash(tuple(sorted(self.RECENTS[t])))
-        return self.RECENTS[t]
+        self.RECENTS[t] = ret = list(permutations(t))
+        self.HASHES[t] = self._hash = hash(tuple(sorted(ret)))
+        return ret
     
     @classmethod
     def clear(cls):
@@ -183,16 +172,7 @@ class Permute(Napkin):
 
 
 NAMES = {
-  'none': NoSymmetry,
-  'reflect': ReflectHorizontal,
-  'reflect_horizontal': ReflectHorizontal,
-  'rotate2': Rotate2,
-  'rotate3': Rotate3,
-  'rotate4': Rotate4,
-  'rotate4reflect': Rotate4Reflect,
-  'rotate6': Rotate6,
-  'rotate6reflect': Rotate6Reflect,
-  'rotate8': Rotate8,
-  'rotate8reflect': Rotate8Reflect,
-  'permute': Permute
+  name: cls
+  for cls in (i for i in globals().values() if hasattr(i, 'expanded'))
+  for name in getattr(cls, 'name', [cls.__name__.lower()])
   }

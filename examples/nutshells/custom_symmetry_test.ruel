@@ -1,0 +1,7 @@
+@NUTSHELL tst
+@TABLE
+states: ?
+symmetries: nutshell.PermutePerpendiculars
+neighborhood: Moore
+
+0, 0, 0, 0, 0, 1, 1, 1, 1, 1

@@ -330,8 +330,8 @@ EAST_R_BRACK, NE (0, data), E DATA_POINTER, SE..N any; [NE: (WEST_BREAK, WEST_LO
 # if it's LOOP ('no'), turn the waiting pointer into a westbound one to send it back to the appropriate l-brack
 R_BRACK, N (SOUTH_BREAK, SOUTH_LOOP), NE..NW any; [0] -> N[(POINTER_R_BRACK, 0)]  W[N: (0, WEST_POINTER)]
 
-WEST_POINTER, W L_BRACK, NW..SE any, S (L_BRACK, prgm), SW any; [S: (BLANK_2, pointerOps)] -> W:L_BRACK
-WEST_POINTER, N..NW any; 0 -> W:WEST_POINTER N:NORTH_NOP
+WEST_POINTER, W L_BRACK, NW..SE any, S (L_BRACK, prgm), SW any; [S: (BLANK_2, pointerOps)] -> W:L_BRACK  E[S: (NORTH_R_BRACK, _, ...)]
+WEST_POINTER, N..NW any; 0 -> W:WEST_POINTER  N:NORTH_NOP
 
 (WEST_BREAK, WEST_LOOP), N..NW any; 0 -> W[0]
 (EAST_BREAK, EAST_LOOP), N..NW any; 0 -> E[0]
@@ -440,15 +440,17 @@ westshadows, N..NW any; WEST_SHADOW -> N[0: (westbound, _)]
 ############################
 
 # Stop moving after reaching a comma or l-brack
-POINTER_COMMA, E (R_BRACK, vac), SE..NE vac; BLANK_1 -> NE:0  # just needs a random non-moving state, so blank_1 works
+POINTER_COMMA, E (R_BRACK, vac), SE..NE any; BLANK_1 -> NE:0  # just needs a random non-moving state, so blank_1 works
 ## l-brack test stuff
-pointerOps, SE L_BRACK, S..E any; NORTH_R_BRACK -> E:BLANK_2  # send out a test signal
-NORTH_R_BRACK, N northboundNOP, NE..NW any; BLANK_1 -> N:0
+(POINTER, pointerOps), SE L_BRACK, S..E any; NORTH_R_BRACK -> E:BLANK_2  # send out a test signal
+NORTH_R_BRACK, N northbound, NE..NW any; BLANK_1 -> N:0
 (BLANK_1, BLANK_2), E BLANK_2, SE..NE any; [0: (BLANK_2, NORTH_R_BRACK)]
-## for most cases:
+### for most cases:
 BLANK_2, NW (SOUTH_LOOP, SOUTH_BREAK), N..SE any, S L_BRACK, SW..W any; [NW: (POINTER, POINTER_SKIP)] -> W:0  N:NORTH_NOP
-## and for when it's on an l-brack that's right after a first l-brack:
+### and for when it's on an l-brack that's right after a first l-brack:
 BLANK_2, N (SOUTH_LOOP, SOUTH_BREAK), NE..SE any, S L_BRACK, SW..NW any; [N: (POINTER, POINTER_SKIP)]
+### and one more edge case:
+BLANK_2, NE (SOUTH_LOOP, SOUTH_BREAK), E..SE any, S L_BRACK, SW..N any; [NE: (POINTER, POINTER_SKIP)] -> E:0
 ## keep moving eastward till pointer_skip finds an r-brack
 POINTER_SKIP, SE (R_BRACK, 0), S..E any; 0 -> E[SE: (POINTER, POINTER_SKIP, ...)]  NE:NORTH_NOP
 # Also don't put out north-bound signals after hitting r-brack
@@ -466,8 +468,8 @@ L_BRACK, N POINTER, NE..E 0, SE (L_BRACK, prgm), S..NW any; L_BRACK -> N:NORTH_N
 POINTER_R_BRACK, E (R_BRACK, any), SE..NE any; POINTER -> NE[E: (NORTH_R_BRACK, _, ...)]
 
 # Make north_r_brack wait 4 generations before going up to absolutely make sure it won't collide badly with the data pointer
-NORTH_R_BRACK, W northboundNOP, NW..SW any; [0] -> N:0
-NORTH_R_BRACK, NW northboundNOP, N..W any; BLANK_1 -> N:0  # random non-interfering state (any would do)
+NORTH_R_BRACK, W northbound, NW..SW any; [0] -> N:0
+NORTH_R_BRACK, NW northbound, N..W any; BLANK_1 -> N:0  # random non-interfering state (any would do)
 BLANK_1, S R_BRACK, SW..SE any; R_BRACK
 R_BRACK, S R_BRACK, SW..SE any; NORTH_R_BRACK
 # Move signals
