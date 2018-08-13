@@ -5,7 +5,7 @@ packages = ['nutshell', 'nutshell.common', 'nutshell.segment_types', 'nutshell.s
 setuptools.setup(
   name='nutshell',
   license='GPL',
-  version='0.0.0',
+  version='0.1.0',
   author='wright',
   packages=packages,
   include_package_data=True,

@@ -1,13 +1,13 @@
-from nutshell.cli import ARGS
+from nutshell.cli import cli
 
 
 def _handle_rule(rulefile, seg):
     name = seg.pop(0)
-    rulefile.extend((f'@RULE {name}', ARGS.header, *seg))
+    rulefile.extend((f'@RULE {name}', cli.result.header, *seg))
 
 
 def _iter_transitions(tbl):
-    if not ARGS.comment_src:
+    if not cli.result.comment_src:
         yield from (', '.join(map(str, tr)) for _lno, tr in tbl.transitions)
         raise StopIteration
     done = set()

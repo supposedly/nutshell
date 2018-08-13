@@ -95,6 +95,3 @@ def states(num):
     if not num.isdigit() and num != '?':
         raise ValueError('Preview n_states must be ? or an integer')
     return str(num)
-
-
-ARGS = cli.parse(strict=True, require_main=4, systemexit=False)

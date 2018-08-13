@@ -1,6 +1,6 @@
 from random import Random
 
-from nutshell.cli import ARGS
+from nutshell.cli import cli
 
 RAND_SEED = 83_523
 random = Random(RAND_SEED)
@@ -40,19 +40,19 @@ def printv(*args, start='\n', end=None, accum=True, **kwargs):
     accum: Whether to print everything up to VERBOSITY or just the item at VERBOSITY
     **kwargs: Passed to _printv()
     """
-    if not ARGS.verbosity:
+    if not cli.result.verbosity:
         return
-    if any(args[:ARGS.verbosity]):
+    if any(args[:cli.result.verbosity]):
         printq(start, end='')
     if accum:
-        _printv(*args[:ARGS.verbosity-1], **kwargs)
+        _printv(*args[:cli.result.verbosity-1], **kwargs)
     try:
-        _printv(args[ARGS.verbosity-1], end=end, **kwargs)
+        _printv(args[cli.result.verbosity-1], end=end, **kwargs)
     except IndexError:
         pass
 
 
 def printq(*args, **kwargs):
-    if ARGS.quiet:
+    if cli.result.quiet:
         return
     print(*args, **kwargs)

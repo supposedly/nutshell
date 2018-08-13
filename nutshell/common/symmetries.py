@@ -5,22 +5,22 @@ from .utils import LazyProperty
 
 
 class ReflectVertical(Napkin):
-    lengths = 4, 6, 8
+    neighborhoods = vonNeumann, hexagonal, Moore
     fallback = NoSymmetry
-    _rotation_amounts = {4: 1, 6: 4, 8: 3}  # these values seem to be arbitrary, dunno
+    
+    _rotation_amounts = {vonNeumann: 1, hexagonal: 4, Moore: 3}  # these values seem to be arbitrary, dunno
     
     @property
     def expanded(self):
         return tuple(self), self.rotate_by(self._rotation_amounts[len(self)])[::-1]
 
 
-_GollyRotate2 = Rotate2
 class Rotate2(OrthNapkin):
     """
     Rotate2 allowing Moore and vonNeumann (and 1D, but...).
     """
-    lengths = None
-    fallback = {None: NoSymmetry, 6: _GollyRotate2}  # don't actually need that alias but it makes things clearer
+    neighborhoods = Any
+    fallback = {Any: NoSymmetry, hexagonal: Rotate2}
     
     @property
     def expanded(self):
@@ -41,7 +41,7 @@ class AlternatingPermute(Permute):
     """
     RECENTS = {}
     HASHES = {}
-    lengths = 4, 8
+    neighborhoods = vonNeumann, Moore
     fallback = Rotate4Reflect
     
     @LazyProperty

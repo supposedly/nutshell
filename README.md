@@ -5,11 +5,11 @@ of this makes any sense to you and you aren't sure how you got here, check out t
 ## Setup
 1. [Download & install Python 3.6](https://www.python.org/downloads/release/python-365/) or higher (support for < 3.6 hopefully coming soon)
 2. Either:
-  1. Execute the terminal command `pip install -U git+git://github.com/eltrhn/ergo.git` (or whichever of the
-    pip command's variations works for you; you may need to try `python -m pip install`, `python3 -m pip install`,
-    on Windows `py -m pip install`, ...)
-  2. `git clone` this project, then `cd` to its directory and execute `pip install -U .` (or the correct one of
-    the variations discussed above)
+    1. Execute the terminal command `pip install -U git+git://github.com/eltrhn/ergo.git` (or whichever of the
+       pip command's variations works for you; you may need to try `python -m pip install`, `python3 -m pip install`,
+       on Windows `py -m pip install`, ...)
+    2. or `git clone` this project, then `cd` to its directory and execute `pip install -U .` (or the correct one of
+       the variations discussed above)
 4. Write your own "nutshell" rule file, then continue with the **Usage** section below.
 
 ## Usage
@@ -162,9 +162,10 @@ that inherits from Nutshell's exposed `Napkin` class (alternatively, `OrthNapkin
 
 ```py
 from nutshell import Napkin
+from nutshell.napkins import oneDimensional, vonNeumann, hexagonal, Moore, Any
 
 class MySymmetries(Napkin):
-    lengths = ...
+    neighborhoods = ...
     fallback = ...
 
     @property
@@ -172,13 +173,18 @@ class MySymmetries(Napkin):
        ...
 ```
 
-As shown by the ellipses, there are three things that you need to define within your class.
-- `lengths`: a tuple containing the *length* of each neighborhood that your symmetries support. For example, in a symmetry type meant for the Moore and vonNeumann neighborhoods, one would
-  have `lengths = 4, 8` (mapping to vonNeumann & Moore because a cell under vonNeumann has 4 neighbors and a cell in Moore has 8).
-  **If you want to support all neighborhoods Golly offers**, write `lengths = None` instead.
-- `fallback`: the name, as a string, of a Golly symmetry which is a superset of (or perhaps equivalent to) yours and thus can be expanded to during transpilation. For example, the class for
-  `nutshell.AlternatingPermute` above has `fallback = 'rotate4reflect'`, because that is the "highest" (most expressive) Golly symmetry in which multiple transitions are able to express a
-  single AlternatingPermute transition.  
+As shown by the ellipses, there are three things you need to define within your class.
+- `neighborhoods`: a tuple containing the *length* of each neighborhood that your symmetries support. These are ultimately just integers, but Nutshell has the constants `oneDimensional`,
+  `vonNeumann`, `hexagonal`, and `Moore` defined respectively as `2`, `4`, `6`, and `8` for clarity.  
+  For example, on a symmetry type meant for the Moore and vonNeumann neighborhoods, one would assign `neighborhoods = vonNeumann, Moore` (with no particular ordering required).  
+  **If you want to support all neighborhoods Golly offers**, write `neighborhoods = Any` instead; `Any` is another Nutshell constant name, aliased to the Python value `None`.
+- `fallback`: Either the name, as a string, of a Golly symmetry which is a superset of (or perhaps equivalent to) yours and thus can be expanded to during transpilation... or,
+  if your symmetry type supports more than one neighborhood for which different appropriate Golly symmetries are available, a dictionary of {`neighborhood length`: `Golly symmetry`}.
+  to the same effect. (`Any`, aka Python `None`, can be used in this dict as well.)  
+  For example, the class for `nutshell.AlternatingPermute` above has `fallback = 'rotate4reflect'`, because that is the "highest" (most expressive) Golly symmetry in which multiple
+  transitions are able to express a single AlternatingPermute transition.  
+  The class for `nutshell.Rotate2` above has `fallback = {Any: 'none', hexagonal: 'rotate2'}`, because Golly already has rotate2 support for hexagonal neighborhoods, so we don't want
+  to unnecessarily expand `nutshell.Rotate2` to None if used there -- but for other neighborhoods, the only way to express Rotate2 in Golly is via `none` symmetry.
   When in doubt, use `fallback = 'none'`.
 - `expanded`: To explain this, it should first be mentioned that `Napkin` is a subclass of Python's built-in `tuple` type; the reason it's called Napkin and not something like Symmetries
   is that a single Napkin instance *represents* the neighbor states of a given transition. That is, when expanding symmetries, an instance of the pertinent Napkin class is constructed from

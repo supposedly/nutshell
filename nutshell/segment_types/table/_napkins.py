@@ -2,29 +2,36 @@ from itertools import permutations
 
 from nutshell.common.utils import LazyProperty
 
-__all__ = 'Napkin', 'OrthNapkin', 'HexNapkin', 'NoSymmetry', 'ReflectHorizontal', 'Rotate2', 'Rotate3', 'Rotate4', 'Rotate4Reflect', 'Rotate6', 'Rotate6Reflect', 'Rotate8', 'Rotate8Reflect', 'Permute'
-GOLLY_LENGTHS = (2, 4, 6, 8)  # 1D, vN, hex, Moore
+oneDimensional, vonNeumann, hexagonal, Moore = _GOLLY_LENGTHS = 2, 4, 6, 8
+Any = None
 
 
-class NapkinMeta(type):
+class _NapkinMeta(type):
     def __init__(cls, name, bases, attrs):
         if 'expanded' not in attrs or 'symmetries' in attrs:
             # if it's some sort of base class like Napkin or OrthNapkin
             # or has symmetries preimplemented itself
             return
-        if isinstance(attrs.get('fallback'), str):
-            cls.fallback = NAMES[cls.fallback]
+        if isinstance(attrs.get('fallback'), (str, _NapkinMeta)):
+            cls.fallback = {None: NAMES[cls.fallback] if isinstance(cls.fallback, str) else cls.fallback}
+        if isinstance(attrs.get('fallback'), dict):
+            cls.fallback = {k: NAMES[v] if isinstance(v, str) else v for k, v in cls.fallback.items()}
+            if None in cls.fallback and cls.neighborhoods is not None:
+                cls.fallback = {
+                  **{k: cls.fallback[None] for k in cls.neighborhoods},
+                  **{k: v for k, v in cls.fallback.items() if k is not None}  # we do want the user-set ones to override the cls.fallback[None]s where possible, so this goes after
+                  }
         cls.symmetries = {
           n: set(cls(range(n)).expanded)
           for n in
-          (GOLLY_LENGTHS if cls.lengths is None else cls.lengths)
+          (_GOLLY_LENGTHS if cls.neighborhoods is None else cls.neighborhoods)
           }
         cls.sym_lens = {n: len(v) for n, v in cls.symmetries.items()}
         if 'clear' in attrs:
             cls.clear()
 
 
-class Napkin(tuple, metaclass=NapkinMeta):
+class Napkin(tuple, metaclass=_NapkinMeta):
     """
     Term "napkin" by 83bismuth38.
     Represents the 'neighborhood' segment of a transition.
@@ -89,9 +96,9 @@ class HexNapkin(Napkin):
         return sorted(self.rotate(6))
 
 
-class NoSymmetry(tuple, metaclass=NapkinMeta):
+class NoSymmetry(tuple, metaclass=_NapkinMeta):
+    neighborhoods = Any
     name = ['none']
-    lengths = None
     
     def expand(self):
         return self,
@@ -101,28 +108,28 @@ class NoSymmetry(tuple, metaclass=NapkinMeta):
 
 # Hexagonal napkins
 class Rotate2(HexNapkin):
-    lengths = 6,
+    neighborhoods = hexagonal,
     @property
     def expanded(self):
         return self.rotated2()
 
 
 class Rotate3(HexNapkin):
-    lengths = 6,
+    neighborhoods = hexagonal,
     @property
     def expanded(self):
         return self.rotated3()
 
 
 class Rotate6(HexNapkin):
-    lengths = 6,
+    neighborhoods = hexagonal,
     @property
     def expanded(self):
         return self.rotated6()
 
 
 class Rotate6Reflect(HexNapkin):
-    lengths = 6,
+    neighborhoods = hexagonal,
     @property
     def expanded(self):
         return (tup for i in self.rotated6() for tup in self.reflection_of(i))
@@ -130,7 +137,7 @@ class Rotate6Reflect(HexNapkin):
 
 # Orthogonal napkins
 class ReflectHorizontal(OrthNapkin):
-    lengths = 4, 8
+    neighborhoods = vonNeumann, Moore
     name = ['reflect', 'reflect_horizontal']
     @LazyProperty
     def expanded(self):
@@ -138,28 +145,28 @@ class ReflectHorizontal(OrthNapkin):
 
 
 class Rotate4(OrthNapkin):
-    lengths = 4, 8
+    neighborhoods = vonNeumann, Moore
     @LazyProperty
     def expanded(self):
         return self.rotated4()
 
 
 class Rotate4Reflect(OrthNapkin):
-    lengths = 4, 8
+    neighborhoods = vonNeumann, Moore
     @property
     def expanded(self):
         return (tup for i in self.rotated4() for tup in self.reflection_of(i))
 
 
 class Rotate8(OrthNapkin):
-    lengths = 8,
+    neighborhoods = Moore,
     @LazyProperty
     def expanded(self):
         return self.rotated8()
 
 
 class Rotate8Reflect(OrthNapkin):
-    lengths = 8,
+    neighborhoods = Moore,
     @property
     def expanded(self):
         return (tup for i in self.rotated8() for tup in self.reflection_of(i))
@@ -167,7 +174,7 @@ class Rotate8Reflect(OrthNapkin):
 
 # General
 class Permute(Napkin):
-    lengths = None
+    neighborhoods = Any
     RECENTS = {}
     HASHES = {}
     
@@ -199,9 +206,9 @@ NAMES = {
   }
 
 GOLLY_SYMS = {
-  # sorted in order of expansion amount (and listing it as well)
-  2: ((Permute, 2), (NoSymmetry, 1)),
-  4: ((Permute, 24), (Rotate4Reflect, 8), (Rotate4, 4), (ReflectHorizontal, 2), (NoSymmetry, 1)),
-  6: ((Permute, 720), (Rotate6Reflect, 12), (Rotate6, 6), (Rotate3, 3), (Rotate2, 2), (NoSymmetry, 1)),
-  8: ((Permute, 40320), (Rotate8Reflect, 16), (Rotate8, 8), (Rotate4Reflect, 8), (Rotate4, 4), (ReflectHorizontal, 2), (NoSymmetry, 1))
+  # tuples sorted in order of expansion amount (listing it as well)
+  oneDimensional: ((Permute, 2), (NoSymmetry, 1)),
+  vonNeumann: ((Permute, 24), (Rotate4Reflect, 8), (Rotate4, 4), (ReflectHorizontal, 2), (NoSymmetry, 1)),
+  hexagonal: ((Permute, 720), (Rotate6Reflect, 12), (Rotate6, 6), (Rotate3, 3), (Rotate2, 2), (NoSymmetry, 1)),
+  Moore: ((Permute, 40320), (Rotate8Reflect, 16), (Rotate8, 8), (Rotate4Reflect, 8), (Rotate4, 4), (ReflectHorizontal, 2), (NoSymmetry, 1))
   }

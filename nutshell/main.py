@@ -5,9 +5,9 @@ from inspect import cleandoc
 
 from ergo.misc import ErgoNamespace
 
-from nutshell.cli import ARGS
-from nutshell.common.utils import printq
 from nutshell import parser, compiler
+from nutshell.cli import cli
+from nutshell.common.utils import printq
 
 
 def transpile(fp, *, preview=False, find=False):
@@ -19,7 +19,7 @@ def transpile(fp, *, preview=False, find=False):
     if preview:
         return '\n'.join(', '.join(map(str, tr)) for _, tr in parsed['@TABLE'].transitions)
     if find:
-        print(parsed['@TABLE'].match(ARGS.find) + '\n')
+        print(parsed['@TABLE'].match(cli.result.find) + '\n')
         return
     printq('Complete!', 'Compiling...', sep='\n\n')
     return compiler.compile(parsed)
@@ -60,15 +60,12 @@ def write_rule(**kwargs):
 
 
 def main():
-    if ARGS is None:
+    cli.prepare(strict=True)
+    if cli.result is None:
         return
-    if 'transpile' in ARGS:
-        res = _transpile(ARGS.transpile)
+    if 'transpile' in cli.result:
+        res = _transpile(cli.result.transpile)
     else:
-        res = _preview(ARGS.preview)
+        res = _preview(cli.result.preview)
     for val in res:
         printq(*val, sep='\n')
-
-
-if __name__ == '__main__':
-    main()
