@@ -6,9 +6,9 @@ import bidict
 
 from . import _napkins as napkins, _utils as utils, _symmetries as symmetries
 from ._classes import SpecialVar, PTCD, VarName
-from magic.common.classes import TableRange
-from magic.common.utils import printv, printq
-from magic.common.errors import *
+from nutshell.common.classes import TableRange
+from nutshell.common.utils import printv, printq
+from nutshell.common.errors import *
 
 
 class Bidict(bidict.bidict):
@@ -265,7 +265,8 @@ class AbstractTable:
     def _fix_symmetries(self):
         transitions, self.directives['symmetries'] = symmetries.desym(
           [(lno, utils.unbind_vars(tr, bind_keep=True)) for lno, tr in self.transitions],
-          self._symmetry_lines
+          self._symmetry_lines,
+          self._trlen
           )
         self.transitions = [(lno, utils.bind_vars(tr, second_pass=True, return_reps=False)) for lno, tr in transitions]
     

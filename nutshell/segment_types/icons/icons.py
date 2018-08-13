@@ -6,9 +6,9 @@ import bidict
 
 from ._classes import ColorRange
 from ._utils import lazylen, maybe_double, SAFE_CHARS, SYMBOL_MAP
-from magic.common.classes import TableRange, ColorMixin
-from magic.common.utils import random
-from magic.common.errors import *
+from nutshell.common.classes import TableRange, ColorMixin
+from nutshell.common.utils import random
+from nutshell.common.errors import *
 
 
 class IShouldntHaveToDoThisBidict(bidict.bidict):

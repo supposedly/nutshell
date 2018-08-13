@@ -1,4 +1,4 @@
-from cli import ARGS
+from nutshell.cli import ARGS
 
 
 def _handle_rule(rulefile, seg):

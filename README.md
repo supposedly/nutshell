@@ -4,24 +4,29 @@ of this makes any sense to you and you aren't sure how you got here, check out t
 
 ## Setup
 1. [Download & install Python 3.6](https://www.python.org/downloads/release/python-365/) or higher (support for < 3.6 hopefully coming soon)
-2. `git clone` this project, then `cd` to its directory
-3. Using Python's bundled *pip* package manager, execute the terminal command `pip install -r requirements.txt` (or
-   any of its variations -- you may need to try `python -m pip install`, `python3 -m pip install`, `py -m pip install`
-   on Windows, ...)
+2. Either:
+  1. Execute the terminal command `pip install -U git+git://github.com/eltrhn/ergo.git` (or whichever of the
+    pip command's variations works for you; you may need to try `python -m pip install`, `python3 -m pip install`,
+    on Windows `py -m pip install`, ...)
+  2. `git clone` this project, then `cd` to its directory and execute `pip install -U .` (or the correct one of
+    the variations discussed above)
 4. Write your own "nutshell" rule file, then continue with the **Usage** section below.
 
 ## Usage
+The `pip install` will add a command `nutshell-ca` for use in terminal. If this for any reason does
+not work for you, you may instead `git clone` Nutshell as in step 2.ii above and then run `to_ruletable.py`
+from its root directory as a substitute for `nutshell-ca`.
+
 ```bash
-$ python to_ruletable.py [infile] [outdir] [flags...]
-$ python to_ruletable.py preview [transition] [flags...]
+$ nutshell-ca [infile] [outdir] [-v | -q | -s | -p | -t | -f]
 ```
 The output file will be written to `outdir` with a .rule extension and the same filename as `infile`.  
-Supported flags:
+Supported flags, though there's more info in `--help`:
   - `-v`: Verbose. Can be repeated up to four times, causing more info to be displayed each time.
   - `-s`: Source. Writes each original nutshell line, as a comment, above the line(s) it compiles
           to in the final ruletable output.
-  - `-c`: Compile. "Compiles" a single nutshell transition, and prints the Golly-
-          preview. Flag is mutually-exclusive with `-t`, `-f`, and `outdir`.
+  - `-p`: Preview. "Compiles" a single nutshell transition, and prints out a Golly-equivalent
+          preview. Flag is mutually exclusive with `-t`, `-f`, and `outdir`.
   - `-t [HEADER]`: Change the "COMPILED FROM NUTSHELL" header that is added by default to transpiled
                    rules. (If `-t` is given no argument the header will be removed)
   - `-f TRANSITION`: Find a certain transition defined within a table section; requires, of course, that
@@ -137,7 +142,61 @@ foo, N..NW bar, baz -> S:2  E[(2, 3)]  SE[wutz]  N[NE: (2, 3)]  NE[E]
   - If the number of cells to fill is not divisible by the number of unmarked states, precedence will
     be given to those that appear earlier; `2,1,0`, for instance, will also expand into `2,2,2,1,1,1,0,0`, but `0,1,2` will expand into `0,0,0,1,1,1,2,2`.
 - You're allowed to switch symmetries partway through via the `symmetries:` directive. (When parsing, this results in all transitions being expanded to the 'lowest'
-symmetry type specified overall.)
+  symmetry type specified overall.) Speaking of which...
+
+### Custom symmetry types
+The implementation of the aforementioned symmetry-switching (in short: expansion of a transition into its representation under `symmetries: none`, then re-compression of
+it into a different symmetry by eliminating duplicates) allows, conveniently, for non-Golly-supported symmetries to be defined and then simply expanded by Nutshell into
+one of Golly's symmetry types. Provided by Nutshell is a small "standard library" of sorts with the following:
+
+- `symmetries: nutshell.AlternatingPermute`: Permutational symmetry, like `symmetries: permute`, but only between every *second* cell in a napkin. Under the Moore neighborhood,
+  this means that cellstates are permuted between orthogonal neighbors and, separately, between diagonal neighbors; under vonNeumann, that cellstates are permuted between opposing
+  pairs of neighbors; and, though *possible* to apply under hexagonal symmetry (where permutation would occur between (N, SE, W) and (E, S, NW)), it would be meaningless so only the
+  former two are supported.
+- `symmetries: nutshell.Rotate2`: Identical to Golly's `rotate2` in a hexagonal neighborhood, but allows Moore and vonNeumann as well. (Use `rotate2` instead of this for a hexagonal
+  rule)
+- `symmetries: nutshell.ReflectVertical`: Vertical reflection.
+
+In addition, although the API for it is somewhat clunky at present, you as the user are allowed to define your own custom symmetries. To do so, create a `.py` file and within it a class
+that inherits from Nutshell's exposed `Napkin` class (alternatively, `OrthNapkin` or `HexNapkin`):
+
+```py
+from nutshell import Napkin
+
+class MySymmetries(Napkin):
+    lengths = ...
+    fallback = ...
+
+    @property
+    def expanded(self):
+       ...
+```
+
+As shown by the ellipses, there are three things that you need to define within your class.
+- `lengths`: a tuple containing the *length* of each neighborhood that your symmetries support. For example, in a symmetry type meant for the Moore and vonNeumann neighborhoods, one would
+  have `lengths = 4, 8` (mapping to vonNeumann & Moore because a cell under vonNeumann has 4 neighbors and a cell in Moore has 8).
+  **If you want to support all neighborhoods Golly offers**, write `lengths = None` instead.
+- `fallback`: the name, as a string, of a Golly symmetry which is a superset of (or perhaps equivalent to) yours and thus can be expanded to during transpilation. For example, the class for
+  `nutshell.AlternatingPermute` above has `fallback = 'rotate4reflect'`, because that is the "highest" (most expressive) Golly symmetry in which multiple transitions are able to express a
+  single AlternatingPermute transition.  
+  When in doubt, use `fallback = 'none'`.
+- `expanded`: To explain this, it should first be mentioned that `Napkin` is a subclass of Python's built-in `tuple` type; the reason it's called Napkin and not something like Symmetries
+  is that a single Napkin instance *represents* the neighbor states of a given transition. That is, when expanding symmetries, an instance of the pertinent Napkin class is constructed from
+  the neighbor states of the current transition to determine how to treat its symmetries.  
+  Instances of napkins under your custom symmetries are constructed as `MySymmetries((0, 1, 2, 3, 4, 5, 6,7))` (assuming Moore neighborhood), i.e. with the sequence of neighbor states
+  it has to represent. The job of `expanded`, given that, is to provide a representation of what a single napkin in your symmetry type looks like *when expanded into `symmetries: none`*,
+  and (importantly!!) returning this representation in the *exact same order* for any equivalent napkin. For example, `ReflectHorizontal((0, 1, 2, 3, 4, 5, 6, 7)).expanded` and
+  `ReflectHorizontal((0, 7, 6, 5, 4, 3, 2, 1)).expanded` **both** return the exact list `[(0, 1, 2, 3, 4, 5, 6, 7), (0, 7, 6, 5, 4, 3, 2, 1)]` (and both in that order), because the
+  two Moore-neighborhood napkins are equivalent under ReflectHorizontal symmetry.   
+  Similarly, `ReflectHorizontal((2, 4, 6, 8)).expanded` returns `[(2, 4, 6, 8), (2, 8, 6, 4)]`, **as does** `ReflectHorizontal((2, 8, 6, 4)).expanded`, because the vonNeumann-neighborhood napkin
+  `2,4,6,8` reflected horizontally is `2,8,6,4` and so both are equivalent under reflect_horizontal symmetry.  
+  (The sequence type that `expanded` returns doesn't matter as long as it's some iterable -- but (a) its individual elements must all be hashable, and (b) it must not contain any occurrences
+  of itself. It's hence probably best to have `expanded` return a sequence of tuples.)  
+  After that, save your file in a directory accessible from the directory of the nutshell file you wish to use the symmetry type from -- and you're done! It'll be accessible from a Nutshell
+  rule as `<import path to containing file>.<class name>`. For instance, the symmetry type above will be accessible as `symmetries: custom_symmetries.MySymmetries` if it's saved in a file called
+  `custom_symmetries.py` in the same directory as the nutshell file it's used from.  
+  The custom-symmetry-type API will be simplified in the future to make it more accessible.
+
 
 ## Non-table-related changes
 - The preferred file extension is `.ruel`, both a holdover from when this project was named `rueltabel` and a simple-but-recognizable variant

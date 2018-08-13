@@ -6,57 +6,10 @@ DEFAULT_HEADER = '''\
 ********************************\
 '''
 
-cli = CLI("A transpiler from the 'Nutshell' rule-table format to Golly's")
-cli.main_grp = Group(XOR='find|preview|normal')
-preview = cli.command('preview', XOR='find|preview|normal', OR='preview|normal')
-
-
-@cli.main_grp.clump(AND='infiles|outdirs')
-@cli.arg()
-def infiles(path: str.split):
-    """
-    Nutshell-formatted input file(s)
-    Separate different files with a space, and use - (no more than once) for stdin.
-    If you have a file in the current directory named -, use ./- instead.
-    """
-    if '-' in path:
-        hyphen_idx = 1 + path.index('-')
-        return path[:hyphen_idx] + [i for i in path[hyphen_idx:] if i != '-']
-    return path
-
-
-@cli.clump(OR='preview|normal')
-@cli.main_grp.clump(AND='infiles|outdirs')
-@cli.main_grp.arg()
-def outdirs(path: str.split):
-    """
-    Directory/ies to create output file in
-    Separate dirnames with a space, and use - (no more than once) for stdout.
-    If you have a directory under the current one named -, use -/ instead.
-    """
-    if '-' in path:
-        hyphen_idx = 1 + path.index('-')
-        return path[:hyphen_idx] + [i for i in path[hyphen_idx:] if i != '-']
-    return path
-
-
-@cli.main_grp.flag(short='t', default=DEFAULT_HEADER)
-def header(text=''):
-    """Change or hide 'COMPILED FROM NUTSHELL' header"""
-    return text or DEFAULT_HEADER
-
-
-@cli.main_grp.flag(short='s', default=False)
-def comment_src():
-    """Comment each tabel source line above the final table line(s) it transpiles to"""
-    return True
-
-
-@cli.clump(XOR='find|preview|normal')
-@cli.flag(short='f', default=None)
-def find(transition):
-    """Locate first transition in `infile` that matches"""
-    return tuple(s if s == '*' else int(s) for s in map(str.strip, transition.split(',')))
+cli = CLI("A transpiler from the 'Nutshell' rule-table format to Golly's", default_command='transpile')
+transpile = cli.command('transpile', XOR='preview|transpile', OR='not nothing')
+preview = cli.command('preview', XOR='preview|transpile', OR='not nothing')
+transpile.main_grp = Group(XOR='find|normal')
 
 
 @cli.clump(XOR='verbose|quiet')
@@ -72,6 +25,54 @@ def verbose(nsp):
 @cli.flag(default=False)
 def quiet():
     return True
+
+
+@transpile.main_grp.clump(AND='infiles|outdirs')
+@transpile.arg()
+def infiles(path: str.split):
+    """
+    Nutshell-formatted input file(s)
+    Separate different files with a space, and use - (no more than once) for stdin.
+    If you have a file in the current directory named -, use ./- instead.
+    """
+    if '-' in path:
+        hyphen_idx = 1 + path.index('-')
+        return path[:hyphen_idx] + [i for i in path[hyphen_idx:] if i != '-']
+    return path
+
+
+@transpile.clump(OR='preview|normal')
+@transpile.main_grp.clump(AND='infiles|outdirs')
+@transpile.main_grp.arg()
+def outdirs(path: str.split):
+    """
+    Directory/ies to create output file in
+    Separate dirnames with a space, and use - (no more than once) for stdout.
+    If you have a directory under the current one named -, use -/ instead.
+    """
+    if '-' in path:
+        hyphen_idx = 1 + path.index('-')
+        return path[:hyphen_idx] + [i for i in path[hyphen_idx:] if i != '-']
+    return path
+
+
+@transpile.main_grp.flag(short='t', default=DEFAULT_HEADER)
+def header(text=''):
+    """Change or hide 'COMPILED FROM NUTSHELL' header"""
+    return text or DEFAULT_HEADER
+
+
+@transpile.main_grp.flag(short='s', default=False)
+def comment_src():
+    """Comment each tabel source line above the final table line(s) it transpiles to"""
+    return True
+
+
+@transpile.clump(XOR='find|preview|normal')
+@transpile.flag(short='f', default=None)
+def find(transition):
+    """Locate first transition in `infile` that matches"""
+    return tuple(s if s == '*' else int(s) for s in map(str.strip, transition.split(',')))
 
 
 @preview.arg(required=True)
@@ -96,4 +97,4 @@ def states(num):
     return str(num)
 
 
-ARGS = cli.parse(strict=True, require_main=2)
+ARGS = cli.parse(strict=True, require_main=4, systemexit=False)

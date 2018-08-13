@@ -5,7 +5,7 @@ from itertools import count
 from math import ceil
 
 from . import _classes as classes
-from magic.common.classes import TableRange
+from nutshell.common.classes import TableRange
 
 rSHORTHAND = re.compile(r'(\d+\s*\.\.\s*\d+)\s+(.+)')
 rRANGE = re.compile(r'\d+(?:\+\d+)?\s*\.\.\s*\d+')

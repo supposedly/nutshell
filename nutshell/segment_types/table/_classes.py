@@ -1,8 +1,8 @@
 import random
 
 from . import _utils as utils
-from magic.common.errors import TableValueError
-from magic.common.utils import random
+from nutshell.common.errors import TableValueError
+from nutshell.common.utils import random
 
 
 class _CoordOutOfBoundsError(Exception):

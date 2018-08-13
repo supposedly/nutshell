@@ -1,13 +1,13 @@
 #!/usr/bin/env python3.6
-"""With the pytest-cov plugin installed, run this using `py.test test.py --cov=magic/ --cov-report html`"""
+"""With the pytest-cov plugin installed, run this using `py.test test.py --cov=nutshell/ --cov-report html`"""
 import os
 import sys
-from types import SimpleNamespace
 
 import pytest
 
-from to_ruletable import transpile, write_rule
-from magic.common.utils import RAND_SEED, random as nutshell_rand
+__name__, _oldname_ = 'not main!', __name__
+from nutshell.main import transpile, write_rule
+from nutshell.common.utils import RAND_SEED, random as nutshell_rand
 
 ARGV = sys.argv + [None, None][len(sys.argv):]
 
@@ -17,17 +17,16 @@ def test_codecov():
             transpile(fp)
 
 
-if __name__ == '__main__':
+if _oldname_ == '__main__':
     main = ARGV[1]
     if main is None:
-        pytest.main('test.py --cov=magic/ --cov-report=html'.split())
+        pytest.main('test.py --cov=nutshell/ --cov-report=html'.split())
     elif main in ('run', 'test'):
         walk = list(os.walk('./examples/nutshells'))[0][2]
         if main == 'run':
             for fname in walk:
                 if len(ARGV) < 3 or fname.split('.')[0] in ARGV[2:]:
-                    d = {'infiles': ['./examples/nutshells/' + fname], 'outdirs': ['./examples/compiled_ruletables/']}
-                    write_rule(SimpleNamespace(**d, __=d))
+                    write_rule(infiles=['./examples/nutshells/' + fname], outdirs=['./examples/compiled_ruletables/'])
                 nutshell_rand.seed(RAND_SEED)
         else:
             for fname in walk:

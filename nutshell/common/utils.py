@@ -1,6 +1,6 @@
 from random import Random
 
-from cli import ARGS
+from nutshell.cli import ARGS
 
 RAND_SEED = 83_523
 random = Random(RAND_SEED)
