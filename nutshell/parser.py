@@ -1,11 +1,12 @@
 import inspect
 
-from .segment_types import AbstractTable, ColorSegment, IconArray
+from .segment_types import NutshellSegment, AbstractTable, ColorSegment, IconArray
 from .common.errors import TableException
 
 
 AbstractTable.hush = False  # a little bit eh but :shrug:
 CONVERTERS = {
+  '@NUTSHELL': NutshellSegment,
   '@TABLE': AbstractTable,
   '@COLORS': ColorSegment,
   '@ICONS': IconArray,

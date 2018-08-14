@@ -64,14 +64,15 @@ class IconArray:
     _rDIMS = re.compile(r'\s*x\s*=\s*(\d+),\s*y\s*=\s*(\d+)')
     _rCOLOR = re.compile(r'(\d+:\s*|[.A-Z]|[p-y][A-O]\s+)(\d{0,3}\s+\d{0,3}\s+\d{0,3}|[0-9A-F]{6}|[0-9A-F]{3}).*')
     
-    def __init__(self, segment, start=0, *, dep: ['@COLORS', '@TABLE'] = None):
+    def __init__(self, segment, start=0, *, dep: ['@COLORS', '@TABLE', '@NUTSHELL'] = None):
         self._src = segment
         self._set_states = None
         self._fill_gradient = None
         
-        _colors, _table = dep
+        _colors, _table, _nutshell = dep
         self._n_states = _table and _table.directives['n_states']
         self._color_segment = None if isinstance(_colors, list) else _colors
+        self._nutshell = _nutshell
         
         self.colormap, _start_state_def = self._parse_colors()
         self._states = self._sep_states(_start_state_def)
@@ -124,11 +125,17 @@ class IconArray:
         states = defaultdict(list)
         used_states = set()
         _last_comment = 0
-        for lno, line in enumerate(map(str.strip, self._src[start:]), start):
+        seq = self._src[start:] if self._nutshell is None else self._nutshell.replace_iter(self._src[start:])
+        for lno, line in enumerate(map(str.strip, seq), start):
             if not line:
                 continue
             if line.startswith('#'):
-                cur_states = {int(state) for split in map(str.split, line.split(',')) for state in TableRange.try_iter(split) if state.isdigit()}
+                cur_states = {
+                  int(state)
+                  for split in map(str.split, line.split(','))
+                  for state in TableRange.try_iter(split)
+                  if state.isdigit()
+                  }
                 if not all(0 < state < 256 for state in cur_states):
                     raise TableValueError(lno, f'Icon declared for invalid state {next(i for i in cur_states if not 0 < i < 256)}')
                 if cur_states.intersection(states):

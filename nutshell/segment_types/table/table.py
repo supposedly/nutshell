@@ -65,6 +65,7 @@ class AbstractTable:
     def __init__(self, tbl, start=0, *, dep: ['@NUTSHELL'] = None):
         self._src = tbl
         self._start = start
+        dep, = dep
         
         if self.hush:
             global printv, printq
@@ -75,9 +76,9 @@ class AbstractTable:
         self.transitions = []
         self._symmetry_lines = []
         self._constants = {}
-        
-        if dep != [None]:
-            self._extract_constants(*dep)
+        if dep is not None:
+            dep.replace(self)
+            self._constants = dep.constants
         
         _assignment_start = self._extract_directives()
         if self.directives['states'] == '?':
@@ -321,29 +322,6 @@ class AbstractTable:
         self.vars[VarName('live')] = SpecialVar(self.vars['any'][1:])
         self.directives['n_states'] = self.directives.pop('states')
         return cardinals
-    
-    def _extract_constants(self, dep):
-        """
-        Extract constants from @RULE section, defined as follows:
-
-            <state>: <...> {<name>} <...>
-        
-        Where <name> is the constant's name.
-        Additionally, {<name>} is removed from final @RULE output.
-        """
-        r_const = re.compile(r'(\s*)(\d+):(.*?)\s*\{\s*(.+)\s*}(.*)')
-        found = False
-        for lno, line in enumerate(dep):
-            match = r_const.match(line)
-            if match is not None:
-                _0, state, _1, name, _2 = match.groups()
-                self._constants[name] = int(state)
-                dep[lno] = f'{_0}{state}:{_1}{_2}'
-                found = True
-        if found:
-            r_consts = re.compile(r'\b' + r'\b|\b'.join(self._constants) + r'\b')
-            for idx, line in enumerate(self):
-                self[idx] = r_consts.sub(lambda m: str(self._constants[m[0]]), line)
     
     def _extract_initial_vars(self, start):
         """

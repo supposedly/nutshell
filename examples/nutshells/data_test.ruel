@@ -55,14 +55,14 @@ DecData, SE 0, S..E any; [NW: (vacdata, ...)]
 1: FFF
 2: 00A0FF
 
-#C 2
+#C Prompt
 x = 7, y = 6, rule = data_test
 2A2.2A$A.A.A.A$A.A.A.A$2A2.A.A$A.A.A.A$A.A.2A!
 
-#C 7
+#C IncSignal
 x = 7, y = 7, rule = data_test
 2.2B$2.2B$6B$6B$2.2B$2.2B!
 
-#C 9
+#C DecSignal
 x = 6, y = 2, rule = data_test
 6B$6B!

@@ -217,7 +217,7 @@ As shown by the ellipses, there are three things you need to define within your 
   10, and can also be written as `FFFFFF: 1 10` or `255 255 255: 1 10`.
 - The `@ICONS` segment is based around RLEs instead of Gollyesque XPM data. See [this post](http://conwaylife.com/forums/viewtopic.php?f=7&t=3361&p=59944#p59944)
   for an explanation + example. Ranges are also supported in icon state specifiers.
-- The `@NUTSHELL` segment allows *constants*, which carry over to and are usable in the `@TABLE` segment, to be
+- The `@NUTSHELL` segment allows *constants*, which carry over to and are usable in the `@TABLE`, `@COLORS`, and `@ICONS` segments, to be
   defined alongside a description of each state. Take the following example:
 
 ```rb
@@ -230,10 +230,10 @@ As shown by the ellipses, there are three things you need to define within your 
 @TABLE
 ...
 ```
-  The names `DATA` and `SIGNAL` will be usable within the `@TABLE` segment as aliases for, respectively, states `1` and `4`.  
+  The names `DATA` and `SIGNAL` will be usable within the aforementioned segments as aliases for, respectively, states `1` and `4`.  
   It is recommended but nowhere required that constant names be written in `UPPERCASE` or at least `PascalCase` and normal
   variable names in `lowercase` or `camelCase`; the initial capitals help visually distinguish constants from multi-state variables.  
-  For the actual registering of a constant, all that matters is that its line in `@NUTSHELL` start with `<number>:` and contain anywhere a pair
+  For the actual registration of a constant, all that matters is that its line in `@NUTSHELL` start with `<number>:` and contain anywhere a pair
   of `{braces}` that enclose the constant's name. The braced part and any whitespace separating it from the previous word will be removed
   from the final `@RULE` segment in the output file.
 - **All segments are optional**. The parser will in addition transcribe "non-special" segments *as is*, meaning that

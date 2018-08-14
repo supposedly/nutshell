@@ -6,10 +6,13 @@ class ColorSegment(ColorMixin):
     transferrable into Golly syntax.
     """
     
-    def __init__(self, colors, start=0):
+    def __init__(self, colors, start=0, *, dep: ['@NUTSHELL'] = None):
+        dep, = dep
         self._packed_dict = None
         self._src = colors
         self.colors = [k.split('#')[0].split(':' if ':' in k else None, 1) for k in self._src if k]
+        if dep is not None:
+            self.colors = [(i[0], dep.replace_line(i[1])) for i in self.colors]
         self.states = {
           int(state.lstrip('*')):
           self.unpack(color.strip())
