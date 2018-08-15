@@ -15,7 +15,7 @@ and where a "dead" (unoccupied) cell is "born" (becomes occupied) if it has prec
 type of CA devised long ago that just tells us the amount of neighbors a dead cell requires to be born and the amount of neighbors a live
 cell requires to survive; for CGoL, as I'll call it from here on, this notation can express it as "B3/S23". Birth on 3, survival on 2 or 3.
 
-Many other interesting "rules", cellular automata whose cells undergo a definable set of transitions, can be notated in this manner ...
+Many other interesting "rules", cellular automata whose cells undergo a definable set of transitions, can be notated in this manner...
 and, tragically, just as many can't. Some rules are nondeterministic and unpredictable, but even without going that far we can find rules that don't
 necessarily rely on the total amount of neighbors (irrespective of their positions) but are interesting nonetheless, or rules that require
 more than two states (OFF/dead and ON/alive) to function. So what do we do?

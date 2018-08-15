@@ -5,10 +5,10 @@ of this makes any sense to you and you aren't sure how you got here, check out t
 ## Setup
 1. [Download & install Python 3.6](https://www.python.org/downloads/release/python-365/) or higher (support for < 3.6 hopefully coming soon)
 2. Either:
-    1. Execute the terminal command `pip install -U git+git://github.com/eltrhn/ergo.git` (or whichever of the
+    1. Execute the terminal command `pip install -U git+git://github.com/eltrhn/nutshell.git` (or whichever of the
        pip command's variations works for you; you may need to try `python -m pip install`, `python3 -m pip install`,
-       on Windows `py -m pip install`, ...)
-    2. or `git clone` this project, then `cd` to its directory and execute `pip install -U .` (or the correct one of
+       on Windows `py -m pip install`, ...) to install via pip directly,
+    2. **OR** `git clone` this project, then `cd` to its directory and execute `pip install -U .` (using the correct one of
        the variations discussed above)
 4. Write your own "nutshell" rule file, then continue with the **Usage** section below.
 
@@ -23,10 +23,9 @@ $ nutshell-ca [infile] [outdir] [-v | -q | -s | -p | -t | -f]
 The output file will be written to `outdir` with a .rule extension and the same filename as `infile`.  
 Supported flags, though there's more info in `--help`:
   - `-v`: Verbose. Can be repeated up to four times, causing more info to be displayed each time.
+  - `-q`: Quiet. Opposite of the above, but only has one level.
   - `-s`: Source. Writes each original nutshell line, as a comment, above the line(s) it compiles
           to in the final ruletable output.
-  - `-p`: Preview. "Compiles" a single nutshell transition, and prints out a Golly-equivalent
-          preview. Flag is mutually exclusive with `-t`, `-f`, and `outdir`.
   - `-t [HEADER]`: Change the "COMPILED FROM NUTSHELL" header that is added by default to transpiled
                    rules. (If `-t` is given no argument the header will be removed)
   - `-f TRANSITION`: Find a certain transition defined within a table section; requires, of course, that
@@ -140,7 +139,10 @@ foo, N..NW bar, baz -> S:2  E[(2, 3)]  SE[wutz]  N[NE: (2, 3)]  NE[E]
   Unmarked states will be filled in to match the number of cells in the transition's neighborhood, meaning
   that this transition can also be written as `0, 0 ** 2, 1, 2, 1` or `0, 1 ** 3, 2 ** 3, 0, 1`.  
   - If the number of cells to fill is not divisible by the number of unmarked states, precedence will
-    be given to those that appear earlier; `2,1,0`, for instance, will also expand into `2,2,2,1,1,1,0,0`, but `0,1,2` will expand into `0,0,0,1,1,1,2,2`.
+    be given to those that appear earlier; `2,1,0`, for instance, will also expandW into `2,2,2,1,1,1,0,0`, but `0,1,2` will expand into `0,0,0,1,1,1,2,2`.
+- The `n_states` directive's name has been changed to `states`, and it can be given a value of `?` (as in `states: ?`) rather than a number to tell Nutshell to detect
+  it from the highest cellstate value used in a transition.
+- The `neighborhood` and `symmetries` directives allow and ignore whitespace, so one can write `neighborhood: von Neumann` or `symmetries: rotate4 reflect`.
 - You're allowed to switch symmetries partway through via the `symmetries:` directive. (When parsing, this results in all transitions being expanded to the 'lowest'
   symmetry type specified overall.) Speaking of which...
 
