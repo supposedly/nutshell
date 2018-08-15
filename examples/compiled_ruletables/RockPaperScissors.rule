@@ -10,52 +10,52 @@ neighborhood: Moore
 symmetries: permute
 n_states: 4
 
-var any_0 = {0, 1, 2, 3}
-var any_1 = any_0
-var any_2 = any_0
-var any_3 = any_0
-var any_4 = any_0
-var any_5 = any_0
-var any_6 = any_0
-var any_7 = any_0
-var any_8 = any_0
-var live_0 = {1, 2, 3}
-var deadA_0 = {0, 2, 3}
-var deadA_1 = deadA_0
-var deadA_2 = deadA_0
-var deadA_3 = deadA_0
-var deadA_4 = deadA_0
-var deadA_5 = deadA_0
-var deadB_0 = {0, 1, 3}
-var deadB_1 = deadB_0
-var deadB_2 = deadB_0
-var deadB_3 = deadB_0
-var deadB_4 = deadB_0
-var deadB_5 = deadB_0
-var deadC_0 = {0, 1, 2}
-var deadC_1 = deadC_0
-var deadC_2 = deadC_0
-var deadC_3 = deadC_0
-var deadC_4 = deadC_0
-var deadC_5 = deadC_0
-var _716888888775130_0 = {0, 1}
-var _188603385896403_0 = {0, 2}
-var _172129488626172_0 = {0, 3}
-var _487705463628354_0 = {1, 2, 3}
+var any.0 = {0, 1, 2, 3}
+var any.1 = any.0
+var any.2 = any.0
+var any.3 = any.0
+var any.4 = any.0
+var any.5 = any.0
+var any.6 = any.0
+var any.7 = any.0
+var any.8 = any.0
+var live.0 = {1, 2, 3}
+var deadA.0 = {0, 2, 3}
+var deadA.1 = deadA.0
+var deadA.2 = deadA.0
+var deadA.3 = deadA.0
+var deadA.4 = deadA.0
+var deadA.5 = deadA.0
+var deadB.0 = {0, 1, 3}
+var deadB.1 = deadB.0
+var deadB.2 = deadB.0
+var deadB.3 = deadB.0
+var deadB.4 = deadB.0
+var deadB.5 = deadB.0
+var deadC.0 = {0, 1, 2}
+var deadC.1 = deadC.0
+var deadC.2 = deadC.0
+var deadC.3 = deadC.0
+var deadC.4 = deadC.0
+var deadC.5 = deadC.0
+var _716888888775130.0 = {0, 1}
+var _188603385896403.0 = {0, 2}
+var _172129488626172.0 = {0, 3}
+var _487705463628354.0 = {1, 2, 3}
 
-_716888888775130_0, 1, 1, 1, 3, 3, 3, deadC_0, deadC_1, 3
-_188603385896403_0, 2, 2, 2, 1, 1, 1, deadA_0, deadA_1, 1
-_172129488626172_0, 3, 3, 3, 2, 2, 2, deadB_0, deadB_1, 2
-_716888888775130_0, 3, 3, 3, deadC_0, deadC_1, deadC_2, deadC_3, deadC_4, 3
-_188603385896403_0, 1, 1, 1, deadA_0, deadA_1, deadA_2, deadA_3, deadA_4, 1
-_172129488626172_0, 2, 2, 2, deadB_0, deadB_1, deadB_2, deadB_3, deadB_4, 2
-1, 3, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 0
-2, 1, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 0
-3, 2, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 0
-1, 1, 1, 1, deadA_0, deadA_1, deadA_2, deadA_3, deadA_4, 1
-2, 2, 2, 2, deadB_0, deadB_1, deadB_2, deadB_3, deadB_4, 2
-3, 3, 3, 3, deadC_0, deadC_1, deadC_2, deadC_3, deadC_4, 3
-1, 1, 1, deadA_0, deadA_1, deadA_2, deadA_3, deadA_4, deadA_5, 1
-2, 2, 2, deadB_0, deadB_1, deadB_2, deadB_3, deadB_4, deadB_5, 2
-3, 3, 3, deadC_0, deadC_1, deadC_2, deadC_3, deadC_4, deadC_5, 3
-any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, any_8, 0
+_716888888775130.0, 1, 1, 1, 3, 3, 3, deadC.0, deadC.1, 3
+_188603385896403.0, 2, 2, 2, 1, 1, 1, deadA.0, deadA.1, 1
+_172129488626172.0, 3, 3, 3, 2, 2, 2, deadB.0, deadB.1, 2
+_716888888775130.0, 3, 3, 3, deadC.0, deadC.1, deadC.2, deadC.3, deadC.4, 3
+_188603385896403.0, 1, 1, 1, deadA.0, deadA.1, deadA.2, deadA.3, deadA.4, 1
+_172129488626172.0, 2, 2, 2, deadB.0, deadB.1, deadB.2, deadB.3, deadB.4, 2
+1, 3, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 0
+2, 1, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 0
+3, 2, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 0
+1, 1, 1, 1, deadA.0, deadA.1, deadA.2, deadA.3, deadA.4, 1
+2, 2, 2, 2, deadB.0, deadB.1, deadB.2, deadB.3, deadB.4, 2
+3, 3, 3, 3, deadC.0, deadC.1, deadC.2, deadC.3, deadC.4, 3
+1, 1, 1, deadA.0, deadA.1, deadA.2, deadA.3, deadA.4, deadA.5, 1
+2, 2, 2, deadB.0, deadB.1, deadB.2, deadB.3, deadB.4, deadB.5, 2
+3, 3, 3, deadC.0, deadC.1, deadC.2, deadC.3, deadC.4, deadC.5, 3
+any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, any.8, 0

@@ -36,7 +36,7 @@ class AbstractTable:
       r'[})]'
       )
     
-    _rASSIGNMENT = re.compile(rf'\w+?\s*=\s*-?-?(?:{__rSMALLVAR}|\d+|[A-Za-z]+)(?:\s*-\s*-?-?(?:[A-Za-z]+|\d+|{__rSMALLVAR}))?')
+    _rASSIGNMENT = re.compile(rf'\w+?\s*=\s*-?-?(?:{__rSMALLVAR}|\w+)(?:\s*-\s*-?-?(?:\w+|{__rSMALLVAR}))?')
     _rBINDMAP = re.compile(rf'\[[0-8](?::\s*?(?:{__rVAR}|[^_][\w\-]+?))?\]')
     _rCARDINAL = re.compile(rf'\b(\[)?({__rCARDINALS})((?(1)\]))\b')
     _rPTCD = re.compile(rf'\b({__rCARDINALS})(?::(\d+)\b|:?\[(?:(0|{__rCARDINALS})\s*:)?\s*(\w+|{__rVAR})\s*]\B)')
@@ -45,10 +45,10 @@ class AbstractTable:
       rf'((?:(?:\d|{__rCARDINALS})'                  # Purely-cosmetic cardinal direction before state (like ", NW 2,")
       rf'(?:\s*\.\.\s*(?:\d|{__rCARDINALS}))?\s+)?'  # Range of cardinal directions (like ", N..NW 2,")
       rf'(?:(?:{__rSMALLVAR}'                        # Variable literal (like ", (1, 2..3, 4),") with no ellipsis allowed at end
-       r'|[\w\-]+)+'                                 # Variable name (like ", aaaa,"), some subtraction operation, or a normal numeric state (ad indefiniteness bc subtraction)
+       r'|[\w\-]+)+'                                 # Variable name (like ", aaaa,"), some subtraction operation, or a normal numeric state (ad indefinitum bc subtraction)
       rf'|\[(?:(?:\d|{__rCARDINALS})\s*:\s*)?'       # Or a mapping, which starts with either a number or the equivalent cardinal direction
-      rf'(?:{__rVAR}|[0A-Za-z\-]+)]))'               # ...and then has (or only has, in which case it's a binding) either a variable name or literal (like ", [S: (1, 2, ...)]," or ", [0],")
-       r'(?:\s*\*\*\s*[1-8])?'                         # Optional permute-symmetry shorthand...
+      rf'(?:{__rVAR}|0|{__rCARDINALS}|[\w\-]+)]))'   # ...and then has (or only has, in which case it's a binding) either a variable name or literal (like ", [S: (1, 2, ...)]," or ", [0],")
+       r'(?:\s*\*\*\s*[1-8])?'                       # Optional permute-symmetry shorthand...
       rf'([,;])?\s*'                                 # Then finally, an optional separator + whitespace after it. (Optional because last term has no separator after it.)
       )
     _rRANGE = re.compile(__rRANGE)
@@ -171,7 +171,7 @@ class AbstractTable:
 
         return: var, but as a tuple with any references substituted for their literal values
         """
-        if var.isalpha() or var.startswith('_'):
+        if utils.isvarname(var) or var.startswith('_'):
             return self.vars[var]
         if var in self._constants:
             return self._constants[var]
@@ -356,13 +356,13 @@ class AbstractTable:
                 bad = str(e).split("'")[1]
                 if not bad:  # Means two consecutive commas, or a comma at the end of a literal
                     raise TableSyntaxError(lno, 'Invalid comma placement in variable declaration')
-                adjective = 'undefined' if bad.isalpha() else 'invalid'
+                adjective = 'undefined' if utils.isvarname(bad) else 'invalid'
                 raise TableReferenceError(lno, f'Declaration of variable {name!r} references {adjective} name {bad!r}')
             
-            if not name.isalpha():
+            if not utils.isvarname(name):
                 raise TableSyntaxError(
                   lno,
-                  f'Variable name {name!r} contains nonalphabetical character {next(i for i in name if not i.isalpha())!r}',
+                  f'Variable name {name!r} contains invalid character {next(i for i in name if not utils.isvarname(i))!r}',
                   )
             try:
                 self.vars[VarName(name)] = var

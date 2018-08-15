@@ -26,60 +26,60 @@ neighborhood: Moore
 symmetries: permute
 n_states: 21
 
-var any_0 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
-var any_1 = any_0
-var any_2 = any_0
-var any_3 = any_0
-var any_4 = any_0
-var any_5 = any_0
-var any_6 = any_0
-var any_7 = any_0
-var live_0 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
-var on_0 = {11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
-var on_1 = on_0
-var on_2 = on_0
-var on_3 = on_0
-var on_4 = on_0
-var on_5 = on_0
-var on_6 = on_0
-var on_7 = on_0
-var off_0 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-var off_1 = off_0
-var off_2 = off_0
-var off_3 = off_0
-var off_4 = off_0
-var off_5 = off_0
-var off_6 = off_0
-var off_7 = off_0
-var _716888888775130_0 = {2, 11}
-var _188603385896403_0 = {3, 12}
-var _172129488626172_0 = {4, 13}
-var _710501783665629_0 = {5, 14}
-var _688398911390223_0 = {6, 15}
-var _537895657608921_0 = {16, 7}
-var _487705463628354_0 = {8, 17}
-var _293966399727257_0 = {9, 18}
-var _691662787204218_0 = {10, 19}
-var _153693061857386_0 = {11, 12, 13, 14, 15, 16, 17, 18, 19}
+var any.0 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+var any.1 = any.0
+var any.2 = any.0
+var any.3 = any.0
+var any.4 = any.0
+var any.5 = any.0
+var any.6 = any.0
+var any.7 = any.0
+var live.0 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+var on.0 = {11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+var on.1 = on.0
+var on.2 = on.0
+var on.3 = on.0
+var on.4 = on.0
+var on.5 = on.0
+var on.6 = on.0
+var on.7 = on.0
+var off.0 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+var off.1 = off.0
+var off.2 = off.0
+var off.3 = off.0
+var off.4 = off.0
+var off.5 = off.0
+var off.6 = off.0
+var off.7 = off.0
+var _716888888775130.0 = {2, 11}
+var _188603385896403.0 = {3, 12}
+var _172129488626172.0 = {4, 13}
+var _710501783665629.0 = {5, 14}
+var _688398911390223.0 = {6, 15}
+var _537895657608921.0 = {16, 7}
+var _487705463628354.0 = {8, 17}
+var _293966399727257.0 = {9, 18}
+var _691662787204218.0 = {10, 19}
+var _153693061857386.0 = {11, 12, 13, 14, 15, 16, 17, 18, 19}
 
-_716888888775130_0, off_0, off_1, off_2, off_3, off_4, off_5, off_6, off_7, 11
-_188603385896403_0, on_0, off_0, off_1, off_2, off_3, off_4, off_5, off_6, 12
-_172129488626172_0, on_0, on_1, off_0, off_1, off_2, off_3, off_4, off_5, 13
-_710501783665629_0, on_0, on_1, on_2, off_0, off_1, off_2, off_3, off_4, 14
-_688398911390223_0, on_0, on_1, on_2, on_3, off_0, off_1, off_2, off_3, 15
-_537895657608921_0, on_0, on_1, on_2, on_3, on_4, off_0, off_1, off_2, 16
-_487705463628354_0, on_0, on_1, on_2, on_3, on_4, on_5, off_0, off_1, 17
-_293966399727257_0, on_0, on_1, on_2, on_3, on_4, on_5, on_6, off_0, 18
-_691662787204218_0, on_0, on_1, on_2, on_3, on_4, on_5, on_6, on_7, 19
-11, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 2
-12, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 3
-13, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 4
-14, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 5
-15, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 6
-16, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 7
-17, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 8
-18, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 9
-19, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 10
+_716888888775130.0, off.0, off.1, off.2, off.3, off.4, off.5, off.6, off.7, 11
+_188603385896403.0, on.0, off.0, off.1, off.2, off.3, off.4, off.5, off.6, 12
+_172129488626172.0, on.0, on.1, off.0, off.1, off.2, off.3, off.4, off.5, 13
+_710501783665629.0, on.0, on.1, on.2, off.0, off.1, off.2, off.3, off.4, 14
+_688398911390223.0, on.0, on.1, on.2, on.3, off.0, off.1, off.2, off.3, 15
+_537895657608921.0, on.0, on.1, on.2, on.3, on.4, off.0, off.1, off.2, 16
+_487705463628354.0, on.0, on.1, on.2, on.3, on.4, on.5, off.0, off.1, 17
+_293966399727257.0, on.0, on.1, on.2, on.3, on.4, on.5, on.6, off.0, 18
+_691662787204218.0, on.0, on.1, on.2, on.3, on.4, on.5, on.6, on.7, 19
+11, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 2
+12, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 3
+13, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 4
+14, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 5
+15, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 6
+16, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 7
+17, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 8
+18, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 9
+19, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 10
 
 @COLORS
 0 128 128 128

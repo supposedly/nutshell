@@ -1,4 +1,8 @@
+from itertools import repeat
+from operator import itemgetter
+
 from nutshell.common.classes import ColorMixin, TableRange
+from nutshell.common.errors import TableValueError
 
 class ColorSegment(ColorMixin):
     """
@@ -9,16 +13,21 @@ class ColorSegment(ColorMixin):
     def __init__(self, colors, start=0, *, dep: ['@NUTSHELL'] = None):
         dep, = dep
         self._packed_dict = None
-        self._src = colors
-        self.colors = [k.split('#')[0].split(':' if ':' in k else None, 1) for k in self._src if k]
+        self._src = [i.split('#')[0].strip() for i in colors]
+        self.colors = list(enumerate(k.split(':' if ':' in k else None, 1) for k in self._src if k))
         if dep is not None:
-            self.colors = [(i[0], dep.replace_line(i[1])) for i in self.colors]
-        self.states = {
-          int(state.lstrip('*')):
-          self.unpack(color.strip())
-          for color, states in self.colors
-          for state in TableRange.try_iter(states.split())
-          }
+            self.colors = [(i, (v[0], dep.replace_line(v[1]))) for i, v in self.colors]
+        try:
+            self.states = {
+              int(state.lstrip('*')): self.unpack(color.strip(), lno)
+              for lno, (color, states) in self.colors
+              for state in TableRange.try_iter(states.split())
+              }
+        except ValueError:
+            lno, state = next((i, state) for i, (_, states) in self.colors for state in TableRange.try_iter(states.split()) if not state.lstrip('*').isdigit())
+            raise TableValueError(lno, f'State {state} is not an integer')
+        except TypeError as e:
+            raise TableValueError(*e.args)
     
     def __iter__(self):
         return (f"{state} {r} {g} {b}" for state, (r, g, b) in self.states.items())
@@ -29,10 +38,12 @@ class ColorSegment(ColorMixin):
             # (i.e. [*2 *3: FFF] vs [2 3: FFF] -- latters will take precedence
             # over icon fill gradient, but the formers will not bc it's kept str
             # and so won't be accessible by ColorSegment[int-type cellstate])
-            self._packed_dict = {
-              int(j) if j.isdigit() else j.lstrip('*'):
-              self.pack(color.strip())
-              for color, state in self.colors
-              for j in state.split()
-              }
+            try:
+                self._packed_dict = {
+                  int(j) if j.isdigit() else j.lstrip('*'): self.pack(color.strip(), lno)
+                  for lno, (color, state) in self.colors
+                  for j in state.split()
+                  }
+            except TypeError as e:
+                raise TableValueError(*e.args)
         return self._packed_dict[item]

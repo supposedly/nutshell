@@ -232,7 +232,7 @@ As shown by the ellipses, there are three things you need to define within your 
 ```
   The names `DATA` and `SIGNAL` will be usable within the aforementioned segments as aliases for, respectively, states `1` and `4`.  
   It is recommended but nowhere required that constant names be written in `UPPERCASE` or at least `PascalCase` and normal
-  variable names in `lowercase` or `camelCase`; the initial capitals help visually distinguish constants from multi-state variables.  
+  variable names in `lowercase`, `camelCase`, or `snake_case`; the initial capitals help visually distinguish constants from multi-state variables.  
   For the actual registration of a constant, all that matters is that its line in `@NUTSHELL` start with `<number>:` and contain anywhere a pair
   of `{braces}` that enclose the constant's name. The braced part and any whitespace separating it from the previous word will be removed
   from the final `@RULE` segment in the output file.

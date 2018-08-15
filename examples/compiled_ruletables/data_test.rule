@@ -25,64 +25,64 @@ neighborhood: Moore
 symmetries: none
 n_states: 11
 
-var any_0 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-var any_1 = any_0
-var any_2 = any_0
-var any_3 = any_0
-var any_4 = any_0
-var any_5 = any_0
-var any_6 = any_0
-var any_7 = any_0
-var live_0 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
-var live_1 = live_0
-var vacdata_0 = {0, 1}
-var up_0 = {2, 3}
-var out_0 = {3, 4}
-var signal_0 = {9, 2, 7}
-var _716888888775130_0 = {2}
-var _188603385896403_0 = {5, 6}
-var _172129488626172_0 = {2, 3, 4, 5, 6, 7, 8, 9, 10}
-var _688398911390223_0 = {8, 10}
-var _537895657608921_0 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+var any.0 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+var any.1 = any.0
+var any.2 = any.0
+var any.3 = any.0
+var any.4 = any.0
+var any.5 = any.0
+var any.6 = any.0
+var any.7 = any.0
+var live.0 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+var live.1 = live.0
+var vacdata.0 = {0, 1}
+var up.0 = {2, 3}
+var out.0 = {3, 4}
+var signal.0 = {9, 2, 7}
+var _716888888775130.0 = {2}
+var _188603385896403.0 = {5, 6}
+var _172129488626172.0 = {2, 3, 4, 5, 6, 7, 8, 9, 10}
+var _688398911390223.0 = {8, 10}
+var _537895657608921.0 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 
-signal_0, 0, live_0, 0, 0, 0, 0, 0, live_1, 0
-0, any_0, any_1, live_0, 0, 7, 0, live_1, any_2, 1
-0, any_0, any_1, live_0, 0, 9, 0, live_1, any_2, 0
-0, any_0, any_1, live_0, 0, _716888888775130_0, 0, live_1, any_2, 0
-2, 0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, 0
-0, any_0, any_1, any_2, any_3, 2, any_4, any_5, any_6, 2
-0, any_0, any_1, any_2, any_3, up_0, any_4, 0, any_5, 6
-1, any_0, any_1, any_2, any_3, up_0, any_4, 0, any_5, 5
-6, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
-5, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 1
-0, any_0, any_1, any_2, any_3, _188603385896403_0, any_4, any_5, any_6, 6
-1, any_0, any_1, any_2, any_3, _188603385896403_0, any_4, any_5, any_6, 5
-2, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
-3, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 1
-0, any_0, any_1, any_2, any_3, up_0, any_4, any_5, any_6, 4
-1, any_0, any_1, any_2, any_3, up_0, any_4, any_5, any_6, 3
-4, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
-3, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 1
-0, any_0, any_1, any_2, any_3, out_0, any_4, any_5, any_6, 4
-1, any_0, any_1, any_2, any_3, out_0, any_4, any_5, any_6, 3
-1, any_0, any_1, any_2, out_0, any_3, any_4, any_5, any_6, 3
-7, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
-0, any_0, any_1, any_2, any_3, 7, any_4, any_5, any_6, 7
-1, any_0, any_1, any_2, any_3, 7, any_4, any_5, any_6, 8
-_172129488626172_0, any_0, any_1, any_2, any_3, 7, any_4, any_5, any_6, 8
-9, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 0
-0, any_0, any_1, any_2, any_3, 9, any_4, any_5, any_6, 9
-1, any_0, any_1, any_2, any_3, 9, any_4, any_5, any_6, 10
-_172129488626172_0, any_0, any_1, any_2, any_3, 9, any_4, any_5, any_6, 10
-1, any_0, any_1, any_2, 10, any_3, any_4, any_5, 0, 0
-1, any_0, any_1, any_2, 10, any_3, any_4, any_5, _537895657608921_0, 10
-0, any_0, any_1, any_2, 8, any_3, any_4, any_5, any_6, 1
-1, any_0, any_1, any_2, 8, any_3, any_4, any_5, any_6, 8
-0, any_0, any_1, any_2, 8, any_3, any_4, any_5, 0, 1
-0, any_0, any_1, any_2, 8, any_3, any_4, any_5, _537895657608921_0, 8
-10, any_0, any_1, any_2, 0, any_3, any_4, any_5, 0, 0
-10, any_0, any_1, any_2, 0, any_3, any_4, any_5, _537895657608921_0, 1
-_688398911390223_0, any_0, any_1, any_2, any_3, any_4, any_5, any_6, any_7, 1
+signal.0, 0, live.0, 0, 0, 0, 0, 0, live.1, 0
+0, any.0, any.1, live.0, 0, 7, 0, live.1, any.2, 1
+0, any.0, any.1, live.0, 0, 9, 0, live.1, any.2, 0
+0, any.0, any.1, live.0, 0, _716888888775130.0, 0, live.1, any.2, 0
+2, 0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 0
+0, any.0, any.1, any.2, any.3, 2, any.4, any.5, any.6, 2
+0, any.0, any.1, any.2, any.3, up.0, any.4, 0, any.5, 6
+1, any.0, any.1, any.2, any.3, up.0, any.4, 0, any.5, 5
+6, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
+5, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 1
+0, any.0, any.1, any.2, any.3, _188603385896403.0, any.4, any.5, any.6, 6
+1, any.0, any.1, any.2, any.3, _188603385896403.0, any.4, any.5, any.6, 5
+2, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
+3, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 1
+0, any.0, any.1, any.2, any.3, up.0, any.4, any.5, any.6, 4
+1, any.0, any.1, any.2, any.3, up.0, any.4, any.5, any.6, 3
+4, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
+3, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 1
+0, any.0, any.1, any.2, any.3, out.0, any.4, any.5, any.6, 4
+1, any.0, any.1, any.2, any.3, out.0, any.4, any.5, any.6, 3
+1, any.0, any.1, any.2, out.0, any.3, any.4, any.5, any.6, 3
+7, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
+0, any.0, any.1, any.2, any.3, 7, any.4, any.5, any.6, 7
+1, any.0, any.1, any.2, any.3, 7, any.4, any.5, any.6, 8
+_172129488626172.0, any.0, any.1, any.2, any.3, 7, any.4, any.5, any.6, 8
+9, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
+0, any.0, any.1, any.2, any.3, 9, any.4, any.5, any.6, 9
+1, any.0, any.1, any.2, any.3, 9, any.4, any.5, any.6, 10
+_172129488626172.0, any.0, any.1, any.2, any.3, 9, any.4, any.5, any.6, 10
+1, any.0, any.1, any.2, 10, any.3, any.4, any.5, 0, 0
+1, any.0, any.1, any.2, 10, any.3, any.4, any.5, _537895657608921.0, 10
+0, any.0, any.1, any.2, 8, any.3, any.4, any.5, any.6, 1
+1, any.0, any.1, any.2, 8, any.3, any.4, any.5, any.6, 8
+0, any.0, any.1, any.2, 8, any.3, any.4, any.5, 0, 1
+0, any.0, any.1, any.2, 8, any.3, any.4, any.5, _537895657608921.0, 8
+10, any.0, any.1, any.2, 0, any.3, any.4, any.5, 0, 0
+10, any.0, any.1, any.2, 0, any.3, any.4, any.5, _537895657608921.0, 1
+_688398911390223.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 1
 
 @ICONS
 XPM

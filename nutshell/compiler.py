@@ -27,9 +27,9 @@ def _handle_table(rulefile, tbl):
     
     for var, value in tbl.vars.items():
         # set() removes duplicates and gives braces
-        rulefile.append(f'var {var.name}_0 = {set(value)}')
+        rulefile.append(f'var {var.name}.0 = {set(value)}')
         for suf in range(1, 1+var.rep):
-            rulefile.append(f'var {var.name}_{suf} = {var.name}_0')
+            rulefile.append(f'var {var.name}.{suf} = {var.name}.0')
     rulefile.append('')
     rulefile.extend(_iter_transitions(tbl))
 

@@ -11,11 +11,15 @@ rSHORTHAND = re.compile(r'(\d+\s*\.\.\s*\d+)\s+(.+)')
 rRANGE = re.compile(r'\d+(?:\+\d+)?\s*\.\.\s*\d+')
 rSEGMENT = re.compile(
   # jesus christ
-  r'\s*(?:([0-8](?:\s*\.\.\s*[0-8])?)\s+)?(-?-?(?:[({](?:[\w\-*\s]*\s*(?:,|\.\.)\s*)*[\w\-*\s]+[})]|[\w\-]+)|\[(?:[0-8]\s*:\s*)?(?:[({](?:(?:\[?[\w\-]+]?(?:\s*\*\s*[\w\-])?|\d+(?:\+\d+)?\s*\.\.\s*\d+)*,\s*)*(?:\[?[\w\-]+]?|\d+(?:\+\d+)?\s*\.\.\s*\d+|(?:\.\.\.)?)[})]|[\w\-*\s]+)])(?:-(?:(?:\d+|(?:[({](?:[\w\-]*\s*(?:,|\.\.)\s*)*[\w\-]+[})]|[A-Za-z\-]+))))?(?:\s*\*\*\s*([1-8]))?'
+  r'\s*(?:([0-8](?:\s*\.\.\s*[0-8])?)\s+)?(-?-?(?:[({](?:[\w\-*\s]*\s*(?:,|\.\.)\s*)*[\w\-*\s]+[})]|[\w\-]+)|\[(?:[0-8]\s*:\s*)?(?:[({](?:(?:\[?[\w\-]+]?(?:\s*\*\s*[\w\-])?|\d+(?:\+\d+)?\s*\.\.\s*\d+)*,\s*)*(?:\[?[\w\-]+]?|\d+(?:\+\d+)?\s*\.\.\s*\d+|(?:\.\.\.)?)[})]|[\w\-*\s]+)])(?:-(?:(?:\d+|(?:[({](?:[\w\-]*\s*(?:,|\.\.)\s*)*[\w\-]+[})]|[\w\-]+))))?(?:\s*\*\*\s*([1-8]))?'
   )
 rBINDMAP = re.compile(r'\[(\d+)')
 rBINDSTART = re.compile(r'\[\d+')
-rALREADY = re.compile(r'(.+)_(\d+)$')
+rALREADY = re.compile(r'(.+)\.(\d+)$')
+
+
+def isvarname(string):
+    return string[0].isalpha() and string.replace('_', '').isalnum()
 
 
 def generate_cardinals(d):
@@ -95,7 +99,7 @@ def bind_vars(tr: (list, tuple), *, second_pass=False, return_reps=True):
                 if isinstance(built[ref], int) and ':' in val:
                     raise ValueError("Can't map from a single cellstate")
                 built.append(
-                  (ref, built[ref].rsplit('_', 1)[0], val[1+val.find(':'):].strip())
+                  (ref, built[ref].rsplit('.', 1)[0], val[1+val.find(':'):].strip())
                   if ':' in val else
                   built[ref]
                   )
@@ -104,7 +108,7 @@ def bind_vars(tr: (list, tuple), *, second_pass=False, return_reps=True):
         else:
             this_num = next(i for i in count() if i not in seen[state])
             seen[state].add(this_num)
-            built.append(f"{state}{'' if state.endswith('_') else '_'}{this_num}")
+            built.append(f"{state}.{this_num}")
     return ({k: max(v) for k, v in seen.items()}, built) if return_reps else built
 
 
@@ -113,7 +117,7 @@ def unbind_vars(tr: (list, tuple), rebind=True, bind_keep=False):
     seen, built = {}, []
     for idx, state in enumerate(tr):
         if state not in seen:
-            built.append(state.rsplit('_', 1)[0] if isinstance(state, str) else state)
+            built.append(state.rsplit('.', 1)[0] if isinstance(state, str) else state)
             seen[state] = idx
         elif bind_keep:
             built[seen[state]] = state
@@ -173,7 +177,7 @@ def expand_tr(tr: list, expected_len: int):
         if lower != cur_idx:
             raise ValueError(group, lower, cur_idx)
         span = upper - lower if upper > lower else expected_len - lower + upper  # else it wraps
-        if all((state.startswith('['), ':' not in state, state.strip('[]').isalpha())):
+        if all((state.startswith('['), ':' not in state, isvarname(state.strip('[]')))):
             # if it's a binding with a var name inside, then expand it
             # as shown in the second 'paragraph' of the docstring above
             group = [state.strip('[]')]

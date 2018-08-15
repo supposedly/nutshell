@@ -22,7 +22,7 @@ class TableRange:
         return self._range[item]
     
     def __repr__(self):
-        return repr(self._range).replace('range', 'TabelRange')
+        return repr(self._range).replace('range', 'TableRange')
     
     @classmethod
     def check(cls, string):
@@ -52,21 +52,27 @@ class ColorMixin:  # XXX: this feels weird being a class? ...but it's also a mix
         return ''.join([f'{c}{c}' for c in color])  # fwiw, measurably faster than c * 2
     
     @classmethod
-    def unpack(cls, color):
+    def unpack(cls, color, lno=None):
         if isinstance(color, (list, tuple)):
             return color
         m = cls._rGOLLY_COLOR.fullmatch(color)
         if m is not None:
             # Color is already golly
             return m.groups()
-        return struct.unpack('BBB', bytes.fromhex(cls.expand(color)))
+        try:
+            return struct.unpack('BBB', bytes.fromhex(cls.expand(color)))
+        except (ValueError, TypeError, struct.error):
+            raise TypeError(lno, f'Invalid color value {color!r} (attempting to convert from hex to Golly RGB format)')
     
     @classmethod
-    def pack(cls, color):
+    def pack(cls, color, lno=None):
         if isinstance(color, str):
             m = cls._rGOLLY_COLOR.fullmatch(color)
             if m is None:
                 # Color is already hex
                 return cls.expand(color)
             color = map(int, m.groups())
-        return struct.pack('BBB', *color).hex().upper()
+        try:
+            return struct.pack('BBB', *color).hex().upper()
+        except (ValueError, TypeError, struct.error):
+            raise TypeError(lno, f'Invalid color value {color!r} (attempting to convert from Golly RGB format to hex)')
