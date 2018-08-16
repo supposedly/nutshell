@@ -402,8 +402,8 @@ class AbstractTable:
             napkin, ptcds = map(str.strip, line.partition('>')[::2])
             main_transition_first = napkin.endswith('-') or not ptcds
             napkin = napkin.rstrip('-~').strip()
-            if self.directives['symmetries'] == 'permute':
-                napkin = utils.conv_permute(napkin, self._trlen)
+            if hasattr(symmetries.get_sym_type(self.directives['symmetries']), 'special'):
+                napkin = utils.special_transform(napkin, self._trlen, symmetries.get_sym_type(self.directives['symmetries']).special)
             try:
                 napkin = [self._rCARDINAL.sub(self._cardinal_sub, i.strip()) for i, _ in self._rTRANSITION.findall(napkin)]
             except KeyError as e:

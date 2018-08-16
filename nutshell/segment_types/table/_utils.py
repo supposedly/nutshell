@@ -2,7 +2,6 @@
 import re
 from collections import defaultdict
 from itertools import count
-from math import ceil
 
 from . import _classes as classes
 from nutshell.common.classes import TableRange
@@ -27,40 +26,14 @@ def generate_cardinals(d):
     return {k: dict(map(reversed, enumerate(v, 1))) for k, v in d.items()}
 
 
-class AdditiveDict(dict):
-    def __init__(self, it):
-        for key, val in it:
-            self[str(key)] = self.get(key, 0) + int(val or 1)
-    
-    def __iter__(self):
-        return (i for k, v in self.items() for i in [k]*v)
-
-
-def conv_permute(tr: str, total: int):
+def special_transform(tr: str, total: int, callback):
     """
-    Given a shorthand permutationally-symmetric transition:
-        total=8 (Moore neighborhood)
-        -------
-        1,0
-        1**4,0**4
-        1**4,0
-        1**3,1,0,0
-    Return its expanded representation:
-        1,1,1,1,0,0,0,0
-    Order is not preserved.
+    Handle the special ** syntax for current symmetries
     """
     # Balance unspecified values
     seq = [(match[2], match[3]) for match in rSEGMENT.finditer(tr)]
-    start, end = seq.pop(0), seq.pop(-1)
-    # How many cells filled
-    tally = total - sum(int(i) for _, i in seq if i)
-    # And how many empty slots left to fill
-    empties = sum(1 for _, i in seq if not i)
-    # filler algo courtesy of Thomas Russell on math.stackexchange
-    # https://math.stackexchange.com/a/1081084
-    filler = (ceil((tally-k+1)/empties) for k in range(1, 1+empties))
-    result = ','.join(AdditiveDict((val, num or str(next(filler))) for val, num in seq))
-    return f"{start[0]},{result},{end[0]}"
+    start, end = seq.pop(0)[0], seq.pop(-1)[0]
+    return ','.join([start, *callback(seq, total), end])
 
 
 def suffix_num(num):
@@ -108,7 +81,7 @@ def bind_vars(tr: (list, tuple), *, second_pass=False, return_reps=True):
         else:
             this_num = next(i for i in count() if i not in seen[state])
             seen[state].add(this_num)
-            built.append(f"{state}.{this_num}")
+            built.append(f'{state}.{this_num}')
     return ({k: max(v) for k, v in seen.items()}, built) if return_reps else built
 
 
