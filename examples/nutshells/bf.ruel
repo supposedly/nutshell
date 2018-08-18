@@ -330,7 +330,8 @@ EAST_R_BRACK, NE (0, data), E DATA_POINTER, SE..N any; [NE: (WEST_BREAK, WEST_LO
 # if it's LOOP ('no'), turn the waiting pointer into a westbound one to send it back to the appropriate l-brack
 R_BRACK, N (SOUTH_BREAK, SOUTH_LOOP), NE..NW any; [0] -> N[(POINTER_R_BRACK, 0)]  W[N: (0, WEST_POINTER)]
 
-WEST_POINTER, W L_BRACK, NW..SE any, S (L_BRACK, prgm), SW any; [S: (BLANK_2, pointerOps)] -> W:L_BRACK  E[S: (NORTH_R_BRACK, _, ...)]
+any, SW L_BRACK, W BLANK_1, NW..S any; NORTH_R_BRACK -> W:BLANK_2
+WEST_POINTER, W L_BRACK, NW..SE any, S (L_BRACK, prgm), SW any; [S: (BLANK_1, pointerOps)] -> W:L_BRACK
 WEST_POINTER, N..NW any; 0 -> W:WEST_POINTER  N:NORTH_NOP
 
 (WEST_BREAK, WEST_LOOP), N..NW any; 0 -> W[0]

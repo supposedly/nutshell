@@ -60,7 +60,7 @@ vacrdata, (16, 17), NE..NW any; [N: (12, 13)]
 vacdata, (12, 13), 5, E..NW any; [N: (1, 2)]
 
 # Move rightward-moving data to the right
-vacrdata, W vacrdata, NW..SW any; [W]
+vacrdata, W rdata, NW..SW any; [W]
 rdata, W 0, NW..SW any; 0
 
 # shift the shifter down two as well

@@ -43,7 +43,7 @@ def _transpile(args):
             finished = transpile(sys.stdin.read().splitlines(True), find=args.find)
         else:
             with open(infile) as infp:
-                finished = transpile(infp)
+                finished = transpile(infp, find=args.find)
         fname = os.path.split(infile)[-1].split('.')[0]
         for directory in args._.get('outdirs', ()):
             if directory == '-':

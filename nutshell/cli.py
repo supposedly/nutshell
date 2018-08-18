@@ -41,7 +41,7 @@ def infiles(path: str.split):
     return path
 
 
-@transpile.clump(OR='preview|normal')
+@transpile.clump(OR='find|outdirs', XOR='find|outdirs')
 @transpile.main_grp.clump(AND='infiles|outdirs')
 @transpile.main_grp.arg()
 def outdirs(path: str.split):
@@ -68,7 +68,7 @@ def comment_src():
     return True
 
 
-@transpile.clump(XOR='find|preview|normal')
+@transpile.clump(OR='find|outdirs', XOR='find|outdirs')
 @transpile.flag(short='f', default=None)
 def find(transition):
     """Locate first transition in `infile` that matches"""
