@@ -475,9 +475,9 @@ NORTH_R_BRACK, NW northbound, N..W any; BLANK_1 -> N:0  # random non-interfering
 BLANK_1, S R_BRACK, SW..SE any; R_BRACK
 R_BRACK, S R_BRACK, SW..SE any; NORTH_R_BRACK
 # Move signals
-(NORTH_R_BRACK, northboundNOP), N..NW any; 0 ~> N[0]
-(WEST_R_BRACK, westbound), N..NW any; 0 ~> W[0]
-(EAST_R_BRACK, eastbound), N..NW any; 0 ~> E[0]
+(NORTH_R_BRACK, northboundNOP), N..NW any; 0 => N[0]
+(WEST_R_BRACK, westbound), N..NW any; 0 => W[0]
+(EAST_R_BRACK, eastbound), N..NW any; 0 => E[0]
 (SOUTH_COMMA, SOUTH_BREAK, SOUTH_LOOP), N..NW any; 0 -> S[0]
 
 # Pointer stops after reaching end

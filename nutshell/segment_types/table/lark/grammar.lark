@@ -1,62 +1,83 @@
-// Need three diff kinds of states:
-// initial (input) state cannot be a reference -- just a _var or number
-// napkin (neighbor, medial) states can be anything
-// resultant (final) state cannot be a varname -- just a number or reference
-// Neither initial nor resultant states can have compass directions, only medials
-
 table: (line | _NL)+
 
-line: VARNAME ":" /.+/                                     -> directive
-  | initial napkin _end final [ARROW ptcd (_WS ptcd)*]     -> transition
-  | VARNAME _WS? "=" _WS? _var  -> var_decl
-
-initial: INT | _var
-// Doing `napkin: (_sep medial permute_shorthand?)~1..8` invokes issue #190
-// (grammar-compilation time explodes)
-napkin: _napkin_transition~1..8
-_napkin_transition: permute_shorthand | _sep medial
-final: INT | reference
-permute_shorthand: _sep medial _PERMUTE INT
-_PERMUTE: _WS? "**" _WS?  // this has to be its own terminal, which I guess makes it function like an atom
-
-_end: ";" _WS?  // XXX: this should maybe include sep? although LALR can't seem to handle it sadly
-_sep: "," _WS?
-ARROW: _WS? ("~>" | "->") _WS?
+line: NAME ":" _WS? /.+/                  -> directive
+  | NAME _WS? "=" _WS? _negation? _expr   -> var_decl
+  | transition [_arrow ptcd (_WS ptcd)*]  -> transition
 
 
-medial: COMPASS_DIR _WS (INT | map_var_expr | reference)
-  | crange? (INT | map_var_expr | reference)  -> medial_range
-  | crange? "[" map_var_expr "]"              -> medial_special_range
-// LALR bugs if this is a terminal rather than a rule
-crange: COMPASS_DIR _RANGE_SEP COMPASS_DIR _WS
+transition: _negation? _expr (_sep tr_state)+ _sep (_expr | reference)  -> main  //can't be (INT | reference) in LALR though it makes more sense syntactically unless final semicolon is made mandatory
+tr_state: [cdir _WS] _negation? (_expr | reference)
+  | [cdir _WS] _negation? (_expr | reference) _PERMUTE /[^,;]+/         -> permute_shorthand
+cdir: COMPASS_DIR
+  | COMPASS_DIR ".." COMPASS_DIR -> crange
 
-reference: "[" PREVIOUS_BIND "]"                 -> binding
-  | "[" PREVIOUS_BIND ":" _WS? map_var_expr "]"  -> mapping
+_PERMUTE: _WS? "~" _WS?
+_sep: ("," | ";") _WS?  //if this is a terminal rather than a rule it interferes with "," in var-related rules below
+_arrow: NORMAL_ARROW | HOIST_ARROW
+NORMAL_ARROW: _WS? "->" _WS?
+HOIST_ARROW: _WS? "=>" _WS?
 
-ptcd: COMPASS_DIR ":" INT                                     -> ptcd_bare
-  | COMPASS_DIR "[" ptcd_var_expr "]"                         -> ptcd_map_self
-  | COMPASS_DIR "[" PREVIOUS_BIND ":" _WS? ptcd_var_expr "]"  -> ptcd_map_other
+var: _VAR_OPEN (_negation? _expr ("," _WS? _negation? _expr)* | range) _VAR_CLOSE
+tr_var: _VAR_OPEN (_negation? _tr_expr ("," _WS? _negation? _tr_expr)* ["," _WS? EXTEND_LAST] | range) _VAR_CLOSE        -> var
+ptcd_var: _VAR_OPEN (_negation? _ptcd_expr ("," _WS? _negation? _ptcd_expr)* ["," _WS? EXTEND_LAST] | range) _VAR_CLOSE  -> var
+
+_expr: _expr_no_int | INT
+_expr_no_int: (NAME | range | operation | var)
+
+operation: _expr MULT _expr  -> mult
+  | _expr_no_int SUBT _expr  -> subt
+
+_tr_expr: _tr_expr_no_int | INT
+_tr_expr_no_int: (NAME | range | tr_operation | tr_var | reference)
+
+tr_operation: _tr_expr MULT _tr_expr  -> mult
+  | _tr_expr_no_int SUBT _tr_expr     -> subt
+
+_ptcd_expr: _ptcd_expr_no_int | INT
+_ptcd_expr_no_int: (NAME| LEAVE_ALONE | range | ptcd_operation | ptcd_var | reference)
+
+ptcd_operation: _ptcd_expr MULT _ptcd_expr  -> mult
+  | _ptcd_expr_no_int SUBT _ptcd_expr       -> subt
+
+ptcd: COMPASS_DIR ":" INT                                                 -> ptcd_bare
+  | COMPASS_DIR "[" _ptcd_expr_no_int "]"                                 -> ptcd_map_self
+  | COMPASS_DIR "[" (PREVIOUS_BIND | "0") "]"                             -> ptcd_bind_self
+  | COMPASS_DIR "[" (PREVIOUS_BIND | "0") ":" _WS? _ptcd_expr_no_int "]"  -> ptcd_map_other
+// I'm not sure why I need to specify the "0" explicitly there,
+// considering that a 0 is already included in PREVIOUS_BIND.
+// (If I don't put it above, Lark will tell me it expected MULT rather than the
+// right square bracket for any "ptcd_bind_self" sequence which makes little sense)
+
+reference: "[" PREVIOUS_BIND "]"                    -> binding
+  | "[" PREVIOUS_BIND ":" _WS? _tr_expr_no_int "]"  -> mapping
+
+range: INT _WS? ".." _WS? INT
+  | INT _WS? "~" _WS? INT _WS? ".." _WS? INT -> range_step
+
+_VAR_OPEN: /[({]/
+_VAR_CLOSE: /[)}]/
+
+LEAVE_ALONE: "_"
+EXTEND_LAST: "..."
+
+_negation: NEGATE_LIVE | NEGATE_ALL
+NEGATE_ALL: "-~"
+NEGATE_LIVE: "~"
+
+MULT: _WS? "*" _WS?
+SUBT: _WS? "-" _WS?
 
 PREVIOUS_BIND: /0|NE|SE|SW|NW|N|E|S|W/
 COMPASS_DIR: /NE|SE|SW|NW|N|E|S|W/
 
-///// NORMAL VAR /////
-
-
-extend_last: "..."
-no_transition: "_"
-_VAR_OPEN: /[({]/
-_VAR_CLOSE: /[)}]/
-// Match all alphabetical strings of text except capitalized compass directions (N, NE, E, SE, S, SW, W, NW)
-// Equivalent to /(?!NE|SE|SW|NW|N|E|S|W)[A-Za-z]+|(?:NE|SE|SW|NW)[A-Za-z]+|(?:N|E|S|W)(?!E|W)[A-Za-z]+/,
-// but takes fewer steps. Courtesy of Dr. Memes#1508 (138628718968045568) on Discord's "The Coding Den"
-VARNAME: /(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?![A-Za-z]))[A-Za-z]+/
-range: INT [_WS? "-"] _WS? _RANGE_SEP _WS? INT
-_RANGE_SEP: ".."
-
-_NL:  NEWLINE 
-%import common (INT, UCASE_LETTER, LCASE_LETTER, WORD, CNAME, NEWLINE)
+// More efficient than /(?!NE|SE|SW|NW|N|E|S|W)[A-Za-z]\w*|(?:NE|SE|SW|NW)[A-Za-z]\w*|(?:N|E|S|W)(?!E|W)[A-Za-z]\w*/
+// Thanks to Dr. Memes#1508 (<@138628718968045568>) from Discord TCD
+// Modified later to switch from only accepting [A-Za-z]+ sans compass dirs to accepting [A-Za-z]\w* sans the same
+NAME: /(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\w))[A-Za-z]\w*/
 
 _WS: /\s+/
-COMMENT: /\s*#[^\n]*/
-%ignore COMMENT
+_NL:  NEWLINE
+
+_COMMENT: /\s*#.*/
+%ignore _COMMENT
+%import common (INT, NEWLINE)

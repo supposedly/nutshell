@@ -5,7 +5,7 @@ from inspect import cleandoc
 
 from ergo.misc import ErgoNamespace
 
-from nutshell import parser, compiler
+from nutshell import segmenter, compiler
 from nutshell.cli import cli
 from nutshell.common.utils import printq
 
@@ -15,7 +15,7 @@ def transpile(fp, *, preview=False, find=None):
     Parses and compiles the given nutshell file into an equivalent .rule.
     """
     printq('\nParsing...')
-    parsed = parser.parse(fp)
+    parsed = segmenter.parse(fp)
     if preview:
         return '\n'.join(', '.join(map(str, tr)) for _, tr in parsed['@TABLE'].transitions)
     if find:
