@@ -17,11 +17,13 @@ The `pip install` will add a command `nutshell-ca` for use in terminal. If this 
 not work for you, you may instead `git clone` Nutshell as in step 2.ii above and then run `to_ruletable.py`
 from its root directory as a substitute for `nutshell-ca`.
 
-```bash
-$ nutshell-ca [infile] [outdir] [-v | -q | -s | -p | -t | -f]
+```
+$ nutshell-ca [-v | -q] transpile [infile] [outdir] [-s | -p | -t | -f]
+(alternatively, `nutshell-ca t ...')
 ```
 The output file will be written to `outdir` with a .rule extension and the same filename as `infile`.  
-Supported flags, though there's more info in `--help`:
+Supported flags, though there's more info in `--help` (note that `-v` and `-q` can come either
+after or before the keyword `transpile`/`t` with no difference):
   - `-v`: Verbose. Can be repeated up to four times, causing more info to be displayed each time.
   - `-q`: Quiet. Opposite of the above, but only has one level.
   - `-s`: Source. Writes each original nutshell line, as a comment, above the line(s) it compiles

@@ -3,11 +3,11 @@ from nutshell.cli import cli
 
 def _handle_rule(rulefile, seg):
     name = seg.pop(0)
-    rulefile.extend((f'@RULE {name}', cli.result.header, *seg))
+    rulefile.extend((f'@RULE {name}', cli.result.transpile.header, *seg))
 
 
 def _iter_transitions(tbl):
-    if not cli.result.comment_src:
+    if not cli.result.transpile.comment_src:
         yield from (', '.join(map(str, tr)) for _lno, tr in tbl.transitions)
         raise StopIteration
     done = set()

@@ -10,7 +10,7 @@ from nutshell.cli import cli
 from nutshell.common.utils import printq
 
 
-def transpile(fp, *, preview=False, find=False):
+def transpile(fp, *, preview=False, find=None):
     """
     Parses and compiles the given nutshell file into an equivalent .rule.
     """
@@ -19,7 +19,7 @@ def transpile(fp, *, preview=False, find=False):
     if preview:
         return '\n'.join(', '.join(map(str, tr)) for _, tr in parsed['@TABLE'].transitions)
     if find:
-        print(parsed['@TABLE'].match(cli.result.find) + '\n')
+        print(parsed['@TABLE'].match(find) + '\n')
         return
     printq('Complete!', 'Compiling...', sep='\n\n')
     return compiler.compile(parsed)
@@ -60,7 +60,7 @@ def write_rule(**kwargs):
 
 
 def main():
-    cli.prepare(strict=True)
+    cli.prepare(strict=True, propagate_unknowns=True)
     if cli.result is None:
         return
     if 'transpile' in cli.result:

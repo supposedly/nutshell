@@ -19,7 +19,7 @@ setuptools.setup(
   include_package_data=True,
   url='https://github.com/eltrhn/nutshell',
   description="Transpiler from an alternative CA-rule-spec language to Golly's",
-  install_requires=['bidict', 'ergo>=0.4.2',],  # & lark later on
+  install_requires=['bidict', 'ergo>=0.4.4',],  # & lark later on
   python_requires='>=3.6',
   entry_points={
       'console_scripts': [

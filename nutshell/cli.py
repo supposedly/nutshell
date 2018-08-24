@@ -6,9 +6,9 @@ DEFAULT_HEADER = '''\
 ********************************\
 '''
 
-cli = CLI("A transpiler from the 'Nutshell' rule-table format to Golly's", default_command='transpile')
-transpile = cli.command('transpile', XOR='preview|transpile', OR='not nothing')
-preview = cli.command('preview', XOR='preview|transpile', OR='not nothing')
+cli = CLI("A transpiler from the 'Nutshell' rule-table format to Golly's")
+transpile = cli.command('transpile', aliases=['t'], XOR='preview|transpile', OR='not nothing')
+preview = cli.command('preview', aliases=['p'], XOR='preview|transpile', OR='not nothing')
 transpile.main_grp = Group(XOR='find|normal')
 
 
