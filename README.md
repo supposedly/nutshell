@@ -44,55 +44,49 @@ after or before the keyword `transpile`/`t` with no difference):
 - Support for `{}` literals, usable directly in transitions, as 'on-the-spot' variables. (Parentheses are also allowed. I personally prefer them to braces.)
 - Support for cellstate *ranges* in variables, via double..dots as in `(0..8)` -- interspersible with state-by-state specification,
   so you can do `(0, 1, 4..6, 9)` to mean `(0, 1, 4, 5, 6, 9)`.  
-  Ranges also accept a step, so you can also do `(0, 1-10..50, 102)` to mean `(0, 1, 11, 21, 31, 41, 102)`.
-- A variable is made 'bound' by referring to its *index* in the transition, wrapped in [brackets]:  
+  Ranges also accept a step, so you can also write `(0, 10~1..50, 102)` to mean `(0, 1, 11, 21, 31, 41, 102)`.
+- A variable is 'bound to' by referring to the *compass direction* it appeared at in the transition, wrapped with [brackets]:
 ```py
-# current (barC repeats)
+# Golly (barC repeats)
 foo,barA,barB,barC,barD,barE,barF,barG,barH,barC
-# new
-foo,bar,bar,bar,bar,bar,bar,bar,bar,[3]
+# Nutshell
+foo, bar, bar, bar, bar, bar, bar, bar, bar, [NE]
 
-# current (barA repeats)
+# Golly (barA repeats)
 foo,barA,barB,barC,barA,barD,barE,barF,barG,baz
-# new
-foo,bar,bar,bar,[1],bar,bar,bar,bar,baz
+# Nutshell
+foo, bar, bar, bar, [N], bar, bar, bar, bar, baz
 ```  
-Transitions are zero-indexed from the input state and must refer to a previous index.
-- To make binding even simpler, the reserved names `N NE E ... NW` are provided as symbolic constants for what the direction's index would be
-  in the specified neighborhood. (The remainder of this document assumes the use of these constants rather than the raw indices,
-  but they are interchangeable.)
-- For example, in a rule with `neighborhood: vonNeumann`, the names `N E S W` are provided for `1 2 3 4`.
-- This means that, above, the first 'new' transition can be rewritten as `foo,bar,bar,bar,bar,bar,bar,bar,bar,[E]` (E meaning east, because
-  the 3rd `bar` represented the eastern cell), and the second as `foo,bar,bar,bar,[N],bar,bar,bar,bar,baz`.  
-  (Note that the input state is still referred to as `[0]` — no symbolic name)
+The input state is referred to as [0]. The eight compass directions also are not allowed to be used as variable names.
 - Repetition can be cut down on even more by specifying directions directly before each state, which then allows
-  *ranges* of directions (which of course ultimately map to their respective numbers). This means that the
-  transitions above can be further rewritten to:
+  *ranges* of directions. This means that the transitions above can be further rewritten to:
 ```py
-# current (barC repeats)
+# Golly (barC repeats)
 foo,barA,barB,barC,barD,barE,barF,barG,barH,barC
-# new
+# Nutshell
 foo, N..NW bar, [E]
 
-# current (barA repeats)
+# Golly (barA repeats)
 foo,barA,barB,barC,barA,barD,barE,barF,barG,baz
-# new
+# Nutshell
 foo, N..E bar, [N], S..NW bar, baz # could also be "..., SE [N], ..."
 ```
-- With this indexing, we can introduce "mapping" one variable to another. For instance, `foo, N..NW (0, 1, 2), [E: (1, 3, 4)]`
-(meaning *map the eastern cell, being any of `(0, 1, 2)`, to the states `(1, 3, 4)`: if it's 0 return 1, if 1 return 3, if 2 return 4*) can
-replace what would otherwise require a separate transition for each of `0`...`1`, `1`...`3`, and `2`...`4`.  
+- With this new type of binding, we can additionally introduce "mapping" one variable to another.
+  For instance, `foo, N..NW (0, 1, 2), [E: (1, 3, 4)]` (meaning *map the eastern cell, being any of `(0, 1, 2)`,
+  to the states `(1, 3, 4)`: if it's 0 return 1, if 1 return 3, if 2 return 4*) can replace what would otherwise
+  require a separate transition for each of `0` -> `1`, `1` -> `3`, and `2` -> `4`.  
   Mapping of course works with named variables as well.
-- If a variable literal is too small to map to, an error will be raised that can be rectified by either (a) filling it out with explicit transitions,
-or (b) using the `...` operator to say *"fill the rest out with whatever value preceded the `...`"*.
-  If the "map-to" is instead *larger* than its "map-from", extraneous values will simply be ignored.
+- If a variable literal is too small to map to, an error will be raised that can be rectified by either (a) filling it out with more cellstates,
+  or (b) using the `...` operator to say *"fill the rest out with whatever value preceded the `...`"*.
+  However, If the "map-to" is *larger* than its "map-from", extraneous values will simply be ignored.
 - Transitions can be started on a direction other than north if explicitly specified. Under vonNeumann, `0, W..E 1, S 0, 2` becomes `0, W 1, N 1, E 1, S 0, 2`
   which is equivalent to `0, 1, 1, 0, 1, 2` or `0, N..E 1, 0, 1, 2`. A single direction (`W`) rather than a range (`W..E`) can also be specified to the same effect.
   Bindings and mappings to "forward" indices are automatically resolved when reordering these non-north-initial transitions.
 - A Golly-ruletable transition such as von-Neumann `0,a,a,a,a,1` might be inefficiently compacted to `0, a, [N], [N], [N], 1`, or worse
   `0, a, E..W [N], 1`. In such cases, where successive variables need all to be bound to the first, the shorthand `direction..direction [var]` can be used.
   Here it would look like `0, N..W [a], 1`, expanding during transpilation to `0, a, [1], [1], [1], 1`.
-- Support for negation and subtraction of variables via the `-` and `--` operators:
+- Support for "subtraction" of variables (similar to a "difference" operation on two sets) via the `-` operator, and as shorthand for
+  (respectively) "subtract from live cellstates" and "subtract from all cellstates" the unary `-` and `--` operators:
 ```py
 0, foo-bar, bar-2, bar-(2, 3), -1, --1, -bar, --(3, 4), (foo, bar), baz
 
@@ -134,12 +128,11 @@ foo, N..NW bar, baz -> S:2  E[(2, 3)]  SE[wutz]  N[NE: (2, 3)]  NE[E]
     - (formerly "PTCDs", from "**p**ost-**t**ransition **c**ompass-**d**irection specifier**s**")
 - The `->` arrow here says to, during transpiling, place the "main" transition (the one preceding the arrow) *before* the ones created by the output specifiers.
   This causes it to, when the transpiled result is interpreted by Golly, override their behavior should they conflict.  
-  If the opposite behavior is instead desired, where the main transition comes last and is overridden by the output-specifier transitions, one can use the `~>` arrow
-  (with a tilde rather than a hyphen) instead.
+  If the opposite behavior is instead desired, where the main transition comes last and is overridden by the output-specifier transitions, one can use the `=>` arrow instead.
 - Transitions under permutational symmetry can make use of a shorthand syntax, specifying only the quantity of cells in each state. For example, `0,2,2,2,1,1,1,0,0,1`
-  in a Moore+permute rule can be compacted to `0, 2 ** 3, 1 ** 3, 0 ** 2, 1`.  
+  in a Moore+permute rule can be compacted to `0, 2 ~ 3, 1 ~ 3, 0 ~ 2, 1`.  
   Unmarked states will be filled in to match the number of cells in the transition's neighborhood, meaning
-  that this transition can also be written as `0, 0 ** 2, 1, 2, 1` or `0, 1 ** 3, 2 ** 3, 0, 1`.  
+  that this transition can also be written as `0, 0 ~ 2, 1, 2, 1` or `0, 1 ~ 3, 2 ~ 3, 0, 1`.  
   - If the number of cells to fill is not divisible by the number of unmarked states, precedence will
     be given to those that appear earlier; `2,1,0`, for instance, will also expandW into `2,2,2,1,1,1,0,0`, but `0,1,2` will expand into `0,0,0,1,1,1,2,2`.
 - The `n_states` directive's name has been changed to `states`, and it can be given a value of `?` (as in `states: ?`) rather than a number to tell Nutshell to detect

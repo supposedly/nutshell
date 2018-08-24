@@ -18,10 +18,10 @@ symmetries: none
 0, NW..NE any, (1, 6), SE..SW any, (1, 4); 0 -> N[(3, _, ...)]  S[(5, _, ...)]
 
 # photon moving
-0, -~3, any, -~4, any, 3, any, -~6, any; 3
-0, -~3, any, -~4, any, -~5, any, 4, any; 4
-0, 5, any, -~4, any, -~5, any, -~6, any; 5
-0, -~3, any, 6, any, -~5, any, -~6, any; 6
+0, --3, any, --4, any, 3, any, --6, any; 3
+0, --3, any, --4, any, --5, any, 4, any; 4
+0, 5, any, --4, any, --5, any, --6, any; 5
+0, --3, any, 6, any, --5, any, --6, any; 6
 
 # photon dying
 (3..6), N..NW any; 0
