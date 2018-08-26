@@ -5,9 +5,9 @@ line: NAME ":" _WS? /.+/                  -> directive  //LALR unfortunately ref
   | "!" _expr_no_int                      -> print_var
   | transition [_arrow ptcd (_WS ptcd)*]  -> transition
 
-transition: _expr (_sep tr_state)+ _sep (_expr | reference)  -> main  //Can't have (INT | reference) here in LALR
-tr_state: [cdir _WS] (_expr | reference)
-  | [cdir _WS] (_expr | reference) _PERMUTE /[^,;]+/  -> permute_shorthand
+transition: _expr (_sep tr_state)+ _sep _tr_expr  -> main  //Can't have (INT | reference) here in LALR
+tr_state: [cdir _WS] _tr_expr
+  | _tr_expr _PERMUTE /[^,;]+/  -> permute_shorthand  //Doesn't make sense to allow cdir *and* permute_shorthand in the same tr_state
 cdir: COMPASS_DIR
   | COMPASS_DIR ".." COMPASS_DIR  -> crange
 
@@ -17,48 +17,10 @@ _arrow: NORMAL_ARROW | HOIST_ARROW
 NORMAL_ARROW: _WS? "->" _WS?
 HOIST_ARROW: _WS? "=>" _WS?
 
-var: _VAR_OPEN (_expr ("," _WS? _expr)* | range) _VAR_CLOSE
-tr_var: _VAR_OPEN (_tr_expr ("," _WS? _tr_expr)* ["," _WS? EXTEND_LAST] | range) _VAR_CLOSE        -> var
+var: _VAR_OPEN (_expr ("," _WS? _expr)* | range) _VAR_CLOSE                                        -> noref_var
+tr_var: _VAR_OPEN (_tr_expr ("," _WS? _tr_expr)* | range) _VAR_CLOSE                               -> var
+ref_var: _VAR_OPEN (_ref_expr ("," _WS? _ref_expr)* ["," _WS? EXTEND_LAST] | range) _VAR_CLOSE     -> var
 ptcd_var: _VAR_OPEN (_ptcd_expr ("," _WS? _ptcd_expr)* ["," _WS? EXTEND_LAST] | range) _VAR_CLOSE  -> var
-
-_expr: _expr_no_int | INT
-_expr_no_int: (NAME | range | operation | var)
-
-
-operation: INT _MULT INT      -> repeat_int
-  | INT _MULT _expr_no_int    -> int_to_var_length
-  | _expr_no_int _MULT INT    -> repeat_var
-  
-  | _expr_no_int _subt _expr  -> subt
-  
-  | _NEGATE_LIVE _expr        -> live_except
-  | _NEGATE_ALL _expr         -> all_except
-
-_tr_expr: _tr_expr_no_int | INT
-_tr_expr_no_int: (NAME | range | tr_operation | tr_var | reference)
-
-
-tr_operation: INT _MULT INT         -> repeat_int
-  | INT _MULT _tr_expr_no_int       -> int_to_var_length
-  | _tr_expr_no_int _MULT INT       -> repeat_var
-  
-  | _tr_expr_no_int _subt _tr_expr  -> subt
-  
-  | _NEGATE_LIVE _tr_expr           -> live_except
-  | _NEGATE_ALL _tr_expr            -> all_except
-
-_ptcd_expr: _ptcd_expr_no_int | INT
-_ptcd_expr_no_int: (NAME| LEAVE_ALONE | range | ptcd_operation | ptcd_var | reference)
-
-
-ptcd_operation: INT _MULT INT           -> repeat_int
-  | INT _MULT _ptcd_expr_no_int         -> int_to_var_length
-  | _ptcd_expr_no_int _MULT INT         -> repeat_var
-  
-  | _ptcd_expr_no_int _subt _ptcd_expr  -> subt
-  
-  | _NEGATE_LIVE _ptcd_expr             -> live_except
-  | _NEGATE_ALL _ptcd_expr              -> all_except
 
 
 ptcd: COMPASS_DIR ":" INT                                                       -> ptcd_bare
@@ -71,8 +33,63 @@ ptcd: COMPASS_DIR ":" INT                                                       
 // right square bracket for any "ptcd_bind_self" sequence which makes little sense)
 // ...so it's a little bit annoying
 
-reference: "[" PREVIOUS_BIND "]"                    -> binding
-  | "[" PREVIOUS_BIND ":" _WS? _tr_expr_no_int "]"  -> mapping
+_expr: _expr_no_int | INT
+_expr_no_int: (NAME | range | operation | var)
+
+// These ones are marked "noref" to indicate that they can safely be extracted
+// in the 'transformer' phase before transpilation actually starts, b/c _expr
+// and _expr_no_int are the only rules guaranteed not to contain any references
+operation: INT _MULT INT      -> noref_repeat_int
+  | INT _MULT _expr_no_int    -> noref_int_to_var_length
+  | _expr_no_int _MULT INT    -> noref_repeat_var
+  
+  | _expr_no_int _subt _expr  -> noref_subt
+  
+  | _NEGATE_LIVE _expr        -> noref_live_except
+  | _NEGATE_ALL _expr         -> noref_all_except
+
+
+_tr_expr: _tr_expr_no_int | INT | reference
+_tr_expr_no_int: (NAME | range | tr_operation | tr_var)
+
+tr_operation: (INT | reference) _MULT INT      -> repeat_int
+  | (INT | reference) _MULT _tr_expr_no_int    -> int_to_var_length
+  | _tr_expr_no_int _MULT INT       -> repeat_var
+  
+  | _tr_expr_no_int _subt _tr_expr  -> subt
+  
+  | _NEGATE_LIVE _tr_expr           -> live_except
+  | _NEGATE_ALL _tr_expr            -> all_except
+
+
+_ref_expr: _ref_expr_no_int | INT | reference
+_ref_expr_no_int: (NAME | range | ref_operation | ref_var)
+
+ref_operation: (INT | reference) _MULT INT      -> repeat_int
+  | (INT | reference) _MULT _ref_expr_no_int    -> int_to_var_length
+  | _ref_expr_no_int _MULT INT       -> repeat_var
+  
+  | _ref_expr_no_int _subt _ref_expr  -> subt
+  
+  | _NEGATE_LIVE _ref_expr           -> live_except
+  | _NEGATE_ALL _ref_expr            -> all_except
+
+
+_ptcd_expr: _ptcd_expr_no_int | INT | reference
+_ptcd_expr_no_int: (NAME| LEAVE_ALONE | range | ptcd_operation | ptcd_var)
+
+ptcd_operation: (INT | reference) _MULT INT        -> repeat_int
+  | (INT | reference) _MULT _ptcd_expr_no_int      -> int_to_var_length
+  | _ptcd_expr_no_int _MULT INT         -> repeat_var
+  
+  | _ptcd_expr_no_int _subt _ptcd_expr  -> subt
+  
+  | _NEGATE_LIVE _ptcd_expr             -> live_except
+  | _NEGATE_ALL _ptcd_expr              -> all_except
+
+
+reference: "[" PREVIOUS_BIND "]"                     -> binding
+  | "[" PREVIOUS_BIND ":" _WS? _ref_expr_no_int "]"  -> mapping
 
 range: INT _WS? ".." _WS? INT
   | INT _WS? "~" _WS? INT _WS? ".." _WS? INT -> range_step
@@ -103,5 +120,7 @@ _WS: /\s+/
 _NL:  NEWLINE
 
 _COMMENT: /\s*#.*/
+_SURROUNDING_WS: /^\s+|\s+$/
 %ignore _COMMENT
+%ignore _SURROUNDING_WS
 %import common (INT, NEWLINE)

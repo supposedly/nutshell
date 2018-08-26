@@ -150,8 +150,7 @@ one of Golly's symmetry types. Provided by Nutshell is a small "standard library
   this means that cellstates are permuted between orthogonal neighbors and, separately, between diagonal neighbors; under vonNeumann, that cellstates are permuted between opposing
   pairs of neighbors; and, though *possible* to apply under hexagonal symmetry (where permutation would occur between (N, SE, W) and (E, S, NW)), it would be meaningless so only the
   former two are supported.
-- `symmetries: nutshell.Rotate2`: Identical to Golly's `rotate2` in a hexagonal neighborhood, but allows Moore and vonNeumann as well. (Use `rotate2` instead of this for a hexagonal
-  rule)
+- `symmetries: nutshell.Rotate2`: Identical to Golly's `rotate2` in a hexagonal neighborhood, but allows Moore and vonNeumann as well. (Use `rotate2` instead of this for a hexagonal rule)
 - `symmetries: nutshell.ReflectVertical`: Vertical reflection.
 
 In addition, although the API for it is somewhat clunky at present, you as the user are allowed to define your own custom symmetries. To do so, create a `.py` file and within it a class
