@@ -1,13 +1,13 @@
 import inspect
 
-from .segment_types import NutshellSegment, AbstractTable, ColorSegment, IconArray
-from .common.errors import TableException
+from .segment_types import NutshellSegment, Table, ColorSegment, IconArray
+from .common.errors import NutshellException
 
 
-AbstractTable.hush = False  # a little bit eh but :shrug:
+Table.hush = False  # a little bit eh but :shrug:
 CONVERTERS = {
   '@NUTSHELL': NutshellSegment,
-  '@TABLE': AbstractTable,
+  '@TABLE': Table,
   '@COLORS': ColorSegment,
   '@ICONS': IconArray,
   }
@@ -44,7 +44,7 @@ def parse(fp):
         annot = getattr(inspect.signature(converter).parameters.get('dep'), 'annotation', None) or {}
         try:
             parts[label] = converter(segment, seg_lno, **(annot and {'dep': [parts.get(i) for i in annot]}))
-        except TableException as exc:
+        except NutshellException as exc:
             if exc.lno is None:
                 raise exc.__class__(None, exc.msg, label)
             raise exc.__class__(exc.lno, exc.msg, label, segment, seg_lno)

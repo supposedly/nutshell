@@ -3,6 +3,8 @@ import re
 from collections import defaultdict
 from itertools import count
 
+from bidict import bidict
+
 from . import _classes as classes
 from nutshell.common.classes import TableRange
 
@@ -22,8 +24,8 @@ def isvarname(string):
 
 
 def generate_cardinals(d):
-    """{'name': ('N', 'E', ...)} >>> {'name': {'N': 1, 'E': 2, ...}}"""
-    return {k: dict(map(reversed, enumerate(v, 1))) for k, v in d.items()}
+    """{'name': ('N', 'E', ...)} >>> {'name': {'N' :: 1, 'E' :: 2, ...}}"""
+    return {k: bidict(map(reversed, enumerate(v, 1))) for k, v in d.items()}
 
 
 def special_transform(tr: str, total: int, callback):

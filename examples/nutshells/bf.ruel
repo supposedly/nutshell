@@ -282,7 +282,7 @@ data = (DATA..DATA_MINUS)
 (prgm, L_BRACK), SW anyPrgm, W..S vac; 0 -> S[0]
 
 # special-casing for ][, but could probably be handled above
-L_BRACK, E..SE vac, W 0, SW R_BRACK, W..NE 0; 0 -> S:L_BRACK
+L_BRACK, E..SE vac, S 0, SW R_BRACK, W..NE 0; 0 -> S:L_BRACK
 R_BRACK, SE L_BRACK, 0, vac, vac, NW..E 0; 0 -> S:R_BRACK
 
 # if a bracket has nothing in its mouth, assume it needs to travel south

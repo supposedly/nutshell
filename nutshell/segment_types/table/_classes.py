@@ -1,7 +1,7 @@
 import random
 
 from . import _utils as utils
-from nutshell.common.errors import TableValueError
+from nutshell.common.errors import ValueErr
 from nutshell.common.utils import random
 
 
@@ -11,7 +11,7 @@ class _CoordOutOfBoundsError(Exception):
     """
 
 
-class CoordOutOfBoundsError(TableValueError):
+class CoordOutOfBoundsError(ValueErr):
     """
     Raised when |one of a coord's values| > 1
     """
@@ -298,7 +298,7 @@ class PTCD:
                 break
             _map_to.append(state)
         if len(copy_to) > sum(len(i) if isinstance(i, range) else 1 for i in _map_to):
-            raise TableValueError(
+            raise ValueErr(
               self.lno,
               f"Variable at index {int(m[1] != '0') and self.tbl.cardinals[m[1]]} in output specifier (direction {m[1]})"
               " mapped to a smaller variable. Maybe add a '...' to fill the latter out?"

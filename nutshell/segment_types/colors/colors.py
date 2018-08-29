@@ -2,7 +2,7 @@ from itertools import repeat
 from operator import itemgetter
 
 from nutshell.common.classes import ColorMixin, TableRange
-from nutshell.common.errors import TableValueError
+from nutshell.common.errors import ValueErr
 
 class ColorSegment(ColorMixin):
     """
@@ -14,7 +14,7 @@ class ColorSegment(ColorMixin):
         dep, = dep
         self._packed_dict = None
         self._src = [i.split('#')[0].strip() for i in colors]
-        self.colors = list(enumerate(k.split(':' if ':' in k else None, 1) for k in self._src if k))
+        self.colors = list(enumerate((k.split(':' if ':' in k else None, 1) for k in self._src if k), 1))
         if dep is not None:
             self.colors = [(i, (v[0], dep.replace_line(v[1]))) for i, v in self.colors]
         try:
@@ -25,9 +25,9 @@ class ColorSegment(ColorMixin):
               }
         except ValueError:
             lno, state = next((i, state) for i, (_, states) in self.colors for state in TableRange.try_iter(states.split()) if not state.lstrip('*').isdigit())
-            raise TableValueError(lno, f'State {state} is not an integer')
+            raise ValueErr(lno, f'State {state} is not an integer')
         except TypeError as e:
-            raise TableValueError(*e.args)
+            raise ValueErr(*e.args)
     
     def __iter__(self):
         return (f"{state} {r} {g} {b}" for state, (r, g, b) in self.states.items())
@@ -45,5 +45,5 @@ class ColorSegment(ColorMixin):
                   for j in state.split()
                   }
             except TypeError as e:
-                raise TableValueError(*e.args)
+                raise ValueErr(*e.args)
         return self._packed_dict[item]

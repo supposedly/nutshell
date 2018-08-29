@@ -22,7 +22,10 @@ class NutshellSegment(MutableSequence):
     def __len__(self):
         return self._src.__len__()
     
-    def _extract_constants(self):
+    def insert(self, index, item):  # for MutableMapping abc
+        return self._src.insert(index, item)
+    
+    def _extract_constants(self, ignore=frozenset({'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'})):
         """
         Extract constants from @NUTSHELL segment, defined as follows:
 
@@ -34,19 +37,22 @@ class NutshellSegment(MutableSequence):
         for lno, match in enumerate(map(self._rCONST.match, self)):
             if match is not None:
                 _0, state, _1, name, _2 = match.groups()
-                self.constants[name] = int(state)
-                self[lno] = f'{_0}{state}:{_1}{_2}'
+                if name in ignore:
+                    self[lno] = f'{_0}{state}:{_1}{_2}  (BAD CONSTANT NAME {name!r})'
+                else:
+                    self.constants[name] = int(state)
+                    self[lno] = f'{_0}{state}:{_1}{_2}'
     
-    def insert(self, index, item):  # for MutableMapping
-        return self._src.insert(index, item)
+    def _get_constant(self, match):
+        return str(self.constants[match[0]])
     
     def replace(self, iterable):
         if self.regex is not None:
             for idx, line in enumerate(iterable):
-                iterable[idx] = self.regex.sub(lambda m: str(self.constants[m[0]]), line)
+                iterable[idx] = self.regex.sub(self._get_constant, line)
     
     def replace_iter(self, iterable):
-        yield from iterable if self.regex is None else (self.regex.sub(lambda m: str(self.constants[m[0]]), line) for line in iterable)
+        yield from iterable if self.regex is None else (self.regex.sub(self._get_constant, line) for line in iterable)
     
     def replace_line(self, line):
-        return line if self.regex is None else self.regex.sub(lambda m: str(self.constants[m[0]]), line)
+        return line if self.regex is None else self.regex.sub(self._get_constant, line)
