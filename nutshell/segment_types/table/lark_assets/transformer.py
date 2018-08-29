@@ -8,6 +8,7 @@ from nutshell.common.errors import *
 from ._classes import *
 from .._classes import VarName
 
+SPECIALS = {'...', '_', 'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'}
 with open('nutshell/segment_types/table/lark_assets/grammar.lark') as f:
     NUTSHELL_GRAMMAR = f.read()
 
@@ -40,11 +41,27 @@ class Preprocess(Transformer):
         self.directives = tbl.directives
         self.vars = tbl.vars
     
+    def kill_string(self, val, meta, li=False):
+        if isinstance(val, str):
+            if val in SPECIALS:
+                return str(val)
+            if val.isdigit():
+                return [int(val)] if li else int(val)
+            try:
+                return self._tbl.vars[val]
+            except KeyError:
+                raise ReferenceErr(
+                  meta,
+                  f'Undefined variable {val}'
+                )
+        return val
+    
+    def kill_strings(self, val, meta):
+        return [self.kill_string(i, meta) for i in val]
+    
     @inline
     def print_var(self, meta, var):
-        if not isinstance(var, (tuple, Variable)):
-            var = self.vars[var]
-        print(var)
+        print(self.kill_string(var, meta))
         raise Discard
     
     @inline
@@ -73,23 +90,15 @@ class Preprocess(Transformer):
     
     @inline
     def noref_int_to_var_length(self, meta, num, var):
-        if not isinstance(var, tuple):
-            var = self.vars[var]
-        return self.noref_var([num], meta) * len(var)
+        return self.noref_var([num], meta) * len(self.kill_string(var, meta))
     
     @inline
     def noref_repeat_var(self, meta, var, num):
-        if not isinstance(var, tuple):
-            var = self.vars[var]
-        return var * int(num)
+        return self.kill_string(var, meta) * int(num)
     
     @inline
     def noref_subt(self, meta, minuend, subtrhnd):
-        if isinstance(minuend, str):
-            minuend = self.vars[minuend]
-        if isinstance(subtrhnd, str):
-            subtrhnd = [int(subtrhnd)] if subtrhnd.isdigit() else self.vars[subtrhnd]
-        return tuple(i for i in minuend if i not in subtrhnd)
+        return tuple(i for i in self.kill_string(minuend, meta) if i not in self.kill_string(subtrhnd, meta, li=True))
     
     @inline
     def noref_live_except(self, meta, subtrhnd):
@@ -100,26 +109,37 @@ class Preprocess(Transformer):
         return self.noref_subt(('any', subtrhnd), meta)
     
     def main(self, children, meta):
-        idx = 0
+        idx = 1
         napkin = {}
         initial, resultant = children.pop(0), children.pop(-1)
+        try:
+            initial = self.kill_string(initial, meta.line)
+        except ReferenceErr as e:
+            raise ReferenceErr((meta.line, meta.column, meta.column + len(str(initial))), e.msg)
+        try:
+            resultant = self.kill_string(resultant, meta.line)
+        except ReferenceErr as e:
+            raise ReferenceErr((meta.line, meta.end_column - len(str(resultant)), meta.end_column), e.msg)
         add_mod = partial(_add_mod, self._tbl.trlen)
         offset_initial = False  # whether it starts on a compass dir other than the "first"
         
         for tr_state in children:
+            m = fix(tr_state.meta)
             first, *rest = tr_state.children
             first_data = getattr(first, 'data', None)
+            rest = self.kill_strings(rest, m)
+            
             if first_data == 'cdir':
                 cdir = first.children[0]
-                if cdir not in self._tbl.neighborhood:
+                try:                
+                    napkin[self._tbl.neighborhood[cdir]], = rest
+                except KeyError:
                     raise SyntaxErr(
                       fix(first.meta),
                       f"Compass direction {cdir} does not exist in {self.directives['neighborhood']} neighborhood"
                       )
-                
-                napkin[cdir], = rest
                 if self._tbl.neighborhood[cdir] != idx:
-                    if idx == 0:
+                    if idx == 1:
                         idx = self._tbl.neighborhood[cdir]
                         offset_initial = True
                     else:
@@ -131,18 +151,18 @@ class Preprocess(Transformer):
                 idx = add_mod(idx, 1)
             elif first_data == 'crange':
                 a, b = first.children
-                if a not in self._tbl.neighborhood:
-                    raise SyntaxErr(
-                      (first.meta.line, first.meta.column, len(a) + first.meta.column),
-                      f"Compass direction {a} does not exist in {self.directives['neighborhood']} neighborhood"
-                      )
-                if b not in self._tbl.neighborhood:
+                try:
+                    crange = range(self._tbl.neighborhood[a], 1+self._tbl.neighborhood[b])
+                except KeyError:
+                    if a not in self._tbl.neighborhood:
+                        raise SyntaxErr(
+                          (first.meta.line, first.meta.column, len(a) + first.meta.column),
+                          f"Compass direction {a} does not exist in {self.directives['neighborhood']} neighborhood"
+                          )
                     raise SyntaxErr(
                       (first.meta.line, first.meta.end_column - len(b), first.meta.end_column),
                       f"Compass direction {b} does not exist in {self.directives['neighborhood']} neighborhood"
                       )
-                
-                crange = range(self._tbl.neighborhood[a], 1+self._tbl.neighborhood[b])
                 if len(crange) == 1 or not crange and not offset_initial:
                     raise ValueErr(
                       fix(first.meta),
@@ -153,7 +173,7 @@ class Preprocess(Transformer):
                     crange = *range(self._tbl.neighborhood[a], 1+self._tbl.trlen), *range(1, 1+self._tbl.neighborhood[b])
                 
                 if idx != crange[0]:
-                    if idx == 0:
+                    if idx == 1:
                         idx = crange[0]
                         offset_initial = True
                     else:
@@ -167,13 +187,14 @@ class Preprocess(Transformer):
                 for i in crange:
                     if i in napkin:
                         raise ValueErr(
-                          (first.meta.line, first.meta.end_column - len(b) - 2, first.meta.end_column),
-                          'Compass-direction range'
+                          fix(first.meta),
+                          'Compass-direction range contains duplicate '
+                          '(i.e. contains at least one compass direction used elsewhere in this transition)'
                           )
                     napkin[i], = rest
                     idx = add_mod(idx, 1)
             else:
-                napkin[idx] = tr_state.children
+                napkin[idx] = self.kill_strings(tr_state.children, m)
                 idx = add_mod(idx, 1)
         if len(napkin) != self._tbl.trlen:
             raise ValueErr(
@@ -185,50 +206,42 @@ class Preprocess(Transformer):
     
     def noref_var(self, children, meta):
         ret = []
-        for val in children:
-            if isinstance(val, (list, tuple)):
+        m = fix(meta)
+        for val in map(self.kill_string, children, [m]*len(children)):
+            if isinstance(val, (tuple, Variable)):
                 ret.extend(val)
-            elif isinstance(val, int) or val.isdigit():
+            elif isinstance(val, int):
                 ret.append(int(val))
-            elif val in self.vars:
-                ret.extend(self.vars[val])
             else:
                 raise NutshellException(fix(meta), val)
         return Variable(self._tbl, ret, context=fix(meta))
     
     def var(self, children, meta):
-        ret = []
-        for val in children:
-            if isinstance(val, int) or isinstance(val, str) and val.isdigit():
-                ret.append(int(val))
-            else:
-                ret.append(val)
-        return Variable(self._tbl, ret, context=fix(meta))
+        m = fix(meta)
+        return Variable(self._tbl, self.kill_strings(children, m), context=m)
     
     @inline
     def repeat_int(self, meta, a, b):
-        if isinstance(a, str):
-            a = int(a)
-        return RepeatInt(a, int(b), context=fix(meta))
+        return RepeatInt(self.kill_string(a, meta), int(b), context=meta)
     
     @inline
     def int_to_var_length(self, meta, num, var):
-        if isinstance(num, str):
-            num = int(num)
-        return IntToVarLength(num, var, context=fix(meta))
+        return IntToVarLength(self.kill_string(num, meta), var, context=meta)
     
     @inline
     def repeat_var(self, meta, var, num):
-        return RepeatVar(var, int(num), context=fix(meta))
+        return RepeatVar(self.kill_string(var, meta), int(num), context=meta)
     
     @inline
     def subt(self, meta, var, subtrhnd):
         # Really this only works because Variable does the "if isinstance(t, str)" thing
         # It also means that the isinstance(..., int) check in Subt.within() won't ever be triggered
-        return Subt(var, Variable(self._tbl, subtrhnd, context=fix(meta)))
+        return Subt(self.kill_string(var, meta), Variable(self._tbl, self.kill_string(subtrhnd, meta), context=meta))
     
-    def mapping(self, children, meta):
-        return Mapping(self._tbl, *children, context=fix(meta))
+    @inline
+    def mapping(self, meta, cdir, map_to):
+        return Mapping(self._tbl, cdir, self.kill_string(map_to, meta), context=meta)
     
     def binding(self, children, meta):
-        return Binding(*children, context=fix(meta))
+        m = fix(meta)
+        return Binding(*children, context=m)

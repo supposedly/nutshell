@@ -70,7 +70,7 @@ class IconArray:
         self._fill_gradient = None
         
         _colors, _table, _nutshell = dep
-        self._n_states = _table and _table.directives['n_states']
+        self._n_states = _table and _table.n_states
         self._color_segment = None if isinstance(_colors, list) else _colors
         self._nutshell = _nutshell
         
@@ -123,7 +123,7 @@ class IconArray:
     
     def _sep_states(self, start) -> dict:
         states = defaultdict(list)
-        used_states = set()
+        cur_states = set()
         _last_comment = 0
         seq = self._src[start:] if self._nutshell is None else self._nutshell.replace_iter(self._src[start:])
         for lno, line in enumerate(map(str.strip, seq), start):

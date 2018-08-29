@@ -11,7 +11,7 @@ class TransitionGroup:
         self.tbl = tbl
         self.symmetries = tbl.symmetries
         nbhd = tbl.neighborhood.inv
-        self._tr_dict = {'0': initial, **{nbhd.get(k, k): v for k, v in napkin.items()}}
+        self._tr_dict = {'0': initial, **{nbhd[k]: v for k, v in napkin.items()}}
         self._tr = [initial, *map(napkin.get, range(1, 1+len(napkin))), resultant]
         self.gollies = self.convert()
     
@@ -25,22 +25,18 @@ class TransitionGroup:
         return cls(tbl, tr[0], dict(enumerate(tr[1:-1], 1)), tr[-1], **kw)
     
     def _extract_trs(self, trs):
-        trs = []
+        'print(trs)'
     
     def convert(self):
         trs = []
         current = []
         for val in self._tr:
-            if isinstance(val, str) and not val.isdigit():
-                val = self.tbl.vars[val]
             if isinstance(val, Expandable):
                 try:
                     current.append(val.within(self))
                 except Reshape as e:
                     var = self[e.cdir]
                     idx = e.cdir != '0' and self.tbl.neighborhood[e.cdir]
-                    if isinstance(var, str):
-                        var = self.tbl.vars[var]
                     trs.extend(
                       TransitionGroup.from_seq(self.tbl, tr, context=self.ctx).gollies
                       for tr in
@@ -62,8 +58,8 @@ class Expandable:  # should be an ABC but eh
 
 class Reference(Expandable):
     def __init__(self, cdir, **kw):
-        self.cdir = str(cdir)
         super().__init__(**kw)
+        self.cdir = str(cdir)
 
 
 class Binding(Reference):
@@ -71,23 +67,19 @@ class Binding(Reference):
         # Since bindings can be their own entire transition state,
         # in which case they can be expressed in Golly with simply
         # a variable name rather than a repeated collection of transitions,
-        # we have no reason to raise Reshape in here.
+        # we have no reason to raise Reshape here.
         # So in the case that the binding is actually an operand of * or -, 
         # those operators must raise Reshape themselves.
         val = tr[self.cdir]
         if isinstance(val, VarValue):
-            val = int(val)
+            val = val.value
         return val
 
 
 class Mapping(Reference):
     def __init__(self, tbl, cdir, map_to, **kw):
-        if isinstance(map_to, str):
-            map_to = tbl.vars[map_to]
-        else:
-            map_to = Variable(tbl, map_to)
-        self.map_to = map_to
         super().__init__(cdir, **kw)
+        self.map_to = Variable(tbl, map_to)
         if len(self.map_to) == 1:
             raise ValueErr(
               self.ctx,
@@ -103,6 +95,8 @@ class Mapping(Reference):
             try:
                 return map_to[val.index]
             except IndexError:
+                if isinstance(val, VarValue):
+                    val = val.parent
                 raise ValueErr(
                   self.ctx,
                   f'Variable {val!r} mapped to smaller variable {self.map_to._tuple}. '
@@ -121,13 +115,9 @@ class Mapping(Reference):
 
 class Operation(Expandable):
     def __init__(self, a, b, **kw):
-        if isinstance(a, str) and a.isdigit():
-            a = int(a)
-        if isinstance(b, str) and b.isdigit():
-            b = int(b)
+        super().__init__(**kw)
         self.a = a
         self.b = b
-        super().__init__(**kw)
 
 
 class RepeatInt(Operation):
@@ -139,8 +129,6 @@ class RepeatInt(Operation):
 
 class IntToVarLength(Operation):
     def within(self, tr):
-        if isinstance(self.b, str):
-            self.b = tr.tbl.vars[self.b]
         if isinstance(self.a, Reference):
             if not isinstance(tr[self.a.cdir], VarValue):
                 raise Reshape(self.a.cdir)
@@ -150,17 +138,11 @@ class IntToVarLength(Operation):
 
 class RepeatVar(Operation):
     def within(self, tr):
-        if isinstance(self.a, str):
-            self.a = tr.tbl.vars[self.a]
         return self.a.within(tr) * self.b
 
 
 class Subt(Operation):
     def within(self, tr):
-        if isinstance(self.a, str):
-            self.a = tr.tbl.vars[self.a]
-        if isinstance(self.b, str):
-            self.b = tr.tbl.vars[self.b]
         if isinstance(self.b, int):
             return self.a.within(tr) - self.b
         if isinstance(self.b, Reference):
@@ -172,10 +154,7 @@ class Subt(Operation):
 class Variable(Expandable):
     def __init__(self, tbl, t, **kw):
         self._tbl = tbl
-        if isinstance(t, str):
-            self._tuple = (int(t),) if t.isdigit() else tbl.vars[t]
-        else:
-            self._tuple = self.unpack_varnames_only(t)
+        self._tuple = (t,) if isinstance(t, int) else self.unpack_varnames_only(t)
         try:
             self._set = {i.value for i in self._tuple}
         except AttributeError:
@@ -243,9 +222,7 @@ class Variable(Expandable):
         if new is None:
             new = []
         for val in t:
-            if isinstance(val, str) and val not in VarValue.SPECIALS:
-                new.append(int(val) if val.isdigit() else self._tbl.vars[val])
-            elif isinstance(val, Variable):
+            if isinstance(val, Variable):
                 self.unpack_varnames_only(val, new)
             else:
                 new.append(val)
@@ -267,11 +244,6 @@ class VarValue:
             self.value = value.value
         elif isinstance(value, (Operation, Variable)):
             raise Unpack(index, value.within(tr))
-        elif isinstance(value, str):
-            if value.isdigit():
-                self.value = int(value)
-                return
-            raise Unpack(index, tr.tbl.vars[value])
     
     def __rmul__(self, other):
         return other * self.value

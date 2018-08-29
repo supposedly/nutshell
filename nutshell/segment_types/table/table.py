@@ -33,6 +33,7 @@ class Table:
         self._src[:] = [i.split('#')[0].strip() for i in tbl]  # Lark chokes otherwise :/
         self._start = start
         self._n_states = 0
+        self._nbhd = self._trlen = None
         dep, = dep
         
         if self.hush:
@@ -61,11 +62,15 @@ class Table:
     
     @property
     def neighborhood(self):
-        return self.CARDINALS[self.directives['neighborhood']]
-    
+        if self._nbhd is None:
+            self._nbhd = self.CARDINALS[self.directives['neighborhood']]
+        return self._nbhd
+
     @property
     def trlen(self):
-        return len(self.neighborhood)
+        if self._trlen is None:
+            self._trlen = len(self.neighborhood)
+        return self._trlen
     
     @property
     def symmetries(self):
@@ -84,7 +89,6 @@ class Table:
                 self.vars[VarName('any')] = Variable(self, range(self.n_states))
                 self.vars[VarName('live')] = Variable(self, range(1, self.n_states))
         else:
-            if value > self.n_states:
-                self._n_states = value
-                self.vars[VarName('any')] = Variable(self, range(value))
-                self.vars[VarName('live')] = Variable(self, range(1, value))
+            self._n_states = value
+            self.vars[VarName('any')] = Variable(self, range(value))
+            self.vars[VarName('live')] = Variable(self, range(1, value))

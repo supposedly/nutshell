@@ -7,7 +7,7 @@ class NutshellException(SystemExit):
         seg: segment of rulefile error occurred in
         shift: line number seg starts on
         """
-        start = f'\n  {self.__class__.__name__}or in {seg_name}'
+        start = f'\n  {self.__class__.__name__} in {seg_name}'
         self.lno, self.span, self.msg = lno, None, msg
         if isinstance(lno, tuple):
             self.lno, *self.span = lno
