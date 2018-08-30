@@ -201,27 +201,27 @@ class Permute(Napkin):
         cls.HASHES.clear()
     
     @staticmethod
-    def special(values, total):
+    def special(values, length):
         """
         Given a shorthand permutationally-symmetric transition:
-          total=8 (Moore neighborhood)
+          length=8 (Moore neighborhood)
           -------
-          1,0
-          1**4,0**4
-          1**4,0
-          1**3,1,0,0
+          1, 0
+          1~4, 0~4
+          1~4, 0
+          1~3, 1, 0, 0
         Return its expanded representation:
-          1,1,1,1,0,0,0,0
+          1, 1, 1, 1, 0, 0, 0, 0
         Order is not preserved.
         """
         # How many cells filled
-        tally = total - sum(int(i) for _, i in values if i)
+        tally = length - sum(int(i) for _, i in values if i)
         # And how many empty slots left to fill
         empties = sum(1 for _, i in values if not i)
         # filler algo courtesy of Thomas Russell on math.stackexchange
         # https://math.stackexchange.com/a/1081084
         filler = (ceil((tally-k+1)/empties) for k in range(1, 1+empties))
-        return AdditiveDict((val, num or str(next(filler))) for val, num in values)
+        return list(AdditiveDict((val, num or str(next(filler))) for val, num in values))
 
 
 NAMES = {

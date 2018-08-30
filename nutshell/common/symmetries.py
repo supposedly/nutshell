@@ -56,8 +56,8 @@ class AlternatingPermute(Permute):
         return ret
     
     @staticmethod
-    def special(values, total):
-        s, t = Permute.special, total // 2
+    def special(values, length):
+        s, t = Permute.special, length // 2
         orth, diag = values[::2], values[1::2]
         return chain.from_iterable(zip(s(orth, t), s(diag, t)))
 

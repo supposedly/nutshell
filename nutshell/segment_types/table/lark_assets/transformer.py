@@ -1,4 +1,7 @@
 from functools import wraps
+from inspect import signature
+from itertools import chain, repeat
+from operator import attrgetter
 
 import bidict
 import lark
@@ -31,6 +34,14 @@ def _add_mod(modulus, index, add, start=1):
     return index % modulus + start
 
 
+class MetaTuple(tuple):  # eh
+    def __new__(cls, meta, it):
+        return super().__new__(cls, it)
+    
+    def __init__(self, meta, _):
+        self.meta = meta
+
+
 @v_args(meta=True)
 class Preprocess(Transformer):
     """
@@ -59,6 +70,52 @@ class Preprocess(Transformer):
     def kill_strings(self, val, meta):
         return [self.kill_string(i, meta) for i in val]
     
+    def check_cdir(self, cdir, meta):
+        if cdir not in self._tbl.neighborhood and cdir != '0':
+            raise SyntaxErr(
+              fix(meta),
+              f"Compass direction {cdir} does not exist in {self.directives['neighborhood']} neighborhood"
+              )
+        return True
+    
+    def special_transform(self, initial, resultant, napkin):
+        """
+        Handle the special ~ syntax for current symmetries
+        """
+        special_params = {
+          'length': self._tbl.trlen,
+          'initial': initial,
+          'resultant': resultant,
+          'values': napkin,
+          }.items()
+        params = signature(self._tbl.symmetries.special).parameters
+        return self._tbl.symmetries.special(**{k: v for k, v in special_params if k in params})
+    
+    def unravel_permute(self, tree, meta):
+        if isinstance(tree, tuple):
+            return tree
+        first, *rest = tree.children
+        if not rest:
+            return (self.kill_string(first, meta), None)
+        # We can now assume first is a tree, I think
+        if first.data in ('cdir', 'crange'):
+            raise SyntaxErr(
+              fix(first.meta),
+              f"Cannot specify compass directions under {self.directives['symmetries']} symmetry"
+              )
+        # Nothing left to return here... right? Because permute_shorthand trees
+        # will already have been transformed (by self.permute_shorthand) and
+        # returned by the first conditional in this method
+    
+    #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+    
+    def table(self, transitions, meta):
+        return transitions
+    
+    @inline
+    def transition(self, meta, main, *ptcds):
+        return main.expand(chain(*ptcds))
+    
     @inline
     def print_var(self, meta, var):
         print(self.kill_string(var, meta))
@@ -75,6 +132,143 @@ class Preprocess(Transformer):
     def var_decl(self, meta, name, var):
         self.vars[VarName(name)] = self.noref_var(var, meta)
         raise Discard
+    
+    def permute_shorthand(self, children, meta):
+        state, *permute = children
+        return MetaTuple(meta, (self.kill_string(state, meta), permute[0] if permute else None))
+    
+    def main(self, children, meta):
+        initial, resultant = children.pop(0), children.pop(-1)
+        try:
+            initial = self.kill_string(initial, meta.line)
+        except ReferenceErr as e:
+            raise ReferenceErr((meta.line, meta.column, meta.column + len(str(initial))), e.msg)
+        try:
+            resultant = self.kill_string(resultant, meta.line)
+        except ReferenceErr as e:
+            raise ReferenceErr((meta.line, meta.end_column - len(str(resultant)), meta.end_column), e.msg)
+        
+        if hasattr(self._tbl.symmetries, 'special'):
+            seq = [self.unravel_permute(i, meta) for i in children]
+            napkin = dict(enumerate(self.special_transform(initial, resultant, seq), 1))
+        else:
+            idx = 1
+            napkin = {}
+            add_mod = partial(_add_mod, self._tbl.trlen)
+            offset_initial = False  # whether it starts on a compass dir other than the first
+            
+            for tr_state in children:
+                m = fix(tr_state.meta)
+                first, *rest = tr_state.children
+                first_data = getattr(first, 'data', None)
+                rest = self.kill_strings(rest, m)
+                
+                if first_data == 'cdir':
+                    cdir = first.children[0]
+                    try:                
+                        napkin[self._tbl.neighborhood[cdir]], = rest
+                    except KeyError:
+                        self.check_cdir(cdir, first.meta)
+                    if self._tbl.neighborhood[cdir] != idx:
+                        if idx == 1:
+                            idx = self._tbl.neighborhood[cdir]
+                            offset_initial = True
+                        else:
+                            raise SyntaxErr(
+                              fix(first.meta),
+                              'Out-of-sequence compass direction '
+                              f'(expected {self._tbl.neighborhood.inv[idx]}, got {cdir})'
+                              )
+                    idx = add_mod(idx, 1)
+                elif first_data == 'crange':
+                    a, b = first.children
+                    try:
+                        crange = range(self._tbl.neighborhood[a], 1+self._tbl.neighborhood[b])
+                    except KeyError:
+                        self.check_cdir(a, (first.meta.line, first.meta.column, len(a) + first.meta.column))
+                        self.check_cdir(b, (first.meta.line, first.meta.end_column - len(b), first.meta.end_column))
+                    
+                    if len(crange) == 1 or not crange and not offset_initial:
+                        if idx != 1:
+                            raise ValueErr(
+                              fix(first.meta),
+                              f'Invalid compass-direction range ({b} does not follow {a} going clockwise)'
+                              )
+                        offset_initial = True
+                    
+                    if not crange and offset_initial:
+                        crange = (*range(self._tbl.neighborhood[a], 1+self._tbl.trlen), *range(1, 1+self._tbl.neighborhood[b]))
+                    
+                    if idx != crange[0]:
+                        if idx == 1:
+                            idx = crange[0]
+                            offset_initial = True
+                        else:
+                            nbhd = self._tbl.neighborhood.inv
+                            raise SyntaxErr(
+                              (first.meta.line, first.meta.column, len(a) + first.meta.column),
+                              'Out-of-sequence compass direction '
+                              f'(expected {nbhd[idx]}, got {nbhd[crange[0]]})'
+                              )
+                    
+                    for i in crange:
+                        if i in napkin:
+                            raise ValueErr(
+                              fix(first.meta),
+                              'Compass-direction range contains duplicate '
+                              '(i.e. contains at least one compass direction used elsewhere in this transition)'
+                              )
+                        napkin[i], = rest
+                        idx = add_mod(idx, 1)
+                else:
+                    napkin[idx], = self.kill_strings(tr_state.children, m)
+                    idx = add_mod(idx, 1)
+            if len(napkin) != self._tbl.trlen:
+                raise ValueErr(
+                  (meta.line, children[0].meta.column, children[-1].meta.end_column),
+                  f"Bad transition length for {self.directives['neighborhood']!r} neighborhood "
+                  f'(expected {self._tbl.trlen} napkin states, got {len(napkin)})'
+                  )
+        return TransitionGroup(self._tbl, initial, napkin, resultant, context=fix(meta))
+    
+    def hoist_ptcds(self, children, meta):
+        for child in children:
+            child.hoist = True
+        return children
+    
+    def normal_ptcds(self, children, meta):
+        return children
+    
+    def cdir_delay(self, children, meta):
+        self.check_cdir(children[0], meta)
+        return {
+          'cdir': str(children[0]),
+          'delay': int(children[1]) if len(children) > 1 else None
+          }
+    
+    @inline
+    def ptcd_bare(self, meta, cdir_to, val):
+        return PTCD(self, cdir_to, val, context=meta)
+    
+    @inline
+    def ptcd_bind_self(self, meta, cdir_to, cdir_from):
+        try:
+            self.check_cdir(cdir_from, meta)
+        except SyntaxErr:
+            self.check_cdir(cdir_from, (meta[0], meta[1] + cdir_to['meta'][1] + 1, len(cdir_from)))
+        return PTCD(self, cdir_to, Binding(cdir_from, context=(meta[0], meta[1]+len(cdir_to), meta[2])), context=meta)
+    
+    @inline
+    def ptcd_map_self(self, meta, cdir_to, val):
+        return PTCD(self, cdir_to, Mapping(cdir_to, val, context=(meta[0], meta[1]+len(cdir_to), meta[2])), context=meta)
+    
+    @inline
+    def ptcd_map_other(self, meta, cdir_to, cdir_from, val):
+        try:
+            self.check_cdir(cdir_from, meta)
+        except SyntaxErr:
+            self.check_cdir(cdir_from, (meta[0], meta[1] + cdir_to['meta'][1] + 1, len(cdir_from)))
+        return PTCD(self, cdir_to, Mapping(cdir_from, val, context=(meta[0], meta[1]+len(cdir_to), meta[2])), context=meta)
     
     @inline
     def range(self, meta, start, stop):
@@ -108,117 +302,21 @@ class Preprocess(Transformer):
     def noref_all_except(self, meta, subtrhnd):
         return self.noref_subt(('any', subtrhnd), meta)
     
-    def main(self, children, meta):
-        idx = 1
-        napkin = {}
-        initial, resultant = children.pop(0), children.pop(-1)
-        try:
-            initial = self.kill_string(initial, meta.line)
-        except ReferenceErr as e:
-            raise ReferenceErr((meta.line, meta.column, meta.column + len(str(initial))), e.msg)
-        try:
-            resultant = self.kill_string(resultant, meta.line)
-        except ReferenceErr as e:
-            raise ReferenceErr((meta.line, meta.end_column - len(str(resultant)), meta.end_column), e.msg)
-        add_mod = partial(_add_mod, self._tbl.trlen)
-        offset_initial = False  # whether it starts on a compass dir other than the "first"
-        
-        for tr_state in children:
-            m = fix(tr_state.meta)
-            first, *rest = tr_state.children
-            first_data = getattr(first, 'data', None)
-            rest = self.kill_strings(rest, m)
-            
-            if first_data == 'cdir':
-                cdir = first.children[0]
-                try:                
-                    napkin[self._tbl.neighborhood[cdir]], = rest
-                except KeyError:
-                    raise SyntaxErr(
-                      fix(first.meta),
-                      f"Compass direction {cdir} does not exist in {self.directives['neighborhood']} neighborhood"
-                      )
-                if self._tbl.neighborhood[cdir] != idx:
-                    if idx == 1:
-                        idx = self._tbl.neighborhood[cdir]
-                        offset_initial = True
-                    else:
-                        raise SyntaxErr(
-                          fix(first.meta),
-                          'Out-of-sequence compass direction '
-                          f'(expected {self._tbl.neighborhood.inv[idx]}, got {cdir})'
-                          )
-                idx = add_mod(idx, 1)
-            elif first_data == 'crange':
-                a, b = first.children
-                try:
-                    crange = range(self._tbl.neighborhood[a], 1+self._tbl.neighborhood[b])
-                except KeyError:
-                    if a not in self._tbl.neighborhood:
-                        raise SyntaxErr(
-                          (first.meta.line, first.meta.column, len(a) + first.meta.column),
-                          f"Compass direction {a} does not exist in {self.directives['neighborhood']} neighborhood"
-                          )
-                    raise SyntaxErr(
-                      (first.meta.line, first.meta.end_column - len(b), first.meta.end_column),
-                      f"Compass direction {b} does not exist in {self.directives['neighborhood']} neighborhood"
-                      )
-                if len(crange) == 1 or not crange and not offset_initial:
-                    raise ValueErr(
-                      fix(first.meta),
-                      f'Invalid compass-direction range ({b} does not follow {a} going clockwise)'
-                      )
-                
-                if not crange and offset_initial:
-                    crange = *range(self._tbl.neighborhood[a], 1+self._tbl.trlen), *range(1, 1+self._tbl.neighborhood[b])
-                
-                if idx != crange[0]:
-                    if idx == 1:
-                        idx = crange[0]
-                        offset_initial = True
-                    else:
-                        nbhd = self._tbl.neighborhood.inv
-                        raise SyntaxErr(
-                          (first.meta.line, first.meta.column, len(a) + first.meta.column),
-                          'Out-of-sequence compass direction '
-                          f'(expected {nbhd[idx]}, got {nbhd[crange[0]]})'
-                          )
-                
-                for i in crange:
-                    if i in napkin:
-                        raise ValueErr(
-                          fix(first.meta),
-                          'Compass-direction range contains duplicate '
-                          '(i.e. contains at least one compass direction used elsewhere in this transition)'
-                          )
-                    napkin[i], = rest
-                    idx = add_mod(idx, 1)
-            else:
-                napkin[idx] = self.kill_strings(tr_state.children, m)
-                idx = add_mod(idx, 1)
-        if len(napkin) != self._tbl.trlen:
-            raise ValueErr(
-              (meta.line, children[0].meta.column, children[-1].meta.end_column),
-              f"Bad transition length for {self.directives['neighborhood']!r} neighborhood "
-              f'(expected {self._tbl.trlen} napkin states, got {len(napkin)})'
-              )
-        return TransitionGroup(self._tbl, initial, napkin, resultant, context=fix(meta))
-    
     def noref_var(self, children, meta):
         ret = []
         m = fix(meta)
-        for val in map(self.kill_string, children, [m]*len(children)):
+        for val in map(self.kill_string, children, repeat(m)):
             if isinstance(val, (tuple, Variable)):
                 ret.extend(val)
             elif isinstance(val, int):
                 ret.append(int(val))
             else:
                 raise NutshellException(fix(meta), val)
-        return Variable(self._tbl, ret, context=fix(meta))
+        return Variable(ret, context=fix(meta))
     
     def var(self, children, meta):
         m = fix(meta)
-        return Variable(self._tbl, self.kill_strings(children, m), context=m)
+        return Variable(self.kill_strings(children, m), context=m)
     
     @inline
     def repeat_int(self, meta, a, b):
@@ -234,14 +332,22 @@ class Preprocess(Transformer):
     
     @inline
     def subt(self, meta, var, subtrhnd):
-        # Really this only works because Variable does the "if isinstance(t, str)" thing
-        # It also means that the isinstance(..., int) check in Subt.within() won't ever be triggered
-        return Subt(self.kill_string(var, meta), Variable(self._tbl, self.kill_string(subtrhnd, meta), context=meta))
+        return Subt(self.kill_string(var, meta), Variable(self.kill_string(subtrhnd, meta), context=meta))
+    
+    @inline
+    def live_except(self, meta, subtrhnd):
+        return self.subt(('live', subtrhnd), meta)
+    
+    @inline
+    def all_except(self, meta, subtrhnd):
+        return self.subt(('any', subtrhnd), meta)
     
     @inline
     def mapping(self, meta, cdir, map_to):
-        return Mapping(self._tbl, cdir, self.kill_string(map_to, meta), context=meta)
+        self.check_cdir(cdir, meta)
+        return Mapping(cdir, self.kill_string(map_to, meta), context=meta)
     
-    def binding(self, children, meta):
-        m = fix(meta)
-        return Binding(*children, context=m)
+    @inline
+    def binding(self, meta, cdir):
+        self.check_cdir(cdir, meta)
+        return Binding(cdir, context=meta)

@@ -21,18 +21,17 @@ hoist_ptcds: _HOIST_ARROW ptcd (_WS ptcd)*
 _NORMAL_ARROW: _WS? "->" _WS?
 _HOIST_ARROW: _WS? "=>" _WS?
 
-ptcd: _cdir_or_delay ":" INT                                                       -> ptcd_bare
-  | _cdir_or_delay "[" _ptcd_expr_no_int "]"                                       -> ptcd_map_self
-  | _cdir_or_delay "[" (PREVIOUS_BIND | ZERO_BIND) "]"                             -> ptcd_bind_self
-  | _cdir_or_delay "[" (PREVIOUS_BIND | ZERO_BIND) ":" _WS? _ptcd_expr_no_int "]"  -> ptcd_map_other
+ptcd: cdir_delay ":" INT                                                       -> ptcd_bare
+  | cdir_delay "[" _ptcd_expr_no_int "]"                                       -> ptcd_map_self
+  | cdir_delay "[" (PREVIOUS_BIND | ZERO_BIND) "]"                             -> ptcd_bind_self
+  | cdir_delay "[" (PREVIOUS_BIND | ZERO_BIND) ":" _WS? _ptcd_expr_no_int "]"  -> ptcd_map_other
 
 // I'm not sure why I need to specify the "0" explicitly there,
 // considering that a 0 is already included in PREVIOUS_BIND.
 // (If I don't put it above, Lark will tell me it expected _MULT rather
 // than the right square bracket for any "ptcd_bind_self" sequence. idgi)
 
-_cdir_or_delay: COMPASS_DIR | cdir_delay
-cdir_delay: COMPASS_DIR "+" INT
+cdir_delay: COMPASS_DIR ["+" /[0123456789]+/]  //just so that it doesn't get counted as INT terminal
 
 
 var: _VAR_OPEN (_expr ("," _WS? _expr)* | range) _VAR_CLOSE                                        -> noref_var
@@ -124,6 +123,7 @@ COMPASS_DIR: /NE|SE|SW|NW|N|E|S|W/
 // Modified later to switch from only accepting [A-Za-z]+ sans compass dirs to accepting [A-Za-z]\w* sans the same
 NAME: /(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\w))[A-Za-z]\w*/
 
+INT: /\d+/
 _WS: /((?!\n)\s)+/
 _NL:  NEWLINE
 
@@ -131,4 +131,4 @@ _COMMENT: /\s*#.*/
 _SURROUNDING_WS: /^\s+|\s+$/m
 %ignore _COMMENT
 %ignore _SURROUNDING_WS
-%import common (INT, NEWLINE)
+%import common.NEWLINE

@@ -1,7 +1,7 @@
 """Facilitates parsing of a nutshell rule into an abstract, compiler.py-readable format."""
 import re
 from functools import partial
-from itertools import cycle, islice, zip_longest
+from itertools import chain, cycle, islice, zip_longest
 
 import bidict
 import lark
@@ -56,6 +56,7 @@ class Table:
         printv(['-- loaded grammar'], start='', end='')
         self._data = trans.transform(parser.parse('\n'.join(self._src)))
         printv(['-- parsed'])
+        print(len(self._data), sum(map(len, self._data)))
     
     def __getitem__(self, item):
         return self._src[item]
@@ -74,7 +75,7 @@ class Table:
     
     @property
     def symmetries(self):
-        return self.directives['symmetries']
+        return symmetries.get_sym_type(self.directives['symmetries'])
     
     @property
     def n_states(self):
@@ -86,9 +87,9 @@ class Table:
             value = int(value)
         except (TypeError, ValueError):
             if value == '?':
-                self.vars[VarName('any')] = Variable(self, range(self.n_states))
-                self.vars[VarName('live')] = Variable(self, range(1, self.n_states))
+                self.vars[VarName('any')] = Variable(range(self.n_states))
+                self.vars[VarName('live')] = Variable(range(1, self.n_states))
         else:
             self._n_states = value
-            self.vars[VarName('any')] = Variable(self, range(value))
-            self.vars[VarName('live')] = Variable(self, range(1, value))
+            self.vars[VarName('any')] = Variable(range(value))
+            self.vars[VarName('live')] = Variable(range(1, value))
