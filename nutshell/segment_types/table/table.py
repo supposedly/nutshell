@@ -61,7 +61,7 @@ class Table:
         print([type(i).__name__ for i in self._data])
         print(len(self._data))
         #print(self._data)
-        #print(*[f'{t!r}' for t in self._data], sep='\n\n')
+        print(*[f'{t!r}' for t in self._data], sep='\n\n')
     
     def __getitem__(self, item):
         return self._src[item]

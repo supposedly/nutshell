@@ -26,6 +26,9 @@ class TransitionGroup:
     def __iter__(self):
         return self._tr.__iter__()
     
+    def __repr__(self):
+        return f'TG[{self._tr[0]}, {self._tr[-1]}]'
+    
     @classmethod
     def from_seq(cls, tr, tbl, **kw):
         return cls(tbl, tr[0], dict(enumerate(tr[1:-1], 1)), tr[-1], **kw)
@@ -34,9 +37,11 @@ class TransitionGroup:
         trs = []
         current = []
         for orig_idx, val in enumerate(self._tr):
+            print(self, val)
             if isinstance(val, Expandable):
                 try:
                     current.append(val.within(self))
+                    print(val.within(self))
                 except Ellipse as e:
                     idx = e.cdir != '0' and self.tbl.neighborhood[e.cdir]
                     tethered_var = self[e.cdir].within(self)
@@ -49,7 +54,7 @@ class TransitionGroup:
                       )
                     if combine:
                         tr = self[:]
-                        tr[idx], tr[orig_idx] = Variable(combine, context=tethered_var.ctx), e.val
+                        tr[idx], tr[orig_idx] = Variable(combine, e.split, context=tethered_var.ctx), e.val
                         trs.extend(TransitionGroup.from_seq(tr, self.tbl, context=self.ctx).expand())
                     break
                 except Reshape as e:
@@ -98,7 +103,7 @@ class TransitionGroup:
                 if combine and e.val is not None:
                     ptcd = PTCD(self.tbl, i.initial_cdir, None, e.val, context=i.ctx)
                     new.extend(TransitionGroup.from_seq(
-                      [*self[:idx], Variable(combine, context=i.ctx), *self[1+idx:]],
+                      [*self[:idx], Variable(combine, e.split, context=i.ctx), *self[1+idx:]],
                       self.tbl, context=self.ctx
                       ).apply_ptcds([i], False))
             except Reshape as e:
@@ -155,6 +160,9 @@ class Binding(Reference):
         # So in the case that the binding cannot be left on its own, the
         # surrounding environment must raise Reshape on its behalf.
         return tr[self.cdir]
+    
+    def __repr__(self):
+        return f'Binding[{self.cdir}]'
 
 
 class Mapping(Reference):
@@ -163,6 +171,9 @@ class Mapping(Reference):
         self.map_to = Variable(map_to)
         if len(self.map_to) == 1:
             raise ValueErr(self.ctx, 'Mapping to a single cellstate')
+    
+    def __repr__(self):
+        return f'Mapping[{self.cdir}: {self.map_to}]'
     
     def within(self, tr):
         val = tr[self.cdir]
@@ -201,6 +212,9 @@ class Operation(Expandable):
         super().__init__(**kw)
         self.a = a
         self.b = b
+    
+    def __repr__(self):
+        return f'{self.__class__.__name__}<{self.a}, {self.b}>'
 
 
 class RepeatInt(Operation):
@@ -237,10 +251,11 @@ class Subt(Operation):
 
 
 class Variable(Expandable):
-    def __init__(self, t, **kw):
+    def __init__(self, t, start=0, **kw):
         Expandable.__init__(self, **kw)
         self._tuple = self.unpack_varnames_only(t) if isinstance(t, Iterable) else (t,)
         self._set = set(self._tuple)
+        self.start = start
     
     def __contains__(self, item):
         if isinstance(item, VarValue):
@@ -283,7 +298,7 @@ class Variable(Expandable):
         return NotImplemented
     
     def within(self, tr):
-        return TetheredVar(self.unpack(self._tuple, tr, count()), context=self.ctx).within(tr)
+        return TetheredVar(self.unpack(self._tuple, tr, count(self.start)), self.start, context=self.ctx).within(tr)
     
     def unpack(self, t, tr, counter, start=None, new=None):
         if new is None:
@@ -312,12 +327,13 @@ class TetheredVar(Variable):  # Tethered == bound to a transition
     """
     Contains VarValue objects only.
     """
-    def __init__(self, t, **kw):
+    def __init__(self, t, start=0, **kw):
         Expandable.__init__(self, **kw)
         self._tuple = self.unpack_varnames_only(t) if isinstance(t, Iterable) else (t,)
         self._set = {i.value for i in self._tuple}
         self.tag = None
         self.bound = False
+        self.start = start
     
     def __eq__(self, other):
         if self.bound:
@@ -330,7 +346,7 @@ class TetheredVar(Variable):  # Tethered == bound to a transition
         return super().__hash__()
     
     def within(self, tr):
-        return TetheredVar(self.unpack(self._tuple, tr, count()), context=self.ctx)
+        return TetheredVar(self.unpack(self._tuple, tr, count(self.start)), context=self.ctx)
 
 
 class VarValue:
@@ -340,14 +356,15 @@ class VarValue:
         self.parent = parent
         self.index = index
         self.value = self.SPECIALS.get(value, value)
-        if isinstance(value, Reference):
-            self.value = value.within(tr)
-            if isinstance(self.value, Expandable):
-                raise Reshape(value.cdir)
-        elif isinstance(value, VarValue):
-            self.value = value.value
-        elif isinstance(value, (Operation, Variable)):
-            raise Unpack(index, value.within(tr))
+        while isinstance(self.value, VarValue):  # lollll rip
+            self.value = self.value.value
+        else:
+            if isinstance(value, Reference):
+                self.value = value.within(tr)
+                if isinstance(self.value, Expandable):
+                    raise Reshape(value.cdir)
+            elif isinstance(value, (Operation, Variable)):
+                raise Unpack(index, value.within(tr))
     
     def __rmul__(self, other):
         return other * self.value
@@ -401,7 +418,7 @@ class PTCD:
             new_tr[orig.cw.idx] = tr[orig.cw.toward(self.initial_cdir).idx]
         with suppress(KeyError):
             new_tr[orig.ccw.idx] = tr[orig.ccw.toward(self.initial_cdir).idx]
-        # If we're orthogonal to orig, we have to count for the cells adjacent to us too
+        # If we're orthogonal to orig, we have to account for the cells adjacent to us too
         if not orig.diagonal():
             # In this case orig.cw(2).toward(self.initial_cdir) happens to be equivalent
             # to orig.cw(3), which is also shorter, but in the interest of remaining
