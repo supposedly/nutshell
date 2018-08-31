@@ -37,11 +37,9 @@ class TransitionGroup:
         trs = []
         current = []
         for orig_idx, val in enumerate(self._tr):
-            print(self, val)
             if isinstance(val, Expandable):
                 try:
                     current.append(val.within(self))
-                    print(val.within(self))
                 except Ellipse as e:
                     idx = e.cdir != '0' and self.tbl.neighborhood[e.cdir]
                     tethered_var = self[e.cdir].within(self)
@@ -187,8 +185,8 @@ class Mapping(Reference):
             except IndexError:
                 raise ValueErr(
                   self.ctx,
-                  f'Variable with length {len(val.parent)} mapped to smaller '
-                  f'variable with length {len(self.map_to)}. '
+                  f'Variable with length {val.parent} mapped to smaller '
+                  f'variable with length {self.map_to}. '
                   'Maybe add a ... to fill the latter out?'
                   )
         if isinstance(val, Reference):
@@ -203,7 +201,12 @@ class Mapping(Reference):
                 raise Ellipse(self.cdir, len(map_to)-2, map_to[-2].value, map_to)
             raise Reshape(self.cdir)
         if isinstance(val, Operation):
-            return val.within(tr)
+            ret = val.within(tr)
+            if isinstance(ret, Variable):
+                raise Reshape(self.cdir)
+            #if isinstance(ret, Expandable):
+            #    return ret.within(tr)
+            return ret
         raise ValueErr(self.ctx, f'Unknown map-from value: {val}')
 
 
@@ -345,6 +348,15 @@ class TetheredVar(Variable):  # Tethered == bound to a transition
             return hash((*self._tuple, self.tag))
         return super().__hash__()
     
+    def __sub__(self, other):
+        if type(other) is type(self):
+            c = count()
+            return self.__class__([i.reindex(next(c)) for i in self if i.value not in other])
+        if isinstance(other, int):
+            c = count()
+            return self.__class__([i.reindex(next(c)) for i in self if i.value != other])
+        return NotImplemented
+    
     def within(self, tr):
         return TetheredVar(self.unpack(self._tuple, tr, count(self.start)), context=self.ctx)
 
@@ -356,6 +368,7 @@ class VarValue:
         self.parent = parent
         self.index = index
         self.value = self.SPECIALS.get(value, value)
+        self.tr = tr
         while isinstance(self.value, VarValue):  # lollll rip
             self.value = self.value.value
         else:
@@ -377,6 +390,9 @@ class VarValue:
     
     def __str__(self):
         return str(self.value)
+    
+    def reindex(self, index):
+        return self.__class__(index, self.value, self.tr, self.parent)
 
 
 class PTCD:
