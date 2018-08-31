@@ -1,8 +1,9 @@
 from contextlib import suppress
 from functools import partial
 from itertools import count
+from collections import Iterable
 
-from ._exceptions import Reshape, Unpack
+from ._exceptions import Ellipse, Reshape, Unpack, CoordOutOfBoundsError
 from nutshell.common.errors import *
 
 
@@ -15,62 +16,123 @@ class TransitionGroup:
         self._tr_dict = {'0': initial, **{nbhd[k]: v for k, v in napkin.items()}}
         self._tr = [initial, *map(napkin.get, range(1, 1+len(napkin))), resultant]
         self._n = napkin
+        self._expanded = None
     
     def __getitem__(self, item):
         if isinstance(item, str):
-            return self._tr_dict[item]
-        return self._tr[item]
+            return self._tr_dict.__getitem__(item)
+        return self._tr.__getitem__(item)
+    
+    def __iter__(self):
+        return self._tr.__iter__()
     
     @classmethod
-    def from_seq(cls, tbl, tr, **kw):
+    def from_seq(cls, tr, tbl, **kw):
         return cls(tbl, tr[0], dict(enumerate(tr[1:-1], 1)), tr[-1], **kw)
     
-    def expand(self, ptcds=None):
+    def expand(self):
         trs = []
         current = []
-        for val in self._tr:
+        for orig_idx, val in enumerate(self._tr):
             if isinstance(val, Expandable):
                 try:
                     current.append(val.within(self))
-                except Reshape as e:
-                    var = self[e.cdir]
+                except Ellipse as e:
                     idx = e.cdir != '0' and self.tbl.neighborhood[e.cdir]
+                    tethered_var = self[e.cdir].within(self)
+                    individuals, combine = tethered_var[:e.split], tethered_var[e.split:]
                     trs.extend(
-                      TransitionGroup.from_seq(self.tbl, tr, context=self.ctx).expand()
-                      for tr in
-                      ([*self[:idx], val, *self[1+idx:]] for val in var.within(self))
+                      new_tr for tr in
+                      ([*self[:idx], value, *self[1+idx:]] for value in individuals)
+                      for new_tr in
+                      TransitionGroup.from_seq(tr, self.tbl, context=self.ctx).expand()
+                      )
+                    if combine:
+                        tr = self[:]
+                        tr[idx], tr[orig_idx] = Variable(combine, context=tethered_var.ctx), e.val
+                        trs.extend(TransitionGroup.from_seq(tr, self.tbl, context=self.ctx).expand())
+                    break
+                except Reshape as e:
+                    idx = e.cdir != '0' and self.tbl.neighborhood[e.cdir]
+                    var = self[e.cdir]
+                    trs.extend(
+                      new_tr for tr in
+                      ([*self[:idx], individual, *self[1+idx:]] for individual in var.within(self))
+                      for new_tr in
+                      TransitionGroup.from_seq(tr, self.tbl, context=self.ctx).expand()
                       )
                     break
             else:
                 current.append(val)
         else:
-            return Transition(current, self.tbl, self.symmetries, ptcds, context=self.ctx)
+            return [Transition(current, self.tbl, context=self.ctx)]
         return trs
+    
+    def apply_ptcds(self, ptcds, top=True):
+        if ptcds is None:
+            return []
+        new = []
+        for i in ptcds:
+            try:
+                new.extend(i.within(self))
+            except CoordOutOfBoundsError as e:
+                raise CoordOutOfBounds(
+                  i.ctx,
+                  'Auxiliary-transition specifier implies invalid transformation '
+                  f'{e.coord.tuple}; the cells in directions {i.initial_cdir} & '
+                  f"{i.resultant.cdir} are not in each other's range-1 Moore neighborhood "
+                  'and cannot be mapped to one another.'
+                  )
+            except Ellipse as e:
+                var = self[e.cdir].within(self)
+                idx = e.cdir != '0' and self.tbl.neighborhood[e.cdir]
+                individuals, combine = var[:e.split], var[e.split:]
+                if individuals:
+                    ptcd = PTCD(self.tbl, i.initial_cdir, None, Mapping(e.cdir, e.map_to, context=i.ctx), context=i.ctx)
+                    new.extend(
+                      new_tr for tr in
+                      ([*self[:idx], val, *self[1+idx:]] for val in individuals if val.value is not None)
+                      for new_tr in
+                      TransitionGroup.from_seq(tr, self.tbl, context=self.ctx).apply_ptcds([ptcd], False)
+                      )
+                if combine and e.val is not None:
+                    ptcd = PTCD(self.tbl, i.initial_cdir, None, e.val, context=i.ctx)
+                    new.extend(TransitionGroup.from_seq(
+                      [*self[:idx], Variable(combine, context=i.ctx), *self[1+idx:]],
+                      self.tbl, context=self.ctx
+                      ).apply_ptcds([i], False))
+            except Reshape as e:
+                var = self[e.cdir]
+                idx = e.cdir != '0' and self.tbl.neighborhood[e.cdir]
+                new.extend(
+                  new_tr for tr in
+                  ([*self[:idx], val, *self[1+idx:]] for val in var.within(self))
+                  for new_tr in
+                  TransitionGroup.from_seq(tr, self.tbl, context=self.ctx).apply_ptcds([i], False)
+                  )
+        return new
 
 
 class Transition:
-    def __init__(self, tr, tbl, symmetries, ptcds, *, context):
+    def __init__(self, tr, tbl, *, context):
         self.ctx = context
+        self.tr = tr
         self.initial, *self.napkin, self.resultant = tr
         nbhd = tbl.neighborhood.inv
-        self._tr_dict = {'0': self.initial, **{nbhd[k]: v for k, v in self.napkin.items()}}
-        self.tr = tr
-        self.symmetries = symmetries
-        self.ptcds = ptcds
+        self._tr_dict = {'0': self.initial, **{nbhd[k]: v for k, v in enumerate(self.napkin, 1)}}
+        self.symmetries = tbl.symmetries
+        self.tbl = tbl
     
     def __repr__(self):
         return f'T{self.tr!r}'
-    
-    def __iter__(self):
-        return self.tr.__iter__()
     
     def __getitem__(self, item):
         if isinstance(item, str):
             return self._tr_dict.__getitem__(item)
         return self.tr.__getitem__(item)
-
-    def apply_ptcds(self):
-        return [tr for i in self.ptcds for tr in i.within(self)]
+    
+    def in_symmetry(self, sym):
+        ...
 
 
 class Expandable:
@@ -90,12 +152,9 @@ class Binding(Reference):
         # in which case they can be expressed in Golly with simply
         # a variable name rather than a repeated collection of transitions,
         # we have no reason to raise Reshape here.
-        # So in the case that the binding is actually an operand of * or -, 
-        # those operators must raise Reshape themselves.
-        val = tr[self.cdir]
-        if isinstance(val, VarValue):
-            return val.value
-        return val
+        # So in the case that the binding cannot be left on its own, the
+        # surrounding environment must raise Reshape on its behalf.
+        return tr[self.cdir]
 
 
 class Mapping(Reference):
@@ -103,25 +162,22 @@ class Mapping(Reference):
         super().__init__(cdir, **kw)
         self.map_to = Variable(map_to)
         if len(self.map_to) == 1:
-            raise ValueErr(
-              self.ctx,
-              'Mapping to single cellstate'
-              )
+            raise ValueErr(self.ctx, 'Mapping to a single cellstate')
     
     def within(self, tr):
         val = tr[self.cdir]
         if isinstance(val, VarValue):
             map_to = self.map_to.within(tr)
-            if val.index >= len(map_to) - 1 and map_to[-1].value is Ellipsis:
-                return map_to[-2]
+            # XXX: necessary?
+            # if val.index + 1 >= len(map_to) and map_to[-1].value is Ellipsis:
+            #    return map_to[-2]
             try:
                 return map_to[val.index]
             except IndexError:
-                if isinstance(val, VarValue):
-                    val = val.parent
                 raise ValueErr(
                   self.ctx,
-                  f'Variable {val!r} mapped to smaller variable {self.map_to}. '
+                  f'Variable with length {len(val.parent)} mapped to smaller '
+                  f'variable with length {len(self.map_to)}. '
                   'Maybe add a ... to fill the latter out?'
                   )
         if isinstance(val, Reference):
@@ -129,9 +185,14 @@ class Mapping(Reference):
                 return 
             return val.within(tr)
         if isinstance(val, int):
-            raise ValueErr(self.ctx, 'Mapping to single cellstate')
+            raise ValueErr(self.ctx, 'Mapping from single cellstate')
         if isinstance(val, Variable):
+            map_to = self.map_to.within(tr)
+            if map_to[-1].value is Ellipsis:
+                raise Ellipse(self.cdir, len(map_to)-2, map_to[-2].value, map_to)
             raise Reshape(self.cdir)
+        if isinstance(val, Operation):
+            return val.within(tr)
         raise ValueErr(self.ctx, f'Unknown map-from value: {val}')
 
 
@@ -145,6 +206,8 @@ class Operation(Expandable):
 class RepeatInt(Operation):
     def within(self, tr):
         if isinstance(self.a, Reference):
+            if not isinstance(tr[self.a.cdir], VarValue):
+                raise Reshape(self.a.cdir)
             return self.a.within(tr) * self.b
         return self.a * self.b
 
@@ -175,8 +238,8 @@ class Subt(Operation):
 
 class Variable(Expandable):
     def __init__(self, t, **kw):
-        super().__init__(**kw)
-        self._tuple = (t,) if isinstance(t, int) else self.unpack_varnames_only(t)
+        Expandable.__init__(self, **kw)
+        self._tuple = self.unpack_varnames_only(t) if isinstance(t, Iterable) else (t,)
         self._set = set(self._tuple)
     
     def __contains__(self, item):
@@ -220,7 +283,7 @@ class Variable(Expandable):
         return NotImplemented
     
     def within(self, tr):
-        return TetheredVar(self.unpack(self._tuple, tr, count()))
+        return TetheredVar(self.unpack(self._tuple, tr, count()), context=self.ctx).within(tr)
     
     def unpack(self, t, tr, counter, start=None, new=None):
         if new is None:
@@ -246,9 +309,12 @@ class Variable(Expandable):
 
 
 class TetheredVar(Variable):  # Tethered == bound to a transition
+    """
+    Contains VarValue objects only.
+    """
     def __init__(self, t, **kw):
         Expandable.__init__(self, **kw)
-        self._tuple = (t,) if isinstance(t, int) else self.unpack_varnames_only(t)
+        self._tuple = self.unpack_varnames_only(t) if isinstance(t, Iterable) else (t,)
         self._set = {i.value for i in self._tuple}
         self.tag = None
         self.bound = False
@@ -262,6 +328,9 @@ class TetheredVar(Variable):  # Tethered == bound to a transition
         if self.bound:
             return hash((*self._tuple, self.tag))
         return super().__hash__()
+    
+    def within(self, tr):
+        return TetheredVar(self.unpack(self._tuple, tr, count()), context=self.ctx)
 
 
 class VarValue:
@@ -270,11 +339,11 @@ class VarValue:
     def __init__(self, index, value, tr, parent=None):
         self.parent = parent
         self.index = index
-        self.value = value
-        if value in self.SPECIALS:
-            self.value = self.SPECIALS[value]
-        elif isinstance(value, Reference):
+        self.value = self.SPECIALS.get(value, value)
+        if isinstance(value, Reference):
             self.value = value.within(tr)
+            if isinstance(self.value, Expandable):
+                raise Reshape(value.cdir)
         elif isinstance(value, VarValue):
             self.value = value.value
         elif isinstance(value, (Operation, Variable)):
@@ -294,20 +363,37 @@ class VarValue:
 
 
 class PTCD:
-    def __init__(self, tbl, initial_cdir, resultant, *, context):
+    def __init__(self, tbl, initial_cdir, delay, resultant, *, context):
         self.ctx = context
         self.tbl = tbl
         self.initial_cdir = initial_cdir
+        self.orig = Coord.from_name(initial_cdir, tbl).inv
         self.resultant = resultant
+        if isinstance(resultant, Mapping):
+            if resultant.cdir != '0' and not self.orig.toward(resultant.cdir).valid():
+                nbhd = tbl.directives['neighborhood']
+                raise CoordOutOfBounds(
+                  self.ctx,
+                  f'Auxiliary-transition specifier implies invalid {nbhd} transformation '
+                  f'{self.orig.toward(resultant.cdir).tuple}; the cells in directions '
+                  f"{initial_cdir} & {resultant.cdir} are not in each other's range-1 "
+                  f'{nbhd} neighborhood and cannot be mapped to one another.'
+                  )
+        self.hoist = False
         self.within = {
           int: self.from_int,
           Binding: self.from_binding,
           Mapping: self.from_mapping
         }[type(resultant)]
+        if delay is not None:
+            raise UnsupportedFeature(
+              self.ctx,
+              f'Delayed auxiliaries (as in "{initial_cdir}+{delay}") are not supported as of yet'
+              )
     
     def _make_tr(self, tr, resultant):
         new_tr = [tr[self.initial_cdir], *[self.tbl.vars['any']]*self.tbl.trlen, resultant]
-        orig = Coord.from_name(self.initial_cdir, self.tbl)
+        orig = self.orig
         # Adjacent cells to original cell (diagonal to current)
         with suppress(KeyError):
             new_tr[orig.idx] = tr[0]
@@ -317,49 +403,31 @@ class PTCD:
             new_tr[orig.ccw.idx] = tr[orig.ccw.toward(self.initial_cdir).idx]
         # If we're orthogonal to orig, we have to count for the cells adjacent to us too
         if not orig.diagonal():
+            # In this case orig.cw(2).toward(self.initial_cdir) happens to be equivalent
+            # to orig.cw(3), which is also shorter, but in the interest of remaining
+            # consistent with the general technique I'll write it the longer way
             with suppress(KeyError):
-                new_tr[orig.cw(2).idx] = tr[orig.cw(3).idx]
+                new_tr[orig.cw(2).idx] = tr[orig.cw(2).toward(self.initial_cdir).idx]
             with suppress(KeyError):
-                new_tr[orig.ccw(2).idx] = tr[orig.ccw(3).idx]
+                new_tr[orig.ccw(2).idx] = tr[orig.ccw(2).toward(self.initial_cdir).idx]
         return new_tr
-    
-    def __make_transition_old(self, tr, source_cd: str, cd_to: str, initial, result):
-        ...
-        # # Otherwise, we have to fiddle with the values at the initial and new_relative indices
-        # with suppress(KeyError):
-        #     new_tr[0] = tr[cur.idx]
-        # new_relative = orig if cd_to == '0' else orig.toward(cd_to)  # position of "copy_to" cell relative to current
-        # if new_relative.center():
-        #     return new_tr
-        # with suppress(KeyError):
-        #     new_tr[new_relative.idx] = initial
-        # return new_tr
     
     def from_int(self, tr):
         return [self._make_tr(tr, self.resultant)]
     
     def from_binding(self, tr):
-        return [self._make_tr(tr, val) for val in self.resultant.within(tr)]
+        if isinstance(self.resultant.within(tr), Variable):
+            raise Reshape(self.resultant.cdir)
+        return [self._make_tr(tr, self.resultant.within(tr).value)]
     
     def from_mapping(self, tr):
-        ...  # how to handle Reshape?
-
-
-class _CoordOutOfBoundsError(Exception):
-    """
-    Raised when |one of a coord's values| > 1
-    """
-
-
-class CoordOutOfBounds(ValueErr):
-    """
-    Raised when |one of a coord's values| > 1
-    """
+        within = self.resultant.within(tr)  # always raises Reshape unless already a VarValue
+        return [] if within.value is None else [self._make_tr(tr, within.value)]
 
 
 class Coord(tuple):
     """
-    Represents a 'unit coordinate' of a cell.
+    Represents a 'unit coordinate'.
     """
     _DIRS = ('N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW')
     _OFFSETS = {
@@ -376,15 +444,16 @@ class Coord(tuple):
     _NAMES = {v: k for k, v in _OFFSETS.items()}
     
     def __new__(cls, it, tbl=None):
-        return super().__new__(tuple, it)
+        return super().__new__(cls, it)
     
-    def __init__(self, _, tbl=None):
+    def __init__(self, tup, tbl=None):
         self.tbl = tbl
-        if not all(-2 < i < 2 for i in self):
-            raise _CoordOutOfBoundsError(self)
+        self.tuple = tuple(super().__iter__())
+        if not (-2 < self.x < 2 and -2 < self.y < 2):
+            raise CoordOutOfBoundsError(self)
     
     def __repr__(self):
-        return f'Coord({tuple(self)!r})'
+        return f'Coord({super().__repr__()})'
     
     @classmethod
     def from_name(cls, cdir, tbl=None):
@@ -396,11 +465,11 @@ class Coord(tuple):
     
     @property
     def idx(self):
-        return self.tbl.neighborhood[self._NAMES[self]]
+        return self.tbl.neighborhood[self.name]
     
     @property
     def inv(self):
-        return Coord((-i for i in self), self.tbl)
+        return Coord((-self.x, -self.y), self.tbl)
     
     @property
     def cw(self):
@@ -410,7 +479,18 @@ class Coord(tuple):
     @property
     def ccw(self):
         idx = self._DIRMAP[self.name]
-        return _MaybeCallableCCW(self._OFFSETS[self._DIRS[idx - 1]], self.tbl)
+        return _MaybeCallableCCW(self._OFFSETS[self._DIRS[idx-1]], self.tbl)
+    
+    @property
+    def x(self):
+        return self[0]
+    
+    @property
+    def y(self):
+        return self[1]
+    
+    def valid(self):
+        return self.center() or self.tbl and self.name in self.tbl.neighborhood
     
     def diagonal(self):
         return all(self)
@@ -422,7 +502,7 @@ class Coord(tuple):
         return self.move(*self._OFFSETS[cd.upper()])
     
     def move(self, x=0, y=0):
-        return Coord((x+self[0], y+self[1]))
+        return Coord((x + self.x, y + self.y), self.tbl)
 
 
 class _MaybeCallableCW(Coord):
@@ -431,7 +511,7 @@ class _MaybeCallableCW(Coord):
     (The former will still work, however.)
     """
     def __call__(self, num):
-        return Coord(self.cw(num-1) if num > 1 else self)
+        return Coord(self.cw(num-1) if num > 1 else self, self.tbl)
 
 
 class _MaybeCallableCCW(Coord):
@@ -439,4 +519,4 @@ class _MaybeCallableCCW(Coord):
     Ditto above, but counterclockwise.
     """
     def __call__(self, num):
-        return Coord(self.ccw(num-1) if num > 1 else self)
+        return Coord(self.ccw(num-1) if num > 1 else self, self.tbl)

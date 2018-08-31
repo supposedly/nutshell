@@ -43,3 +43,7 @@ class ValueErr(NutshellException):
 
 class UnsupportedFeature(NutshellException):
     pass
+
+
+class CoordOutOfBounds(ValueErr):
+    pass
