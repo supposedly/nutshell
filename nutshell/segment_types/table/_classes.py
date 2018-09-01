@@ -15,7 +15,7 @@ class VarName:
     """
     __slots__ = 'name', 'rep'
     
-    def __init__(self, name, rep=0):
+    def __init__(self, name, rep=-1):
         self.name = str(name)
         self.rep = rep
     
@@ -35,12 +35,12 @@ class VarName:
         return getattr(self.name, attr)
     
     @classmethod
-    def random(cls):
+    def random(cls, rep=0):
         """
         Generates a Variable with a random name.
         Method of random generation liable to change.
         """
-        return cls(f'_{random.randrange(10**15)}')
+        return cls(f'_{random.randrange(10**15)}', rep)
 
 
 class SpecialVar(tuple):

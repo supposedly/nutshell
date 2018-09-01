@@ -53,16 +53,22 @@ class Table:
         
         trans = Preprocess(tbl=self)
         parser = lark.Lark(NUTSHELL_GRAMMAR, parser='lalr', start='table', propagate_positions=True)
-        print('loaded grammar', flush=True, end='\n\n')
+        #print('loaded grammar', flush=True, end='\n\n')
         printv(['-- loaded grammar'], start='', end='')
         self._data = trans.transform(parser.parse('\n'.join(self._src)))
         printv(['-- parsed'])
-        print(len(self._data))
+        #print(len(self._data))
         #print(self._data)
-        print(*[f'{t!r}' for t in self._data], sep='\n\n')
+        #print(*[f'{t.fix_vars()!r}' for t in self._data], sep='\n\n')
+        self.final = [t.fix_vars() for t in self._data]
+        self.directives['n_states'] = self.directives.pop('states')
+        #print(self.vars)
     
     def __getitem__(self, item):
         return self._src[item]
+    
+    def __iter__(self):
+        yield from self.final
     
     @property
     def neighborhood(self):

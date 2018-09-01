@@ -9,7 +9,7 @@ def _handle_rule(rulefile, seg):
 def _iter_transitions(tbl):
     if not cli.result.transpile.comment_src:
         yield from (', '.join(map(str, tr)) for _lno, tr in tbl.transitions)
-        raise StopIteration
+        return
     done = set()
     for lno, tr in tbl.transitions:
         if lno not in done:
@@ -24,14 +24,15 @@ def _handle_table(rulefile, tbl):
     for directive, value in tbl.directives.items():
         rulefile.append(f'{directive}: {value}')
     rulefile.append('')
-    
     for var, value in tbl.vars.items():
+        if var.rep == -1:
+            continue
         # set() removes duplicates and gives braces
         rulefile.append(f'var {var.name}.0 = {set(value)}')
-        for suf in range(1, 1+var.rep):
+        for suf in range(1, 1 + var.rep):
             rulefile.append(f'var {var.name}.{suf} = {var.name}.0')
     rulefile.append('')
-    rulefile.extend(_iter_transitions(tbl))
+    rulefile.extend(', '.join(map(str, i)) for i in tbl)
 
 
 def compile(parsed):

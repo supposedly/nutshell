@@ -1,9 +1,10 @@
 from contextlib import suppress
 from functools import partial
 from itertools import count
-from collections import Iterable
+from collections import Iterable, defaultdict
 
 from ._exceptions import Ellipse, Reshape, Unpack, CoordOutOfBoundsError
+from .._classes import VarName
 from nutshell.common.errors import *
 
 _print = print
@@ -142,6 +143,30 @@ class Transition:
         if isinstance(item, str):
             return self._tr_dict.__getitem__(item)
         return self.tr.__getitem__(item)
+    
+    def __iter__(self):
+        return self.tr.__iter__()
+    
+    def fix_vars(self):
+        ret = []
+        variables = self.tbl.vars.inv
+        seen = defaultdict(lambda: -1)
+        for i in self:
+            if not isinstance(i, Variable):
+                ret.append(i)
+            elif isinstance(i, ResolvedBinding):
+                ret.append(ret[i.cdir != '0' and self.tbl.neighborhood[i.cdir]])
+            elif i.untether() in variables:
+                varname = variables[i.untether()]
+                seen[varname] += 1
+                varname.rep = max(varname.rep, seen[varname])
+                ret.append(f'{varname}.{seen[varname]}')
+            else:
+                varname = VarName.random(rep=0)
+                seen[varname] = varname.rep = 0
+                variables[varname] = i.untether()
+                ret.append(f'{varname}.0')
+        return ret
     
     def in_symmetry(self, sym):
         ...
@@ -355,19 +380,7 @@ class TetheredVar(Variable):  # Tethered == bound to a transition
         Expandable.__init__(self, **kw)
         self._tuple = self.unpack_vars_only(t) if isinstance(t, Iterable) else (t,)
         self._set = {i.value for i in self._tuple}
-        self.tag = None
-        self.bound = False
         self.start = start
-    
-    def __eq__(self, other):
-        if self.bound:
-            return super().__eq__(other) and self.tag == getattr(other, 'tag', None)
-        return super().__eq__(other)
-    
-    def __hash__(self):
-        if self.bound:
-            return hash((*self._tuple, self.tag))
-        return super().__hash__()
     
     def __sub__(self, other):
         c = count()
@@ -376,6 +389,9 @@ class TetheredVar(Variable):  # Tethered == bound to a transition
         if isinstance(other, int):
             return TetheredVar([i.reindex(next(c)) for i in self if i.value != other])
         return NotImplemented
+    
+    def untether(self):
+        return tuple(i.value for i in self)
 
 
 class ResolvedBinding(Variable):
