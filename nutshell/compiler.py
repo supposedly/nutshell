@@ -9,7 +9,7 @@ def _handle_rule(rulefile, seg):
 def _iter_transitions(tbl):
     if not cli.result.transpile.comment_src:
         yield from (', '.join(map(str, tr)) for _lno, tr in tbl.transitions)
-        raise StopIteration
+        return
     done = set()
     for lno, tr in tbl.transitions:
         if lno not in done:
