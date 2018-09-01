@@ -263,7 +263,7 @@ class Preprocess(Transformer):
     @inline
     def aux_map_self(self, meta, cdir_to, val):
         cdir_to, delay = cdir_to['cdir'], cdir_to['delay']
-        return Auxiliary(self._tbl, cdir_to, delay, Mapping(cdir_to, val, context=(meta[0], meta[1]+len(cdir_to), meta[2])), context=meta)
+        return Auxiliary(self._tbl, cdir_to, delay, Mapping(cdir_to, self.kill_string(val, meta), context=(meta[0], meta[1]+len(cdir_to), meta[2])), context=meta)
     
     @inline
     def aux_map_other(self, meta, cdir_to, cdir_from, val):
@@ -272,7 +272,7 @@ class Preprocess(Transformer):
         except SyntaxErr:
             self.check_cdir(cdir_from, (meta[0], meta[1] + cdir_to['meta'][1] + 1, len(cdir_from)))
         cdir_to, delay = cdir_to['cdir'], cdir_to['delay']
-        return Auxiliary(self._tbl, cdir_to, delay, Mapping(cdir_from, val, context=(meta[0], meta[1]+len(cdir_to), meta[2])), context=meta)
+        return Auxiliary(self._tbl, cdir_to, delay, Mapping(cdir_from, self.kill_string(val, meta), context=(meta[0], meta[1]+len(cdir_to), meta[2])), context=meta)
     
     @inline
     def range(self, meta, start, stop):

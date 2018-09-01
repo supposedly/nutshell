@@ -164,7 +164,7 @@ class Transition:
             else:
                 varname = VarName.random(rep=0)
                 seen[varname] = varname.rep = 0
-                variables[varname] = i.untether()
+                variables.inv[varname] = i.untether()
                 ret.append(f'{varname}.0')
         return ret
     

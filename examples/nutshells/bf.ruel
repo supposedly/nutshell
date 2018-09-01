@@ -236,7 +236,7 @@ x = 9, y = 13, rule = //11
 
 
 @TABLE
-states: ?
+states: 96
 neighborhood: Moore
 symmetries: none
 
