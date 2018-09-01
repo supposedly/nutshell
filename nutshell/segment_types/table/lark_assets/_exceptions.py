@@ -1,7 +1,7 @@
 class Reshape(Exception):
-    def __init__(self, cdir, fasdfsfa=None):
+    def __init__(self, cdir, backup=None):
         self.cdir = cdir
-        self.fsadfasfa = fasdfsfa
+        self.backup = backup
 
 
 class Ellipse(Exception):  # the imperative verb 'ellipse'

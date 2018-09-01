@@ -35,16 +35,18 @@ class TransitionGroup:
     def from_seq(cls, tr, tbl, **kw):
         return cls(tbl, tr[0], dict(enumerate(tr[1:-1], 1)), tr[-1], **kw)
     
-    def expand(self):
+    def expand(self, reference=None):
+        if reference is None:
+            reference = self
         trs = []
         current = []
         for orig_idx, val in enumerate(self._tr):
             if isinstance(val, Expandable):
                 try:
-                    current.append(val.within(self))
+                    current.append(val.within(reference))
                 except Ellipse as e:
                     idx = e.cdir != '0' and self.tbl.neighborhood[e.cdir]
-                    tethered_var = self[e.cdir].within(self)
+                    tethered_var = self[e.cdir].within(reference)
                     individuals, combine = tethered_var[:e.split], tethered_var[e.split:]
                     trs.extend(
                       new_tr for tr in
@@ -58,11 +60,14 @@ class TransitionGroup:
                         trs.extend(TransitionGroup.from_seq(tr, self.tbl, context=self.ctx).expand())
                     break
                 except Reshape as e:
+                    #if e.cdir is None:
+                    #    idx, var = orig_idx, val
+                    #else:
+                    var = self[e.cdir].within(reference)
                     idx = e.cdir != '0' and self.tbl.neighborhood[e.cdir]
-                    var = self[e.cdir]
                     trs.extend(
                       new_tr for tr in
-                      ([*self[:idx], individual, *self[1+idx:]] for individual in var.within(self))
+                      ([*self[:idx], individual, *self[1+idx:]] for individual in var)
                       for new_tr in
                       TransitionGroup.from_seq(tr, self.tbl, context=self.ctx).expand()
                       )
@@ -93,7 +98,7 @@ class TransitionGroup:
                 idx = e.cdir != '0' and self.tbl.neighborhood[e.cdir]
                 individuals, combine = var[:e.split], var[e.split:]
                 if individuals:
-                    aux = Auxiliary(self.tbl, i.initial_cdir, None, Mapping(e.cdir, e.map_to, context=i.ctx), context=i.ctx)
+                    aux = Auxiliary(self.tbl, i.initial_cdir, None, Mapping(e.cdir, e.map_to[:-2], context=i.ctx), context=i.ctx)
                     new.extend(
                       new_tr for tr in
                       ([*self[:idx], val, *self[1+idx:]] for val in individuals if val.value is not None)
@@ -105,14 +110,15 @@ class TransitionGroup:
                     new.extend(TransitionGroup.from_seq(
                       [*self[:idx], Variable(combine, e.split, context=i.ctx), *self[1+idx:]],
                       self.tbl, context=self.ctx
-                      ).apply_aux([i], False))
+                      ).apply_aux([aux], False))
             except Reshape as e:
-                var = self[e.cdir]
-                print(var, self)
+                # if e.cdir is None:
+                #    e.cdir = e.backup
+                var = self[e.cdir].within(self)
                 idx = e.cdir != '0' and self.tbl.neighborhood[e.cdir]
                 new.extend(
                   new_tr for tr in
-                  ([*self[:idx], val, *self[1+idx:]] for val in var.within(self))
+                  ([*self[:idx], val, *self[1+idx:]] for val in var)
                   for new_tr in
                   TransitionGroup.from_seq(tr, self.tbl, context=self.ctx).apply_aux([i], False)
                   )
@@ -160,7 +166,10 @@ class Binding(Reference):
         # we have no reason to raise Reshape here.
         # So in the case that the binding cannot be left on its own, the
         # surrounding environment must raise Reshape on its behalf.
-        return tr[self.cdir]
+        r = tr[self.cdir]
+        if isinstance(r, Variable):
+            return ResolvedBinding(self.cdir, r)
+        return r
     
     def __repr__(self):
         return f'Binding[{self.cdir}]'
@@ -170,8 +179,8 @@ class Mapping(Reference):
     def __init__(self, cdir, map_to, **kw):
         super().__init__(cdir, **kw)
         self.map_to = Variable(map_to)
-        if len(self.map_to) == 1:
-            raise ValueErr(self.ctx, 'Mapping to a single cellstate')
+        #if len(self.map_to) == 1:
+        #    raise ValueErr(self.ctx, 'Mapping to a single cellstate')
     
     def __repr__(self):
         return f'Mapping[{self.cdir}: {self.map_to}]'
@@ -303,20 +312,29 @@ class Variable(Expandable):
             return Variable([i for i in self if i != other])
         return NotImplemented
     
-    def within(self, tr):
-        return TetheredVar(self.unpack(self._tuple, tr, count(self.start)), self.start, context=self.ctx).within(tr)
+    def bind(self, val, idx, tr):
+        if isinstance(val, Reference):
+            cdir, val = val.cdir, val.within(tr)
+            if isinstance(val, Variable):
+                raise Reshape(cdir)  # (None if isinstance(val, Binding) else cdir, cdir) | (None, cdir)
+        r = VarValue(val, idx, parent=self)
+        return r
     
-    def unpack(self, t, tr, counter, start=None, new=None):
-        if new is None:
-            new = []
-        for val in t:
-            try:
-                new.append(VarValue(next(counter) if start is None else start, val, tr, self))
-            except Unpack as e:
-                self.unpack(e.val, tr, counter, e.idx, new)
-            if start is not None:
-                start = None
-        return new
+    def within(self, tr):
+        return TetheredVar(self.iwithin(tr), self.start, context=self.ctx)
+    
+    def iwithin(self, tr, counter=None):
+        if counter is None:
+            counter = count()
+        for val in self._tuple:
+            if isinstance(val, Variable):
+                yield from val.within(tr, counter)
+                continue
+            elif isinstance(val, Operation):
+                for v in val.within(tr):
+                    yield self.bind(v, next(counter), tr)
+                continue
+            yield self.bind(val, next(counter), tr)
     
     def unpack_vars_only(self, t, new=None):
         if new is None:
@@ -358,28 +376,23 @@ class TetheredVar(Variable):  # Tethered == bound to a transition
         if isinstance(other, int):
             return TetheredVar([i.reindex(next(c)) for i in self if i.value != other])
         return NotImplemented
-    
-    def within(self, tr):
-        return TetheredVar(self.unpack(self._tuple, tr, count(self.start)), context=self.ctx)
+
+
+class ResolvedBinding(Variable):
+    def __init__(self, cdir, *args, **kwargs):
+        Variable.__init__(self, *args, **kwargs)
+        self.cdir = cdir
 
 
 class VarValue:
     SPECIALS = {'_': None, '...': ...}
     
-    def __init__(self, index, value, tr, parent=None):
+    def __init__(self, value, index, parent=None):
         self.parent = parent
         self.index = index
         self.value = self.SPECIALS.get(value, value)
-        self.tr = tr
-        while isinstance(self.value, VarValue):  # lollll rip
+        while isinstance(self.value, VarValue):
             self.value = self.value.value
-        else:
-            if isinstance(value, Reference):
-                self.value = value.within(tr)
-                if isinstance(self.value, Variable):
-                    raise Reshape(value.cdir, tr)
-            elif isinstance(value, (Operation, Variable)):
-                raise Unpack(index, value.within(tr))
     
     def __rmul__(self, other):
         return other * self.value
@@ -394,7 +407,7 @@ class VarValue:
         return str(self.value)
     
     def reindex(self, index):
-        return self.__class__(index, self.value, self.tr, self.parent)
+        return self.__class__(self.value, index, self.parent)
 
 
 class Auxiliary:
@@ -451,16 +464,16 @@ class Auxiliary:
         return new_tr
     
     def from_int(self, tr):
-        return TransitionGroup.from_seq(self._make_tr(tr, self.resultant), self.tbl).expand()
+        return TransitionGroup.from_seq(self._make_tr(tr, self.resultant), self.tbl).expand(tr)
     
     def from_binding(self, tr):
         if isinstance(self.resultant.within(tr), Variable):
             raise Reshape(self.resultant.cdir)
-        return TransitionGroup.from_seq(self._make_tr(tr, self.resultant.within(tr).value), self.tbl).expand()
+        return TransitionGroup.from_seq(self._make_tr(tr, self.resultant.within(tr).value), self.tbl).expand(tr)
     
     def from_mapping(self, tr):
-        within = self.resultant.within(tr)  # always raises Reshape unless already a VarValue
-        return [] if within.value is None else TransitionGroup.from_seq(self._make_tr(tr, self.resultant.within(tr).value), self.tbl).expand()
+        within = self.resultant.within(tr)  # always raises some exception unless already a VarValue
+        return [] if within.value is None else TransitionGroup.from_seq(self._make_tr(tr, self.resultant.within(tr).value), self.tbl).expand(tr)
 
 
 class Coord(tuple):

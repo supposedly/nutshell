@@ -18,7 +18,7 @@ move = (1, 2)
 wait = (3, 4)
 
 # A waiting car starts moving on the next tick
-wait, N..W any; [0: move]
+wait, N..S any, W [N]; [0: move]
 
 # A downward-bound car moves down if the cell below it is 0, else stays put and becomes a 'waiting'
 1, N..W any; [S: (0, 3, ...)] -> S[(3, _, ...)]
