@@ -98,7 +98,7 @@ class IconArray:
             name = ''.join(random.sample(SAFE_CHARS, 2))
         return name
     
-    def _parse_colors(self, start=0):
+    def _parse_colors(self, start=1):
         colormap = IShouldntHaveToDoThisBidict()
         lno = start
         for lno, line in enumerate(map(str.strip, self._src), 1):
@@ -125,7 +125,7 @@ class IconArray:
         states = defaultdict(list)
         cur_states = set()
         _last_comment = 0
-        seq = self._src[start:] if self._nutshell is None else self._nutshell.replace_iter(self._src[start:])
+        seq = self._src[start-1:] if self._nutshell is None else self._nutshell.replace_iter(self._src[start-1:])
         for lno, line in enumerate(map(str.strip, seq), start):
             if not line:
                 continue

@@ -4,6 +4,7 @@ from operator import itemgetter
 from nutshell.common.classes import ColorMixin, TableRange
 from nutshell.common.errors import ValueErr
 
+
 class ColorSegment(ColorMixin):
     """
     Parse a rulefile's color format into something abstract &
