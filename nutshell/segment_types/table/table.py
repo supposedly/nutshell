@@ -11,7 +11,7 @@ from nutshell.common.utils import printv, printq
 from nutshell.common.errors import *
 from . import _napkins as napkins, _utils as utils, _symmetries as symmetries
 from ._classes import SpecialVar, VarName
-from .lark_assets import NUTSHELL_GRAMMAR, Preprocess, Variable
+from .lark_assets import NUTSHELL_GRAMMAR, Preprocess, Variable, _classes
 
 
 class Bidict(bidict.bidict):
@@ -57,8 +57,6 @@ class Table:
         printv(['-- loaded grammar'], start='', end='')
         self._data = trans.transform(parser.parse('\n'.join(self._src)))
         printv(['-- parsed'])
-        #print(self._data)
-        print([type(i).__name__ for i in self._data])
         print(len(self._data))
         #print(self._data)
         print(*[f'{t!r}' for t in self._data], sep='\n\n')

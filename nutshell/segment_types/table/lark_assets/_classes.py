@@ -6,6 +6,8 @@ from collections import Iterable
 from ._exceptions import Ellipse, Reshape, Unpack, CoordOutOfBoundsError
 from nutshell.common.errors import *
 
+_print = print
+print = lambda *a, **kw: _print(*map(repr, a), **kw)
 
 class TransitionGroup:
     def __init__(self, tbl, initial, napkin, resultant, *, context=None):
@@ -27,7 +29,7 @@ class TransitionGroup:
         return self._tr.__iter__()
     
     def __repr__(self):
-        return f'TG[{self._tr[0]}, {self._tr[-1]}]'
+        return f'TG{self._tr}'
     
     @classmethod
     def from_seq(cls, tr, tbl, **kw):
@@ -71,11 +73,11 @@ class TransitionGroup:
             return [Transition(current, self.tbl, context=self.ctx)]
         return trs
     
-    def apply_ptcds(self, ptcds, top=True):
-        if ptcds is None:
+    def apply_aux(self, auxiliaries, top=True):
+        if auxiliaries is None:
             return []
         new = []
-        for i in ptcds:
+        for i in auxiliaries:
             try:
                 new.extend(i.within(self))
             except CoordOutOfBoundsError as e:
@@ -91,27 +93,28 @@ class TransitionGroup:
                 idx = e.cdir != '0' and self.tbl.neighborhood[e.cdir]
                 individuals, combine = var[:e.split], var[e.split:]
                 if individuals:
-                    ptcd = PTCD(self.tbl, i.initial_cdir, None, Mapping(e.cdir, e.map_to, context=i.ctx), context=i.ctx)
+                    aux = Auxiliary(self.tbl, i.initial_cdir, None, Mapping(e.cdir, e.map_to, context=i.ctx), context=i.ctx)
                     new.extend(
                       new_tr for tr in
                       ([*self[:idx], val, *self[1+idx:]] for val in individuals if val.value is not None)
                       for new_tr in
-                      TransitionGroup.from_seq(tr, self.tbl, context=self.ctx).apply_ptcds([ptcd], False)
+                      TransitionGroup.from_seq(tr, self.tbl, context=self.ctx).apply_aux([aux], False)
                       )
                 if combine and e.val is not None:
-                    ptcd = PTCD(self.tbl, i.initial_cdir, None, e.val, context=i.ctx)
+                    aux = Auxiliary(self.tbl, i.initial_cdir, None, e.val, context=i.ctx)
                     new.extend(TransitionGroup.from_seq(
                       [*self[:idx], Variable(combine, e.split, context=i.ctx), *self[1+idx:]],
                       self.tbl, context=self.ctx
-                      ).apply_ptcds([i], False))
+                      ).apply_aux([i], False))
             except Reshape as e:
                 var = self[e.cdir]
+                print(var, self)
                 idx = e.cdir != '0' and self.tbl.neighborhood[e.cdir]
                 new.extend(
                   new_tr for tr in
                   ([*self[:idx], val, *self[1+idx:]] for val in var.within(self))
                   for new_tr in
-                  TransitionGroup.from_seq(tr, self.tbl, context=self.ctx).apply_ptcds([i], False)
+                  TransitionGroup.from_seq(tr, self.tbl, context=self.ctx).apply_aux([i], False)
                   )
         return new
 
@@ -256,7 +259,7 @@ class Subt(Operation):
 class Variable(Expandable):
     def __init__(self, t, start=0, **kw):
         Expandable.__init__(self, **kw)
-        self._tuple = self.unpack_varnames_only(t) if isinstance(t, Iterable) else (t,)
+        self._tuple = self.unpack_vars_only(t) if isinstance(t, Iterable) else (t,)
         self._set = set(self._tuple)
         self.start = start
     
@@ -285,19 +288,19 @@ class Variable(Expandable):
     
     def __mul__(self, other):
         if isinstance(other, int):
-            return self.__class__(self._tuple*other)
+            return Variable(self._tuple*other)
         return NotImplemented
     
     def __rmul__(self, other):
         if isinstance(other, int):
-            return self.__class__([other]*len(self._tuple))
+            return Variable([other]*len(self._tuple))
         return NotImplemented
     
     def __sub__(self, other):
         if type(other) is type(self):
-            return self.__class__([i for i in self if i not in other])
+            return Variable([i for i in self if i not in other])
         if isinstance(other, int):
-            return self.__class__([i for i in self if i != other])
+            return Variable([i for i in self if i != other])
         return NotImplemented
     
     def within(self, tr):
@@ -315,12 +318,12 @@ class Variable(Expandable):
                 start = None
         return new
     
-    def unpack_varnames_only(self, t, new=None):
+    def unpack_vars_only(self, t, new=None):
         if new is None:
             new = []
         for val in t:
-            if isinstance(val, Variable):
-                self.unpack_varnames_only(val, new)
+            if isinstance(val, (Variable, tuple)):
+                self.unpack_vars_only(val, new)
             else:
                 new.append(val)
         return tuple(new)
@@ -332,7 +335,7 @@ class TetheredVar(Variable):  # Tethered == bound to a transition
     """
     def __init__(self, t, start=0, **kw):
         Expandable.__init__(self, **kw)
-        self._tuple = self.unpack_varnames_only(t) if isinstance(t, Iterable) else (t,)
+        self._tuple = self.unpack_vars_only(t) if isinstance(t, Iterable) else (t,)
         self._set = {i.value for i in self._tuple}
         self.tag = None
         self.bound = False
@@ -349,12 +352,11 @@ class TetheredVar(Variable):  # Tethered == bound to a transition
         return super().__hash__()
     
     def __sub__(self, other):
+        c = count()
         if type(other) is type(self):
-            c = count()
-            return self.__class__([i.reindex(next(c)) for i in self if i.value not in other])
+            return TetheredVar([i.reindex(next(c)) for i in self if i.value not in other])
         if isinstance(other, int):
-            c = count()
-            return self.__class__([i.reindex(next(c)) for i in self if i.value != other])
+            return TetheredVar([i.reindex(next(c)) for i in self if i.value != other])
         return NotImplemented
     
     def within(self, tr):
@@ -374,8 +376,8 @@ class VarValue:
         else:
             if isinstance(value, Reference):
                 self.value = value.within(tr)
-                if isinstance(self.value, Expandable):
-                    raise Reshape(value.cdir)
+                if isinstance(self.value, Variable):
+                    raise Reshape(value.cdir, tr)
             elif isinstance(value, (Operation, Variable)):
                 raise Unpack(index, value.within(tr))
     
@@ -395,7 +397,7 @@ class VarValue:
         return self.__class__(index, self.value, self.tr, self.parent)
 
 
-class PTCD:
+class Auxiliary:
     def __init__(self, tbl, initial_cdir, delay, resultant, *, context):
         self.ctx = context
         self.tbl = tbl
@@ -424,6 +426,9 @@ class PTCD:
               f'Delayed auxiliaries (as in "{initial_cdir}+{delay}") are not supported as of yet'
               )
     
+    def __repr__(self):
+        return f'Aux[{self.initial_cdir}: {self.resultant}]'
+
     def _make_tr(self, tr, resultant):
         new_tr = [tr[self.initial_cdir], *[self.tbl.vars['any']]*self.tbl.trlen, resultant]
         orig = self.orig
@@ -446,16 +451,16 @@ class PTCD:
         return new_tr
     
     def from_int(self, tr):
-        return [self._make_tr(tr, self.resultant)]
+        return TransitionGroup.from_seq(self._make_tr(tr, self.resultant), self.tbl).expand()
     
     def from_binding(self, tr):
         if isinstance(self.resultant.within(tr), Variable):
             raise Reshape(self.resultant.cdir)
-        return [self._make_tr(tr, self.resultant.within(tr).value)]
+        return TransitionGroup.from_seq(self._make_tr(tr, self.resultant.within(tr).value), self.tbl).expand()
     
     def from_mapping(self, tr):
         within = self.resultant.within(tr)  # always raises Reshape unless already a VarValue
-        return [] if within.value is None else [self._make_tr(tr, within.value)]
+        return [] if within.value is None else TransitionGroup.from_seq(self._make_tr(tr, self.resultant.within(tr).value), self.tbl).expand()
 
 
 class Coord(tuple):

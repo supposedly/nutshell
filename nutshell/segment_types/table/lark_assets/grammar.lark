@@ -3,7 +3,7 @@ table: (line _COMMENT? _NL? | _NL)+
 line: NAME ":" _WS? /.+/      -> directive  //LALR unfortunately refuses to parse if this uses a different regex such as /\w+/
   | NAME _WS? "=" _WS? _expr  -> var_decl
   | "!" _expr_no_int          -> print_var
-  | transition _ptcds?        -> transition
+  | transition _aux?        -> transition
 
 transition: _expr (_sep tr_state)+ _sep _tr_expr  -> main  //Can't have (INT | reference) here in LALR
 tr_state: [cdir _WS] _tr_expr
@@ -14,22 +14,22 @@ cdir: COMPASS_DIR
 _PERMUTE: _WS? "~" _WS?
 _sep: ("," | ";") _WS?  //If this is a terminal rather than a rule it interferes with "," in var-related rules below
 
-_ptcds: normal_ptcds hoist_ptcds? | hoist_ptcds normal_ptcds?
-normal_ptcds: _NORMAL_ARROW ptcd (_WS ptcd)*
-hoist_ptcds: _HOIST_ARROW ptcd (_WS ptcd)*
+_aux: normal_aux hoist_aux? | hoist_aux normal_aux?
+normal_aux: _NORMAL_ARROW auxiliary (_WS auxiliary)*
+hoist_aux: _HOIST_ARROW auxiliary (_WS auxiliary)*
 
 _NORMAL_ARROW: _WS? "->" _WS?
 _HOIST_ARROW: _WS? "=>" _WS?
 
-ptcd: cdir_delay ":" INT                                                       -> ptcd_bare
-  | cdir_delay "[" _ptcd_expr_no_int "]"                                       -> ptcd_map_self
-  | cdir_delay "[" (PREVIOUS_BIND | ZERO_BIND) "]"                             -> ptcd_bind_self
-  | cdir_delay "[" (PREVIOUS_BIND | ZERO_BIND) ":" _WS? _ptcd_expr_no_int "]"  -> ptcd_map_other
+auxiliary: cdir_delay ":" INT                                                 -> aux_bare
+  | cdir_delay "[" _aux_expr_no_int "]"                                       -> aux_map_self
+  | cdir_delay "[" (PREVIOUS_BIND | ZERO_BIND) "]"                            -> aux_bind_self
+  | cdir_delay "[" (PREVIOUS_BIND | ZERO_BIND) ":" _WS? _aux_expr_no_int "]"  -> aux_map_other
 
 // I'm not sure why I need to specify the "0" explicitly there,
 // considering that a 0 is already included in PREVIOUS_BIND.
 // (If I don't put it above, Lark will tell me it expected _MULT rather
-// than the right square bracket for any "ptcd_bind_self" sequence. idgi)
+// than the right square bracket for any "aux_bind_self" sequence. idgi)
 
 cdir_delay: COMPASS_DIR ["+" /[0123456789]+/]  //just so that it doesn't get counted as INT terminal
 
@@ -37,7 +37,7 @@ cdir_delay: COMPASS_DIR ["+" /[0123456789]+/]  //just so that it doesn't get cou
 var: _VAR_OPEN (_expr ("," _WS? _expr)* | range) _VAR_CLOSE                                        -> noref_var
 tr_var: _VAR_OPEN (_tr_expr ("," _WS? _tr_expr)* | range) _VAR_CLOSE                               -> var
 ref_var: _VAR_OPEN (_ref_expr ("," _WS? _ref_expr)* ["," _WS? EXTEND_LAST] | range) _VAR_CLOSE     -> var
-ptcd_var: _VAR_OPEN (_ptcd_expr ("," _WS? _ptcd_expr)* ["," _WS? EXTEND_LAST] | range) _VAR_CLOSE  -> var
+aux_var: _VAR_OPEN (_aux_expr ("," _WS? _aux_expr)* ["," _WS? EXTEND_LAST] | range) _VAR_CLOSE     -> var
 
 
 _expr: _expr_no_int | INT
@@ -82,17 +82,17 @@ ref_operation: (INT | reference) _MULT INT      -> repeat_int
   | _NEGATE_ALL _ref_expr            -> all_except
 
 
-_ptcd_expr: _ptcd_expr_no_int | INT | reference
-_ptcd_expr_no_int: (NAME| LEAVE_ALONE | range | ptcd_operation | ptcd_var)
+_aux_expr: _aux_expr_no_int | INT | reference
+_aux_expr_no_int: (NAME| LEAVE_ALONE | range | aux_operation | aux_var)
 
-ptcd_operation: (INT | reference) _MULT INT        -> repeat_int
-  | (INT | reference) _MULT _ptcd_expr_no_int      -> int_to_var_length
-  | _ptcd_expr_no_int _MULT INT         -> repeat_var
+aux_operation: (INT | reference) _MULT INT        -> repeat_int
+  | (INT | reference) _MULT _aux_expr_no_int      -> int_to_var_length
+  | _aux_expr_no_int _MULT INT         -> repeat_var
   
-  | _ptcd_expr_no_int _subt _ptcd_expr  -> subt
+  | _aux_expr_no_int _subt _aux_expr  -> subt
   
-  | _NEGATE_LIVE _ptcd_expr             -> live_except
-  | _NEGATE_ALL _ptcd_expr              -> all_except
+  | _NEGATE_LIVE _aux_expr             -> live_except
+  | _NEGATE_ALL _aux_expr              -> all_except
 
 
 reference: "[" PREVIOUS_BIND "]"                     -> binding

@@ -113,10 +113,10 @@ class Preprocess(Transformer):
         return list(chain.from_iterable(transitions))
     
     @inline
-    def transition(self, meta, main, ptcd_first=None, ptcd_second=None):
-        if ptcd_first is not None and ptcd_first.meta == 'normal':
-            return list(chain(main.apply_ptcds(ptcd_second), main.expand(), main.apply_ptcds(ptcd_first)))
-        return list(chain(main.apply_ptcds(ptcd_first), main.expand(), main.apply_ptcds(ptcd_second)))
+    def transition(self, meta, main, aux_first=None, aux_second=None):
+        if aux_first is not None and aux_first.meta == 'normal':
+            return list(chain(main.apply_aux(aux_second), main.expand(), main.apply_aux(aux_first)))
+        return list(chain(main.apply_aux(aux_first), main.expand(), main.apply_aux(aux_second)))
     
     @inline
     def print_var(self, meta, var):
@@ -233,12 +233,12 @@ class Preprocess(Transformer):
                   )
         return TransitionGroup(self._tbl, initial, napkin, resultant, context=fix(meta))
     
-    def hoist_ptcds(self, children, meta):
+    def hoist_aux(self, children, meta):
         for child in children:
             child.hoist = True
         return MetaTuple('hoist', children)
     
-    def normal_ptcds(self, children, meta):
+    def normal_aux(self, children, meta):
         return MetaTuple('normal', children)
     
     def cdir_delay(self, children, meta):
@@ -250,29 +250,29 @@ class Preprocess(Transformer):
           }
     
     @inline
-    def ptcd_bare(self, meta, cdir_to, val):
+    def aux_bare(self, meta, cdir_to, val):
         cdir_to, delay = cdir_to['cdir'], cdir_to['delay']
-        return PTCD(self._tbl, cdir_to, delay, self.kill_string(val, meta), context=meta)
+        return Auxiliary(self._tbl, cdir_to, delay, self.kill_string(val, meta), context=meta)
     
     @inline
-    def ptcd_bind_self(self, meta, cdir_to, cdir_from):
+    def aux_bind_self(self, meta, cdir_to, cdir_from):
         self.check_cdir(cdir_from, meta)
         cdir_to, delay = cdir_to['cdir'], cdir_to['delay']
-        return PTCD(self._tbl, cdir_to, delay, Binding(cdir_from, context=(meta[0], meta[1]+len(cdir_to), meta[2])), context=meta)
+        return Auxiliary(self._tbl, cdir_to, delay, Binding(cdir_from, context=(meta[0], meta[1]+len(cdir_to), meta[2])), context=meta)
     
     @inline
-    def ptcd_map_self(self, meta, cdir_to, val):
+    def aux_map_self(self, meta, cdir_to, val):
         cdir_to, delay = cdir_to['cdir'], cdir_to['delay']
-        return PTCD(self._tbl, cdir_to, delay, Mapping(cdir_to, val, context=(meta[0], meta[1]+len(cdir_to), meta[2])), context=meta)
+        return Auxiliary(self._tbl, cdir_to, delay, Mapping(cdir_to, val, context=(meta[0], meta[1]+len(cdir_to), meta[2])), context=meta)
     
     @inline
-    def ptcd_map_other(self, meta, cdir_to, cdir_from, val):
+    def aux_map_other(self, meta, cdir_to, cdir_from, val):
         try:
             self.check_cdir(cdir_from, meta)
         except SyntaxErr:
             self.check_cdir(cdir_from, (meta[0], meta[1] + cdir_to['meta'][1] + 1, len(cdir_from)))
         cdir_to, delay = cdir_to['cdir'], cdir_to['delay']
-        return PTCD(self._tbl, cdir_to, delay, Mapping(cdir_from, val, context=(meta[0], meta[1]+len(cdir_to), meta[2])), context=meta)
+        return Auxiliary(self._tbl, cdir_to, delay, Mapping(cdir_from, val, context=(meta[0], meta[1]+len(cdir_to), meta[2])), context=meta)
     
     @inline
     def range(self, meta, start, stop):
@@ -328,7 +328,7 @@ class Preprocess(Transformer):
     
     @inline
     def int_to_var_length(self, meta, num, var):
-        return IntToVarLength(self.kill_string(num, meta), var, context=meta)
+        return IntToVarLength(int(num), self.kill_string(var, meta), context=meta)
     
     @inline
     def repeat_var(self, meta, var, num):
