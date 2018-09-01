@@ -187,6 +187,7 @@ class Permute(Napkin):
     
     @LazyProperty
     def expanded(self):
+        print('?')
         t = tuple(sorted(self))
         if t in self.RECENTS:
             self._hash = self.HASHES[t]

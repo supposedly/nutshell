@@ -153,7 +153,7 @@ class Transition:
         seen = defaultdict(lambda: -1)
         for i in self:
             if not isinstance(i, Variable):
-                ret.append(i)
+                ret.append(getattr(i, 'value', i))
             elif isinstance(i, ResolvedBinding):
                 ret.append(ret[i.cdir != '0' and self.tbl.neighborhood[i.cdir]])
             elif i.untether() in variables:
@@ -163,13 +163,61 @@ class Transition:
                 ret.append(f'{varname}.{seen[varname]}')
             else:
                 varname = VarName.random(rep=0)
-                seen[varname] = varname.rep = 0
+                seen[varname] = 0
                 variables.inv[varname] = i.untether()
                 ret.append(f'{varname}.0')
         return ret
     
-    def in_symmetry(self, sym):
-        ...
+    def fix_partial(self):
+        ret = []
+        variables = self.tbl.vars.inv
+        seen = defaultdict(lambda: -1)
+        for i in self:
+            if not isinstance(i, Variable):
+                ret.append(str(getattr(i, 'value', i)))
+            elif isinstance(i, ResolvedBinding):
+                cdir = i.cdir != '0' and self.tbl.neighborhood[i.cdir]
+                varname = variables[i.untether()]
+                if '.' in ret[cdir]:
+                    seen[varname] += 1
+                    varname.rep = max(varname.rep, seen[varname])
+                    ret.append(f'{varname}.{seen[varname]}')
+                else:
+                    seen[varname] = 1
+                    varname.rep = max(varname.rep, 1)
+                    ret[cdir] = f'{varname}.0'
+                    ret.append(f'{varname}.1')
+            elif i.untether() in variables:
+                ret.append(f'{variables[i.untether()]}')
+            else:
+                varname = VarName.random(rep=0)
+                seen[varname] = 0
+                variables.inv[varname] = i.untether()
+                ret.append(f'{varname}')  # XXX: Faster overall to append varname as a string like this or to preserve variable tuple and assign name in second 'fix' step?
+        return ret
+    
+    @staticmethod
+    def fix_final(tr, variables):
+        ret = []
+        seen = {}
+        for i in tr:
+            if isinstance(i, str):
+                if '.' in i:
+                    varname, tag = i.split('.')
+                    seen.setdefault(varname, set()).add(int(tag))
+                else:
+                    seen[i] = set()
+        tag = count()
+        for i in tr:
+            if isinstance(i, str) and i.isidentifier():
+                ret.append(f'{i}.{next(j for j in tag if j not in seen[i])}')
+            else:
+                ret.append(i)
+        return ret
+    
+    def in_symmetry(self, new_sym):
+        variables = self.tbl.vars.inv
+        return [self.fix_final(i, variables) for i in {new_sym(j) for j in self.symmetries(self.fix_partial()).expand()}]
 
 
 class Expandable:

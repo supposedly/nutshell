@@ -27,11 +27,11 @@ def find_min_sym_type(symmetries, tr_len):
     if failures:
         to_test = [min_syms, *failures]
         return next(
-          (getattr(cls, 'name', [cls.__name__.lower()])[0], cls)
+          cls
           for cls in (cls for cls, v in napkins.GOLLY_SYMS[tr_len] if v < min_sym_len)
           if all(napkin in napkin_set for napkin in cls.symmetries[tr_len] for napkin_set in to_test)
           )
-    return getattr(golly_cls, 'name', [golly_cls.__name__.lower()])[0], golly_cls
+    return golly_cls
 
 
 def get_sym_type(sym):
@@ -54,7 +54,8 @@ def desym(transitions, sym_lines, transition_length):
     sym_clses = [get_sym_type(sym) for _, sym in sym_lines]
     
     clear_caches = _clearables(sym_clses)
-    min_sym, min_sym_cls = find_min_sym_type(sym_clses, transition_length)
+    min_sym_cls = find_min_sym_type(sym_clses, transition_length)
+    min_sym = getattr(min_sym_cls, 'name', [min_sym_cls.__name__.lower()])[0]
     utils.printv(f'lowest symmetry: {min_sym}\n')
     
     built = []

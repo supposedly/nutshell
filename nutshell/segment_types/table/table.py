@@ -44,6 +44,7 @@ class Table:
         self.directives = {}
         self.transitions = []
         self._constants = {}
+        self.sym_types = set()
         
         if dep is not None:
             dep.replace(self._src)
@@ -53,16 +54,14 @@ class Table:
         
         trans = Preprocess(tbl=self)
         parser = lark.Lark(NUTSHELL_GRAMMAR, parser='lalr', start='table', propagate_positions=True)
-        #print('loaded grammar', flush=True, end='\n\n')
-        printv(['-- loaded grammar'], start='', end='')
         self._data = trans.transform(parser.parse('\n'.join(self._src)))
-        printv(['-- parsed'])
-        #print(len(self._data))
-        #print(self._data)
-        #print(*[f'{t.fix_vars()!r}' for t in self._data], sep='\n\n')
-        self.final = [t.fix_vars() for t in self._data]
+        if len(self.sym_types) == 1 and not hasattr(next(iter(self.sym_types)), 'fallback'):
+            self.final = [t.fix_vars() for t in self._data]
+        else:
+            min_sym = symmetries.find_min_sym_type(self.sym_types, self.trlen)
+            self.directives['symmetries'] = getattr(min_sym, 'name', [min_sym.__name__.lower()])[0]
+            self.final = [new_tr for tr in self._data for new_tr in tr.in_symmetry(min_sym)]
         self.directives['n_states'] = self.directives.pop('states')
-        #print(self.vars)
     
     def __getitem__(self, item):
         return self._src[item]
@@ -102,3 +101,6 @@ class Table:
             self._n_states = value
             self.vars[VarName('any')] = Variable(range(value), context=None)
             self.vars[VarName('live')] = Variable(range(1, value), context=None)
+
+    def add_sym_type(self, name):
+        self.sym_types.add(symmetries.get_sym_type(name))

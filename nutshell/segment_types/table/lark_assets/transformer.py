@@ -125,9 +125,12 @@ class Preprocess(Transformer):
     
     @inline
     def directive(self, meta, name, val):
-        self.directives[str(name)] = val.replace(' ', '')
+        val = val.replace(' ', '')
+        self.directives[str(name)] = val
         if name == 'states':
-            self._tbl.n_states = val.replace(' ', '')
+            self._tbl.n_states = val
+        if name == 'symmetries':
+            self._tbl.add_sym_type(val)
         raise Discard
     
     @inline
