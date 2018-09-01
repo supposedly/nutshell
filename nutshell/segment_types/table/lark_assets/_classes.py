@@ -296,6 +296,7 @@ class Variable(Expandable):
         self._tuple = self.unpack_vars_only(t) if isinstance(t, Iterable) else (t,)
         self._set = set(self._tuple)
         self.start = start
+        self._d = {}
     
     def __contains__(self, item):
         if isinstance(item, VarValue):
@@ -346,14 +347,16 @@ class Variable(Expandable):
         return r
     
     def within(self, tr):
-        return TetheredVar(self.iwithin(tr), self.start, context=self.ctx)
+        if tr not in self._d:
+            self._d[tr] = TetheredVar(self.iwithin(tr), self.start, context=self.ctx)
+        return self._d[tr]
     
     def iwithin(self, tr, counter=None):
         if counter is None:
             counter = count()
         for val in self._tuple:
             if isinstance(val, Variable):
-                yield from val.within(tr, counter)
+                yield from val.iwithin(tr, counter)
                 continue
             elif isinstance(val, Operation):
                 for v in val.within(tr):

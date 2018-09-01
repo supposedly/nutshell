@@ -140,7 +140,7 @@ Brainfuck.
 + An example:
   x = 61, y = 13, rule = bf
   53.qR$52.qR$51.qR$50.qR$49.qR$47.2qR$42.qR3.2qR$41.qR3.2qR$41.qJ$43.pR
-  $7SrU12rSrU10rSrUrTrU5rSrM$43.I$44.AB2DFHCHCEDGDBCEC!
+  $7rSrU12rSrU10rSrUrTrU5rSrM$43.I$44.AB2DFHCHCEDGDBCEC!
 
 
 @COLORS
@@ -305,7 +305,7 @@ prgm, SE L_BRACK, 0, 0, W prgm, NW..E 0; 0 -> S[0]  # x[
 DATA_POINTER, W eastbound, NW..SW any; [W: datapointers]
 DATA_POINTER, E westbound, SE..NE any; [E: datapointers]
 # If a loaded shadow is directly below data pointer, pretend it's the same as a signal
-DATA_POINTER, S (westshadows-WEST_SHADOW, eastshadows-EAST_SHADOW), SW..SE any; [S: (datapointers, datapointers)]
+DATA_POINTER, S (westshadows-WEST_SHADOW, eastshadows-EAST_SHADOW), SW..SE any; [S: datapointers*2]
 
 DATA_POINTER_MINUS, N..NW any; DATA_POINTER -> N:DATA_MINUS
 DATA_POINTER_PLUS, N..NW (DATA, any-DATA); DATA_POINTER -> N[(DATA_PLUS, DATA, ...)]
