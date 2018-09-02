@@ -9,9 +9,14 @@ import lark
 from nutshell.common.classes import TableRange
 from nutshell.common.utils import printv, printq
 from nutshell.common.errors import *
-from . import _napkins as napkins, _utils as utils, _symmetries as symmetries
-from ._classes import SpecialVar, VarName
-from .lark_assets import NUTSHELL_GRAMMAR, Preprocess, Variable, _classes
+from ._transformer import NUTSHELL_GRAMMAR, Preprocess
+from ._classes import SpecialVar, VarName, Variable
+from . import _symutils as symutils
+
+
+def generate_cardinals(d):
+    """{'name': ('N', 'E', ...)} >>> {'name': {'N' :: 1, 'E' :: 2, ...}}"""
+    return {k: bidict.bidict(map(reversed, enumerate(v, 1))) for k, v in d.items()}
 
 
 class Bidict(bidict.bidict):
@@ -19,7 +24,7 @@ class Bidict(bidict.bidict):
 
 
 class Table:
-    CARDINALS = utils.generate_cardinals({
+    CARDINALS = generate_cardinals({
       'oneDimensional': ('W', 'E'),
       'vonNeumann': ('N', 'E', 'S', 'W'),
       'hexagonal': ('N', 'E', 'SE', 'S', 'W', 'NW'),
@@ -58,7 +63,7 @@ class Table:
         if len(self.sym_types) == 1 and not hasattr(next(iter(self.sym_types)), 'fallback'):
             self.final = [t.fix_vars() for t in self._data]
         else:
-            min_sym = symmetries.find_min_sym_type(self.sym_types, self.trlen)
+            min_sym = symutils.find_min_sym_type(self.sym_types, self.trlen)
             self.directives['symmetries'] = getattr(min_sym, 'name', [min_sym.__name__.lower()])[0]
             self.final = [new_tr for tr in self._data for new_tr in tr.in_symmetry(min_sym)]
         self.directives['n_states'] = self.directives.pop('states')
@@ -83,7 +88,7 @@ class Table:
     
     @property
     def symmetries(self):
-        return symmetries.get_sym_type(self.directives['symmetries'])
+        return symutils.get_sym_type(self.directives['symmetries'])
     
     @property
     def n_states(self):
@@ -103,4 +108,4 @@ class Table:
             self.vars[VarName('live')] = Variable(range(1, value), context=None)
 
     def add_sym_type(self, name):
-        self.sym_types.add(symmetries.get_sym_type(name))
+        self.sym_types.add(symutils.get_sym_type(name))

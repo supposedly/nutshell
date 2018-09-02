@@ -12,12 +12,6 @@ class Ellipse(Exception):  # the imperative verb 'ellipse'
         self.map_to = map_to
 
 
-class Unpack(Exception):
-    def __init__(self, index, value):
-        self.idx = index
-        self.val = value
-
-
 class CoordOutOfBoundsError(Exception):
     """
     Raised when |one of a coord's values| > 1

@@ -9,7 +9,6 @@ from lark import Transformer, Tree, Discard, v_args
 
 from nutshell.common.errors import *
 from ._classes import *
-from .._classes import VarName
 
 SPECIALS = {'...', '_', 'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'}
 with open('nutshell/segment_types/table/lark_assets/grammar.lark') as f:
@@ -131,7 +130,7 @@ class Preprocess(Transformer):
             if val == '?':
                 raise UnsupportedFeature(
                   fix(meta),
-                  ':( `states: ?` is currently not supported. Please specify your number of states explicitly.'
+                  "`states: ?` is currently not supported. Please specify your rule's number of states explicitly :("
                   )
             self._tbl.n_states = val
         if name == 'symmetries':
