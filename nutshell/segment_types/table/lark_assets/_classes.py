@@ -205,7 +205,8 @@ class Transition:
                 if '.' in i:
                     varname, tag = i.split('.')
                     seen.setdefault(varname, set()).add(int(tag))
-                    variables.inv[varname].rep = max(variables.inv[varname].rep, int(tag))
+                    varname = variables[variables.inv[varname]]  # (ew, but converting string to varname)
+                    varname.rep = max(varname.rep, tag)
                 else:
                     seen[i] = set()
         tags = count()
@@ -213,7 +214,7 @@ class Transition:
             if isinstance(i, str) and i.isidentifier():
                 tag = next(j for j in tags if j not in seen[i])
                 ret.append(f'{i}.{tag}')
-                varname = variables[variables.inv[i]]  # h m m m m
+                varname = variables[variables.inv[i]]  # (ew, but converting string to varname)
                 varname.rep = max(varname.rep, tag)
             else:
                 ret.append(i)
@@ -242,7 +243,7 @@ class Binding(Reference):
         # in which case they can be expressed in Golly with simply
         # a variable name rather than a repeated collection of transitions,
         # we have no reason to raise Reshape here.
-        # So in the case that the binding cannot be left on its own, the
+        # So in the case that the binding cannot stand on its own, its
         # surrounding environment must raise Reshape on its behalf.
         r = tr[self.cdir]
         if isinstance(r, Variable):
@@ -257,8 +258,9 @@ class Mapping(Reference):
     def __init__(self, cdir, map_to, **kw):
         super().__init__(cdir, **kw)
         self.map_to = Variable(map_to)
-        #if len(self.map_to) == 1:
-        #    raise ValueErr(self.ctx, 'Mapping to a single cellstate')
+        # XXX: Below is bad because mapping to a single cellstate can happen during reshaping
+        # if len(self.map_to) == 1:
+        #     raise ValueErr(self.ctx, 'Mapping to a single cellstate')
     
     def __repr__(self):
         return f'Mapping[{self.cdir}: {self.map_to}]'
@@ -536,16 +538,16 @@ class Auxiliary:
         return new_tr
     
     def from_int(self, tr):
-        return TransitionGroup.from_seq(self._make_tr(tr, self.resultant), self.tbl).expand(tr)
+        return TransitionGroup.from_seq(self._make_tr(tr, self.resultant), self.tbl, context=self.ctx).expand(tr)
     
     def from_binding(self, tr):
         if isinstance(self.resultant.within(tr), Variable):
             raise Reshape(self.resultant.cdir)
-        return TransitionGroup.from_seq(self._make_tr(tr, self.resultant.within(tr).value), self.tbl).expand(tr)
+        return TransitionGroup.from_seq(self._make_tr(tr, self.resultant.within(tr).value), self.tbl, context=self.ctx).expand(tr)
     
     def from_mapping(self, tr):
         within = self.resultant.within(tr)  # always raises some exception unless already a VarValue
-        return [] if within.value is None else TransitionGroup.from_seq(self._make_tr(tr, self.resultant.within(tr).value), self.tbl).expand(tr)
+        return [] if within.value is None else TransitionGroup.from_seq(self._make_tr(tr, self.resultant.within(tr).value), self.tbl, context=self.ctx).expand(tr)
 
 
 class Coord(tuple):

@@ -74,7 +74,7 @@ http://esolangs.org/wiki/Roie
     53: w {D_W1}
     
 @TABLE
-states: ?
+states: 54
 neighborhood: Moore
 symmetries: none
 

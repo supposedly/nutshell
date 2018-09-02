@@ -107,7 +107,7 @@ class Preprocess(Transformer):
         # will already have been transformed (by self.permute_shorthand) and
         # returned by the first conditional in this method
     
-    #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+    #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
     
     def table(self, transitions, meta):
         return list(chain.from_iterable(transitions))
@@ -128,6 +128,11 @@ class Preprocess(Transformer):
         val = val.replace(' ', '')
         self.directives[str(name)] = val
         if name == 'states':
+            if val == '?':
+                raise UnsupportedFeature(
+                  fix(meta),
+                  ':( `states: ?` is currently not supported. Please specify your number of states explicitly.'
+                  )
             self._tbl.n_states = val
         if name == 'symmetries':
             self._tbl.add_sym_type(val)

@@ -61,7 +61,6 @@ class Table:
             min_sym = symmetries.find_min_sym_type(self.sym_types, self.trlen)
             self.directives['symmetries'] = getattr(min_sym, 'name', [min_sym.__name__.lower()])[0]
             self.final = [new_tr for tr in self._data for new_tr in tr.in_symmetry(min_sym)]
-            print(self.vars)
         self.directives['n_states'] = self.directives.pop('states')
     
     def __getitem__(self, item):

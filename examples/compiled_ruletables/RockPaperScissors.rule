@@ -19,7 +19,6 @@ var any.5 = any.0
 var any.6 = any.0
 var any.7 = any.0
 var any.8 = any.0
-var live.0 = {1, 2, 3}
 var deadA.0 = {0, 2, 3}
 var deadA.1 = deadA.0
 var deadA.2 = deadA.0
@@ -41,7 +40,6 @@ var deadC.5 = deadC.0
 var _716888888775130.0 = {0, 1}
 var _188603385896403.0 = {0, 2}
 var _172129488626172.0 = {0, 3}
-var _487705463628354.0 = {1, 2, 3}
 
 _716888888775130.0, 1, 1, 1, 3, 3, 3, deadC.0, deadC.1, 3
 _188603385896403.0, 2, 2, 2, 1, 1, 1, deadA.0, deadA.1, 1

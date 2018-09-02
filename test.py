@@ -5,7 +5,6 @@ import sys
 
 import pytest
 
-__name__, _oldname_ = 'not main!', __name__
 from nutshell.main import transpile, write_rule
 from nutshell.common.utils import RAND_SEED, random as nutshell_rand
 
@@ -17,7 +16,7 @@ def test_codecov():
             transpile(fp)
 
 
-if _oldname_ == '__main__':
+if __name__ == '__main__':
     main = ARGV[1]
     if main is None:
         pytest.main('test.py --cov=nutshell/ --cov-report=html'.split())
@@ -26,7 +25,7 @@ if _oldname_ == '__main__':
         if main == 'run':
             for fname in walk:
                 if len(ARGV) < 3 or fname.split('.')[0] in ARGV[2:]:
-                    write_rule(infiles=['./examples/nutshells/' + fname], outdirs=['./examples/compiled_ruletables/'])
+                    write_rule(infiles=['./examples/nutshells/' + fname], outdirs=['./examples/compiled_ruletables/'], find=False)
                 nutshell_rand.seed(RAND_SEED)
         else:
             for fname in walk:

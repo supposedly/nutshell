@@ -22,17 +22,14 @@ var any.1 = any.0
 var any.2 = any.0
 var any.3 = any.0
 var live.0 = {1, 2, 3, 4}
-var move.0 = {1, 2}
-var wait.0 = {3, 4}
-var _716888888775130.0 = {1, 2, 3, 4}
 
 3, any.0, any.1, any.2, any.3, 1
 4, any.0, any.1, any.2, any.3, 2
 1, any.0, any.1, 0, any.2, 0
-1, any.0, any.1, _716888888775130.0, any.2, 3
+1, any.0, any.1, live.0, any.2, 3
 0, 1, any.0, any.1, any.2, 3
 2, any.0, 0, any.1, any.2, 0
-2, any.0, _716888888775130.0, any.1, any.2, 4
+2, any.0, live.0, any.1, any.2, 4
 0, any.0, any.1, any.2, 2, 4
 
 @COLORS

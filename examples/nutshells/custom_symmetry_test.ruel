@@ -1,6 +1,6 @@
 @NUTSHELL tst
 @TABLE
-states: ?
+states: 2
 symmetries: nutshell.AlternatingPermute
 neighborhood: Moore
 

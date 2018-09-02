@@ -89,11 +89,9 @@ var any.4 = any.0
 var any.5 = any.0
 var any.6 = any.0
 var any.7 = any.0
-var live.0 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53}
 var anyO.0 = {10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27}
 var anyR.0 = {32, 33, 34, 35, 36, 28, 29, 30, 31}
 var anyD.0 = {37, 46, 47, 48, 49, 50, 51, 52, 53}
-var notP.0 = {1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53}
 var northZero.0 = {2, 46, 17, 19, 20, 23, 29}
 var eastZero.0 = {3, 47, 16, 18, 20, 21, 30}
 var southZero.0 = {4, 48, 17, 19, 21, 22, 31}
@@ -102,22 +100,20 @@ var north.0 = {33, 2, 6, 12, 46, 14, 17, 50, 19, 20, 23, 24, 27, 29}
 var east.0 = {34, 3, 7, 11, 13, 47, 16, 18, 51, 20, 21, 24, 25, 30}
 var south.0 = {35, 4, 8, 12, 14, 48, 17, 19, 52, 21, 22, 25, 26, 31}
 var west.0 = {32, 36, 5, 9, 11, 13, 16, 49, 18, 53, 22, 23, 26, 27}
-var _716888888775130.0 = {38, 39, 40, 41, 42, 43, 44, 45}
-var _188603385896403.0 = {0, 32, 36, 5, 9, 11, 13, 16, 49, 18, 53, 22, 23, 26, 27}
-var _710501783665629.0 = {2, 3, 4, 5}
-var _688398911390223.0 = {8, 9, 6, 7}
-var _537895657608921.0 = {32, 29, 30, 31}
-var _487705463628354.0 = {33, 34, 35, 36}
-var _293966399727257.0 = {48, 49, 46, 47}
-var _691662787204218.0 = {50, 51, 52, 53}
-var _153693061857386.0 = {20, 21, 22, 23}
-var _672977476146232.0 = {24, 25, 26, 27}
-var _677095602545038.0 = {16, 17, 18, 19}
-var _851146148095641.0 = {11, 12, 13, 14}
-var _724337786825825.0 = {35, 8, 12, 14, 52, 25, 26}
-var _346203539103498.0 = {36, 9, 11, 13, 53, 26, 27}
-var _556658519650401.0 = {33, 6, 12, 14, 50, 24, 27}
-var _674011333405727.0 = {34, 7, 11, 13, 51, 24, 25}
+var _716888888775130.0 = {35, 8, 12, 14, 52, 25, 26}
+var _188603385896403.0 = {36, 9, 11, 13, 53, 26, 27}
+var _172129488626172.0 = {33, 6, 12, 14, 50, 24, 27}
+var _710501783665629.0 = {34, 7, 11, 13, 51, 24, 25}
+var _688398911390223.0 = {2, 3, 4, 5}
+var _537895657608921.0 = {8, 9, 6, 7}
+var _487705463628354.0 = {32, 29, 30, 31}
+var _293966399727257.0 = {33, 34, 35, 36}
+var _691662787204218.0 = {48, 49, 46, 47}
+var _153693061857386.0 = {50, 51, 52, 53}
+var _672977476146232.0 = {20, 21, 22, 23}
+var _677095602545038.0 = {24, 25, 26, 27}
+var _851146148095641.0 = {16, 17, 18, 19}
+var _724337786825825.0 = {11, 12, 13, 14}
 
 1, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 1
 anyO.0, southZero.0, any.0, any.1, any.2, any.3, any.4, eastZero.0, any.5, 21
@@ -135,7 +131,7 @@ anyO.0, 17, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 13
 anyO.0, 19, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 13
 anyO.0, 22, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 13
 anyO.0, 21, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 13
-anyO.0, _724337786825825.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 18
+anyO.0, _716888888775130.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 18
 anyO.0, any.0, any.1, 5, any.2, any.3, any.4, any.5, any.6, 14
 anyO.0, any.0, any.1, 32, any.2, any.3, any.4, any.5, any.6, 14
 anyO.0, any.0, any.1, 49, any.2, any.3, any.4, any.5, any.6, 14
@@ -143,7 +139,7 @@ anyO.0, any.0, any.1, 16, any.2, any.3, any.4, any.5, any.6, 14
 anyO.0, any.0, any.1, 18, any.2, any.3, any.4, any.5, any.6, 14
 anyO.0, any.0, any.1, 23, any.2, any.3, any.4, any.5, any.6, 14
 anyO.0, any.0, any.1, 22, any.2, any.3, any.4, any.5, any.6, 14
-anyO.0, any.0, any.1, _346203539103498.0, any.2, any.3, any.4, any.5, any.6, 19
+anyO.0, any.0, any.1, _188603385896403.0, any.2, any.3, any.4, any.5, any.6, 19
 anyO.0, any.0, any.1, any.2, any.3, 2, any.4, any.5, any.6, 11
 anyO.0, any.0, any.1, any.2, any.3, 29, any.4, any.5, any.6, 11
 anyO.0, any.0, any.1, any.2, any.3, 46, any.4, any.5, any.6, 11
@@ -151,7 +147,7 @@ anyO.0, any.0, any.1, any.2, any.3, 17, any.4, any.5, any.6, 11
 anyO.0, any.0, any.1, any.2, any.3, 19, any.4, any.5, any.6, 11
 anyO.0, any.0, any.1, any.2, any.3, 23, any.4, any.5, any.6, 11
 anyO.0, any.0, any.1, any.2, any.3, 20, any.4, any.5, any.6, 11
-anyO.0, any.0, any.1, any.2, any.3, _556658519650401.0, any.4, any.5, any.6, 16
+anyO.0, any.0, any.1, any.2, any.3, _172129488626172.0, any.4, any.5, any.6, 16
 anyO.0, any.0, any.1, any.2, any.3, any.4, any.5, 3, any.6, 12
 anyO.0, any.0, any.1, any.2, any.3, any.4, any.5, 30, any.6, 12
 anyO.0, any.0, any.1, any.2, any.3, any.4, any.5, 47, any.6, 12
@@ -159,7 +155,7 @@ anyO.0, any.0, any.1, any.2, any.3, any.4, any.5, 16, any.6, 12
 anyO.0, any.0, any.1, any.2, any.3, any.4, any.5, 18, any.6, 12
 anyO.0, any.0, any.1, any.2, any.3, any.4, any.5, 20, any.6, 12
 anyO.0, any.0, any.1, any.2, any.3, any.4, any.5, 21, any.6, 12
-anyO.0, any.0, any.1, any.2, any.3, any.4, any.5, _674011333405727.0, any.6, 17
+anyO.0, any.0, any.1, any.2, any.3, any.4, any.5, _710501783665629.0, any.6, 17
 anyR.0, 4, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 32
 anyR.0, 31, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 32
 anyR.0, 48, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 32
@@ -167,7 +163,7 @@ anyR.0, 17, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 32
 anyR.0, 19, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 32
 anyR.0, 22, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 32
 anyR.0, 21, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 32
-anyR.0, _724337786825825.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 34
+anyR.0, _716888888775130.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 34
 anyR.0, any.0, any.1, 5, any.2, any.3, any.4, any.5, any.6, 29
 anyR.0, any.0, any.1, 32, any.2, any.3, any.4, any.5, any.6, 29
 anyR.0, any.0, any.1, 49, any.2, any.3, any.4, any.5, any.6, 29
@@ -175,7 +171,7 @@ anyR.0, any.0, any.1, 16, any.2, any.3, any.4, any.5, any.6, 29
 anyR.0, any.0, any.1, 18, any.2, any.3, any.4, any.5, any.6, 29
 anyR.0, any.0, any.1, 23, any.2, any.3, any.4, any.5, any.6, 29
 anyR.0, any.0, any.1, 22, any.2, any.3, any.4, any.5, any.6, 29
-anyR.0, any.0, any.1, _346203539103498.0, any.2, any.3, any.4, any.5, any.6, 35
+anyR.0, any.0, any.1, _188603385896403.0, any.2, any.3, any.4, any.5, any.6, 35
 anyR.0, any.0, any.1, any.2, any.3, 2, any.4, any.5, any.6, 30
 anyR.0, any.0, any.1, any.2, any.3, 29, any.4, any.5, any.6, 30
 anyR.0, any.0, any.1, any.2, any.3, 46, any.4, any.5, any.6, 30
@@ -183,7 +179,7 @@ anyR.0, any.0, any.1, any.2, any.3, 17, any.4, any.5, any.6, 30
 anyR.0, any.0, any.1, any.2, any.3, 19, any.4, any.5, any.6, 30
 anyR.0, any.0, any.1, any.2, any.3, 23, any.4, any.5, any.6, 30
 anyR.0, any.0, any.1, any.2, any.3, 20, any.4, any.5, any.6, 30
-anyR.0, any.0, any.1, any.2, any.3, _556658519650401.0, any.4, any.5, any.6, 36
+anyR.0, any.0, any.1, any.2, any.3, _172129488626172.0, any.4, any.5, any.6, 36
 anyR.0, any.0, any.1, any.2, any.3, any.4, any.5, 3, any.6, 31
 anyR.0, any.0, any.1, any.2, any.3, any.4, any.5, 30, any.6, 31
 anyR.0, any.0, any.1, any.2, any.3, any.4, any.5, 47, any.6, 31
@@ -191,7 +187,7 @@ anyR.0, any.0, any.1, any.2, any.3, any.4, any.5, 16, any.6, 31
 anyR.0, any.0, any.1, any.2, any.3, any.4, any.5, 18, any.6, 31
 anyR.0, any.0, any.1, any.2, any.3, any.4, any.5, 20, any.6, 31
 anyR.0, any.0, any.1, any.2, any.3, any.4, any.5, 21, any.6, 31
-anyR.0, any.0, any.1, any.2, any.3, any.4, any.5, _674011333405727.0, any.6, 33
+anyR.0, any.0, any.1, any.2, any.3, any.4, any.5, _710501783665629.0, any.6, 33
 anyD.0, 4, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 40
 anyD.0, 31, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 40
 anyD.0, 48, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 40
@@ -199,7 +195,7 @@ anyD.0, 17, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 40
 anyD.0, 19, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 40
 anyD.0, 22, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 40
 anyD.0, 21, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 40
-anyD.0, _724337786825825.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 44
+anyD.0, _716888888775130.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 44
 anyD.0, any.0, any.1, 5, any.2, any.3, any.4, any.5, any.6, 41
 anyD.0, any.0, any.1, 32, any.2, any.3, any.4, any.5, any.6, 41
 anyD.0, any.0, any.1, 49, any.2, any.3, any.4, any.5, any.6, 41
@@ -207,7 +203,7 @@ anyD.0, any.0, any.1, 16, any.2, any.3, any.4, any.5, any.6, 41
 anyD.0, any.0, any.1, 18, any.2, any.3, any.4, any.5, any.6, 41
 anyD.0, any.0, any.1, 23, any.2, any.3, any.4, any.5, any.6, 41
 anyD.0, any.0, any.1, 22, any.2, any.3, any.4, any.5, any.6, 41
-anyD.0, any.0, any.1, _346203539103498.0, any.2, any.3, any.4, any.5, any.6, 45
+anyD.0, any.0, any.1, _188603385896403.0, any.2, any.3, any.4, any.5, any.6, 45
 anyD.0, any.0, any.1, any.2, any.3, 2, any.4, any.5, any.6, 38
 anyD.0, any.0, any.1, any.2, any.3, 29, any.4, any.5, any.6, 38
 anyD.0, any.0, any.1, any.2, any.3, 46, any.4, any.5, any.6, 38
@@ -215,7 +211,7 @@ anyD.0, any.0, any.1, any.2, any.3, 17, any.4, any.5, any.6, 38
 anyD.0, any.0, any.1, any.2, any.3, 19, any.4, any.5, any.6, 38
 anyD.0, any.0, any.1, any.2, any.3, 23, any.4, any.5, any.6, 38
 anyD.0, any.0, any.1, any.2, any.3, 20, any.4, any.5, any.6, 38
-anyD.0, any.0, any.1, any.2, any.3, _556658519650401.0, any.4, any.5, any.6, 42
+anyD.0, any.0, any.1, any.2, any.3, _172129488626172.0, any.4, any.5, any.6, 42
 anyD.0, any.0, any.1, any.2, any.3, any.4, any.5, 3, any.6, 39
 anyD.0, any.0, any.1, any.2, any.3, any.4, any.5, 30, any.6, 39
 anyD.0, any.0, any.1, any.2, any.3, any.4, any.5, 47, any.6, 39
@@ -223,7 +219,7 @@ anyD.0, any.0, any.1, any.2, any.3, any.4, any.5, 16, any.6, 39
 anyD.0, any.0, any.1, any.2, any.3, any.4, any.5, 18, any.6, 39
 anyD.0, any.0, any.1, any.2, any.3, any.4, any.5, 20, any.6, 39
 anyD.0, any.0, any.1, any.2, any.3, any.4, any.5, 21, any.6, 39
-anyD.0, any.0, any.1, any.2, any.3, any.4, any.5, _674011333405727.0, any.6, 43
+anyD.0, any.0, any.1, any.2, any.3, any.4, any.5, _710501783665629.0, any.6, 43
 38, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 46
 39, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 47
 40, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 48
@@ -268,37 +264,37 @@ west.0, any.0, any.1, any.2, any.3, any.4, any.5, east.0, any.6, 0
 0, any.0, any.1, 0, any.2, north.0, any.3, 24, any.4, 0
 0, any.0, any.1, 0, any.2, north.0, any.3, 25, any.4, 0
 0, any.0, any.1, west.0, any.2, north.0, any.3, 0, any.4, 0
-_710501783665629.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
+_688398911390223.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
 any.0, any.1, any.2, any.3, any.4, 2, any.5, any.6, any.7, 2
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, 3, any.7, 3
 any.0, 4, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 4
 any.0, any.1, any.2, 5, any.3, any.4, any.5, any.6, any.7, 5
-_688398911390223.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
+_537895657608921.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
 any.0, any.1, any.2, any.3, any.4, 6, any.5, any.6, any.7, 6
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, 7, any.7, 7
 any.0, 8, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 8
 any.0, any.1, any.2, 9, any.3, any.4, any.5, any.6, any.7, 9
-_537895657608921.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 28
+_487705463628354.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 28
 any.0, any.1, any.2, any.3, any.4, 29, any.5, any.6, any.7, 2
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, 30, any.7, 3
 any.0, 31, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 4
 any.0, any.1, any.2, 32, any.3, any.4, any.5, any.6, any.7, 5
-_487705463628354.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 28
+_293966399727257.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 28
 any.0, any.1, any.2, any.3, any.4, 33, any.5, any.6, any.7, 6
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, 34, any.7, 7
 any.0, 35, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 8
 any.0, any.1, any.2, 36, any.3, any.4, any.5, any.6, any.7, 9
-_293966399727257.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 37
+_691662787204218.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 37
 any.0, any.1, any.2, any.3, any.4, 46, any.5, any.6, any.7, 2
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, 47, any.7, 3
 any.0, 48, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 4
 any.0, any.1, any.2, 49, any.3, any.4, any.5, any.6, any.7, 5
-_691662787204218.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 37
+_153693061857386.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 37
 any.0, any.1, any.2, any.3, any.4, 50, any.5, any.6, any.7, 6
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, 51, any.7, 7
 any.0, 52, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 8
 any.0, any.1, any.2, 53, any.3, any.4, any.5, any.6, any.7, 9
-_153693061857386.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 10
+_672977476146232.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 10
 any.0, any.1, any.2, any.3, any.4, 20, any.5, any.6, any.7, 2
 any.0, any.1, any.2, any.3, any.4, 23, any.5, any.6, any.7, 2
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, 20, any.7, 3
@@ -307,7 +303,7 @@ any.0, 21, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 4
 any.0, 22, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 4
 any.0, any.1, any.2, 22, any.3, any.4, any.5, any.6, any.7, 5
 any.0, any.1, any.2, 23, any.3, any.4, any.5, any.6, any.7, 5
-_672977476146232.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 10
+_677095602545038.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 10
 any.0, any.1, any.2, any.3, any.4, 24, any.5, any.6, any.7, 6
 any.0, any.1, any.2, any.3, any.4, 27, any.5, any.6, any.7, 6
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, 24, any.7, 7
@@ -316,7 +312,7 @@ any.0, 25, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 8
 any.0, 26, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 8
 any.0, any.1, any.2, 26, any.3, any.4, any.5, any.6, any.7, 9
 any.0, any.1, any.2, 27, any.3, any.4, any.5, any.6, any.7, 9
-_677095602545038.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 10
+_851146148095641.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 10
 any.0, any.1, any.2, any.3, any.4, 17, any.5, any.6, any.7, 3
 any.0, any.1, any.2, any.3, any.4, 19, any.5, any.6, any.7, 5
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, 16, any.7, 2
@@ -325,7 +321,7 @@ any.0, 17, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 3
 any.0, 19, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 5
 any.0, any.1, any.2, 16, any.3, any.4, any.5, any.6, any.7, 2
 any.0, any.1, any.2, 18, any.3, any.4, any.5, any.6, any.7, 4
-_851146148095641.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 10
+_724337786825825.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 10
 any.0, any.1, any.2, any.3, any.4, 12, any.5, any.6, any.7, 7
 any.0, any.1, any.2, any.3, any.4, 14, any.5, any.6, any.7, 9
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, 11, any.7, 6
@@ -399,32 +395,32 @@ XPM
 "CC c #1400BB"
 "DD c #008A00"
 "EE c #FF6000"
-"9{ c #494949"
-"~[ c #505050"
-")d c #575757"
-"on c #5D5D5D"
-"~p c #646464"
-"p{ c #6B6B6B"
-"]z c #727272"
-"ig c #787878"
-"p8 c #7F7F7F"
-"=9 c #868686"
-"~& c #8C8C8C"
-",5 c #939393"
-";n c #9A9A9A"
-"m| c #A1A1A1"
-"]5 c #A7A7A7"
-"l1 c #AEAEAE"
-">: c #B5B5B5"
-"/\ c #C2C2C2"
-"l{ c #C9C9C9"
-")0 c #D0D0D0"
-"(= c #D6D6D6"
-"r* c #DDDDDD"
-"+[ c #E4E4E4"
-"x: c #EAEAEA"
-"'v c #F1F1F1"
-"5m c #FFFFFF"
+"$u c #494949"
+"{@ c #505050"
+"c6 c #575757"
+"it c #5D5D5D"
+"': c #646464"
+"'u c #6B6B6B"
+"29 c #727272"
+"9{ c #787878"
+"~[ c #7F7F7F"
+")d c #868686"
+"on c #8C8C8C"
+"~p c #939393"
+"p{ c #9A9A9A"
+"]z c #A1A1A1"
+"ig c #A7A7A7"
+"p8 c #AEAEAE"
+"=9 c #B5B5B5"
+"~& c #C2C2C2"
+",5 c #C9C9C9"
+";n c #D0D0D0"
+"m| c #D6D6D6"
+"]5 c #DDDDDD"
+"l1 c #E4E4E4"
+">: c #EAEAEA"
+"/\ c #F1F1F1"
+"l{ c #FFFFFF"
 "..........AAAAAAAAAA.........."
 "..........AAAAAAAAAA.........."
 "......AAAA..........AAAA......"
@@ -575,6 +571,111 @@ XPM
 "..........AAAAAAAAAA.........."
 "..........AAAAAAAAAA.........."
 ".............................."
+"$u$u$u$u$u$u$u$u$u$u$u$u$u$u$u"
+"$u$u$u$u$u$u$u$u$u$u$u$u$u$u$u"
+"$u$u$u$u$u$u$u$u$u$u$u$u$u$u$u"
+"$u$u$u$u$u$u$u$u$u$u$u$u$u$u$u"
+"$u$u$u$u$u$u$u$u$u$u$u$u$u$u$u"
+"$u$u$u$u$u$u$u$u$u$u$u$u$u$u$u"
+"$u$u$u$u$u$u$u$u$u$u$u$u$u$u$u"
+"$u$u$u$u$u$u$u$u$u$u$u$u$u$u$u"
+"$u$u$u$u$u$u$u$u$u$u$u$u$u$u$u"
+"$u$u$u$u$u$u$u$u$u$u$u$u$u$u$u"
+"$u$u$u$u$u$u$u$u$u$u$u$u$u$u$u"
+"$u$u$u$u$u$u$u$u$u$u$u$u$u$u$u"
+"$u$u$u$u$u$u$u$u$u$u$u$u$u$u$u"
+"$u$u$u$u$u$u$u$u$u$u$u$u$u$u$u"
+"$u$u$u$u$u$u$u$u$u$u$u$u$u$u$u"
+"{@{@{@{@{@{@{@{@{@{@{@{@{@{@{@"
+"{@{@{@{@{@{@{@{@{@{@{@{@{@{@{@"
+"{@{@{@{@{@{@{@{@{@{@{@{@{@{@{@"
+"{@{@{@{@{@{@{@{@{@{@{@{@{@{@{@"
+"{@{@{@{@{@{@{@{@{@{@{@{@{@{@{@"
+"{@{@{@{@{@{@{@{@{@{@{@{@{@{@{@"
+"{@{@{@{@{@{@{@{@{@{@{@{@{@{@{@"
+"{@{@{@{@{@{@{@{@{@{@{@{@{@{@{@"
+"{@{@{@{@{@{@{@{@{@{@{@{@{@{@{@"
+"{@{@{@{@{@{@{@{@{@{@{@{@{@{@{@"
+"{@{@{@{@{@{@{@{@{@{@{@{@{@{@{@"
+"{@{@{@{@{@{@{@{@{@{@{@{@{@{@{@"
+"{@{@{@{@{@{@{@{@{@{@{@{@{@{@{@"
+"{@{@{@{@{@{@{@{@{@{@{@{@{@{@{@"
+"{@{@{@{@{@{@{@{@{@{@{@{@{@{@{@"
+"c6c6c6c6c6c6c6c6c6c6c6c6c6c6c6"
+"c6c6c6c6c6c6c6c6c6c6c6c6c6c6c6"
+"c6c6c6c6c6c6c6c6c6c6c6c6c6c6c6"
+"c6c6c6c6c6c6c6c6c6c6c6c6c6c6c6"
+"c6c6c6c6c6c6c6c6c6c6c6c6c6c6c6"
+"c6c6c6c6c6c6c6c6c6c6c6c6c6c6c6"
+"c6c6c6c6c6c6c6c6c6c6c6c6c6c6c6"
+"c6c6c6c6c6c6c6c6c6c6c6c6c6c6c6"
+"c6c6c6c6c6c6c6c6c6c6c6c6c6c6c6"
+"c6c6c6c6c6c6c6c6c6c6c6c6c6c6c6"
+"c6c6c6c6c6c6c6c6c6c6c6c6c6c6c6"
+"c6c6c6c6c6c6c6c6c6c6c6c6c6c6c6"
+"c6c6c6c6c6c6c6c6c6c6c6c6c6c6c6"
+"c6c6c6c6c6c6c6c6c6c6c6c6c6c6c6"
+"c6c6c6c6c6c6c6c6c6c6c6c6c6c6c6"
+"ititititititititititititititit"
+"ititititititititititititititit"
+"ititititititititititititititit"
+"ititititititititititititititit"
+"ititititititititititititititit"
+"ititititititititititititititit"
+"ititititititititititititititit"
+"ititititititititititititititit"
+"ititititititititititititititit"
+"ititititititititititititititit"
+"ititititititititititititititit"
+"ititititititititititititititit"
+"ititititititititititititititit"
+"ititititititititititititititit"
+"ititititititititititititititit"
+"':':':':':':':':':':':':':':':"
+"':':':':':':':':':':':':':':':"
+"':':':':':':':':':':':':':':':"
+"':':':':':':':':':':':':':':':"
+"':':':':':':':':':':':':':':':"
+"':':':':':':':':':':':':':':':"
+"':':':':':':':':':':':':':':':"
+"':':':':':':':':':':':':':':':"
+"':':':':':':':':':':':':':':':"
+"':':':':':':':':':':':':':':':"
+"':':':':':':':':':':':':':':':"
+"':':':':':':':':':':':':':':':"
+"':':':':':':':':':':':':':':':"
+"':':':':':':':':':':':':':':':"
+"':':':':':':':':':':':':':':':"
+"'u'u'u'u'u'u'u'u'u'u'u'u'u'u'u"
+"'u'u'u'u'u'u'u'u'u'u'u'u'u'u'u"
+"'u'u'u'u'u'u'u'u'u'u'u'u'u'u'u"
+"'u'u'u'u'u'u'u'u'u'u'u'u'u'u'u"
+"'u'u'u'u'u'u'u'u'u'u'u'u'u'u'u"
+"'u'u'u'u'u'u'u'u'u'u'u'u'u'u'u"
+"'u'u'u'u'u'u'u'u'u'u'u'u'u'u'u"
+"'u'u'u'u'u'u'u'u'u'u'u'u'u'u'u"
+"'u'u'u'u'u'u'u'u'u'u'u'u'u'u'u"
+"'u'u'u'u'u'u'u'u'u'u'u'u'u'u'u"
+"'u'u'u'u'u'u'u'u'u'u'u'u'u'u'u"
+"'u'u'u'u'u'u'u'u'u'u'u'u'u'u'u"
+"'u'u'u'u'u'u'u'u'u'u'u'u'u'u'u"
+"'u'u'u'u'u'u'u'u'u'u'u'u'u'u'u"
+"'u'u'u'u'u'u'u'u'u'u'u'u'u'u'u"
+"292929292929292929292929292929"
+"292929292929292929292929292929"
+"292929292929292929292929292929"
+"292929292929292929292929292929"
+"292929292929292929292929292929"
+"292929292929292929292929292929"
+"292929292929292929292929292929"
+"292929292929292929292929292929"
+"292929292929292929292929292929"
+"292929292929292929292929292929"
+"292929292929292929292929292929"
+"292929292929292929292929292929"
+"292929292929292929292929292929"
+"292929292929292929292929292929"
+"292929292929292929292929292929"
 "9{9{9{9{9{9{9{9{9{9{9{9{9{9{9{"
 "9{9{9{9{9{9{9{9{9{9{9{9{9{9{9{"
 "9{9{9{9{9{9{9{9{9{9{9{9{9{9{9{"
@@ -725,111 +826,6 @@ XPM
 "=9=9=9=9=9=9=9=9=9=9=9=9=9=9=9"
 "=9=9=9=9=9=9=9=9=9=9=9=9=9=9=9"
 "=9=9=9=9=9=9=9=9=9=9=9=9=9=9=9"
-"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
-"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
-"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
-"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
-"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
-"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
-"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
-"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
-"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
-"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
-"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
-"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
-"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
-"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
-"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
-",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
-",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
-",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
-",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
-",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
-",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
-",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
-",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
-",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
-",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
-",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
-",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
-",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
-",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
-",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
-";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
-";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
-";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
-";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
-";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
-";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
-";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
-";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
-";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
-";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
-";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
-";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
-";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
-";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
-";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
-"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
-"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
-"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
-"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
-"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
-"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
-"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
-"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
-"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
-"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
-"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
-"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
-"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
-"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
-"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
-"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
-"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
-"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
-"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
-"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
-"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
-"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
-"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
-"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
-"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
-"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
-"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
-"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
-"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
-"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
-"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
-"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
-"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
-"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
-"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
-"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
-"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
-"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
-"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
-"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
-"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
-"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
-"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
-"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
-"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
-">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
-">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
-">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
-">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
-">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
-">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
-">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
-">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
-">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
-">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
-">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
-">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
-">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
-">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
-">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
 ".............................."
 "......DDDDDDDDDDDDDDDD........"
 "......DDDDDDDDDDDDDDDDDD......"
@@ -845,6 +841,111 @@ XPM
 "......DDDD...................."
 ".............................."
 ".............................."
+"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
+"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
+"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
+"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
+"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
+"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
+"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
+"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
+"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
+"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
+"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
+"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
+"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
+"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
+"~&~&~&~&~&~&~&~&~&~&~&~&~&~&~&"
+",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
+",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
+",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
+",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
+",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
+",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
+",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
+",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
+",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
+",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
+",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
+",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
+",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
+",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
+",5,5,5,5,5,5,5,5,5,5,5,5,5,5,5"
+";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
+";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
+";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
+";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
+";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
+";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
+";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
+";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
+";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
+";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
+";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
+";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
+";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
+";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
+";n;n;n;n;n;n;n;n;n;n;n;n;n;n;n"
+"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
+"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
+"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
+"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
+"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
+"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
+"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
+"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
+"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
+"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
+"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
+"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
+"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
+"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
+"m|m|m|m|m|m|m|m|m|m|m|m|m|m|m|"
+"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
+"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
+"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
+"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
+"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
+"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
+"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
+"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
+"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
+"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
+"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
+"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
+"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
+"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
+"]5]5]5]5]5]5]5]5]5]5]5]5]5]5]5"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+"l1l1l1l1l1l1l1l1l1l1l1l1l1l1l1"
+">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
+">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
+">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
+">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
+">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
+">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
+">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
+">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
+">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
+">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
+">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
+">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
+">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
+">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
+">:>:>:>:>:>:>:>:>:>:>:>:>:>:>:"
 "/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\"
 "/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\"
 "/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\"
@@ -860,111 +961,6 @@ XPM
 "/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\"
 "/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\"
 "/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\"
-"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
-"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
-"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
-"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
-"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
-"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
-"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
-"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
-"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
-"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
-"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
-"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
-"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
-"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
-"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
-")0)0)0)0)0)0)0)0)0)0)0)0)0)0)0"
-")0)0)0)0)0)0)0)0)0)0)0)0)0)0)0"
-")0)0)0)0)0)0)0)0)0)0)0)0)0)0)0"
-")0)0)0)0)0)0)0)0)0)0)0)0)0)0)0"
-")0)0)0)0)0)0)0)0)0)0)0)0)0)0)0"
-")0)0)0)0)0)0)0)0)0)0)0)0)0)0)0"
-")0)0)0)0)0)0)0)0)0)0)0)0)0)0)0"
-")0)0)0)0)0)0)0)0)0)0)0)0)0)0)0"
-")0)0)0)0)0)0)0)0)0)0)0)0)0)0)0"
-")0)0)0)0)0)0)0)0)0)0)0)0)0)0)0"
-")0)0)0)0)0)0)0)0)0)0)0)0)0)0)0"
-")0)0)0)0)0)0)0)0)0)0)0)0)0)0)0"
-")0)0)0)0)0)0)0)0)0)0)0)0)0)0)0"
-")0)0)0)0)0)0)0)0)0)0)0)0)0)0)0"
-")0)0)0)0)0)0)0)0)0)0)0)0)0)0)0"
-"(=(=(=(=(=(=(=(=(=(=(=(=(=(=(="
-"(=(=(=(=(=(=(=(=(=(=(=(=(=(=(="
-"(=(=(=(=(=(=(=(=(=(=(=(=(=(=(="
-"(=(=(=(=(=(=(=(=(=(=(=(=(=(=(="
-"(=(=(=(=(=(=(=(=(=(=(=(=(=(=(="
-"(=(=(=(=(=(=(=(=(=(=(=(=(=(=(="
-"(=(=(=(=(=(=(=(=(=(=(=(=(=(=(="
-"(=(=(=(=(=(=(=(=(=(=(=(=(=(=(="
-"(=(=(=(=(=(=(=(=(=(=(=(=(=(=(="
-"(=(=(=(=(=(=(=(=(=(=(=(=(=(=(="
-"(=(=(=(=(=(=(=(=(=(=(=(=(=(=(="
-"(=(=(=(=(=(=(=(=(=(=(=(=(=(=(="
-"(=(=(=(=(=(=(=(=(=(=(=(=(=(=(="
-"(=(=(=(=(=(=(=(=(=(=(=(=(=(=(="
-"(=(=(=(=(=(=(=(=(=(=(=(=(=(=(="
-"r*r*r*r*r*r*r*r*r*r*r*r*r*r*r*"
-"r*r*r*r*r*r*r*r*r*r*r*r*r*r*r*"
-"r*r*r*r*r*r*r*r*r*r*r*r*r*r*r*"
-"r*r*r*r*r*r*r*r*r*r*r*r*r*r*r*"
-"r*r*r*r*r*r*r*r*r*r*r*r*r*r*r*"
-"r*r*r*r*r*r*r*r*r*r*r*r*r*r*r*"
-"r*r*r*r*r*r*r*r*r*r*r*r*r*r*r*"
-"r*r*r*r*r*r*r*r*r*r*r*r*r*r*r*"
-"r*r*r*r*r*r*r*r*r*r*r*r*r*r*r*"
-"r*r*r*r*r*r*r*r*r*r*r*r*r*r*r*"
-"r*r*r*r*r*r*r*r*r*r*r*r*r*r*r*"
-"r*r*r*r*r*r*r*r*r*r*r*r*r*r*r*"
-"r*r*r*r*r*r*r*r*r*r*r*r*r*r*r*"
-"r*r*r*r*r*r*r*r*r*r*r*r*r*r*r*"
-"r*r*r*r*r*r*r*r*r*r*r*r*r*r*r*"
-"+[+[+[+[+[+[+[+[+[+[+[+[+[+[+["
-"+[+[+[+[+[+[+[+[+[+[+[+[+[+[+["
-"+[+[+[+[+[+[+[+[+[+[+[+[+[+[+["
-"+[+[+[+[+[+[+[+[+[+[+[+[+[+[+["
-"+[+[+[+[+[+[+[+[+[+[+[+[+[+[+["
-"+[+[+[+[+[+[+[+[+[+[+[+[+[+[+["
-"+[+[+[+[+[+[+[+[+[+[+[+[+[+[+["
-"+[+[+[+[+[+[+[+[+[+[+[+[+[+[+["
-"+[+[+[+[+[+[+[+[+[+[+[+[+[+[+["
-"+[+[+[+[+[+[+[+[+[+[+[+[+[+[+["
-"+[+[+[+[+[+[+[+[+[+[+[+[+[+[+["
-"+[+[+[+[+[+[+[+[+[+[+[+[+[+[+["
-"+[+[+[+[+[+[+[+[+[+[+[+[+[+[+["
-"+[+[+[+[+[+[+[+[+[+[+[+[+[+[+["
-"+[+[+[+[+[+[+[+[+[+[+[+[+[+[+["
-"x:x:x:x:x:x:x:x:x:x:x:x:x:x:x:"
-"x:x:x:x:x:x:x:x:x:x:x:x:x:x:x:"
-"x:x:x:x:x:x:x:x:x:x:x:x:x:x:x:"
-"x:x:x:x:x:x:x:x:x:x:x:x:x:x:x:"
-"x:x:x:x:x:x:x:x:x:x:x:x:x:x:x:"
-"x:x:x:x:x:x:x:x:x:x:x:x:x:x:x:"
-"x:x:x:x:x:x:x:x:x:x:x:x:x:x:x:"
-"x:x:x:x:x:x:x:x:x:x:x:x:x:x:x:"
-"x:x:x:x:x:x:x:x:x:x:x:x:x:x:x:"
-"x:x:x:x:x:x:x:x:x:x:x:x:x:x:x:"
-"x:x:x:x:x:x:x:x:x:x:x:x:x:x:x:"
-"x:x:x:x:x:x:x:x:x:x:x:x:x:x:x:"
-"x:x:x:x:x:x:x:x:x:x:x:x:x:x:x:"
-"x:x:x:x:x:x:x:x:x:x:x:x:x:x:x:"
-"x:x:x:x:x:x:x:x:x:x:x:x:x:x:x:"
-"'v'v'v'v'v'v'v'v'v'v'v'v'v'v'v"
-"'v'v'v'v'v'v'v'v'v'v'v'v'v'v'v"
-"'v'v'v'v'v'v'v'v'v'v'v'v'v'v'v"
-"'v'v'v'v'v'v'v'v'v'v'v'v'v'v'v"
-"'v'v'v'v'v'v'v'v'v'v'v'v'v'v'v"
-"'v'v'v'v'v'v'v'v'v'v'v'v'v'v'v"
-"'v'v'v'v'v'v'v'v'v'v'v'v'v'v'v"
-"'v'v'v'v'v'v'v'v'v'v'v'v'v'v'v"
-"'v'v'v'v'v'v'v'v'v'v'v'v'v'v'v"
-"'v'v'v'v'v'v'v'v'v'v'v'v'v'v'v"
-"'v'v'v'v'v'v'v'v'v'v'v'v'v'v'v"
-"'v'v'v'v'v'v'v'v'v'v'v'v'v'v'v"
-"'v'v'v'v'v'v'v'v'v'v'v'v'v'v'v"
-"'v'v'v'v'v'v'v'v'v'v'v'v'v'v'v"
-"'v'v'v'v'v'v'v'v'v'v'v'v'v'v'v"
 ".............................."
 "....................EEEE......"
 "....................EEEE......"
@@ -980,18 +976,18 @@ XPM
 "..........EEEEEEEEEEEEEE......"
 ".............................."
 ".............................."
-"5m5m5m5m5m5m5m5m5m5m5m5m5m5m5m"
-"5m5m5m5m5m5m5m5m5m5m5m5m5m5m5m"
-"5m5m5m5m5m5m5m5m5m5m5m5m5m5m5m"
-"5m5m5m5m5m5m5m5m5m5m5m5m5m5m5m"
-"5m5m5m5m5m5m5m5m5m5m5m5m5m5m5m"
-"5m5m5m5m5m5m5m5m5m5m5m5m5m5m5m"
-"5m5m5m5m5m5m5m5m5m5m5m5m5m5m5m"
-"5m5m5m5m5m5m5m5m5m5m5m5m5m5m5m"
-"5m5m5m5m5m5m5m5m5m5m5m5m5m5m5m"
-"5m5m5m5m5m5m5m5m5m5m5m5m5m5m5m"
-"5m5m5m5m5m5m5m5m5m5m5m5m5m5m5m"
-"5m5m5m5m5m5m5m5m5m5m5m5m5m5m5m"
-"5m5m5m5m5m5m5m5m5m5m5m5m5m5m5m"
-"5m5m5m5m5m5m5m5m5m5m5m5m5m5m5m"
-"5m5m5m5m5m5m5m5m5m5m5m5m5m5m5m"
+"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
+"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
+"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
+"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
+"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
+"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
+"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
+"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
+"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
+"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
+"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
+"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
+"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
+"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
+"l{l{l{l{l{l{l{l{l{l{l{l{l{l{l{"
