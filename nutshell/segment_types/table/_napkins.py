@@ -187,13 +187,12 @@ class Permute(Napkin):
     
     @LazyProperty
     def expanded(self):
-        print('?')
         t = tuple(sorted(self))
         if t in self.RECENTS:
             self._hash = self.HASHES[t]
             return self.RECENTS[t]
         self.RECENTS[t] = ret = list(permutations(t))
-        self.HASHES[t] = self._hash = hash(tuple(sorted(ret)))
+        self.HASHES[t] = self._hash = hash(tuple(ret))
         return ret
     
     @classmethod

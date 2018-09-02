@@ -205,19 +205,24 @@ class Transition:
                 if '.' in i:
                     varname, tag = i.split('.')
                     seen.setdefault(varname, set()).add(int(tag))
+                    variables.inv[varname].rep = max(variables.inv[varname].rep, int(tag))
                 else:
                     seen[i] = set()
-        tag = count()
+        tags = count()
         for i in tr:
             if isinstance(i, str) and i.isidentifier():
-                ret.append(f'{i}.{next(j for j in tag if j not in seen[i])}')
+                tag = next(j for j in tags if j not in seen[i])
+                ret.append(f'{i}.{tag}')
+                varname = variables[variables.inv[i]]  # h m m m m
+                varname.rep = max(varname.rep, tag)
             else:
                 ret.append(i)
         return ret
     
     def in_symmetry(self, new_sym):
         variables = self.tbl.vars.inv
-        return [self.fix_final(i, variables) for i in {new_sym(j) for j in self.symmetries(self.fix_partial()).expand()}]
+        initial, *napkin, resultant = self.fix_partial()
+        return [self.fix_final([initial, *i, resultant], variables) for i in {new_sym(j) for j in self.symmetries(napkin).expand()}]
 
 
 class Expandable:
