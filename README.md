@@ -26,11 +26,11 @@ Supported flags, though there's more info in `--help` (note that `-v` and `-q` c
 after or before the keyword `transpile`/`t` with no difference):
   - `-v`: Verbose. Can be repeated up to four times, causing more info to be displayed each time.
   - `-q`: Quiet. Opposite of the above, but only has one level.
-  - `-s`: Source. Writes each original nutshell line, as a comment, above the line(s) it compiles
+  - `-s`: [CURRENTLY UNAVAILABLE] Source. Writes each original nutshell line, as a comment, above the line(s) it compiles
           to in the final ruletable output.
   - `-t [HEADER]`: Change the "COMPILED FROM NUTSHELL" header that is added by default to transpiled
                    rules. (If `-t` is given no argument the header will be removed)
-  - `-f TRANSITION`: Find a certain transition defined within a table section; requires, of course, that
+  - `-f TRANSITION`: [CURRENTLY UNAVAILABLE] Find a certain transition defined within a table section; requires, of course, that
                      the rule have a `@TABLE` segment to search within. If a certain cell isn't behaving
                      the way it's supposed to, you can `-f` the transition it's undergoing, and nutshell
                      will find the offending transition for you (rather than you having to guess at what
@@ -40,71 +40,260 @@ after or before the keyword `transpile`/`t` with no difference):
                      on the next tick. Example [here](https://user-images.githubusercontent.com/32081933/39951382-2b37fca0-553e-11e8-87b5-69685dfe4881.png)!
 
 ## What's new
-- All variables always unbound, because needing to define eight "any state" vars is ridiculous.
-- Support for `{}` literals, usable directly in transitions, as 'on-the-spot' variables. (Parentheses are also allowed. I personally prefer them to braces.)
-- Support for cellstate *ranges* in variables, via double..dots as in `(0..8)` -- interspersible with state-by-state specification,
-  so you can do `(0, 1, 4..6, 9)` to mean `(0, 1, 4, 5, 6, 9)`.  
-  Ranges also accept a step, so you can also write `(0, 10~1..50, 102)` to mean `(0, 1, 11, 21, 31, 41, 102)`.
-- A variable is 'bound to' by referring to the *compass direction* it appeared at in the transition, wrapped with [brackets]:
-```py
-# Golly (barC repeats)
-foo,barA,barB,barC,barD,barE,barF,barG,barH,barC
+### Directives
+The `n_states` directive's name has been changed to `states`, and all directives ignore whitespace in their values so one may
+write, say, `symmetries: rotate 4` or `neighborhood: von Neumann`.
+The `symmetries` directive can take a Python import path for *custom symmetry types*; this is elaborated upon later on.
+```rb
 # Nutshell
-foo, bar, bar, bar, bar, bar, bar, bar, bar, [NE]
-
-# Golly (barA repeats)
-foo,barA,barB,barC,barA,barD,barE,barF,barG,baz
-# Nutshell
-foo, bar, bar, bar, [N], bar, bar, bar, bar, baz
-```  
-The input state is referred to as [0]. The eight compass directions also are not allowed to be used as variable names.
-- Repetition can be cut down on even more by specifying directions directly before each state, which then allows
-  *ranges* of directions. This means that the transitions above can be further rewritten to:
-```py
-# Golly (barC repeats)
-foo,barA,barB,barC,barD,barE,barF,barG,barH,barC
-# Nutshell
-foo, N..NW bar, [E]
-
-# Golly (barA repeats)
-foo,barA,barB,barC,barA,barD,barE,barF,barG,baz
-# Nutshell
-foo, N..E bar, [N], S..NW bar, baz # could also be "..., SE [N], ..."
+@TABLE
+states: 5
+symmetries: rotate4 reflect
 ```
-- With this new type of binding, we can additionally introduce "mapping" one variable to another.
-  For instance, `foo, N..NW (0, 1, 2), [E: (1, 3, 4)]` (meaning *map the eastern cell, being any of `(0, 1, 2)`,
-  to the states `(1, 3, 4)`: if it's 0 return 1, if 1 return 3, if 2 return 4*) can replace what would otherwise
-  require a separate transition for each of `0` -> `1`, `1` -> `3`, and `2` -> `4`.  
-  Mapping of course works with named variables as well.
+```rb
+# Golly
+@TABLE
+n_states: 5
+symmetries: rotate4reflect
+```
+In addition, the `symmetries` directive can be used multiple times within a file, allowing the writer to switch symmetries
+partway through a rule. During transpilation, each set of transitions under different symmetries will be expanded into the
+"lowest" (least-expressive) Golly symmetry type specified overall.
+
+### Transitions
+*The following transitions assume vonNeumann neighborhood for brevity.*
+
+Semicolons are allowed alongside commas to separate different cellsattes, and as a visual aid their use as a "final" separator
+(that is, separating a transition from its resultant cellstate) is strongly encouraged.
+```rb
+# Nutshell
+0, 1, 2, 3, 4; 5
+```
+```rb
+# Golly
+0, 1, 2, 3, 4, 5
+```
+
+Individual cellstates of a transition can be prefixed with a compass direction for clarity, and a *range* of compass directions
+can be indicated using double..dots; this can displace repetition of a certain cellstate.
+```rb
+# Nutshell
+0, N 1, E..S 3, W 1; 4
+```
+```rb
+# Golly
+0, 1, 3, 3, 1, 4
+```
+Transitions by default use the Golly-canonical ordering of `C, N, ..., C'` (center cellstate, northern cellstate, ..., new center),
+or `C, W, E, C'` in the oneDimensional neighborhood, but are allowed to start on a different compass direction if explicitly specified.
+```rb
+# Nutshell
+0, E..S 3, W..N 1; 4
+```
+```rb
+# Golly
+0, 1, 3, 3, 1, 4
+```
+
+### Variables
+All variable names are unbound, always, because needing to define eight separate "any state" vars is ridiculous.
+```rb
+# Nutshell
+variable = (1, 2, 3, 4)
+
+0, variable, variable, 0, 1, 2, 0, 2, 0; 1
+```
+```rb
+# Golly
+var variable.0 = {1, 2, 3, 4}
+var variable.1 = variable.0
+
+0, variable.0, variable.1, 0, 1, 2, 0, 2, 0, 1
+```
+Also allowed is the use of `{}` literals directly in transitions as 'on-the-spot' variables; no need to define them prior.
+(Parentheses are also acceptable in place of curly brackets, as shown above and later... I personally prefer them.)
+```rb
+# Nutshell
+(0, 1, 2), 3, (4, 5), 6, 7, 8, 9, 0, 1; 10
+```
+```rb
+# Golly
+var _random_name_A.0 = {0, 1, 2}
+var _random_name_B.0 = {4, 5}
+
+_random_name_A.0, 3, _random_name_B.1, 6, 7, 8, 9, 0, 1, 10
+```
+The var names "live" and "any" are predefined in Nutshell, assigned respectively to a rule's *live cellstates* and *all* of its cellstates.
+```rb
+# Nutshell
+@TABLE
+states: 5
+
+a = live
+b = any
+```
+```rb
+# Golly
+@TABLE
+n_states: 5
+
+var a.0 = {1, 2, 3, 4}
+var b.0 = {0, 1, 2, 3, 4}
+```
+
+As in Golly, variables are not nested; placing a variable inside another simply unpacks it thereinto.  
+Also, order of cellstates can matter in variables! We'll see why + how in a few sections.
+
+### Operations
+Variables can contain or be represented by "operations", with the binary `*` and `-` operators & the unary `-` and `--` operators.
+
+These operations don't have to be assigned to variable names beforehand, by the way. All of what's described below is perfectly
+valid if used directly in a transition, just like the 'on-the-spot' var literal mentioned above.
+
+#### n * m ("Multiplication")
+Not commutative.
+```rb
+# Nutshell
+a = (1, 2) * 2  # variable 'times' integer (n * m here repeats the integer to match the variable's length)
+b = 2 * (1, 2)  # integer 'times' variable (repeats the former to match the latter's length)
+c = 0 * 3       # integer 'times' integer (repeats the first integer m times)
+d = (b*2, 1*(1,2), 0*3)  # operations, like all expressions, can be placed inside a var literal
+```
+```rb
+# Golly
+var a.0 = {1, 2, 1, 2}
+var b.0 = {2, 2}
+var c.0 = {0, 0, 0}
+var d.0 = {2, 2, 2, 2, 1, 1, 0, 0, 0}
+```
+
+#### n - m ("Subtraction")
+Acts as a difference operation does between two sets.
+```rb
+# Nutshell
+a = (1, 2, 3, 1) - 1    # variable 'minus' integer (removes the integer from the variable)
+b = (1, 2, 3) - (2, 3)  # variable 'minus' variable (removes common elements from the former)
+c = (a-2, (3, 4)-3)     # again, operations can be placed inside var literals
+```
+```rb
+# Golly
+var a.0 = {2, 3}
+var b.0 = {1}
+var c.0 = {3, 4}
+```
+
+#### -n, --n ("Negation")
+These are shorthand for, respectively, `live-n` and `any-n`.
+```rb
+# Nutshell
+@TABLE
+states: 3
+
+a = -2
+b = --2
+
+c = live-2
+d = any-2
+```
+```rb
+# Golly
+n_states: 4
+
+var a.0 = {1, 3}
+var b.0 = {0, 1, 3}
+
+var c.0 = {1, 3}
+var d.0 = {0, 1, 3}
+```
+These can be chained indefinitely; `------------3` is a syntactically-valid expression, as is `some_varname----------5`
+(subtraction then negation).
+Not sure that would be too useful in practice, but... you never know.
+
+#### Ranges
+Though not exactly an operation, a range of cellstates can be expressed as two numbers (lower and upper bound) separated by double..dots.
+```rb
+# Nutshell
+a = (3..6)         # lower..upper
+b = (0, 2..5, 10)  # ranges and normal states can be interspersed as normal
+c = (1, 2+4..10)   # step+lower..upper
+```
+```rb
+# Golly
+var a.0 = {3, 4, 5, 6}
+var b.0 = {0, 2, 3, 4, 5, 10}
+var c.0 = {1, 4, 6, 8, 10}
+```
+Ranges differ from the expressions described above in that they cannot be used "bare" -- you always have to surround them with
+parentheses or curly brackets as shown in `a = (3..6)`.
+
+### References
+In a Golly table, variables are what we might call "name-bound": a variable name used once in a transition can refer to any of the
+states it comprises, but if the same name is used again it can only refer to the state it first matched, like a group
+backreference in a regex. In other words, the sequence `a,a`, with `var a={1,2}`, can match `1,1` and `2,2`
+but **not** `1,2` or `2,1`, because the name `a` is *bound* to the first cellstate it matches.
+
+This works as intended, but it comes with a side-effect: if the writer *should* wish for the above sequence to match `1,2` or `2,1`
+without any of the binding behavior, then they must define two separate variables, `var a={1,2}` and `var b=a`, writing it as
+`a,b`.
+
+This doesn't seem bad at all on a small scale. It's convenient to be able to do it both ways, after all. However, in nearly any
+large project, this forces each variable definition to be duplicated up to nine times (depending on the neighborhood, of
+course) which gets messy and tedious to keep track of, making it an easy source of headaches and bugs and often both.
+
+Nutshell's key innovation (and the only thing, in fact, that Nutshell mandates be done differently than in Golly) is in noting
+that the *name* of a variable doesn't need to hold any particular meaning, only its value within a given transition.
+Therefore, rather than binding by a variable's name, we can simply use... some other way of referring to *only* the value it held
+at a given point in said transition.
+
+
+### Bindings
+This is handled in a straightforward manner by using compass directions as "indices" of a transition.
+To bind to a previous variable, just wrap in [brackets] the name of the compass direction it appeared at
+(and refer to the input cellstate as [0]):
+```rb
+# Nutshell
+any, any, any, [0], [NE], 0, 1, 3, 2; [N]
+any, N..E [0], SW..W any, 0; [W]
+(1, 2), N..NW 0; [0]
+```
+```rb
+var _random_name_A.0 = {1, 2}
+
+# Golly
+any.0, any.1, any.2, any.0, any.2, 0, 1, 3, 2, any.1
+any.0, any.0, any.0, any.0, any.1, any.2, any.3, any.4, 0, any.4
+_random_name_A.0, 0, 0, 0, 0, 0, 0, 0, 0, _random_name_A.0
+```
+The eight compass directions, by the way, are not allowed to be used as variable names.
+
+### Mappings
+Now that we've introduced binding by compass-direction index rather than by name, we can extend the concept into a second
+type of reference:
+*mapping* one variable to another. For example, "mapping" the variable (0, 1, 2) to the variable (2, 3, 4) says if the former is
+0 to return 2, if 1 then to return 3, and if 2 then to return 4; this single mapping can hence replace what otherwise requires
+a separate transition for each of 0->1, 1->2, and 3->4. The syntax is `[compass direction: variable expression]`:
+```rb
+# Nutshell
+
+```
+```rb
+# Golly
+
+```
+- `...` keyword
+- - - - - - -
+- auxiliary transitions
+    - `_` keyword
+    - hoist vs normal
+- permute-symmetry shorthand
+- custom symmetry types
+- non-table-related changes
+
+- - - - - - -
+
 - If a variable literal is too small to map to, an error will be raised that can be rectified by either (a) filling it out with more cellstates,
   or (b) using the `...` operator to say *"fill the rest out with whatever value preceded the `...`"*.
   However, If the "map-to" is *larger* than its "map-from", extraneous values will simply be ignored.
-- Transitions can be started on a direction other than north if explicitly specified. Under vonNeumann, `0, W..E 1, S 0, 2` becomes `0, W 1, N 1, E 1, S 0, 2`
-  which is equivalent to `0, 1, 1, 0, 1, 2` or `0, N..E 1, 0, 1, 2`. A single direction (`W`) rather than a range (`W..E`) can also be specified to the same effect.
-  Bindings and mappings to "forward" indices are automatically resolved when reordering these non-north-initial transitions.
-- A Golly-ruletable transition such as von-Neumann `0,a,a,a,a,1` might be inefficiently compacted to `0, a, [N], [N], [N], 1`, or worse
-  `0, a, E..W [N], 1`. In such cases, where successive variables need all to be bound to the first, the shorthand `direction..direction [var]` can be used.
-  Here it would look like `0, N..W [a], 1`, expanding during transpilation to `0, a, [1], [1], [1], 1`.
-- Support for "subtraction" of variables (similar to a "difference" operation on two sets) via the `-` operator, and as shorthand for
-  (respectively) "subtract from live cellstates" and "subtract from all cellstates" the unary `-` and `--` operators:
-```py
-0, foo-bar, bar-2, bar-(2, 3), -1, --1, -bar, --(3, 4), (foo, bar), baz
-
-# foo-bar says "All states in foo that are not in bar"
-# foo-2 says "All states in foo that are not 2"
-# bar-(2, 3) says "All states in bar that are not in (2, 3)"
-# -1 says "All *live* states that are not 1" (expands to {2, 3, 4} assuming n_states==5)
-# --1 says "*All* states (including 0) that are not 1" (expands to {0, 2, 3, 4} assuming the same)
-# -bar and --(3, 4) say the same but with multiple states enclosed in a variable
-``` 
-"Addition" of two variables can be accomplished by placing them in a variable literal, as in the `(foo, bar)` state above.
-- The `*` operator within a variable literal acts as something like multiplication. It repeats or truncates the left-hand operand until its
-  length matches the right-hand operand's -- if the latter is a variable -- or until the former's length equals the right-hand operand itself
-  if the latter is a number.  
-  - `0*5` expands to `(0, 0, 0, 0, 0)`
-  - `any*5`, assuming `any = (0, 1, 2)`, expands to `(0, 1, 2, 0, 1)` -- note the new length, 5
-  - `5*any`, assuming the same, expands to `(5, 5, 5)`
-  - `live*any`, assuming as well that `live = (1, 2)`, expands to `(1, 2, 1)`
 - Live cells can be treated as moving objects: a cardinal direction to travel in and resultant cell state are specifiable post transition.
 ```py
 foo, N..NW bar, baz -> S:2  E[(2, 3)]  SE[wutz]  N[NE: (2, 3)]  NE[E]

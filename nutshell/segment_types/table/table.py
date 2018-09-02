@@ -109,3 +109,6 @@ class Table:
 
     def add_sym_type(self, name):
         self.sym_types.add(symutils.get_sym_type(name))
+    
+    def match(self, tr):
+        raise UnsupportedFeature(None, '-f is currently not supported. Apologies.')
