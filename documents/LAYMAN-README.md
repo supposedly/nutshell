@@ -119,9 +119,9 @@ symmetries: permute
 neighborhood: Moore
 
 # Survival on 2 neighbors
-1, 1 * 2, 0; 1
+1, 1 ~ 2, 0; 1
 # Birth, survival on 3 neighbors
-any, 1 * 3, 0; 1
+any, 1 ~ 3, 0; 1
 # Death in all other cases
 any, any, 0
 ```
@@ -137,13 +137,13 @@ neighborhood: Moore
 
 # Birth, survival on 3 neighbors
 # and survival on 2
-any, 1 * 2, [0: (0, 1)], 0 * 5; 1
+any, 1 ~ 2, [0: (0, 1)], 0 ~ 5; 1
 # Death in all other cases
 any, any, 0
 ```
 
 A bit easier on the eyes! Note in particular the compression achieved by allowing a single variable name to be used multiple times in a transition (with a different
-syntax for "binding" to a previous value), and other things like the `*` shorthand for permutate-symmetry transitions and a "mapping" syntax to complement the new way
+syntax for "binding" to a previous value), and other things like the `~` shorthand for permutate-symmetry transitions and a "mapping" syntax to complement the new way
 of binding.  
 That may sound a bit abstruse, but this repo's main README.md does again contain an in-depth explanation of the additions and their uses -- which will hopefully be
 more-understandable or at least -accessible after reading this intro.
