@@ -1,6 +1,9 @@
 import re
 from collections.abc import MutableSequence
 
+from nutshell.common.errors import ValueErr
+
+
 class NutshellSegment(MutableSequence):
     _rCONST = re.compile(r'(\s*)(\d+):(.*?)\s*\{\s*(.+)\s*}(.*)')
     
@@ -37,6 +40,8 @@ class NutshellSegment(MutableSequence):
         for lno, match in enumerate(map(self._rCONST.match, self)):
             if match is not None:
                 _0, state, _1, name, _2 = match.groups()
+                if name in self.constants:
+                    raise ValueErr(lno, f'Duplicate constant {name!r}')
                 if name in ignore:
                     self[lno] = f'{_0}{state}:{_1}{_2}  (BAD CONSTANT NAME {name!r})'
                 else:

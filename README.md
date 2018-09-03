@@ -231,7 +231,7 @@ var b.0 = {0, 1, 3}
 var c.0 = {1, 3}
 var d.0 = {0, 1, 3}
 ```
-These can be chained indefinitely as well; `------------3` is a syntactically-valid expression, as is `some_varname----------5`
+They can be chained indefinitely as well; `------------3` is a syntactically-valid expression, as is `some_varname----------5`
 (subtraction then negation).
 This is probably not too useful in practice, but... you never know.
 
@@ -272,7 +272,7 @@ that the *name* of a variable doesn't need to hold any particular meaning, only 
 Thus, rather than binding to a variable's name, we can simply use... some other way of referring to nothing except the value it
 holds at a given point.
 
-### Bindings
+#### Bindings
 This is handled in a straightforward manner by using compass directions as "indices" of a transition.
 To bind to a previous variable, just refer to the compass direction it appeared at by wrapping it in [brackets]
 (and by referring to the origin cellstate as [0] since, being at the center, it has no nameable compass direction):
@@ -292,7 +292,7 @@ _random_name.0, 0, 0, 0, 0, 0, 0, 0, 0, _random_name.0
 ```
 The eight compass directions, by the way, are not allowed to be used as variable names.
 
-### Mappings
+#### Mappings
 Now that we've introduced binding by compass-direction index rather than by name, we can extend the concept into a second
 type of reference: *mapping* one variable to another.
 For example, "mapping" the variable (0, 1, 2) to the variable (2, 3, 4) says if the former is 0 to return 2, if 1 then to
@@ -323,7 +323,7 @@ var a.0 = {0, 1}
 ```
 
 A variable literal used in a mapping can end with an ellipsis, `...`, which indicates that any remaining cellstates are to be
-mapped to the value it follows.
+mapped to the value it follows:
 ```rb
 # Nutshell
 (1, 2, 3, 4, 5), [0: (3, 5, ...)], NE..NW any; 1
@@ -335,6 +335,9 @@ var _random_name.0 = {2, 3, 4, 5}
 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0
 _random_name.0, 5, 0, 0, 0, 0, 0, 0, 0, 1
 ```
+If a variable is too small to map to, an error will be raised that can be rectified by either (a) filling it out with more
+cellstates, or (b) using the `...` as above.
+However, if the "map-to" is *larger* than its "map-from", extraneous values will simply be ignored.
 
 References are in essence single cellstates, so **they can be used anywhere a cellstate would** -- not just
 as their own whole transition state. This means references can be used as operands of the `*`, `-`, & `--` operators and as
@@ -356,7 +359,7 @@ var _random_name_D.0 = {4, 5}
 var _random_name_D.1 = _random_name_C.0
 
 1, _random_name_A.0, _random_name_C.0, _random_name_C.1, _random_name_A.0; 0
-2, _random_name_B.0, _random_name_B.0, _random_name_B.1, _random_name_B.0; 0
+2, _random_name_B.0, _random_name_D.0, _random_name_D.1, _random_name_B.0; 0
 ```
 *(Note that Nutshell is for some reason unable to optimize its output here, so it renders the above with 20 transitions
 and only the variables for (3, 5) & (4, 5); this result is, however, equivalent to the two transitions shown. It's all
@@ -406,7 +409,7 @@ Just to run through what's happening, let's take a graphical look at the main ce
 7 0 3
 6 5 4
 ```
-These are the Moore neighborhoods of a cell A and the cell to its north B, where @ represents a shared cell:
+And these are the Moore neighborhoods of a cell A and the cell to its north B, where @ represents a shared cell:
 ```hs
 b b b
 @ B @
@@ -453,7 +456,7 @@ var _random_name.0 = {1, 2, 3}
 4, 1, _random_name.0, 0, any.0, any.1, any.2, 0, 0, _random_name.0
 ```
 The transition napkin is copied in the exact same manner as described before, but the resultant cellstate (`_random_name.0`)
-is a binding rather than a single cellstate. An error will be raised if the cells in each compass direction specified do not
+is a binding rather than a single state. An error will be raised if the cells in each compass direction specified do not
 share any neighbors.
 
 An example: `(1, 2, 3), N..NW any; 0 -> S[0]  E[E]` says that cells of state (1, 2, 3) should be sent south (the `[0]`
@@ -461,7 +464,8 @@ in `S[0]` refers to the input state) and that, when this happens, the cell to th
 to override a later transition).
 
 The third type of auxiliary, given the relationship established above between bindings and mappings, is a natural extension
-to that binding-like form. It uses the syntax `compass direction[compass direction: variable or other expression]`:
+to the previous binding-like form into what's essentially a mapping. It uses the syntax
+`compass direction[compass direction: variable or other expression]`:
 ```rb
 1, 0, 0, E (1, 2, 3), 0, S 4, 0, 0, 0; 2 -> S[E: (5, 6, 7)]
 ```
@@ -524,15 +528,6 @@ var _random_name.0 = {1, 2}
 _random_name.0, any.0, any.1, 2, 3, 0, 7, 8, any.2, 0  # N:0
 ```
 
-- custom symmetry types
-- non-table-related changes
-
-- - - - - - -
-
-- If a variable literal is too small to map to, an error will be raised that can be rectified by either (a) filling it out with more cellstates,
-  or (b) using the `...` operator to say *"fill the rest out with whatever value preceded the `...`"*.
-  However, If the "map-to" is *larger* than its "map-from", extraneous values will simply be ignored.
-
 ### Custom symmetry types
 The implementation of the above-mentioned symmetry-switching allows, conveniently, for non-Golly-supported symmetries to be defined and then simply expanded by Nutshell into
 one of Golly's symmetry types. Provided by Nutshell is a small "standard library" of sorts that comes with the following:
@@ -542,7 +537,7 @@ one of Golly's symmetry types. Provided by Nutshell is a small "standard library
   diagonal neighbors; under vonNeumann, that cellstates are permuted between opposing pairs of neighbors; and, though *possible* to apply
   under hexagonal symmetry (where permutation would occur between (N, SE, W) and (E, S, NW)), it would be meaningless so only the
   former two are supported.  
-  This symmetry type supports the tilde-based shorthand, but it only spreads cellstates out within their permute space (i.e.
+  This symmetry type supports the tilde-based shorthand, but it only spreads cellstates out within their permute space (e.g.
   `0, 1, 2; 0` results in the Moore transition `0, 1, 2, 1, 2, 1, 2, 1, 2; 0` because the 1 and 2 are distributed into alternating slots).
 - `symmetries: nutshell.Rotate2`: Identical to Golly's hexagonal `rotate2`, but allows Moore and vonNeumann as well.
 - `symmetries: nutshell.ReflectVertical`: Vertical reflection.
@@ -571,17 +566,18 @@ As shown by the ellipses, there are three things you need to define within your 
 - `fallback`: Either the name, as a string, of a Golly symmetry which is a superset of (or perhaps equivalent to) yours and thus can be expanded to during transpilation... or,
   if your symmetry type supports more than one neighborhood for which different appropriate Golly symmetries are available, a dictionary of {`neighborhood length`: `Golly symmetry`}.
   to the same effect. (`Any`, aka Python `None`, can be used in this dict as well.)  
-  For example, the class for `nutshell.AlternatingPermute` above has `fallback = 'rotate4reflect'`, because that is the "highest" (most expressive) Golly symmetry in which multiple
-  transitions are able to express a single AlternatingPermute transition.  
-  The class for `nutshell.Rotate2` above has `fallback = {Any: 'none', hexagonal: 'rotate2'}`, because Golly already has rotate2 support for hexagonal neighborhoods, so we don't want
-  to unnecessarily expand `nutshell.Rotate2` to None if used there -- but for other neighborhoods, the only way to express Rotate2 in Golly is via `none` symmetry.
+  For example, the class for `nutshell.AlternatingPermute` above has `fallback = 'rotate4reflect'`, because that is the "highest"
+  (most-expressive) Golly symmetry in which multiple transitions are able to express a single AlternatingPermute transition.  
+  The class for `nutshell.Rotate2` above has `fallback = {Any: 'none', hexagonal: 'rotate2'}`, because Golly already has rotate2 support
+  for hexagonal neighborhoods, so we don't want to unnecessarily expand `nutshell.Rotate2` to None if used there -- but for other
+  neighborhoods, the only way to express Rotate2 in Golly is via `none` symmetry.
   When in doubt, use `fallback = 'none'`.
 - `expanded`: To explain this, it should first be mentioned that `Napkin` is a subclass of Python's built-in `tuple` type; the reason it's
   called Napkin and not something like Symmetries is that a single Napkin instance *represents* the neighbor states of a given transition.
   That is, when expanding symmetries, an instance of the pertinent Napkin class is constructed from the neighbor states of the current
   transition to determine how to treat its symmetries.  
   Instances of napkins under your custom symmetries are constructed as `MySymmetries((0, 1, 2, 3, 4, 5, 6,7))`
-  (assuming Moore neighborhood), i.e. with the sequence of neighbor states it has to represent. The job of `expanded`, given that, is to
+  (assuming Moore neighborhood), i.e. with the sequence of neighbor states it has to represent. The job of `expanded`, then, is to
   provide a representation of what a single napkin in your symmetry type looks like *when expanded into `symmetries: none`*,
   and (importantly!!) returning this representation in the *exact same order* for any equivalent napkin. For example,
   `ReflectHorizontal((0, 1, 2, 3, 4, 5, 6, 7)).expanded` and `ReflectHorizontal((0, 7, 6, 5, 4, 3, 2, 1)).expanded` **both**
@@ -601,16 +597,17 @@ As shown by the ellipses, there are three things you need to define within your 
 
 ## Non-table-related changes
 - The preferred file extension is `.ruel`, both a holdover from when this project was named `rueltabel` and a simple-but-recognizable variant
-  of "rule" to distinguish nutshell files from standard `.rule` files. This obviously isn't enforced anywhere, however, and might also be subject to
-  change later.
-- Comments in every segment (barring `@NUTSHELL`, where everything after the first word is a comment) start with `#` and stretch to the end of a line.
+  of "rule" to distinguish nutshell files from standard `.rule` files. This obviously isn't enforced anywhere, however, and may
+  also be subject to change.
+- Comments in every segment (barring `@NUTSHELL`, where everything after the first word is a comment) start with `#` and stretch to the end
+  of a line.
 - The `@COLORS` segment in nutshells allows multiple states with the same color to be defined
   on the same line as each other, and for a color to be written as either a triplet of base-10 `R G B` values, as in Golly, or a
   hexadecimal color code. As a result of its allowing multiple colors, the "key/value" order, if you will, has been switched: the color now
   goes first on a line, followed by all the states it's assigned to. A range can be used here identically to that found in variable
   literals.  
-  For instance: `FFF: 1 10` says to assign the color `#FFFFFF` to states 1 and
-  10, and can also be written as `FFFFFF: 1 10` or `255 255 255: 1 10`.
+  For instance: `FFF: 2 4 6 8 10` says to assign the color `#FFFFFF` to states 2, 4, 6, 8, and 10, and can also be written
+  as `FFF: 2+2..10` or `FFFFFF: 2+2..10` or `255 255 255: 2+2..10`.
 - The `@ICONS` segment is based around RLEs instead of Gollyesque XPM data. See [this post](http://conwaylife.com/forums/viewtopic.php?f=7&t=3361&p=59944#p59944)
   for an explanation + example. Ranges are also supported in icon state specifiers.
 - The `@NUTSHELL` segment allows *constants*, which carry over to and are usable in the `@TABLE`, `@COLORS`, and `@ICONS` segments, to be
