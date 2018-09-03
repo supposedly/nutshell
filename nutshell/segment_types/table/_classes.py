@@ -57,7 +57,7 @@ class SpecialVar(tuple):
 
 
 class TransitionGroup:
-    def __init__(self, tbl, initial, napkin, resultant, *, context=None):
+    def __init__(self, tbl, initial, napkin, resultant, *, context):
         self.ctx = context
         self.tbl = tbl
         self.symmetries = tbl.symmetries
@@ -212,7 +212,7 @@ class Transition:
                 seen[varname] = 0
                 variables.inv[varname] = i.untether()
                 ret.append(f'{varname}.0')
-        return ret
+        return FinalTransition(ret, context=self.ctx)
     
     def fix_partial(self):
         ret = []
@@ -242,8 +242,7 @@ class Transition:
                 ret.append(f'{varname}')  # XXX: Faster overall to append varname as a string like this or to preserve variable tuple and assign name in second 'fix' step?
         return ret
     
-    @staticmethod
-    def fix_final(tr, variables):
+    def fix_final(self, tr, variables):
         ret = []
         seen = {}
         for i in tr:
@@ -264,12 +263,18 @@ class Transition:
                 varname.rep = max(varname.rep, tag)
             else:
                 ret.append(i)
-        return ret
+        return FinalTransition(ret, context=self.ctx)
     
     def in_symmetry(self, new_sym):
         variables = self.tbl.vars.inv
         initial, *napkin, resultant = self.fix_partial()
         return [self.fix_final([initial, *i, resultant], variables) for i in {new_sym(j) for j in self.symmetries(napkin).expand()}]
+
+
+class FinalTransition(list):
+    def __init__(self, it, *, context):
+        super().__init__(it)
+        self.ctx = context
 
 
 class Expandable:
@@ -292,9 +297,9 @@ class Binding(Reference):
         # So in the case that the binding cannot stand on its own, its
         # surrounding environment must raise Reshape on its behalf.
         r = tr[self.cdir]
-        if isinstance(r, Variable):
-            return ResolvedBinding(self.cdir, r)
-        return r
+        while isinstance(r, Expandable) and not isinstance(r, Variable):
+            r = r.within(tr)
+        return ResolvedBinding(self.cdir, r) if isinstance(r, Variable) else r
     
     def __repr__(self):
         return f'Binding[{self.cdir}]'
@@ -316,8 +321,8 @@ class Mapping(Reference):
         if isinstance(val, VarValue):
             map_to = self.map_to.within(tr)
             # XXX: necessary?
-            # if val.index + 1 >= len(map_to) and map_to[-1].value is Ellipsis:
-            #    return map_to[-2]
+            if val.index + 1 >= len(map_to) and map_to[-1].value is Ellipsis:
+                return map_to[-2]
             try:
                 return map_to[val.index]
             except IndexError:
@@ -340,10 +345,10 @@ class Mapping(Reference):
             raise Reshape(self.cdir)
         if isinstance(val, Operation):
             ret = val.within(tr)
+            while isinstance(ret, Expandable) and not isinstance(ret, Variable):
+                ret = ret.within(tr)
             if isinstance(ret, Variable):
                 raise Reshape(self.cdir)
-            #if isinstance(ret, Expandable):
-            #    return ret.within(tr)
             return ret
         raise ValueErr(self.ctx, f'Unknown map-from value: {val}')
 
@@ -442,8 +447,8 @@ class Variable(Expandable):
     def bind(self, val, idx, tr):
         if isinstance(val, Reference):
             cdir, val = val.cdir, val.within(tr)
-            if isinstance(val, Variable):
-                raise Reshape(cdir)  # (None if isinstance(val, Binding) else cdir, cdir) | (None, cdir)
+            if isinstance(val, Operation):
+                raise Reshape(cdir)
         r = VarValue(val, idx, parent=self)
         return r
     
@@ -485,6 +490,7 @@ class TetheredVar(Variable):  # Tethered == bound to a transition
         self._tuple = self.unpack_vars_only(t) if isinstance(t, Iterable) else (t,)
         self._set = {i.value for i in self._tuple}
         self.start = start
+        self._d = {}
     
     def __sub__(self, other):
         c = count()
@@ -513,6 +519,12 @@ class VarValue:
         self.value = self.SPECIALS.get(value, value)
         while isinstance(self.value, VarValue):
             self.value = self.value.value
+    
+    #def __eq__(self, other):
+    #    return self.value == other
+    #
+    #def __hash__(self):
+    #    return self.value.__hash__()
     
     def __rmul__(self, other):
         return other * self.value
@@ -584,16 +596,22 @@ class Auxiliary:
         return new_tr
     
     def from_int(self, tr):
-        return TransitionGroup.from_seq(self._make_tr(tr, self.resultant), self.tbl, context=self.ctx).expand(tr)
+        return TransitionGroup.from_seq(
+          self._make_tr(tr, self.resultant), self.tbl, context=self.ctx
+        ).expand(tr)
     
     def from_binding(self, tr):
         if isinstance(self.resultant.within(tr), Variable):
             raise Reshape(self.resultant.cdir)
-        return TransitionGroup.from_seq(self._make_tr(tr, self.resultant.within(tr).value), self.tbl, context=self.ctx).expand(tr)
+        return TransitionGroup.from_seq(
+          self._make_tr(tr, self.resultant.within(tr).value), self.tbl, context=self.ctx
+        ).expand(tr)
     
     def from_mapping(self, tr):
         within = self.resultant.within(tr)  # always raises some exception unless already a VarValue
-        return [] if within.value is None else TransitionGroup.from_seq(self._make_tr(tr, self.resultant.within(tr).value), self.tbl, context=self.ctx).expand(tr)
+        return [] if within.value is None else TransitionGroup.from_seq(
+          self._make_tr(tr, self.resultant.within(tr).value), self.tbl, context=self.ctx
+        ).expand(tr)
 
 
 class Coord(tuple):

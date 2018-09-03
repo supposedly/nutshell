@@ -37,7 +37,10 @@ def parse(fp):
         except KeyError:
             continue
         if segment[0].replace(' ', '').lower() == '#golly':
-            parts[label] = segment[1:]
+            if label == '@TABLE':
+                segment[0] = None
+            else:
+                parts[label] = segment[1:]
             continue
         # If the converter requires another segment/s to work, it'll have
         # a kwarg called 'dep' annotated with a list of the name/s of said segment/s

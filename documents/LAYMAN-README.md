@@ -16,7 +16,7 @@ type of CA devised long ago that just tells us the amount of neighbors a dead ce
 cell requires to survive; for CGoL, as I'll call it from here on, this notation can express it as "B3/S23". Birth on 3, survival on 2 or 3.
 
 Many other interesting "rules", cellular automata whose cells undergo a definable set of transitions, can be notated in this manner...
-and, tragically, just as many can't. Some rules are nondeterministic and unpredictable, but even without going that far we can find rules that don't
+and, tragically, just as many can't. We can find plenty of deterministic rules that don't
 necessarily rely on the total amount of neighbors (irrespective of their positions) but are interesting nonetheless, or rules that require
 more than two states (OFF/dead and ON/alive) to function. So what do we do?
 
@@ -24,14 +24,14 @@ Well, occasionally, a concept or rule paradigm becomes popular enough that it ge
 case with "Generations", a cellular-automaton algorithm that behaves like a normal B/S rule except that it requires each "died" cell to remain stationary
 and interactionless for a set number of generations before truly dying; its notation flips the B/S conditions and adds a third "C" parameter, said
 number of pre-death stationary generations, to the end. (Conway's Game of Life with nine extra death generations, for instance, would be notated as
-23/3/10 -- survival on 2 or 3, birth on 3, and 10 pre-death states) There are also "non-totalistic rules" or specifically "isotropic non-totalistic rules",
+23/3/10 -- survival on 2 or 3, birth on 3, and 10 pre-death states.) There are also "non-totalistic rules" or specifically "isotropic non-totalistic rules",
 where the term "non-totalistic" refers to the fact that they consider the *positions* of individual neighbors rather than merely the total quantity of
 neighborhing cells; these are expressed with an alphabetic extension to the B/S notation, described [here](http://www.ibiblio.org/lifepatterns/neighbors2.html).
 
 Still, even those aren't everything. What about all the other deterministic types of rules?  
-Well, we can't account for *all* of them, but there has been some very very nice work put into settling for a large majority. Some smart folks
-have gotten together (as they do) and created a cellular-automata explorer named [Golly](https://golly.sourceforge.net), now the de-facto tool
-for exploring many types of CA; more importantly, they've also given it a whole domain-specific language for describing different kinds of
+We of course can't account for *all* of them, but there has been some very very nice work put into settling for a large majority. Some smart folks
+have gotten together (as they do) and created a cellular-automata explorer named [Golly](https://golly.sourceforge.net), which has
+become probably the de-facto tool among the CA hobbyist community; more importantly, they've also given it a whole domain-specific language for describing different kinds of
 non-standard CA rules, ones that can't be expressed via the sort of concise notations seen above.
 
 ## Ruletables

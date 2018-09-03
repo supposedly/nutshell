@@ -71,7 +71,7 @@ class Preprocess(Transformer):
     
     def check_cdir(self, cdir, meta):
         if cdir not in self._tbl.neighborhood and cdir != '0':
-            raise SyntaxErr(
+            raise ReferenceErr(
               fix(meta),
               f"Compass direction {cdir} does not exist in {self.directives['neighborhood']} neighborhood"
               )
@@ -199,7 +199,7 @@ class Preprocess(Transformer):
                     
                     if len(crange) == 1 or not crange and not offset_initial:
                         if idx != 1:
-                            raise ValueErr(
+                            raise SyntaxErr(
                               fix(first.meta),
                               f'Invalid compass-direction range ({b} does not follow {a} going clockwise)'
                               )
@@ -236,7 +236,7 @@ class Preprocess(Transformer):
                 raise ValueErr(
                   (meta.line, children[0].meta.column, children[-1].meta.end_column),
                   f"Bad transition length for {self.directives['neighborhood']!r} neighborhood "
-                  f'(expected {self._tbl.trlen} napkin states, got {len(napkin)})'
+                  f'(expected {2+self._tbl.trlen} states, got {2+len(napkin)})'
                   )
         return TransitionGroup(self._tbl, initial, napkin, resultant, context=fix(meta))
     
@@ -276,7 +276,7 @@ class Preprocess(Transformer):
     def aux_map_other(self, meta, cdir_to, cdir_from, val):
         try:
             self.check_cdir(cdir_from, meta)
-        except SyntaxErr:
+        except ReferenceErr:
             self.check_cdir(cdir_from, (meta[0], meta[1] + cdir_to['meta'][1] + 1, len(cdir_from)))
         cdir_to, delay = cdir_to['cdir'], cdir_to['delay']
         return Auxiliary(self._tbl, cdir_to, delay, Mapping(cdir_from, self.kill_string(val, meta), context=(meta[0], meta[1]+len(cdir_to), meta[2])), context=meta)

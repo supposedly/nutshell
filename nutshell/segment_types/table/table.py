@@ -1,5 +1,6 @@
 """Facilitates parsing of a nutshell rule into an abstract, compiler.py-readable format."""
 import re
+from collections import Iterable
 from functools import partial
 from itertools import chain, cycle, islice, zip_longest
 
@@ -111,4 +112,32 @@ class Table:
         self.sym_types.add(symutils.get_sym_type(name))
     
     def match(self, tr):
-        raise UnsupportedFeature(None, '-f is currently not supported. Apologies.')
+        printq('Complete!\n\nSearching for match...')
+        start, *in_napkin, end = tr
+        if len(in_napkin) != self.trlen:
+            raise ValueErr(None, f'Bad length for match (expected {2+self.trlen} states, got {2+len(in_napkin)})')
+        in_trs = [(start, *napkin, end) for napkin in self.symmetries(in_napkin).expand()]
+        for tr in self._data:
+            for in_tr in in_trs:
+                for cur_len, (in_state, tr_state) in enumerate(zip(in_tr, tr), 1):
+                    if in_state != '*' and not (in_state in tr_state if isinstance(tr_state, Iterable) else in_state == getattr(tr_state, 'value', tr_state)):
+                        if cur_len == self.trlen:
+                            lno, start, end = tr.ctx
+                            return (
+                              'No match\n\n'
+                              f'Impossible match!\nOverridden on line {self._start+lno} by:\n  {self[lno-1]}\n'
+                              f"""{"" if start == 1 else f"  {' '*(start-1)}{'^'*(end-start)}"}\n"""  # TODO+FIXME: deuglify
+                              f"Specifically (compiled line):\n  {', '.join(map(str, tr.fix_vars()))}"
+                              )
+                        break
+                else:
+                    lno, start, end = tr.ctx
+                    return (
+                      'Found!\n\n'
+                      f'Line {self._start+lno}:\n  {self[lno-1]}\n'
+                      f"""{"" if start == 1 else f"  {' '*(start-1)}{'^'*(end-start)}"}\n"""  # TODO+FIXME: deuglify
+                      f"Compiled line:\n  {', '.join(map(str, tr.fix_vars()))}"
+                      )
+        if start == end:
+            return 'No match\n\nThis transition is the result of unspecified default behavior'
+        return 'No match'
