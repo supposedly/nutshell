@@ -1,9 +1,12 @@
 from random import Random
+from string import whitespace
 
 from nutshell.cli import cli
 
 RAND_SEED = 83_523
 random = Random(RAND_SEED)
+
+KILL_WS = str.maketrans('', '', whitespace)
 
 
 class LazyProperty:

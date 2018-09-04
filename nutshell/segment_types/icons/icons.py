@@ -70,7 +70,7 @@ class IconArray:
         self._fill_gradient = None
         
         _colors, _table, _nutshell = dep
-        self._n_states = _table and _table.directives['n_states']
+        self._n_states = _table and _table.n_states
         self._color_segment = None if isinstance(_colors, list) else _colors
         self._nutshell = _nutshell
         
@@ -98,10 +98,10 @@ class IconArray:
             name = ''.join(random.sample(SAFE_CHARS, 2))
         return name
     
-    def _parse_colors(self, start=0):
+    def _parse_colors(self, start=1):
         colormap = IShouldntHaveToDoThisBidict()
         lno = start
-        for lno, line in enumerate(map(str.strip, self._src)):
+        for lno, line in enumerate(map(str.strip, self._src), 1):
             if line.startswith('?'):
                 # Can put n_states in brackets if no TABLE section to grab it from
                 pre, *post = map(str.strip, line.split('[', 1))
@@ -123,9 +123,9 @@ class IconArray:
     
     def _sep_states(self, start) -> dict:
         states = defaultdict(list)
-        used_states = set()
+        cur_states = set()
         _last_comment = 0
-        seq = self._src[start:] if self._nutshell is None else self._nutshell.replace_iter(self._src[start:])
+        seq = self._src[start-1:] if self._nutshell is None else self._nutshell.replace_iter(self._src[start-1:])
         for lno, line in enumerate(map(str.strip, seq), start):
             if not line:
                 continue
@@ -137,9 +137,9 @@ class IconArray:
                   if state.isdigit()
                   }
                 if not all(0 < state < 256 for state in cur_states):
-                    raise TableValueError(lno, f'Icon declared for invalid state {next(i for i in cur_states if not 0 < i < 256)}')
+                    raise ValueErr(lno, f'Icon declared for invalid state {next(i for i in cur_states if not 0 < i < 256)}')
                 if cur_states.intersection(states):
-                    raise TableValueError(lno, f'States {cur_states.intersection(states)} were already assigned an icon')
+                    raise ValueErr(lno, f'States {cur_states.intersection(states)} were already assigned an icon')
                 _last_comment = lno
                 continue
             for state in cur_states:
@@ -154,7 +154,7 @@ class IconArray:
                 color = self._color_segment[state]
             except (KeyError, TypeError):  # (state not present, @COLORS is None)
                 if self._fill_gradient is None:
-                    raise TableReferenceError(None,
+                    raise ReferenceErr(None,
                       f'No icon available for state {state}. '
                       'To change this, either (a) define an icon for it in @ICONS, '
                       '(b) define a color for it in non-golly @COLORS to be filled in as a solid square, '

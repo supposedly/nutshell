@@ -1,5 +1,5 @@
 """Errors to be raised during nutshell parsing."""
-class TableException(SystemExit):
+class NutshellException(SystemExit):
     def __init__(self, lno: int, msg: str, seg_name: str = None, segment: list = None, shift: int = 0):
         """
         lno: line number error occurred on
@@ -7,25 +7,43 @@ class TableException(SystemExit):
         seg: segment of rulefile error occurred in
         shift: line number seg starts on
         """
-        start = f'\n  {self.__class__.__name__} in {seg_name}'
-        self.lno, self.msg = lno, msg
-        self.code = f'{start}:\n      {msg}\n' if lno is None else f'{start}, line {1+shift+lno}:\n      {msg}\n'
+        start = f'\n  {self.__class__.__name__}' if seg_name is None else f'\n  {self.__class__.__name__} in {seg_name}'
+        self.lno, self.span, self.msg = lno, None, msg
+        if isinstance(lno, tuple):
+            self.lno, *self.span = lno
         if isinstance(segment, list):
-            # add 1 because 'lno' is zero-indexed
-            self.code = f'{start}, line {1+shift+lno}:\n      {segment[lno]}\n  {msg}\n'
+            code = [
+              f'{start}, line {shift+self.lno}:',
+              f'      {segment[self.lno-1]}'
+              ]
+            if self.span is not None:
+                begin, end = self.span
+                code.append(f"      {' ' * (begin - 1)}{'^' * (end - begin)}")
+            code.append(f'  {msg}')
+        else:
+            code = [
+              f'{start}:' if self.lno is None else f'{start}, line {shift+self.lno}:',
+              f'      {msg}\n'
+              ]
+        self.lno = lno
+        self.code = '\n'.join(code) + '\n'
 
 
-class TableReferenceError(TableException):
+class ReferenceErr(NutshellException):
     pass
 
 
-class TableSyntaxError(TableException):
+class SyntaxErr(NutshellException):
     pass
 
 
-class TableValueError(TableException):
+class ValueErr(NutshellException):
     pass
 
 
-class TableFeatureUnsupported(TableException):
+class UnsupportedFeature(NutshellException):
+    pass
+
+
+class CoordOutOfBounds(ValueErr):
     pass

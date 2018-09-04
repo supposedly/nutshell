@@ -1,0 +1,135 @@
+table: (line _COMMENT? _NL? | _NL)+
+
+line: NAME ":" _WS? /.+/      -> directive
+  | NAME _WS? "=" _WS? _expr  -> var_decl
+  | "!" _expr_no_int          -> print_var
+  | transition _aux?          -> transition
+
+transition: _expr (_sep tr_state)+ _sep _tr_expr  -> main  //Can't have (STATE | reference) here in LALR
+tr_state: [cdir _WS] _tr_expr
+  | _tr_expr _PERMUTE /[^,;]+/    -> permute_shorthand  //Doesn't make sense to allow cdir *and* permute_shorthand in the same tr_state
+cdir: COMPASS_DIR
+  | COMPASS_DIR ".." COMPASS_DIR  -> crange
+
+_PERMUTE: _WS? "~" _WS?
+_sep: ("," | ";") _WS?  //If this is a terminal rather than a rule it interferes with "," in var-related rules below
+
+_aux: normal_aux hoist_aux? | hoist_aux normal_aux?
+normal_aux: _NORMAL_ARROW auxiliary (_WS auxiliary)*
+hoist_aux: _HOIST_ARROW auxiliary (_WS auxiliary)*
+
+_NORMAL_ARROW: _WS? "->" _WS?
+_HOIST_ARROW: _WS? "=>" _WS?
+
+auxiliary: cdir_delay ":" STATE                                               -> aux_bare
+  | cdir_delay "[" _aux_expr_no_int "]"                                       -> aux_map_self
+  | cdir_delay "[" (PREVIOUS_BIND | ZERO_BIND) "]"                            -> aux_bind_self
+  | cdir_delay "[" (PREVIOUS_BIND | ZERO_BIND) ":" _WS? _aux_expr_no_int "]"  -> aux_map_other
+
+// I'm not sure why I need to specify the "0" explicitly there,
+// considering that a 0 is already included in PREVIOUS_BIND.
+// (If I don't put it above, Lark will tell me it expected _MULT rather
+// than the right square bracket for any "aux_bind_self" sequence. idgi)
+
+cdir_delay: COMPASS_DIR ["+" INT]
+
+
+var: _VAR_OPEN (_expr ("," _WS? _expr)* | range) _VAR_CLOSE                                     -> noref_var
+tr_var: _VAR_OPEN (_tr_expr ("," _WS? _tr_expr)* | range) _VAR_CLOSE                            -> var
+ref_var: _VAR_OPEN (_ref_expr ("," _WS? _ref_expr)* ["," _WS? EXTEND_LAST] | range) _VAR_CLOSE  -> var
+aux_var: _VAR_OPEN (_aux_expr ("," _WS? _aux_expr)* ["," _WS? EXTEND_LAST] | range) _VAR_CLOSE  -> var
+
+
+_expr: _expr_no_int | STATE
+_expr_no_int: (NAME | range | operation | var)
+
+// These ones are marked "noref" to indicate that they can safely be extracted
+// in the 'transformer' phase before transpilation actually starts, b/c _expr
+// and _expr_no_int are the only rules guaranteed not to contain any references
+operation: STATE _MULT INT    -> noref_repeat_int
+  | STATE _MULT _expr_no_int  -> noref_int_to_var_length
+  | _expr_no_int _MULT INT    -> noref_repeat_var
+  
+  | _expr_no_int _subt _expr  -> noref_subt
+  
+  | _NEGATE_LIVE _expr        -> noref_live_except
+  | _NEGATE_ALL _expr         -> noref_all_except
+
+
+_tr_expr: _tr_expr_no_int | STATE | reference
+_tr_expr_no_int: (NAME | range | tr_operation | tr_var)
+
+tr_operation: (STATE | reference) _MULT INT    -> repeat_int
+  | (STATE | reference) _MULT _tr_expr_no_int  -> int_to_var_length
+  | _tr_expr_no_int _MULT INT                  -> repeat_var
+  
+  | _tr_expr_no_int _subt _tr_expr             -> subt
+  
+  | _NEGATE_LIVE _tr_expr                      -> live_except
+  | _NEGATE_ALL _tr_expr                       -> all_except
+
+
+_ref_expr: _ref_expr_no_int | STATE | reference
+_ref_expr_no_int: (NAME | range | ref_operation | ref_var)
+
+ref_operation: (STATE | reference) _MULT INT    -> repeat_int
+  | (STATE | reference) _MULT _ref_expr_no_int  -> int_to_var_length
+  | _ref_expr_no_int _MULT INT                  -> repeat_var
+  
+  | _ref_expr_no_int _subt _ref_expr            -> subt
+  
+  | _NEGATE_LIVE _ref_expr                      -> live_except
+  | _NEGATE_ALL _ref_expr                       -> all_except
+
+
+_aux_expr: _aux_expr_no_int | STATE | reference
+_aux_expr_no_int: (NAME| LEAVE_ALONE | range | aux_operation | aux_var)
+
+aux_operation: (STATE | reference) _MULT INT    -> repeat_int
+  | (STATE | reference) _MULT _aux_expr_no_int  -> int_to_var_length
+  | _aux_expr_no_int _MULT INT                  -> repeat_var
+  
+  | _aux_expr_no_int _subt _aux_expr            -> subt
+  
+  | _NEGATE_LIVE _aux_expr                      -> live_except
+  | _NEGATE_ALL _aux_expr                       -> all_except
+
+
+reference: "[" PREVIOUS_BIND "]"                     -> binding
+  | "[" PREVIOUS_BIND ":" _WS? _ref_expr_no_int "]"  -> mapping
+
+range: STATE _WS? ".." _WS? STATE
+  | STATE _WS? "+" _WS? INT _WS? ".." _WS? STATE  -> range_step  //step+lower..upper
+
+_VAR_OPEN: /[({]/
+_VAR_CLOSE: /[)}]/
+
+LEAVE_ALONE: "_"
+EXTEND_LAST: "..."
+
+_subt: _SUBT | "-" _WS?  //Annoying, but the second variant needs to be specified or it gets confused between subt and negate_all
+_MULT: _WS? "*" _WS?
+_SUBT: _WS? "-" _WS?
+
+_NEGATE_LIVE: "-"
+_NEGATE_ALL: "--"
+
+PREVIOUS_BIND: /0|NE|SE|SW|NW|N|E|S|W/
+ZERO_BIND: "0"  //hm
+COMPASS_DIR: /NE|SE|SW|NW|N|E|S|W/
+
+// More efficient than /(?!NE|SE|SW|NW|N|E|S|W)[A-Za-z]\w*|(?:NE|SE|SW|NW)[A-Za-z]\w*|(?:N|E|S|W)(?!E|W)[A-Za-z]\w*/
+// Thanks to Dr. Memes#1508 (<@138628718968045568>) from Discord TCD
+// Modified later to switch from only accepting [A-Za-z]+ sans compass dirs to accepting [A-Za-z]\w* sans the same
+NAME: /(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\w))[A-Za-z]\w*/
+
+STATE: /\d+/
+INT: /[0123456789]+/
+_WS: /((?!\n)\s)+/
+_NL:  NEWLINE
+
+_COMMENT: /\s*#.*/
+_SURROUNDING_WS: /^\s+|\s+$/m
+%ignore _COMMENT
+%ignore _SURROUNDING_WS
+%import common.NEWLINE

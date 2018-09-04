@@ -140,7 +140,7 @@ Brainfuck.
 + An example:
   x = 61, y = 13, rule = bf
   53.qR$52.qR$51.qR$50.qR$49.qR$47.2qR$42.qR3.2qR$41.qR3.2qR$41.qJ$43.pR
-  $7SrU12rSrU10rSrUrTrU5rSrM$43.I$44.AB2DFHCHCEDGDBCEC!
+  $7rSrU12rSrU10rSrUrTrU5rSrM$43.I$44.AB2DFHCHCEDGDBCEC!
 
 
 @COLORS
@@ -236,7 +236,7 @@ x = 9, y = 13, rule = //11
 
 
 @TABLE
-states: ?
+states: 96
 neighborhood: Moore
 symmetries: none
 
@@ -282,7 +282,7 @@ data = (DATA..DATA_MINUS)
 (prgm, L_BRACK), SW anyPrgm, W..S vac; 0 -> S[0]
 
 # special-casing for ][, but could probably be handled above
-L_BRACK, E..SE vac, W 0, SW R_BRACK, W..NE 0; 0 -> S:L_BRACK
+L_BRACK, E..SE vac, S 0, SW R_BRACK, W..NE 0; 0 -> S:L_BRACK
 R_BRACK, SE L_BRACK, 0, vac, vac, NW..E 0; 0 -> S:R_BRACK
 
 # if a bracket has nothing in its mouth, assume it needs to travel south
@@ -305,7 +305,7 @@ prgm, SE L_BRACK, 0, 0, W prgm, NW..E 0; 0 -> S[0]  # x[
 DATA_POINTER, W eastbound, NW..SW any; [W: datapointers]
 DATA_POINTER, E westbound, SE..NE any; [E: datapointers]
 # If a loaded shadow is directly below data pointer, pretend it's the same as a signal
-DATA_POINTER, S (westshadows-WEST_SHADOW, eastshadows-EAST_SHADOW), SW..SE any; [S: (datapointers, datapointers)]
+DATA_POINTER, S (westshadows-WEST_SHADOW, eastshadows-EAST_SHADOW), SW..SE any; [S: datapointers*2]
 
 DATA_POINTER_MINUS, N..NW any; DATA_POINTER -> N:DATA_MINUS
 DATA_POINTER_PLUS, N..NW (DATA, any-DATA); DATA_POINTER -> N[(DATA_PLUS, DATA, ...)]
@@ -475,9 +475,9 @@ NORTH_R_BRACK, NW northbound, N..W any; BLANK_1 -> N:0  # random non-interfering
 BLANK_1, S R_BRACK, SW..SE any; R_BRACK
 R_BRACK, S R_BRACK, SW..SE any; NORTH_R_BRACK
 # Move signals
-(NORTH_R_BRACK, northboundNOP), N..NW any; 0 ~> N[0]
-(WEST_R_BRACK, westbound), N..NW any; 0 ~> W[0]
-(EAST_R_BRACK, eastbound), N..NW any; 0 ~> E[0]
+(NORTH_R_BRACK, northboundNOP), N..NW any; 0 => N[0]
+(WEST_R_BRACK, westbound), N..NW any; 0 => W[0]
+(EAST_R_BRACK, eastbound), N..NW any; 0 => E[0]
 (SOUTH_COMMA, SOUTH_BREAK, SOUTH_LOOP), N..NW any; 0 -> S[0]
 
 # Pointer stops after reaching end

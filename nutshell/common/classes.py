@@ -81,7 +81,7 @@ class ColorMixin:  # XXX: this feels weird being a class? ...but it's also a mix
 class AdditiveDict(dict):
     def __init__(self, it):
         for key, val in it:
-            self[str(key)] = self.get(key, 0) + int(val or 1)
+            self[key] = self.get(key, 0) + int(val or 1)
     
     def __iter__(self):
         return (i for k, v in self.items() for i in [k]*v)

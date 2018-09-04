@@ -13,7 +13,7 @@ from ergo import CLI
 
 SYMBOL_MAP = [
   '.',
-  *(chr(64+num) for num in range(1, 25)),
+  *(chr(64 + num) for num in range(1, 25)),
   *(chr(110 + ceil(num/24)) + chr(64 + (num % 24 or 24)) for num in range(25, 256))
   ]
 
