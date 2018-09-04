@@ -1,4 +1,7 @@
+
 # CA rules “in a nutshell”
+
+[![Discord](https://img.shields.io/badge/Chat-on%20Discord-7289da.svg?logo=discord&logoWidth=17)](https://discord.gg/BV6zxM9)  
 A transpiler from a reimagined Golly ruletable language to the traditional format. See [`examples/`](/examples) for examples, and if none
 of this makes any sense to you and you aren't sure how you got here, check out the [layman's README](documents/LAYMAN-README.md).
 
@@ -10,19 +13,30 @@ of this makes any sense to you and you aren't sure how you got here, check out t
     - [Directives](#directives)
     - [Transitions](#transitions)
     - [Variables](#variables)
+      <!--
       - [Variable names](#variable-names)
+      -->
     - [Operations](#operations)
+        <!--
         - ["Multiplication"](#n--m-multiplication)
         - ["Subtraction"](#n---m-subtraction)
         - ["Negation"](#-n---n-negation)
         - [Ranges](#ranges)
+        -->
     - [References](#references)
+        <!--
         - [Bindings](#bindings)
         - [Mappings](#mappings)
+        -->
     - [Auxiliary transitions](#auxiliary-transitions)
+        <!--
         - [Precedence and "hoisting"](#precedence-and-hoisting)
+        -->
     - [Custom symmetry types](#custom-symmetry-types)
 * [Non-table-related changes](#non-table-related-changes)
+    - [The `@NUTSHELL` segment](#the-nutshell-segment)
+    - [The `@COLORS` segment](#the-colors-segment)
+    - [The `@ICONS` segment](#the-icons-segment)
 
 ## Setup
 1. [Download & install Python 3.6](https://www.python.org/downloads/release/python-365/) or higher (support for < 3.6 hopefully coming soon)
@@ -40,7 +54,7 @@ not work for you, you may instead `git clone` Nutshell as in step 2.ii above and
 from its root directory as a substitute for `nutshell-ca`.
 
 ```
-$ nutshell-ca [-v | -q] transpile [infile] [outdir] [-s | -p | -t | -f]
+$ nutshell-ca transpile [infile] [outdir] [-v | -q | -s | -p | -t | -f]
 (alternatively, `nutshell-ca t ...')
 ```
 The output file will be written to `outdir` with a .rule extension and the same filename as `infile`.  
@@ -60,7 +74,7 @@ after or before the keyword `transpile`/`t` with no difference):
                      you typo'd).  
                      Transition should be given in the standard Golly form `C,N,...,C'` -- that is, state of the
                      current center cell, then its neighborhood, and finally the state it transitions into
-                     on the next tick. Use `*` as an "any state" wildcard. Example [here](https://user-images.githubusercontent.com/32081933/39951382-2b37fca0-553e-11e8-87b5-69685dfe4881.png)!
+                     on the next tick. Use `*` as an "any state" wildcard. Old example [here](https://user-images.githubusercontent.com/32081933/39951382-2b37fca0-553e-11e8-87b5-69685dfe4881.png)!
 
 ## Glossary of Nutshell-specific terms
 - **variable**: Either a literal statelist or a name referring to one. 
@@ -672,16 +686,27 @@ variable names in `lowercase`, `camelCase`, or `snake_case`; the initial capital
 For the actual registration of a constant, all that matters is that its line in `@NUTSHELL` start with `<number>:` and contain anywhere a
 pair of `{braces}` that enclose the constant's name. The braced part and any whitespace separating it from the previous word will be removed
 from the final `@RULE` segment in the output file.
-# The `@ICONS` segment
-This segment is based around Golly's XRLE format instead of XPM data; the idea is that you're likely going to be in Golly anyway
-when you're fiddling with a rule, so it'll be easier to quickly copy/paste an RLE in and out of a blank Golly tab than it'd be to
-edit XPM images in your text editor. Icons are automatically centered & uniformly resized to the nearest Golly icon dimensions
-(7x7/15x15/31x31).
 
-Each individual XRLE pattern listed represents one icon. To assign this icon to some cellstate,
-include the state (or its `@NUTSHELL`-defined constant) in a comment immediately above the icon's RLE pattern. Multiple cellstates
-can be assigned to by listing them individually (as long as each cellstate appears either with whitespace on both sides or with
-whitespace before and a comma after) or by including them in a [range literal](#ranges) (sans parentheses / curly brackets).
+### The `@COLORS` segment
+This segment allows multiple states with the same color to be defined on the same line as each other, and for a color to be written
+either as a triplet of base-10 `R G B` values, like in Golly, or as a hexadecimal color code.
+As a result of its allowing multiple colors, the "key/value" order, if you will, has been switched: the color now
+goes first on a line, followed by all the states it's assigned to. A [range](#ranges) sans parentheses/braces can be used here as well.  
+
+For instance: `FFF: 2 4 6 8 10` says to assign the color `#FFFFFF` to states 2, 4, 6, 8, and 10, and can also be written
+as `FFF: 2+2..10` or `FFFFFF: 2+2..10` or `255 255 255: 2+2..10`.
+
+### The `@ICONS` segment
+This segment is based around Golly's RLE format instead of XPM data; the idea is that you're likely going to be in Golly anyway
+when you're fiddling with a rule, so it'll be easier to quickly copy/paste an RLE in and out of a blank Golly tab than it'd be to
+edit XPM images in your text editor. Non-normalized icons are automatically centered & uniformly resized to the nearest Golly icon
+dimensions (7x7/15x15/31x31).
+
+Each individual XRLE pattern listed represents one icon, and to assign this icon to some cellstate,
+include the state (or its `@NUTSHELL`-defined constant) in a comment immediately above the icon's RLE pattern.
+Multiple cellstates can be assigned to by listing them individually (as long as each cellstate appears either
+with whitespace on both sides or with whitespace before and a comma after) or by describing them with a
+[range literal](#ranges) (sans parentheses / curly brackets).
 
 Before further explanation, a simple example:
 
@@ -707,36 +732,27 @@ x = 10, y = 9, rule = //10
 2AI!
 ```
 
-Pixel colors are determined by those directive-like lines before the XRLEs. `0: 303030`, for instance, says that state 0 (symbol `.`)
-in an icon should represent the hex color #303030 (Golly's default background color), `1: D0D0D0` says that state 1
-(the symbol `A`) represents the hex color #D0D0D0, and so on. The cellstate's symbol also can be written instead of
-its number, as in `. 303030` / `A D0D0D0` / `B 9CF` (notice, no colon) if it's easier to read.  
-In the future, Nutshell will come with a utility to aid in visualizing these icons
+Pixel colors in an icon are determined by those directive-like lines before the XRLEs. `0: 303030`, for instance, says
+that state 0 (symbol `.`) in an icon should represent the hex color #303030 (Golly's default background color), `1: D0D0D0`
+says that state 1 (the symbol `A`) represents the hex color #D0D0D0, and so on.
+The cellstate's symbol also can be written instead of its number, as in `. 303030` / `A D0D0D0` / `B 9CF` (notice, no colon)
+if it's easier to read.  
+In the future, Nutshell will come with a utility to aid in creating these icons
 (accessible as `nutshell-ca icon makerule <nutshell file>`)
-that creates a B/S012345678 ruletable whose `@COLORS` segment mirrors the colors in the nutshell file's `@ICONS`.
+that generates a B/S012345678 ruletable whose `@COLORS` segment mirrors the colors in the nutshell file's `@ICONS`.
 
-The rule of each RLE is ignored; just choose one with enough cellstates for the pattern to be pastable into Golly.
+The rule of each RLE is ignored; just choose one with enough cellstates for its pattern to be pastable into Golly.
 Note that the icons don't have to be in sequence or even present (the pre-icon comments determine ordering); if a certain state's
-icon is omitted (like state 3's above!) and it doesn't come after the last state with an icon, it will be made as a solid square colored
-according to what's assigned to the state in `@COLORS`. (if it does follow the last state whose icon is defined then it can safely be
-ignored and Nutshell won't attempt to fill it in)
+icon is omitted (like state 3's above!) and it doesn't come *after* the highest-numbered state with an icon (in which case it
+can & will be safely ignored), it will be made as a solid square colored according to what's assigned to that state in `@COLORS`.
 
 If a missing cellstate is not addressed in `@COLORS` or if there is no `@COLORS` to use, an error will be raised -- but to
-mitigate this, you can define a gradient with which to fill missing states; the syntax for this is
+mitigate this, you can define a gradient with which to fill missing states. The syntax for this is
 `? <hex color> <optional separator, ignored> <hex color>` (whitespace required), where the first hex color is the
-gradient's start and the second its end, and it goes with the other color definitions before the RLEs.  
-The gradient relies on the `states:` or `n_states:` directive in @TABLE to compute its start and end -- but if there is no
-`@TABLE` or if it's `@TABLE #golly` (i.e. marked as "don't touch, Nutshell") then the `n_states` won't be available. In this
-case you may append to the gradient line a bracketed number indicated the rule's desired "n_states" value, as in
+gradient's start and the second its end; this goes with the other color definitions before the RLEs.  
+The gradient relies on the `states:` or `n_states:` directive in @TABLE to compute its medial colors -- but if there is no
+`@TABLE` or if it's written as `@TABLE #golly` (i.e. marked as "don't touch, Nutshell") then the `n_states` won't be available.
+In this case you may append to the gradient line a bracketed number indicating the rule's "n_states" value, as in
 `?  <hex color> <optional separator> <hex color> [<n_states>]`.
 
-`@COLORS` colors will always take precedence over the gradient unless the cellstate in `@COLORS` has an \*asterisk before it.
-
-### The `@COLORS` segment
-This segment allows multiple states with the same color to be defined on the same line as each other, and for a color to be written as
-either a triplet of base-10 `R G B` values, as in Golly, or a hexadecimal color code.
-As a result of its allowing multiple colors, the "key/value" order, if you will, has been switched: the color now
-goes first on a line, followed by all the states it's assigned to. A [range](#ranges) can be used here as well.  
-
-For instance: `FFF: 2 4 6 8 10` says to assign the color `#FFFFFF` to states 2, 4, 6, 8, and 10, and can also be written
-as `FFF: 2+2..10` or `FFFFFF: 2+2..10` or `255 255 255: 2+2..10`.
+`@COLORS` colors will always take precedence over the gradient, except when the cellstate in `@COLORS` has an \*asterisk before it.
