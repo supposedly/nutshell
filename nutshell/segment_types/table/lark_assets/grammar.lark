@@ -15,8 +15,10 @@ _PERMUTE: _WS? "~" _WS?
 _sep: ("," | ";") _WS?  //If this is a terminal rather than a rule it interferes with "," in var-related rules below
 
 _aux: normal_aux hoist_aux? | hoist_aux normal_aux?
-normal_aux: _NORMAL_ARROW auxiliary (_WS auxiliary)*
-hoist_aux: _HOIST_ARROW auxiliary (_WS auxiliary)*
+normal_aux: _NORMAL_ARROW _auxlist
+hoist_aux: _HOIST_ARROW _auxlist
+_auxlist: (auxiliary | symmetried_aux) (_WS (auxiliary | symmetried_aux))*
+symmetried_aux: /(?<![\w\.])(?!(?:[NS][EW]?|[EW])(?![\w\.]))[\w\.]+/ "(" auxiliary (_WS auxiliary)* ")"
 
 _NORMAL_ARROW: _WS? "->" _WS?
 _HOIST_ARROW: _WS? "=>" _WS?
@@ -83,7 +85,7 @@ ref_operation: (STATE | reference) _MULT INT    -> repeat_int
 
 
 _aux_expr: _aux_expr_no_int | STATE | reference
-_aux_expr_no_int: (NAME| LEAVE_ALONE | range | aux_operation | aux_var)
+_aux_expr_no_int: (NAME| LEAVE_ALONE | leave_alone_mult | range | aux_operation | aux_var)
 
 aux_operation: (STATE | reference) _MULT INT    -> repeat_int
   | (STATE | reference) _MULT _aux_expr_no_int  -> int_to_var_length
@@ -104,6 +106,7 @@ range: STATE _WS? ".." _WS? STATE
 _VAR_OPEN: /[({]/
 _VAR_CLOSE: /[)}]/
 
+leave_alone_mult: LEAVE_ALONE _MULT INT
 LEAVE_ALONE: "_"
 EXTEND_LAST: "..."
 

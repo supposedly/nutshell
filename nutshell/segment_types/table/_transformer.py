@@ -9,6 +9,7 @@ from lark import Transformer, Tree, Discard, v_args
 
 from nutshell.common.errors import *
 from nutshell.common.utils import KILL_WS
+from . import _symutils as symutils
 from ._classes import *
 
 SPECIALS = {'...', '_', 'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'}
@@ -242,11 +243,19 @@ class Preprocess(Transformer):
         return TransitionGroup(self._tbl, initial, napkin, resultant, context=fix(meta))
     
     def hoist_aux(self, children, meta):
-        for child in children:
-            child.hoist = True
+        for idx, i in enumerate(children):
+            if isinstance(i, tuple):
+                for child in i:
+                    child.hoist = True
+                children[idx:1+idx] = i
+            else:
+                i.hoist = True
         return MetaTuple('hoist', children)
     
     def normal_aux(self, children, meta):
+        for idx, i in enumerate(children):
+            if isinstance(i, tuple):
+                children[idx:1+idx] = i
         return MetaTuple('normal', children)
     
     def cdir_delay(self, children, meta):
@@ -256,6 +265,14 @@ class Preprocess(Transformer):
           'delay': int(children[1]) if len(children) > 1 else None,
           'meta': fix(meta)
           }
+    
+    @inline
+    def symmetried_aux(self, meta, symmetries, *auxiliaries):
+        self._tbl.add_sym_type(symmetries)
+        symmetries = symutils.get_sym_type(symmetries)
+        for aux in auxiliaries:
+            aux.symmetries = symmetries
+        return auxiliaries
     
     @inline
     def aux_bare(self, meta, cdir_to, val):
@@ -333,6 +350,10 @@ class Preprocess(Transformer):
     @inline
     def repeat_int(self, meta, a, b):
         return RepeatInt(self.kill_string(a, meta), int(b), context=meta)
+    
+    @inline
+    def leave_alone_mult(self, meta, underscore, mult):
+        return RepeatInt([None], self.kill_string(mult, meta), context=meta)
     
     @inline
     def int_to_var_length(self, meta, num, var):

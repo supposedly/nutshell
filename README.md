@@ -585,6 +585,32 @@ var _random_name.0 = {1, 2}
 _random_name.0, any.0, any.1, 2, 3, 0, 7, 8, any.2, 0  # N:0
 ```
 
+#### Symmetries
+Auxiliaries can be assigned a different set of symmetries than their main transition:
+```rb
+# Nutshell
+symmetries: none
+
+0, NE 0, E..N any; 1 -> E:3  rotate4(N:0  NE[N])
+```
+```rb
+# Golly
+0, any.0, 0, any.1, any.2, any.3, any.4, any.5, any.6, 1  # main transition
+
+any.0, 0, any.1, any.2, any.3, any.4, any.5, 0, any.6, 3  # E:3
+
+any.0, 0, any.1, 0, any.2, any.3, any.4, any.5, any.6, 0  # N:0
+any.0, any.1, any.2, any.3, any.4, 0, any.5, 0, any.6, 0  # N:0
+any.0, any.1, any.2, 0, any.3, 0, any.4, any.5, any.6, 0  # N:0
+any.0, 0, any.1, any.2, any.3, any.4, any.5, 0, any.6, 0  # N:0
+
+0, any.0, 0, any.1, any.2, any.3, any.4, any.5, any.6, any.0  # NE[N]
+0, any.0, any.1, any.2, 0, any.3, any.4, any.5, any.6, any.2  # NE[N]
+0, any.0, any.1, any.2, any.3, any.4, 0, any.5, any.6, any.4  # NE[N]
+0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 0, any.6  # NE[N]
+```
+Symmetry-specifier groups cannot be nested.
+
 ### Custom symmetry types
 The implementation of the above-mentioned symmetry-switching allows, conveniently, for nonstandard symmetries to be defined and
 then simply expanded by Nutshell into one of Golly's symmetry types. Provided by Nutshell is a small "standard library" of sorts
