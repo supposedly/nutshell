@@ -6,8 +6,8 @@ class TableRange:
     """Proxy for a range object."""
     def __init__(self, span, *, shift=0, step=1):
         lower, upper = map(str.strip, span.split('..'))
-        if '-' in lower:
-            lower, step = map(int, map(str.strip, lower.split('-')))
+        if '+' in lower:
+            step, lower = map(int, map(str.strip, lower.split('+')))
         self.bounds = (shift+int(lower), 1+shift+int(upper))
         self.lower, self.upper, self.step = lower, upper, step
         self._range = range(*self.bounds, step)
