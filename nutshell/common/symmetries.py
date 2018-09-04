@@ -21,7 +21,7 @@ class Rotate2(OrthNapkin):
     Rotate2 allowing Moore and vonNeumann (and 1D, but...).
     """
     neighborhoods = Any
-    fallback = {Any: NoSymmetry, hexagonal: Rotate2}
+    fallback = {Any: NoSymmetry, hexagonal: Rotate2}  # the Rotate2 is Golly's, not this one
     
     @property
     def expanded(self):
@@ -42,8 +42,8 @@ class AlternatingPermute(Permute):
     """
     RECENTS = {}
     HASHES = {}
-    neighborhoods = vonNeumann, Moore
-    fallback = Rotate4Reflect
+    neighborhoods = Any
+    fallback = {Any: Rotate4Reflect, hexagonal: NoSymmetry}
     
     @LazyProperty
     def expanded(self):
@@ -60,6 +60,3 @@ class AlternatingPermute(Permute):
         s, t = Permute.special, length // 2
         orth, diag = values[::2], values[1::2]
         return chain.from_iterable(zip(s(orth, t), s(diag, t)))
-
-# Deprecation sorta thing
-PermutePerpendiculars = AlternatingPermute

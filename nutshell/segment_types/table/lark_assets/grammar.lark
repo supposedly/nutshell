@@ -1,6 +1,6 @@
 table: (line _COMMENT? _NL? | _NL)+
 
-line: NAME ":" _WS? /.+/      -> directive  //LALR unfortunately refuses to parse if this uses a different regex such as /\w+/
+line: NAME ":" _WS? /.+/      -> directive
   | NAME _WS? "=" _WS? _expr  -> var_decl
   | "!" _expr_no_int          -> print_var
   | transition _aux?          -> transition

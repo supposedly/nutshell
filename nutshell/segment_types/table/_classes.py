@@ -14,7 +14,7 @@ class VarName:
     redefined (to avoid binding) in a Golly table.
     
     Also overrides __hash__ and __eq__ in order to
-    allow a Variable in a dict to be referred to by its name.
+    allow a StateList in a dict to be referred to by its name.
     """
     __slots__ = 'name', 'rep'
     
@@ -40,7 +40,7 @@ class VarName:
     @classmethod
     def random(cls, rep=0):
         """
-        Generates a Variable with a random name.
+        Generates a statelist with a random name.
         Method of random generation liable to change.
         """
         return cls(f'_{random.randrange(10**15)}', rep)
@@ -103,7 +103,7 @@ class TransitionGroup:
                       )
                     if combine:
                         tr = self[:]
-                        tr[idx], tr[orig_idx] = Variable(combine, e.split, context=tethered_var.ctx), e.val
+                        tr[idx], tr[orig_idx] = StateList(combine, e.split, context=tethered_var.ctx), e.val
                         trs.extend(TransitionGroup.from_seq(tr, self.tbl, context=self.ctx).expand())
                     break
                 except Reshape as e:
@@ -155,7 +155,7 @@ class TransitionGroup:
                 if combine and e.val is not None:
                     aux = Auxiliary(self.tbl, i.initial_cdir, None, e.val, context=i.ctx)
                     new.extend(TransitionGroup.from_seq(
-                      [*self[:idx], Variable(combine, e.split, context=i.ctx), *self[1+idx:]],
+                      [*self[:idx], StateList(combine, e.split, context=i.ctx), *self[1+idx:]],
                       self.tbl, context=self.ctx
                       ).apply_aux([aux], False))
             except Reshape as e:
@@ -198,8 +198,10 @@ class Transition:
         variables = self.tbl.vars.inv
         seen = defaultdict(lambda: -1)
         for i in self:
-            if not isinstance(i, Variable):
-                ret.append(getattr(i, 'value', i))
+            while isinstance(i, VarValue):
+                i = i.value
+            if not isinstance(i, StateList):
+                ret.append(str(i))
             elif isinstance(i, ResolvedBinding):
                 ret.append(ret[i.cdir != '0' and self.tbl.neighborhood[i.cdir]])
             elif i.untether() in variables:
@@ -219,8 +221,10 @@ class Transition:
         variables = self.tbl.vars.inv
         seen = defaultdict(lambda: -1)
         for i in self:
-            if not isinstance(i, Variable):
-                ret.append(str(getattr(i, 'value', i)))
+            while isinstance(i, VarValue):
+                i = i.value
+            if not isinstance(i, StateList):
+                ret.append(str(i))
             elif isinstance(i, ResolvedBinding):
                 cdir = i.cdir != '0' and self.tbl.neighborhood[i.cdir]
                 varname = variables[i.untether()]
@@ -297,9 +301,9 @@ class Binding(Reference):
         # So in the case that the binding cannot stand on its own, its
         # surrounding environment must raise Reshape on its behalf.
         r = tr[self.cdir]
-        while isinstance(r, Expandable) and not isinstance(r, Variable):
+        while isinstance(r, Expandable) and not isinstance(r, StateList):
             r = r.within(tr)
-        return ResolvedBinding(self.cdir, r) if isinstance(r, Variable) else r
+        return ResolvedBinding(self.cdir, r) if isinstance(r, StateList) else r
     
     def __repr__(self):
         return f'Binding[{self.cdir}]'
@@ -308,7 +312,7 @@ class Binding(Reference):
 class Mapping(Reference):
     def __init__(self, cdir, map_to, **kw):
         super().__init__(cdir, **kw)
-        self.map_to = Variable(map_to)
+        self.map_to = StateList(map_to)
         # XXX: Below is bad because mapping to a single cellstate can happen during reshaping
         # if len(self.map_to) == 1:
         #     raise ValueErr(self.ctx, 'Mapping to a single cellstate')
@@ -328,8 +332,8 @@ class Mapping(Reference):
             except IndexError:
                 raise ValueErr(
                   self.ctx,
-                  f'Variable with length {val.parent} mapped to smaller '
-                  f'variable with length {self.map_to}. '
+                  f'Variable {val.parent} mapped to smaller '
+                  f'variable {self.map_to}. '
                   'Maybe add a ... to fill the latter out?'
                   )
         if isinstance(val, Reference):
@@ -338,16 +342,16 @@ class Mapping(Reference):
             return val.within(tr)
         if isinstance(val, int):
             raise ValueErr(self.ctx, 'Mapping from single cellstate')
-        if isinstance(val, Variable):
+        if isinstance(val, StateList):
             map_to = self.map_to.within(tr)
             if map_to[-1].value is Ellipsis:
                 raise Ellipse(self.cdir, len(map_to)-2, map_to[-2].value, map_to)
             raise Reshape(self.cdir)
         if isinstance(val, Operation):
             ret = val.within(tr)
-            while isinstance(ret, Expandable) and not isinstance(ret, Variable):
+            while isinstance(ret, Expandable) and not isinstance(ret, StateList):
                 ret = ret.within(tr)
-            if isinstance(ret, Variable):
+            if isinstance(ret, StateList):
                 raise Reshape(self.cdir)
             return ret
         raise ValueErr(self.ctx, f'Unknown map-from value: {val}')
@@ -396,7 +400,7 @@ class Subt(Operation):
         return self.a.within(tr) - self.b.within(tr)
 
 
-class Variable(Expandable):
+class StateList(Expandable):
     def __init__(self, t, start=0, **kw):
         Expandable.__init__(self, **kw)
         self._tuple = self.unpack_vars_only(t) if isinstance(t, Iterable) else (t,)
@@ -429,19 +433,19 @@ class Variable(Expandable):
     
     def __mul__(self, other):
         if isinstance(other, int):
-            return Variable(self._tuple*other)
+            return StateList(self._tuple*other)
         return NotImplemented
     
     def __rmul__(self, other):
         if isinstance(other, int):
-            return Variable([other]*len(self._tuple))
+            return StateList([other]*len(self._tuple))
         return NotImplemented
     
     def __sub__(self, other):
         if type(other) is type(self):
-            return Variable([i for i in self if i not in other])
+            return StateList([i for i in self if i not in other])
         if isinstance(other, int):
-            return Variable([i for i in self if i != other])
+            return StateList([i for i in self if i != other])
         return NotImplemented
     
     def bind(self, val, idx, tr):
@@ -461,7 +465,7 @@ class Variable(Expandable):
         if counter is None:
             counter = count()
         for val in self._tuple:
-            if isinstance(val, Variable):
+            if isinstance(val, StateList):
                 yield from val.iwithin(tr, counter)
                 continue
             elif isinstance(val, Operation):
@@ -474,14 +478,14 @@ class Variable(Expandable):
         if new is None:
             new = []
         for val in t:
-            if isinstance(val, (Variable, tuple)):
+            if isinstance(val, (StateList, tuple)):
                 self.unpack_vars_only(val, new)
             else:
                 new.append(val)
         return tuple(new)
 
 
-class TetheredVar(Variable):  # Tethered == bound to a transition
+class TetheredVar(StateList):  # Tethered == bound to a transition
     """
     Contains VarValue objects only.
     """
@@ -504,9 +508,9 @@ class TetheredVar(Variable):  # Tethered == bound to a transition
         return tuple(i.value for i in self)
 
 
-class ResolvedBinding(Variable):
+class ResolvedBinding(StateList):
     def __init__(self, cdir, *args, **kwargs):
-        Variable.__init__(self, *args, **kwargs)
+        StateList.__init__(self, *args, **kwargs)
         self.cdir = cdir
 
 
@@ -601,7 +605,7 @@ class Auxiliary:
         ).expand(tr)
     
     def from_binding(self, tr):
-        if isinstance(self.resultant.within(tr), Variable):
+        if isinstance(self.resultant.within(tr), StateList):
             raise Reshape(self.resultant.cdir)
         return TransitionGroup.from_seq(
           self._make_tr(tr, self.resultant.within(tr).value), self.tbl, context=self.ctx

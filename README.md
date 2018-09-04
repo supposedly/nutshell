@@ -2,6 +2,28 @@
 A transpiler from a reimagined Golly ruletable language to the traditional format. See [`examples/`](/examples) for examples, and if none
 of this makes any sense to you and you aren't sure how you got here, check out the [layman's README](documents/LAYMAN-README.md).
 
+## Contents
+* [Setup](#setup)
+* [Usage](#usage)
+* [Glossary](#glossary-of-nutshell-specific-terms)
+* [What's new](#whats-new)
+    - [Directives](#directives)
+    - [Transitions](#transitions)
+    - [Variables](#variables)
+      - [Variable names](#variable-names)
+    - [Operations](#operations)
+        - ["Multiplication"](#n--m-multiplication)
+        - ["Subtraction"](#n---m-subtraction)
+        - ["Negation"](#-n---n-negation)
+        - [Ranges](#ranges)
+    - [References](#references)
+        - [Bindings](#bindings)
+        - [Mappings](#mappings)
+    - [Auxiliary transitions](#auxiliary-transitions)
+        - [Precedence and "hoisting"](#precedence-and-hoisting)
+    - [Custom symmetry types](#custom-symmetry-types)
+* [Non-table-related changes](#non-table-related-changes)
+
 ## Setup
 1. [Download & install Python 3.6](https://www.python.org/downloads/release/python-365/) or higher (support for < 3.6 hopefully coming soon)
 2. Either:
@@ -40,11 +62,22 @@ after or before the keyword `transpile`/`t` with no difference):
                      current center cell, then its neighborhood, and finally the state it transitions into
                      on the next tick. Use `*` as an "any state" wildcard. Example [here](https://user-images.githubusercontent.com/32081933/39951382-2b37fca0-553e-11e8-87b5-69685dfe4881.png)!
 
+## Glossary of Nutshell-specific terms
+- **variable**: Either a literal statelist or a name referring to one. 
+- **expression**: Anything that resolves to a statelist, including varnames and operations.
+- **state list** (or state-list, statelist): An ordered sequence of cellstates or expressions (written literally).
+  This is referred to as a "variable" in Golly, but here it's better to distinguish it from the prior terms. 
+- **directive**: A declaration following the form `name: value` that describes anything about a ruletable.
+- **term**: One individual element of a transition napkin.
+- **napkin** (or transition napkin): Referring to the cells in another's neighborhood, including their states. Coined by
+  conwaylife forum contributor 83bismuth38. (In contrast, the term "neighborhood" refers only to the positions of these cells)
+
 ## What's new
 ### Directives
-The `n_states` directive's name has been changed to `states`, and all directives ignore whitespace in their values -- so one may
-write, say, `symmetries: rotate 4` or `neighborhood: von Neumann`.
-The `symmetries` directive can take a Python import path for *custom symmetry types*; this will be elaborated upon later on.
+The `n_states` directive's name has been changed to `states` (though the former can still be used),
+and all directives ignore whitespace in their values -- so one may write, say, `symmetries: rotate 4` or
+`neighborhood: von Neumann`. The `symmetries` directive can take a Python import path for *custom symmetry types*;
+this will be elaborated upon later on.
 ```rb
 # Nutshell
 @TABLE
@@ -59,12 +92,13 @@ neighborhood: vonNeumann
 n_states: 5
 symmetries: rotate4reflect
 ```
+
 In addition, the `symmetries` directive can be used multiple times within a file, allowing the writer to switch symmetries
 partway through a rule. During transpilation, differently-symmetried transitions will be expanded into the "lowest"
 (least-expressive) Golly symmetry type specified overall.
 
 ### Transitions
-Semicolons are allowed alongside commas to separate different cellstates, and as a visual aid their use as a "final" separator
+Semicolons are allowed alongside commas to separate different terms, and as a visual aid their use as a "final" separator
 (that is, separating a transition from its resultant cellstate) is strongly encouraged.
 ```rb
 # Nutshell
@@ -89,7 +123,9 @@ neighborhood: von Neumann
 # Golly
 0, 1, 3, 3, 1, 4
 ```
-Transitions by default use the Golly-canonical ordering -- usually `C, N, ..., C'`
+
+Transitions, whose terms are listed in clockwise order,
+by default use the Golly-canonical ordering -- usually `C, N, ..., C'`
 (center cellstate, northern cellstate, ..., new center) --
 but they are allowed to start on a different compass direction if explicitly specified.
 ```rb
@@ -109,9 +145,9 @@ tilde-based shorthand. Nutshell's implementation of Golly's `permute` symmetry u
 # Nutshell
 symmetries: permute
 
-0, 1 ~ 3, 2 ~ 5; 9   # Specifying amount of each cellstate (three 1s and five 2s)
+0, 1 ~ 3, 2 ~ 5; 9   # Specifying amount of each term (three 1s and five 2s)
 0, any ~ 2, 2, 6; 9  # Specifying some amounts (two "any"s) and leaving the rest to be distributed evenly (three 2s, three 6s)
-0, 1, 2; 9           # Specifying nothing and letting each be distributed evenly (four 1s, four 2s)
+0, 1, 2; 9           # Specifying nothing and letting all terms be distributed evenly (four 1s, four 2s)
 any, any; 0          # Ditto above (8 "any"s)
 ```
 ```rb
@@ -121,6 +157,9 @@ any, any; 0          # Ditto above (8 "any"s)
 0, 1, 1, 1, 1, 2, 2, 2, 2, 9
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, any.8, 0
 ```
+If the "unspecified" terms cannot be distributed perfectly into the table's neighborhood, precedence will be given to those
+that appear earlier; `2, 1, 0` under Moore, for instance, will expand into `2,2,2,1,1,1,0,0`, but `0, 1, 2` will expand into
+`0,0,0,1,1,1,2,2`.
 
 ### Variables
 All variable names are unbound, always, because needing to define eight separate "any state" vars is ridiculous.
@@ -140,8 +179,7 @@ var variable.1 = variable.0
 That's not to say, however, that there is no concept of binding variables in Nutshell! Rather, it's that the variable
 names themselves are not intrinsically bound by anything. Nutshell's idea of binding is explained later on.
 
-Also allowed is the use of `{}` literals directly in transitions as 'on-the-spot' variables; no need to define them prior.
-(Parentheses are also acceptable in place of curly brackets, as shown above and later... I personally prefer them.)
+Also allowed is the use of state-list literals directly in transitions as 'on-the-spot' variables; no need to define them prior.
 ```rb
 # Nutshell
 (0, 1, 2), 3, (4, 5), 6, 7, 8, 9, 0, 1; 10
@@ -153,7 +191,7 @@ var _random_name_B.0 = {4, 5}
 
 _random_name_A.0, 3, _random_name_B.1, 6, 7, 8, 9, 0, 1, 10
 ```
-The var names "live" and "any" are predefined in Nutshell, assigned respectively to a rule's *live cellstates* and *all* of its cellstates.
+The varnames "live" and "any" are predefined in Nutshell, assigned respectively to a rule's *nonzero cellstates* and *all* of its cellstates.
 ```rb
 # Nutshell
 states: 5
@@ -167,23 +205,31 @@ var a.0 = {1, 2, 3, 4}
 var b.0 = {0, 1, 2, 3, 4}
 ```
 
-As in Golly, variables are not nested; placing a variable inside another simply unpacks it thereinto.
+As in Golly, variables do not nest; placing a variable or state-list inside another simply unpacks it thereinto.
+
+#### Variable names
+Varnames are alphanumeric (and case-sensitive) with three exceptions:
+- Underscores are allowed.
+- The first character of the name must be alphabetical.
+- The name as a whole cannot match one of the eight compass directions: `N`, `E`, `S`, `W`, `NE`, `SE`, `SW`, `NW`.
 
 ### Operations
 Variables can contain or be represented by "operations", with the binary `*` and `-` operators & the unary `-` and `--` operators.
 
 These operations don't have to be assigned to variable names beforehand, by the way. All of what's described below is perfectly
-valid if used directly in a transition, just like the 'on-the-spot' var literal mentioned above.
+valid if used directly in a transition, just like the "on-the-spot" state-lists mentioned above.
+
+Note: the precedence rules can be skirted by placing operations in their own single-element statelists such as in `(any-3)*2`.
 
 #### n * m ("Multiplication")
-Not commutative.
+Left-associative and not commutative. Has the highest precedence.
 ```rb
 # Nutshell
 a = (1, 2) * 2  # variable 'times' integer (repeats the variable m times)
-b = 2 * (1, 2)  # integer 'times' variable (repeats the integer to match the variable's length)
-c = 0 * 3       # integer 'times' integer (repeats the first integer m times)
+b = 2 * (1, 2)  # cellstate 'times' variable (repeats the cellstate to match the variable's length)
+c = 0 * 3       # cellstate 'times' integer (repeats the cellstate m times)
 d = b * 3 * 2   # operations can be chained if needed (probably won't be needed)
-e = (2*b, 1*(1,2), 0*3)  # ...and, like all expressions, can be placed inside a var literal
+e = (2*b, 1*(1,2), 0*3)  # ...and, like all expressions, can be placed inside a literal statelist
 ```
 ```rb
 # Golly
@@ -198,10 +244,10 @@ var e.0 = {2, 2, 2, 2, 1, 1, 0, 0, 0}
 Acts as a difference operation does between two sets.
 ```rb
 # Nutshell
-a = (1, 2, 3, 1) - 1    # variable 'minus' integer (removes the integer from the variable)
+a = (1, 2, 3, 1) - 1    # variable 'minus' cellstate (removes the cellstate from the variable)
 b = (1, 2, 3) - (2, 3)  # variable 'minus' variable (removes common elements from the former)
 c = (3, 4, 5) - 5 - 4   # chaining again
-d = (a-2, (3, 4)-3)     # again, operations can be placed inside var literals
+d = (a-2, (3, 4)-3)     # again, operations can be placed inside statelists
 ```
 ```rb
 # Golly
@@ -212,7 +258,7 @@ var d.0 = {3, 4}
 ```
 
 #### -n, --n ("Negation")
-These are shorthand for, respectively, `live-n` and `any-n`.
+These are shorthand for, respectively, `live-n` and `any-n`. Has higher precedence than the above.
 ```rb
 # Nutshell
 states: 4
@@ -231,12 +277,13 @@ var b.0 = {0, 1, 3}
 var c.0 = {1, 3}
 var d.0 = {0, 1, 3}
 ```
-They can be chained indefinitely as well; `------------3` is a syntactically-valid expression, as is `some_varname----------5`
-(subtraction then negation).
-This is probably not too useful in practice, but... you never know.
+They can be chained indefinitely as well; `-----3` is a syntactically-valid expression that will be parsed
+as `--(--(-3))`, as is `some_varname-------5` (subtracting `--(--(--5)))`). This is probably not too useful
+in practice, but... you never know.
 
 #### Ranges
-Though not exactly an operation, a range of cellstates can be expressed as two numbers (lower and upper bound) separated by double..dots.
+Though not exactly an operation, a range of cellstates can be expressed as two numbers (lower and upper bound) separated by double..dots,
+with an optional step included.
 ```rb
 # Nutshell
 a = (3..6)         # lower..upper
@@ -250,7 +297,7 @@ var b.0 = {0, 2, 3, 4, 5, 10}
 var c.0 = {1, 4, 6, 8, 10}
 ```
 Ranges differ from the expressions described above in that they cannot be used "bare" -- you always have to surround them with
-parentheses or curly brackets as shown in `a = (3..6)` as they're only allowed within a variable.
+parentheses or curly brackets as shown in `a = (3..6)` as they're only allowed within a statelist.
 
 ### References
 In a Golly table, variables are what we might call "name-bound": a variable name used once in a transition can refer to any of the
@@ -267,10 +314,10 @@ This doesn't seem bad at all on a small scale. It's convenient to be able to do 
 large project, this forces each variable definition to be duplicated up to nine times (depending on the neighborhood, of
 course) which gets messy and tedious to keep track of, making it an easy source of headaches and bugs and often both.
 
-Nutshell's key innovation (and the only thing, in fact, that it mandates be done differently than in Golly) is in noting
-that the *name* of a variable doesn't need to hold any particular meaning, only its value within a given transition.
-Thus, rather than binding to a variable's name, we can simply use... some other way of referring to nothing except the value it
-holds at a given point.
+Nutshell's key innovation (and the only thing, in fact, that it mandates be done differently than in Golly besides also eschewing
+the `var` keyword) is in noting that the *name* of a variable doesn't need to hold any particular meaning, only its value within
+a given transition. Thus, rather than binding to a variable's name, we can simply use... some other way of referring to nothing except
+the value it holds at a given point.
 
 #### Bindings
 This is handled in a straightforward manner by using compass directions as "indices" of a transition.
@@ -290,14 +337,13 @@ any.0, any.1, any.2, any.0, any.2, 0, 1, 3, 2, any.1
 any.0, any.0, any.0, any.0, any.1, any.2, any.3, any.4, 0, any.4
 _random_name.0, 0, 0, 0, 0, 0, 0, 0, 0, _random_name.0
 ```
-The eight compass directions, by the way, are not allowed to be used as variable names.
 
 #### Mappings
 Now that we've introduced binding by compass-direction index rather than by name, we can extend the concept into a second
 type of reference: *mapping* one variable to another.
 For example, "mapping" the variable (0, 1, 2) to the variable (2, 3, 4) says if the former is 0 to return 2, if 1 then to
 return 3, and if 2 then to return 4; this single mapping can therefore replace what would otherwise require a separate transition
-for each of 0->1, 1->2, and 3->4. The syntax is `[compass direction: variable expression]`, like an extension to the binding syntax:
+for each of 0->1, 1->2, and 3->4. The syntax is `[compass direction: expression]`, like an extension to the binding syntax:
 ```rb
 # Nutshell
 a = (2, 3)
@@ -322,8 +368,8 @@ var a.0 = {0, 1}
 3, 0, 0, 0, 0, 0, 0, 0, 0, 1  #3
 ```
 
-A variable literal used in a mapping can end with an ellipsis, `...`, which indicates that any remaining cellstates are to be
-mapped to the value it follows:
+A statelist used in a mapping can end with an ellipsis, `...`, which indicates that any remaining cellstates are to be
+mapped to the second-to-last value:
 ```rb
 # Nutshell
 (1, 2, 3, 4, 5), [0: (3, 5, ...)], NE..NW any; 1
@@ -341,7 +387,7 @@ However, if the "map-to" is *larger* than its "map-from", extraneous values will
 
 References are in essence single cellstates, so **they can be used anywhere a cellstate would** -- not just
 as their own whole transition state. This means references can be used as operands of the `*`, `-`, & `--` operators and as
-cellstates in variables (including variable literals in mappings).
+cellstates in variables (including statelists in mappings).
 ```rb
 # Nutshell
 neighborhood: von Neumann
@@ -354,16 +400,13 @@ states: 6
 var _random_name_A.0 = {0, 2, 3, 4, 5}
 var _random_name_B.0 = {0, 1, 3, 4, 5}
 var _random_name_C.0 = {3, 5}
-var _random_name_C.1 = _random_name_B.0
+var _random_name_C.1 = _random_name_C.0
 var _random_name_D.0 = {4, 5}
-var _random_name_D.1 = _random_name_C.0
+var _random_name_D.1 = _random_name_D.0
 
 1, _random_name_A.0, _random_name_C.0, _random_name_C.1, _random_name_A.0; 0
-2, _random_name_B.0, _random_name_D.0, _random_name_D.1, _random_name_B.0; 0
+2, _random_name_B.0, _random_name_D.0, _random_name_D.1, _random_name_D.0; 0
 ```
-*(Note that Nutshell is for some reason unable to optimize its output here, so it renders the above with 20 transitions
-and only the variables for (3, 5) & (4, 5); this result is, however, equivalent to the two transitions shown. It's all
-the same to Golly, in any case.)*
 
 ### Auxiliary transitions
 In general, the motion of a *moving* cell can only be described in Golly through two disconnected steps: first, a cell dies,
@@ -465,7 +508,7 @@ to override a later transition).
 
 The third type of auxiliary, given the relationship established above between bindings and mappings, is a natural extension
 to the previous binding-like form into what's essentially a mapping. It uses the syntax
-`compass direction[compass direction: variable or other expression]`:
+`compass direction[compass direction: expression]`:
 ```rb
 1, 0, 0, E (1, 2, 3), 0, S 4, 0, 0, 0; 2 -> S[E: (5, 6, 7)]
 ```
@@ -477,7 +520,7 @@ var _random_name.0 = {1, 2, 3}
 4, 1, 2, 0, any.0, any.1, any.2, 0, 0, 6   # S:6
 4, 1, 3, 0, any.0, any.1, any.2, 0, 0, 7   # S:7
 ```
-Anything valid in a mapping var literal is also valid here (references too), with one addition: an underscore, `_`, says not to make
+Anything valid in a mapping statelist is also valid here (references too), with one addition: an underscore, `_`, says not to make
 an auxiliary transition at all for its cellstate.
 ```rb
 # Nutshell
@@ -498,22 +541,22 @@ var _random_name.0 = {1, 2, 3}
 ```
 
 Finally, as a shorthand for this last form in cases where both compass directions are the same, one can simply write
-`compass direction[variable or other expression]` -- `S[(1, 2, 3)]`, for instance, will be interpreted as `S[S: (1, 2, 3)]`.
+`compass direction[expression]` -- `S[(1, 2, 3)]`, for instance, will be understood as `S[S: (1, 2, 3)]`.
 
 #### Precedence and "hoisting"
 As you may have noticed, auxiliary transitions are output in the order of their Nutshell specifiers. This plays into
 Golly's transition-precedence rules, where the first matching transition from the top down for a given napkin is selected,
 meaning that earlier transitions always override later ones -- likewise, an auxiliary will (should an appropriate situation
-arise) always override the ones it precedes.
+arise) always override any that follow it.
 
 In some cases, auxiliaries will need to override the main transition and not just each other, meaning that (unlike in the
-examples above) they'll have to be output before it. This can be indicated using the arrow `=>` rather than `->`, with
-thoroughly-identical syntax otherwise:
+examples above) they'll have to be output before (above) it. This can be indicated using the arrow `=>` rather than `->`, with
+otherwise-thoroughly-identical syntax:
 ```rb
 # Nutshell
 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 => S:1
 
-0, (0, 1), 2, 3, 4, 5, 6, 7, 8, 9 => S:1  E[N] -> N:0  # can also be ` -> N:0 => S:2  E2`
+0, (0, 1), 2, 3, 4, 5, 6, 7, 8, 9 => S:1  E[N] -> N:0  # can also be ` -> N:0 => S:2  E[N]`
 ```
 ```rb
 # Golly
@@ -529,15 +572,14 @@ _random_name.0, any.0, any.1, 2, 3, 0, 7, 8, any.2, 0  # N:0
 ```
 
 ### Custom symmetry types
-The implementation of the above-mentioned symmetry-switching allows, conveniently, for non-Golly-supported symmetries to be defined and then simply expanded by Nutshell into
-one of Golly's symmetry types. Provided by Nutshell is a small "standard library" of sorts that comes with the following:
+The implementation of the above-mentioned symmetry-switching allows, conveniently, for nonstandard symmetries to be defined and
+then simply expanded by Nutshell into one of Golly's symmetry types. Provided by Nutshell is a small "standard library" of sorts
+that comes with the following:
 
 - `symmetries: nutshell.AlternatingPermute`: Permutational symmetry, like `symmetries: permute`, but only between every *second* cell in
   a napkin. Under the Moore neighborhood, this means that cellstates are permuted between orthogonal neighbors and, separately, between
-  diagonal neighbors; under vonNeumann, that cellstates are permuted between opposing pairs of neighbors; and, though *possible* to apply
-  under hexagonal symmetry (where permutation would occur between (N, SE, W) and (E, S, NW)), it would be meaningless so only the
-  former two are supported.  
-  This symmetry type supports the tilde-based shorthand, but it only spreads cellstates out within their permute space (e.g.
+  diagonal neighbors; under vonNeumann, that cellstates are permuted between opposing pairs of neighbors; and, under hexagonal, between [N, SE, W] and [E, S, NW].  
+  This symmetry type supports the tilde-based shorthand, but it only spreads terms out within their permute space (as in,
   `0, 1, 2; 0` results in the Moore transition `0, 1, 2, 1, 2, 1, 2, 1, 2; 0` because the 1 and 2 are distributed into alternating slots).
 - `symmetries: nutshell.Rotate2`: Identical to Golly's hexagonal `rotate2`, but allows Moore and vonNeumann as well.
 - `symmetries: nutshell.ReflectVertical`: Vertical reflection.
@@ -596,41 +638,105 @@ As shown by the ellipses, there are three things you need to define within your 
   The custom-symmetry-type API will be simplified in the future to make it more accessible.
 
 ## Non-table-related changes
-- The preferred file extension is `.ruel`, both a holdover from when this project was named `rueltabel` and a simple-but-recognizable variant
-  of "rule" to distinguish nutshell files from standard `.rule` files. This obviously isn't enforced anywhere, however, and may
+- The preferred file extension is `.ruel`, both a holdover from when this project was named `rueltabel` and a simple-but-recognizable
+  variant of "rule" to distinguish nutshell files from standard `.rule` files. This obviously isn't enforced anywhere, however, and may
   also be subject to change.
 - Comments in every segment (barring `@NUTSHELL`, where everything after the first word is a comment) start with `#` and stretch to the end
   of a line.
-- The `@COLORS` segment in nutshells allows multiple states with the same color to be defined
-  on the same line as each other, and for a color to be written as either a triplet of base-10 `R G B` values, as in Golly, or a
-  hexadecimal color code. As a result of its allowing multiple colors, the "key/value" order, if you will, has been switched: the color now
-  goes first on a line, followed by all the states it's assigned to. A range can be used here identically to that found in variable
-  literals.  
-  For instance: `FFF: 2 4 6 8 10` says to assign the color `#FFFFFF` to states 2, 4, 6, 8, and 10, and can also be written
-  as `FFF: 2+2..10` or `FFFFFF: 2+2..10` or `255 255 255: 2+2..10`.
-- The `@ICONS` segment is based around RLEs instead of Gollyesque XPM data. See [this post](http://conwaylife.com/forums/viewtopic.php?f=7&t=3361&p=59944#p59944)
-  for an explanation + example. Ranges are also supported in icon state specifiers.
-- The `@NUTSHELL` segment allows *constants*, which carry over to and are usable in the `@TABLE`, `@COLORS`, and `@ICONS` segments, to be
-  defined alongside a description of each state. Take the following example:
+- **All segments are optional**. Nutshell will in addition transcribe "non-special" segments *as is*, meaning that
+  a file can have a `@RULE` segment rather than `@NUTSHELL` and it will be transcribed into the output file untouched.
+- The other "special" nutshell segments like `@TABLE` and `@ICONS` and `@COLORS`, none of whose names differ from
+  their Golly-format counterparts, will still be ignored if their header is immediately followed by
+  the comment `# golly` -- either on the same line (after whitespace) or on the very next.
+
+### The `@NUTSHELL` segment
+This segment replaces Golly's `@RULE`.
+It allows *constants*, which carry over to and are usable in the `@TABLE`, `@COLORS`, and `@ICONS` segments, to be defined alongside a
+description of each state. Take the following example:
 
 ```rb
 @NUTSHELL foo
 
 1: Stationary data {DATA}
-3: Signal over data
+3: Signal-transferring data
 4: Signal over vacuum {SIGNAL}
 
 @TABLE
 ...
 ```
-  The names `DATA` and `SIGNAL` will be usable within the aforementioned segments as aliases for, respectively, states `1` and `4`.  
-  It is recommended but nowhere required that constant names be written in `UPPERCASE` or at least `PascalCase` and normal
-  variable names in `lowercase`, `camelCase`, or `snake_case`; the initial capitals help visually distinguish constants from multi-state variables.  
-  For the actual registration of a constant, all that matters is that its line in `@NUTSHELL` start with `<number>:` and contain anywhere a pair
-  of `{braces}` that enclose the constant's name. The braced part and any whitespace separating it from the previous word will be removed
-  from the final `@RULE` segment in the output file.
-- **All segments are optional**. The parser will in addition transcribe "non-special" segments *as is*, meaning that
-  a file can have a `@RULE` segment rather than `@NUTSHELL` and it will be transcribed into the output file untouched.
-- The other "special" nutshell segments like `@TABLE` and `@ICONS` and `@COLORS`, none of whose names differ from
-  their Golly-format counterparts, will still be ignored by the parser if their header is immediately followed by
-  the comment `#golly` -- either on the same line (after whitespace) or on the line immediately below.
+
+The names `DATA` and `SIGNAL` will be usable within the aforementioned segments as aliases for, respectively, cellstates `1` and `4`.  
+It is strongly recommended albeit nowhere required that constant names be written in `UPPERCASE` or at least `PascalCase` and normal
+variable names in `lowercase`, `camelCase`, or `snake_case`; the initial capitals help visually distinguish constants from multi-state variables.
+
+For the actual registration of a constant, all that matters is that its line in `@NUTSHELL` start with `<number>:` and contain anywhere a
+pair of `{braces}` that enclose the constant's name. The braced part and any whitespace separating it from the previous word will be removed
+from the final `@RULE` segment in the output file.
+# The `@ICONS` segment
+This segment is based around Golly's XRLE format instead of XPM data; the idea is that you're likely going to be in Golly anyway
+when you're fiddling with a rule, so it'll be easier to quickly copy/paste an RLE in and out of a blank Golly tab than it'd be to
+edit XPM images in your text editor. Icons are automatically centered & uniformly resized to the nearest Golly icon dimensions
+(7x7/15x15/31x31).
+
+Each individual XRLE pattern listed represents one icon. To assign this icon to some cellstate,
+include the state (or its `@NUTSHELL`-defined constant) in a comment immediately above the icon's RLE pattern. Multiple cellstates
+can be assigned to by listing them individually (as long as each cellstate appears either with whitespace on both sides or with
+whitespace before and a comma after) or by including them in a [range literal](#ranges) (sans parentheses / curly brackets).
+
+Before further explanation, a simple example:
+
+```rb
+@NUTSHELL IconTest
+
+@COLORS
+FFF: 3
+
+@ICONS       # Alternatively:
+0: 303030    # .  303030
+1: D0D0D0    # A  D0D0D0
+2: 9CF       # B  9CF
+
+#C Up arrow 1 2
+x = 10, y = 9, rule = //10
+I2A4.I2A$I2A4.I2A$.I2A2.I2A$.I2A2.I2A$2.I2AI2A$2.I2AI2A$3.I3A$3.I3A$
+4.IA!
+
+#C Down arrow: 4, 5
+x = 10, y = 9, rule = //10
+4.AI$3.3AI$3.3AI$2.2AI2AI$2.2AI2AI$.2AI2.2AI$.2AI2.2AI$2AI4.2AI$2AI4.
+2AI!
+```
+
+Pixel colors are determined by those directive-like lines before the XRLEs. `0: 303030`, for instance, says that state 0 (symbol `.`)
+in an icon should represent the hex color #303030 (Golly's default background color), `1: D0D0D0` says that state 1
+(the symbol `A`) represents the hex color #D0D0D0, and so on. The cellstate's symbol also can be written instead of
+its number, as in `. 303030` / `A D0D0D0` / `B 9CF` (notice, no colon) if it's easier to read.  
+In the future, Nutshell will come with a utility to aid in visualizing these icons
+(accessible as `nutshell-ca icon makerule <nutshell file>`)
+that creates a B/S012345678 ruletable whose `@COLORS` segment mirrors the colors in the nutshell file's `@ICONS`.
+
+The rule of each RLE is ignored; just choose one with enough cellstates for the pattern to be pastable into Golly.
+Note that the icons don't have to be in sequence or even present (the pre-icon comments determine ordering); if a certain state's
+icon is omitted (like state 3's above!) and it doesn't come after the last state with an icon, it will be made as a solid square colored
+according to what's assigned to the state in `@COLORS`. (if it does follow the last state whose icon is defined then it can safely be
+ignored and Nutshell won't attempt to fill it in)
+
+If a missing cellstate is not addressed in `@COLORS` or if there is no `@COLORS` to use, an error will be raised -- but to
+mitigate this, you can define a gradient with which to fill missing states; the syntax for this is
+`? <hex color> <optional separator, ignored> <hex color>` (whitespace required), where the first hex color is the
+gradient's start and the second its end, and it goes with the other color definitions before the RLEs.  
+The gradient relies on the `states:` or `n_states:` directive in @TABLE to compute its start and end -- but if there is no
+`@TABLE` or if it's `@TABLE #golly` (i.e. marked as "don't touch, Nutshell") then the `n_states` won't be available. In this
+case you may append to the gradient line a bracketed number indicated the rule's desired "n_states" value, as in
+`?  <hex color> <optional separator> <hex color> [<n_states>]`.
+
+`@COLORS` colors will always take precedence over the gradient unless the cellstate in `@COLORS` has an \*asterisk before it.
+
+### The `@COLORS` segment
+This segment allows multiple states with the same color to be defined on the same line as each other, and for a color to be written as
+either a triplet of base-10 `R G B` values, as in Golly, or a hexadecimal color code.
+As a result of its allowing multiple colors, the "key/value" order, if you will, has been switched: the color now
+goes first on a line, followed by all the states it's assigned to. A [range](#ranges) can be used here as well.  
+
+For instance: `FFF: 2 4 6 8 10` says to assign the color `#FFFFFF` to states 2, 4, 6, 8, and 10, and can also be written
+as `FFF: 2+2..10` or `FFFFFF: 2+2..10` or `255 255 255: 2+2..10`.

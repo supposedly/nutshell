@@ -1,7 +1,7 @@
 import inspect
 
 from .segment_types import NutshellSegment, Table, ColorSegment, IconArray
-from .common.errors import NutshellException
+from .common import errors, utils
 
 
 Table.hush = False  # a little bit eh but :shrug:
@@ -36,7 +36,7 @@ def parse(fp):
             segment, seg_lno = parts[label], lines[label]
         except KeyError:
             continue
-        if segment[0].replace(' ', '').lower() == '#golly':
+        if segment[0].translate(utils.KILL_WS).lower() == '#golly':
             if label == '@TABLE':
                 segment[0] = None
             else:
@@ -47,7 +47,7 @@ def parse(fp):
         annot = getattr(inspect.signature(converter).parameters.get('dep'), 'annotation', None) or {}
         try:
             parts[label] = converter(segment, seg_lno, **(annot and {'dep': [parts.get(i) for i in annot]}))
-        except NutshellException as exc:
+        except errors.NutshellException as exc:
             if exc.lno is None:
                 raise exc.__class__(None, exc.msg, label)
             raise exc.__class__(exc.lno, exc.msg, label, segment, seg_lno)

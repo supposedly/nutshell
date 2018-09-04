@@ -8,6 +8,7 @@ import lark
 from lark import Transformer, Tree, Discard, v_args
 
 from nutshell.common.errors import *
+from nutshell.common.utils import KILL_WS
 from ._classes import *
 
 SPECIALS = {'...', '_', 'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'}
@@ -124,13 +125,13 @@ class Preprocess(Transformer):
     
     @inline
     def directive(self, meta, name, val):
-        val = val.replace(' ', '')
+        val = val.translate(KILL_WS)
         self.directives[str(name)] = val
-        if name == 'states':
+        if name in ('n_states', 'states'):
             if val == '?':
                 raise UnsupportedFeature(
                   fix(meta),
-                  "`states: ?` is currently not supported. Please specify your rule's number of states explicitly :("
+                  f"`{name}: ?` is currently not supported. Please specify your rule's number of states explicitly :("
                   )
             self._tbl.n_states = val
         if name == 'symmetries':
@@ -317,17 +318,17 @@ class Preprocess(Transformer):
         ret = []
         m = fix(meta)
         for val in map(self.kill_string, children, repeat(m)):
-            if isinstance(val, (tuple, Variable)):
+            if isinstance(val, (tuple, StateList)):
                 ret.extend(val)
             elif isinstance(val, int):
                 ret.append(int(val))
             else:
                 raise NutshellException(fix(meta), val)
-        return Variable(ret, context=fix(meta))
+        return StateList(ret, context=fix(meta))
     
     def var(self, children, meta):
         m = fix(meta)
-        return Variable(self.kill_strings(children, m), context=m)
+        return StateList(self.kill_strings(children, m), context=m)
     
     @inline
     def repeat_int(self, meta, a, b):
@@ -343,7 +344,7 @@ class Preprocess(Transformer):
     
     @inline
     def subt(self, meta, var, subtrhnd):
-        return Subt(self.kill_string(var, meta), Variable(self.kill_string(subtrhnd, meta), context=meta), context=meta)
+        return Subt(self.kill_string(var, meta), StateList(self.kill_string(subtrhnd, meta), context=meta), context=meta)
     
     @inline
     def live_except(self, meta, subtrhnd):

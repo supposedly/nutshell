@@ -11,7 +11,7 @@ from nutshell.common.classes import TableRange
 from nutshell.common.utils import printv, printq
 from nutshell.common.errors import *
 from ._transformer import NUTSHELL_GRAMMAR, Preprocess
-from ._classes import SpecialVar, VarName, Variable
+from ._classes import SpecialVar, VarName, StateList
 from . import _symutils as symutils
 
 
@@ -46,22 +46,22 @@ class Table:
             global printv, printq
             printv = printq = lambda *_, **__: None
         
-        self.vars = Bidict()  # {VarName(name) | str(name) :: Variable(value)}
-        self.directives = {}
-        self.transitions = []
-        self._constants = {}
-        self.sym_types = set()
-        
         if dep is not None:
             dep.replace(self._src)
             self._constants = dep.constants
             if self._constants:
                 self._n_states = max(self._constants.values())
         
+        self.directives = {'symmetries': 'none', 'neighborhood': 'Moore', 'states': self._n_states}
+        self.vars = Bidict()  # {VarName(name) | str(name) :: Variable(value)}
+        self.sym_types = set()
+        self.transitions = []
+        self._constants = {}
+        
         trans = Preprocess(tbl=self)
         parser = lark.Lark(NUTSHELL_GRAMMAR, parser='lalr', start='table', propagate_positions=True)
         self._data = trans.transform(parser.parse('\n'.join(self._src)))
-        if len(self.sym_types) == 1 and not hasattr(next(iter(self.sym_types)), 'fallback'):
+        if len(self.sym_types) <= 1 and not hasattr(next(iter(self.sym_types), None), 'fallback'):
             self.final = [t.fix_vars() for t in self._data]
         else:
             min_sym = symutils.find_min_sym_type(self.sym_types, self.trlen)
@@ -101,12 +101,12 @@ class Table:
             value = int(value)
         except (TypeError, ValueError):
             if value == '?':
-                self.vars[VarName('any')] = Variable(range(self.n_states), context=None)
-                self.vars[VarName('live')] = Variable(range(1, self.n_states), context=None)
+                self.vars[VarName('any')] = StateList(range(self.n_states), context=None)
+                self.vars[VarName('live')] = StateList(range(1, self.n_states), context=None)
         else:
             self._n_states = value
-            self.vars[VarName('any')] = Variable(range(value), context=None)
-            self.vars[VarName('live')] = Variable(range(1, value), context=None)
+            self.vars[VarName('any')] = StateList(range(value), context=None)
+            self.vars[VarName('live')] = StateList(range(1, value), context=None)
 
     def add_sym_type(self, name):
         self.sym_types.add(symutils.get_sym_type(name))
@@ -126,7 +126,7 @@ class Table:
                             return (
                               'No match\n\n'
                               f'Impossible match!\nOverridden on line {self._start+lno} by:\n  {self[lno-1]}\n'
-                              f"""{"" if start == 1 else f"  {' '*(start-1)}{'^'*(end-start)}"}\n"""  # TODO+FIXME: deuglify
+                              f"""{"" if start == 1 else f"  {' '*(start-1)}{'^'*(end-start)}"}\n"""  # TODO FIXME: deuglify
                               f"Specifically (compiled line):\n  {', '.join(map(str, tr.fix_vars()))}"
                               )
                         break
@@ -135,7 +135,7 @@ class Table:
                     return (
                       'Found!\n\n'
                       f'Line {self._start+lno}:\n  {self[lno-1]}\n'
-                      f"""{"" if start == 1 else f"  {' '*(start-1)}{'^'*(end-start)}"}\n"""  # TODO+FIXME: deuglify
+                      f"""{"" if start == 1 else f"  {' '*(start-1)}{'^'*(end-start)}"}\n"""  # TODO FIXME: deuglify
                       f"Compiled line:\n  {', '.join(map(str, tr.fix_vars()))}"
                       )
         if start == end:
