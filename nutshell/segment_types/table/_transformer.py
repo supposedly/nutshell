@@ -71,13 +71,23 @@ class Preprocess(Transformer):
     def kill_strings(self, val, meta):
         return [self.kill_string(i, meta) for i in val]
     
-    def check_cdir(self, cdir, meta):
-        if cdir not in self._tbl.neighborhood and cdir != '0':
+    def check_cdir(self, cdir, meta, *, return_int=True, enforce_int=False):
+        if enforce_int and hasattr(self._tbl.symmetries, 'special') and not cdir.isdigit():
+            raise SyntaxErr(
+              fix(meta),
+              f"Compass directions have no meaning under {self.directives['symmetries']} symmetry. "
+              f'Instead, refer to previous states using numbers 0..8: here, {cdir} would be {self._tbl.neighborhood[cdir]}'
+              )
+        try:
+            if return_int:
+                return int(cdir) if cdir.isdigit() else self._tbl.neighborhood[str(cdir)]
+            return int(cdir != '0') and self._tbl.neighborhood.inv[int(cdir)] if cdir.isdigit() else str(cdir)
+        except KeyError:
+            pre = 'Transition index' if cdir.isdigit() else 'Compass direction'
             raise ReferenceErr(
               fix(meta),
-              f"Compass direction {cdir} does not exist in {self.directives['neighborhood']} neighborhood"
+              f"{pre} {cdir} does not exist in {self.directives['neighborhood']} neighborhood"
               )
-        return True
     
     def special_transform(self, initial, resultant, napkin):
         """
@@ -175,29 +185,24 @@ class Preprocess(Transformer):
                 rest = self.kill_strings(rest, m)
                 
                 if first_data == 'cdir':
-                    cdir = first.children[0]
-                    try:                
-                        napkin[self._tbl.neighborhood[cdir]], = rest
-                    except KeyError:
-                        self.check_cdir(cdir, first.meta)
-                    if self._tbl.neighborhood[cdir] != idx:
+                    cdir = self.check_cdir(first.children[0], first.meta)
+                    napkin[cdir], = rest
+                    if cdir != idx:
                         if idx == 1:
-                            idx = self._tbl.neighborhood[cdir]
+                            idx = cdir
                             offset_initial = True
                         else:
                             raise SyntaxErr(
                               fix(first.meta),
                               'Out-of-sequence compass direction '
-                              f'(expected {self._tbl.neighborhood.inv[idx]}, got {cdir})'
+                              f'(expected {self._tbl.neighborhood.inv[idx]}, got {first.children[0]})'
                               )
                     idx = add_mod(idx, 1)
                 elif first_data == 'crange':
                     a, b = first.children
-                    try:
-                        crange = range(self._tbl.neighborhood[a], 1+self._tbl.neighborhood[b])
-                    except KeyError:
-                        self.check_cdir(a, (first.meta.line, first.meta.column, len(a) + first.meta.column))
-                        self.check_cdir(b, (first.meta.line, first.meta.end_column - len(b), first.meta.end_column))
+                    int_a = self.check_cdir(a, (first.meta.line, first.meta.column, len(a) + first.meta.column))
+                    int_b = self.check_cdir(b, (first.meta.line, first.meta.end_column - len(b), first.meta.end_column))
+                    crange = range(int_a, 1+int_b)
                     
                     if len(crange) == 1 or not crange and not offset_initial:
                         if idx != 1:
@@ -259,9 +264,8 @@ class Preprocess(Transformer):
         return MetaTuple('normal', children)
     
     def cdir_delay(self, children, meta):
-        self.check_cdir(children[0], meta)
         return {
-          'cdir': str(children[0]),
+          'cdir': self.check_cdir(children[0], meta, return_int=False),
           'delay': int(children[1]) if len(children) > 1 else None,
           'meta': fix(meta)
           }
@@ -275,28 +279,25 @@ class Preprocess(Transformer):
         return auxiliaries
     
     @inline
-    def aux_bare(self, meta, cdir_to, val):
-        cdir_to, delay = cdir_to['cdir'], cdir_to['delay']
+    def aux_bare(self, meta, cdir_info, val):
+        cdir_to, delay = cdir_info['cdir'], cdir_info['delay']
         return Auxiliary(self._tbl, cdir_to, delay, self.kill_string(val, meta), context=meta)
     
     @inline
-    def aux_bind_self(self, meta, cdir_to, cdir_from):
-        self.check_cdir(cdir_from, meta)
-        cdir_to, delay = cdir_to['cdir'], cdir_to['delay']
+    def aux_bind_self(self, meta, cdir_info, cdir_from):
+        cdir_from = self.check_cdir(cdir_from, meta, return_int=False, enforce_int=True)
+        cdir_to, delay = cdir_info['cdir'], cdir_info['delay']
         return Auxiliary(self._tbl, cdir_to, delay, Binding(cdir_from, context=(meta[0], meta[1]+len(cdir_to), meta[2])), context=meta)
     
     @inline
-    def aux_map_self(self, meta, cdir_to, val):
-        cdir_to, delay = cdir_to['cdir'], cdir_to['delay']
+    def aux_map_self(self, meta, cdir_info, val):
+        cdir_to, delay = cdir_info['cdir'], cdir_info['delay']
         return Auxiliary(self._tbl, cdir_to, delay, Mapping(cdir_to, self.kill_string(val, meta), context=(meta[0], meta[1]+len(cdir_to), meta[2])), context=meta)
     
     @inline
-    def aux_map_other(self, meta, cdir_to, cdir_from, val):
-        try:
-            self.check_cdir(cdir_from, meta)
-        except ReferenceErr:
-            self.check_cdir(cdir_from, (meta[0], meta[1] + cdir_to['meta'][1] + 1, len(cdir_from)))
-        cdir_to, delay = cdir_to['cdir'], cdir_to['delay']
+    def aux_map_other(self, meta, cdir_info, cdir_from, val):
+        cdir_to, delay = cdir_info['cdir'], cdir_info['delay']
+        cdir_from = self.check_cdir(cdir_from, (meta[0], meta[1] + cdir_info['meta'][1] + 1, len(cdir_from)), return_int=False, enforce_int=True)
         return Auxiliary(self._tbl, cdir_to, delay, Mapping(cdir_from, self.kill_string(val, meta), context=(meta[0], meta[1]+len(cdir_to), meta[2])), context=meta)
     
     @inline
@@ -377,10 +378,22 @@ class Preprocess(Transformer):
     
     @inline
     def mapping(self, meta, cdir, map_to):
-        self.check_cdir(cdir, meta)
+        if hasattr(self._tbl.symmetries, 'special') and not cdir.isdigit():
+            raise SyntaxErr(
+              meta,
+              f"Compass directions have no meaning under {self.directives['symmetries']} symmetry. "
+              f'Instead, refer to previous states using numbers 0..8: here, {cdir} would be {self._tbl.neighborhood[cdir]}'
+              )
+        cdir = self.check_cdir(cdir, meta, return_int=False)
         return Mapping(cdir, self.kill_string(map_to, meta), context=meta)
     
     @inline
     def binding(self, meta, cdir):
-        self.check_cdir(cdir, meta)
+        if hasattr(self._tbl.symmetries, 'special') and not cdir.isdigit():
+            raise SyntaxErr(
+              meta,
+              f"Compass directions have no meaning under {self.directives['symmetries']} symmetry.\n  "
+              f'Instead, refer to previous states using numbers 0..8: here, {cdir} would be {self._tbl.neighborhood[cdir]}'
+              )
+        cdir = self.check_cdir(cdir, meta, return_int=False)
         return Binding(cdir, context=meta)

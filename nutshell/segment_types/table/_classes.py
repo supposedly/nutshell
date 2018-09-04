@@ -607,10 +607,8 @@ class Auxiliary:
         ).expand(tr)
     
     def from_binding(self, tr):
-        if isinstance(self.resultant.within(tr), StateList):
-            raise Reshape(self.resultant.cdir)
         return TransitionGroup.from_seq(
-          self._make_tr(tr, self.resultant.within(tr).value), self.tbl, context=self.ctx, symmetries=self.symmetries
+          self._make_tr(tr, self.resultant.within(tr)), self.tbl, context=self.ctx, symmetries=self.symmetries
         ).expand(tr)
     
     def from_mapping(self, tr):
