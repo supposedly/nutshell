@@ -1,5 +1,6 @@
 import re
 from collections.abc import MutableSequence
+from nutshell.common.errors import TableValueError
 
 from nutshell.common.errors import ValueErr
 
