@@ -107,9 +107,6 @@ class TransitionGroup:
                         trs.extend(TransitionGroup.from_seq(tr, self.tbl, context=self.ctx, symmetries=self.symmetries).expand())
                     break
                 except Reshape as e:
-                    #if e.cdir is None:
-                    #    idx, var = orig_idx, val
-                    #else:
                     var = self[e.cdir].within(reference)
                     idx = e.cdir != '0' and self.tbl.neighborhood[e.cdir]
                     trs.extend(
@@ -229,7 +226,7 @@ class Transition:
                 ret.append(str(i))
             elif isinstance(i, ResolvedBinding):
                 cdir = i.cdir != '0' and self.tbl.neighborhood[i.cdir]
-                varname = variables[tuple(i)]
+                varname = variables[i.untether()]
                 if '.' not in ret[cdir]:
                     seen[varname] = 1
                     varname.rep = max(varname.rep, 1)
@@ -513,6 +510,14 @@ class ResolvedBinding(StateList):
     
     def __repr__(self):
         return f'{super().__repr__()}[{self.cdir}]'
+    
+    def within(self, tr):
+        if tr not in self._d:
+            self._d[tr] = ResolvedBinding(self.cdir, self.iwithin(tr), self.start, context=self.ctx)
+        return self._d[tr]
+    
+    def untether(self):
+        return tuple(getattr(i, 'value', i) for i in self)
 
 
 class VarValue:
