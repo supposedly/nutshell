@@ -618,7 +618,7 @@ any.0, 0, any.1, any.2, any.3, any.4, any.5, 0, any.6, 0  # N:0
 ```
 Symmetry-specifier groups cannot be nested.
 
-Now, handy as that is, it's still missing something. Consider the following transition:
+...handy as that is, though, it's still missing something. Consider the following transition:
 ```rb
 # Nutshell
 states: 5
@@ -643,10 +643,9 @@ live.0, any.0, any.1, 0, any.2, live.0
 live.0, any.0, 0, any.1, any.2, live.0
 live.0, any.0, any.1, any.2, 0, live.0
 ```
-Though the `N[N]` auxiliary *appears* to be saying "keep to the north whatever's there", what it actually says is
-"keep the `live` cell, which may or may not be to the north because it gets rotate4'd around, in place".
-
-This may seem to be rectifiable by placing the N[N] under `none` symmetry, like so:
+Though the `N[N]` auxiliary *appears* to be saying _"keep to the north whatever's there"_, what it actually says is
+_"keep the `live` cell where it is, even though it won't always be to the north thanks to `rotate4`"_. This may seem
+to be rectifiable by placing the `N[N]` under `none` symmetry, like so:
 ```rb
 # Nutshell
 states: 5
@@ -669,10 +668,8 @@ symmetries: rotate4
 live.0, any.0, any.1, 0, any.2, live.0
 ```
 ...but what that actually results in, as shown in the second codeblock, is the auxiliary's being applied in the
-exact same fashion but *only* to the north. (In other words, the `none()` symmetry specifier affects only the
-transformations applied to the auxiliaries inside it.)
-
-~~To actually rectify this, include an exclamation mark after the symmetry type's name:~~ **NOT YET IMPLEMENTED**
+exact same fashion, just *only* to the north. To actually change this behavior, include an exclamation mark after
+the symmetry type's name:
 ```rb
 # Nutshell
 states: 5
@@ -697,9 +694,9 @@ live.0, any.0, any.1, 0, any.2, live.0
 3, any.0, any.1, 0, any.2, 3
 4, any.0, any.1, 0, any.2, 4
 ```
-This indicates to Nutshell that the auxiliary should remain "stationary" while its symmetries are applied to it.
-If it were written here as `rotate4!(N[N])` instead of `none!(N[N])`, the Golly output would contain a rotate4
-expansion of each of the final four lines.
+This indicates to Nutshell that the auxiliary should remain "stationary" while the main transition's symmetries are applied.
+If it were written here as `rotate4!(N[N])` instead of `none!(N[N])`, the Golly output would contain a rotate4 expansion of
+each of the final four lines.
 
 ### Custom symmetry types
 The implementation of the above-mentioned symmetry-switching allows, conveniently, for nonstandard symmetries to be defined and

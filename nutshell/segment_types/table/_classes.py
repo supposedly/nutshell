@@ -1,7 +1,7 @@
+from collections import Iterable, defaultdict
 from contextlib import suppress
 from functools import partial
 from itertools import count
-from collections import Iterable, defaultdict
 
 from nutshell.common.utils import random
 from nutshell.common.errors import *
@@ -65,7 +65,7 @@ class TransitionGroup:
         self._tr_dict = {'0': initial, **{nbhd[k]: v for k, v in napkin.items()}}
         self._tr = [initial, *map(napkin.get, range(1, 1+len(napkin))), resultant]
         self._n = napkin
-        self._expanded = None
+        self._expandeds = {}
     
     def __getitem__(self, item):
         if isinstance(item, str):
@@ -85,6 +85,8 @@ class TransitionGroup:
     def expand(self, reference=None):
         if reference is None:
             reference = self
+        if reference in self._expandeds:
+            return self._expandeds[reference]
         trs = []
         current = []
         for orig_idx, val in enumerate(self._tr):
@@ -120,13 +122,22 @@ class TransitionGroup:
                 current.append(val)
         else:
             return [Transition(current, self.tbl, context=self.ctx, symmetries=self.symmetries)]
+        self._expandeds[reference] = trs
         return trs
+    
+    @staticmethod
+    def _fix_vars(d, tr):
+        seen, ret = {}, []
+        for name in tr:
+            idx = seen[name] = 1 + seen.get(name, -1)
+            ret.append(d[name][idx])
+        return ret
     
     def apply_aux(self, auxiliaries, top=True):
         if auxiliaries is None:
             return []
         new = []
-        for i in auxiliaries:
+        for i in (aux for aux in auxiliaries if not aux.stationary):
             try:
                 new.extend(i.within(self))
             except CoordOutOfBoundsError as e:
@@ -165,6 +176,22 @@ class TransitionGroup:
                   TransitionGroup.from_seq(
                     tr, self.tbl, context=self.ctx, symmetries=self.symmetries
                     ).apply_aux([i], False)
+                  )
+        
+        stationaries = [aux for aux in auxiliaries if aux.stationary]
+        if stationaries:
+            for i in stationaries:
+                i.stationary = False
+            for tr in self.expand():
+                partial = initial, *napkin, resultant = tr.fix_partial()
+                d = {k: [v for i, v in enumerate(tr) if partial[i] == k] for k in set(partial)}
+                new.extend(
+                  j
+                  for i in self.symmetries(napkin).expand()
+                  for j in TransitionGroup.from_seq(
+                    self._fix_vars(d, [initial, *i, resultant]),
+                    tr.tbl, context=tr.ctx, symmetries=tr.symmetries
+                    ).apply_aux(stationaries)
                   )
         return new
 
@@ -265,8 +292,7 @@ class Transition:
     def in_symmetry(self, new_sym):
         variables = self.tbl.vars.inv
         initial, *napkin, resultant = self.fix_partial()
-        gen = (self.fix_final([initial, *i, resultant], variables) for i in {new_sym(j) for j in self.symmetries(napkin).expand()})
-        return list(gen)
+        return [self.fix_final([initial, *i, resultant], variables) for i in {new_sym(j) for j in self.symmetries(napkin).expand()}]
 
 
 class FinalTransition(list):
@@ -560,6 +586,11 @@ class Auxiliary:
         self.resultant = resultant
         self.symmetries = symmetries or tbl.symmetries
         self.stationary = False
+        if delay is not None:
+            raise UnsupportedFeature(
+              self.ctx,
+              f'Delayed auxiliaries (as in "{initial_cdir}+{delay}") are not supported as of yet'
+              )
         if isinstance(resultant, Mapping):
             if resultant.cdir != '0' and not self.orig.toward(resultant.cdir).valid():
                 nbhd = tbl.directives['neighborhood']
@@ -576,11 +607,6 @@ class Auxiliary:
           Binding: self.from_binding,
           Mapping: self.from_mapping
         }[type(resultant)]
-        if delay is not None:
-            raise UnsupportedFeature(
-              self.ctx,
-              f'Delayed auxiliaries (as in "{initial_cdir}+{delay}") are not supported as of yet'
-              )
     
     def __repr__(self):
         return f'Aux[{self.initial_cdir}: {self.resultant}]'

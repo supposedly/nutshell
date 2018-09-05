@@ -52,7 +52,7 @@ class Table:
             if self._constants:
                 self._n_states = max(self._constants.values())
         
-        self.directives = {'symmetries': 'none', 'neighborhood': 'Moore', 'states': self._n_states}
+        self.directives = {'neighborhood': 'Moore', 'states': self._n_states}  # {'symmetries': [[what should the default symmetries be??]]}
         self.vars = Bidict()  # {VarName(name) | str(name) :: Variable(value)}
         self.sym_types = set()
         self.transitions = []
@@ -65,7 +65,7 @@ class Table:
             self.final = [t.fix_vars() for t in self._data]
         else:
             min_sym = symutils.find_min_sym_type(self.sym_types, self.trlen)
-            self.directives['symmetries'] = getattr(min_sym, 'name', [min_sym.__name__.lower()])[0]
+            self.directives['symmetries'] = min_sym.name[0] if hasattr(min_sym, 'name') else min_sym.__name__.lower()
             self.final = [new_tr for tr in self._data for new_tr in tr.in_symmetry(min_sym)]
         self.directives['n_states'] = self.directives.pop('states')
     
