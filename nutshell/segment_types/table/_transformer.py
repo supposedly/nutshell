@@ -155,6 +155,12 @@ class Preprocess(Transformer):
         raise Discard
     
     def permute_shorthand(self, children, meta):
+        if not hasattr(self._tbl.symmetries, 'special'):
+            raise SyntaxErr(
+              fix(meta),
+              f"Cannot use tilde-based shorthand under {self.directives['symmetries']} symmetry.\n  "
+              '(Try a range of compass directions instead)'
+              )
         state, *permute = children
         return MetaTuple(meta, (self.kill_string(state, meta), permute[0] if permute else None))
     
@@ -168,7 +174,6 @@ class Preprocess(Transformer):
             resultant = self.kill_string(resultant, meta.line)
         except ReferenceErr as e:
             raise ReferenceErr((meta.line, meta.end_column - len(str(resultant)), meta.end_column), e.msg)
-        
         if hasattr(self._tbl.symmetries, 'special'):
             seq = [self.unravel_permute(i, meta) for i in children]
             napkin = dict(enumerate(self.special_transform(initial, resultant, seq), 1))
@@ -276,6 +281,15 @@ class Preprocess(Transformer):
         symmetries = symutils.get_sym_type(symmetries)
         for aux in auxiliaries:
             aux.symmetries = symmetries
+        return auxiliaries
+    
+    @inline
+    def stationary_symmetried_aux(self, meta, symmetries, *auxiliaries):
+        self._tbl.add_sym_type(symmetries)
+        symmetries = symutils.get_sym_type(symmetries)
+        for aux in auxiliaries:
+            aux.symmetries = symmetries
+            aux.stationary = True
         return auxiliaries
     
     @inline

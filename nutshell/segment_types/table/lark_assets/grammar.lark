@@ -17,8 +17,12 @@ _sep: ("," | ";") _WS?  //If this is a terminal rather than a rule it interferes
 _aux: normal_aux hoist_aux? | hoist_aux normal_aux?
 normal_aux: _NORMAL_ARROW _auxlist
 hoist_aux: _HOIST_ARROW _auxlist
-_auxlist: (auxiliary | symmetried_aux) (_WS (auxiliary | symmetried_aux))*
-symmetried_aux: /(?<![\w\.])(?!(?:[NS][EW]?|[EW])(?![\w\.]))[\w\.]+/ "(" auxiliary (_WS auxiliary)* ")"
+
+_auxlist: (auxiliary | symmetried_aux | stationary_symmetried_aux) (_WS (auxiliary | symmetried_aux | stationary_symmetried_aux))*
+symmetried_aux: SYMMETRY_NAME "(" auxiliary (_WS auxiliary)* ")"
+stationary_symmetried_aux: SYMMETRY_NAME "!" "(" auxiliary (_WS auxiliary)* ")"
+SYMMETRY_NAME: /(?<![\w\.])(?!(?:[NS][EW]?|[EW])(?![\w\.]))[\w\.]+/
+
 
 _NORMAL_ARROW: _WS? "->" _WS?
 _HOIST_ARROW: _WS? "=>" _WS?

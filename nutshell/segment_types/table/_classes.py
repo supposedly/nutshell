@@ -156,8 +156,6 @@ class TransitionGroup:
                       self.tbl, context=self.ctx, symmetries=self.symmetries
                       ).apply_aux([aux], False))
             except Reshape as e:
-                # if e.cdir is None:
-                #    e.cdir = e.backup
                 var = self[e.cdir].within(self)
                 idx = e.cdir != '0' and self.tbl.neighborhood[e.cdir]
                 new.extend(
@@ -267,7 +265,8 @@ class Transition:
     def in_symmetry(self, new_sym):
         variables = self.tbl.vars.inv
         initial, *napkin, resultant = self.fix_partial()
-        return [self.fix_final([initial, *i, resultant], variables) for i in {new_sym(j) for j in self.symmetries(napkin).expand()}]
+        gen = (self.fix_final([initial, *i, resultant], variables) for i in {new_sym(j) for j in self.symmetries(napkin).expand()})
+        return list(gen)
 
 
 class FinalTransition(list):
@@ -560,6 +559,7 @@ class Auxiliary:
         self.orig = Coord.from_name(initial_cdir, tbl).inv
         self.resultant = resultant
         self.symmetries = symmetries or tbl.symmetries
+        self.stationary = False
         if isinstance(resultant, Mapping):
             if resultant.cdir != '0' and not self.orig.toward(resultant.cdir).valid():
                 nbhd = tbl.directives['neighborhood']
@@ -612,8 +612,11 @@ class Auxiliary:
         ).expand(tr)
     
     def from_binding(self, tr):
+        within = self.resultant.within(tr)
+        if isinstance(within, ResolvedBinding):
+            within.cdir = '0'
         return TransitionGroup.from_seq(
-          self._make_tr(tr, self.resultant.within(tr)), self.tbl, context=self.ctx, symmetries=self.symmetries
+          self._make_tr(tr, within), self.tbl, context=self.ctx, symmetries=self.symmetries
         ).expand(tr)
     
     def from_mapping(self, tr):
@@ -639,7 +642,7 @@ class Coord(tuple):
       'NW': (-1, 1)
       }
     _DIRMAP = dict(zip(_DIRS, range(8)))
-    _NAMES = {v: k for k, v in _OFFSETS.items()}
+    _NAMES = {**{v: k for k, v in _OFFSETS.items()}, (0, 0): '0'}
     
     def __new__(cls, it, tbl=None):
         return super().__new__(cls, it)
