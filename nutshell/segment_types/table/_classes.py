@@ -1,7 +1,7 @@
 from collections import Iterable, defaultdict
 from contextlib import suppress
 from functools import partial
-from itertools import count
+from itertools import count, cycle
 
 from nutshell.common.utils import random
 from nutshell.common.errors import *
@@ -125,14 +125,6 @@ class TransitionGroup:
         self._expandeds[reference] = trs
         return trs
     
-    @staticmethod
-    def _fix_vars(d, tr):
-        seen, ret = {}, []
-        for name in tr:
-            idx = seen[name] = 1 + seen.get(name, -1)
-            ret.append(d[name][idx])
-        return ret
-    
     def apply_aux(self, auxiliaries, top=True):
         if auxiliaries is None:
             return []
@@ -182,17 +174,31 @@ class TransitionGroup:
         if stationaries:
             for i in stationaries:
                 i.stationary = False
+            tmp = []
             for tr in self.expand():
                 partial = initial, *napkin, resultant = tr.fix_partial()
-                d = {k: [v for i, v in enumerate(tr) if partial[i] == k] for k in set(partial)}
-                new.extend(
+                d = {k: cycle([v for i, v in enumerate(tr) if partial[i] == k]) for k in set(partial)}
+                tmp.extend(
                   j
                   for i in self.symmetries(napkin).expand()
                   for j in TransitionGroup.from_seq(
-                    self._fix_vars(d, [initial, *i, resultant]),
+                    [next(d[name]) for name in [initial, *i, resultant]],
                     tr.tbl, context=tr.ctx, symmetries=tr.symmetries
                     ).apply_aux(stationaries)
                   )
+                rep = len(stationaries)
+                # The following line groups together transitions with the same ctx before extending.
+                # i.e. before this line, given len(stationaries) == 3, you'd have
+                # tmp == [1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3]
+                # where each different number represents a transition with a different ctx
+                # But this line gets that into
+                # tmp == [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3]
+                # and it's only necessary to do this because the user may want to invoke the `-s` flag;
+                # this line could just be `new.extend(tmp)` if not for that possibility
+                # 
+                # NOTE i'm very lucky that tmp is a subscriptable list; otherwise my best shot was
+                # [j for i in zip(*zip(*[iter(tmp)] * len(stationaries))) for j in i]
+                new.extend(i for n in range(rep) for i in tmp[n::rep])
         return new
 
 
