@@ -13,8 +13,8 @@ from . import _symutils as symutils
 from ._classes import *
 
 SPECIALS = {'...', '_', 'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'}
-with open('nutshell/segment_types/table/lark_assets/grammar.lark') as f:
-    NUTSHELL_GRAMMAR = f.read()
+#with open('nutshell/segment_types/table/lark_assets/grammar.lark') as f:
+#    NUTSHELL_GRAMMAR = f.read()
 
 
 def fix(meta):
