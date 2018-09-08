@@ -872,4 +872,4 @@ In this case you may append to the gradient line a bracketed number indicating t
 `@COLORS` colors will always take precedence over the gradient, except when the cellstate in `@COLORS` has an \*asterisk before it.
 
 **Additionally:** If you have a Golly ruletable with its own `@ICONS` and do not wish to convert it to the Nutshell format manually,
-there is a tool `nutshell-ca icon convert <ruletable filepath> <outdir>` which can do it for you.
+there is a tool `nutshell-ca icon convert <rulefile> <outdir>` that can do it for you.

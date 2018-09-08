@@ -477,7 +477,7 @@ class StateList(Expandable):
     def bind(self, val, idx, tr):
         if isinstance(val, Reference):
             cdir, val = val.cdir, val.within(tr)
-            if isinstance(val, Operation):
+            if isinstance(val, Expandable):
                 raise Reshape(cdir)
         r = VarValue(val, idx, parent=self)
         return r

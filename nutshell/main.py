@@ -17,7 +17,8 @@ def transpile(fp, *, preview=False, find=None):
     printq('\nParsing...')
     parsed = segmentor.parse(fp)
     if preview:
-        return '\n'.join(', '.join(map(str, tr)) for _, tr in parsed['@TABLE'].transitions)
+        tbl = parsed['@TABLE']
+        return '{}\n\n{}'.format('\n'.join(f'{k}: {v}' for k, v in tbl.vars.items()), '\n'.join(', '.join(map(str, tr)) for tr in tbl))
     if find:
         print(parsed['@TABLE'].match(find) + '\n')
         return
@@ -29,7 +30,7 @@ def _preview(args):
     mock = f'''
       @TABLE
       states: {args.states}
-      symmetries: none
+      symmetries: {args.symmetries}
       neighborhood: {args.neighborhood}
       {args.transition}
     '''

@@ -98,9 +98,14 @@ def neighborhood(value):
     return value
 
 
-@preview.flag(short='o', default='?')
+@preview.flag(short='s', default='?')
 def states(num):
     """Number of states to include in transition (default: guess)"""
     if not num.isdigit() and num != '?':
         raise ValueError('Preview n_states must be ? or an integer')
     return str(num)
+
+
+@preview.flag(short='y', default='none')
+def symmetries(value):
+    return value.lower()
