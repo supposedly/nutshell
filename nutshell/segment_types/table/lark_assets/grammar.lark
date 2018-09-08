@@ -18,9 +18,10 @@ _aux: normal_aux hoist_aux? | hoist_aux normal_aux?
 normal_aux: _NORMAL_ARROW _auxlist
 hoist_aux: _HOIST_ARROW _auxlist
 
-_auxlist: (auxiliary | symmetried_aux | stationary_symmetried_aux) (_WS (auxiliary | symmetried_aux | stationary_symmetried_aux))*
-symmetried_aux: SYMMETRY_NAME "(" auxiliary (_WS auxiliary)* ")"
-stationary_symmetried_aux: SYMMETRY_NAME "!" "(" auxiliary (_WS auxiliary)* ")"
+_auxlist: (auxiliary | symmetried_aux) (_WS (auxiliary | symmetried_aux))*
+symmetried_aux: SYMMETRY_NAME _aux_group
+  | SYMMETRY_NAME "!" _aux_group  -> stationary_symmetried_aux
+_aux_group: "(" _WS? auxiliary (_WS auxiliary)* _WS? ")"
 SYMMETRY_NAME: /(?<![\w\.])(?!(?:[NS][EW]?|[EW])(?![\w\.]))[\w\.]+/
 
 
@@ -47,36 +48,42 @@ aux_var: _VAR_OPEN (_aux_expr ("," _WS? _aux_expr)* ["," _WS? EXTEND_LAST] | ran
 
 
 _expr: _expr_no_int | STATE
+_expr_norec_int: _expr_no_rec | STATE
 _expr_no_int: NAME | range | operation | var
+_expr_no_rec: NAME | range | var
 
 // These ones are marked "noref" to indicate that they can safely be extracted
 // in the 'transformer' phase before transpilation actually starts, b/c _expr
 // and _expr_no_int are the only rules guaranteed not to contain any references
 operation: STATE _MULT INT    -> noref_repeat_int
-  | STATE _MULT _expr_no_int  -> noref_int_to_var_length
+  | STATE _MULT _expr_no_rec  -> noref_int_to_var_length
   | _expr_no_int _MULT INT    -> noref_repeat_var
   
-  | _expr_no_int _subt _expr  -> noref_subt
+  | _expr_no_int _subt _expr_norec_int  -> noref_subt
   
   | _NEGATE_LIVE _expr        -> noref_live_except
   | _NEGATE_ALL _expr         -> noref_all_except
 
 
 _tr_expr: _tr_expr_no_int | STATE | reference
+_tr_expr_norec_int: _tr_expr_no_rec | STATE | reference
 _tr_expr_no_int: NAME | range | tr_operation | tr_var
+_tr_expr_no_rec: NAME | range | tr_var
 
 tr_operation: (STATE | reference) _MULT INT    -> repeat_int
-  | (STATE | reference) _MULT _tr_expr_no_int  -> int_to_var_length
+  | (STATE | reference) _MULT _tr_expr_no_rec  -> int_to_var_length
   | _tr_expr_no_int _MULT INT                  -> repeat_var
   
-  | _tr_expr_no_int _subt _tr_expr             -> subt
+  | _tr_expr_no_int _subt _tr_expr_norec_int   -> subt
   
   | _NEGATE_LIVE _tr_expr                      -> live_except
   | _NEGATE_ALL _tr_expr                       -> all_except
 
 
 _ref_expr: _ref_expr_no_int | STATE | reference
+_ref_expr_norec_int: _ref_expr_no_rec | STATE | reference
 _ref_expr_no_int: NAME | range | ref_operation | ref_var
+_ref_expr_no_rec: NAME | range| ref_var
 
 ref_operation: (STATE | reference) _MULT INT    -> repeat_int
   | (STATE | reference) _MULT _ref_expr_no_int  -> int_to_var_length
@@ -89,13 +96,15 @@ ref_operation: (STATE | reference) _MULT INT    -> repeat_int
 
 
 _aux_expr: _aux_expr_no_int | STATE | aux_reference
-_aux_expr_no_int: NAME| LEAVE_ALONE | leave_alone_mult | range | aux_operation | aux_var
+_aux_expr_norec_int: _aux_expr_no_rec | STATE | aux_reference
+_aux_expr_no_int: NAME | LEAVE_ALONE | leave_alone_mult | range | aux_operation | aux_var
+_aux_expr_no_rec: NAME | LEAVE_ALONE | leave_alone_mult | range | aux_var
 
 aux_operation: (STATE | aux_reference) _MULT INT    -> repeat_int
-  | (STATE | aux_reference) _MULT _aux_expr_no_int  -> int_to_var_length
+  | (STATE | aux_reference) _MULT _aux_expr_no_rec  -> int_to_var_length
   | _aux_expr_no_int _MULT INT                      -> repeat_var
   
-  | _aux_expr_no_int _subt _aux_expr                -> subt
+  | _aux_expr_no_int _subt _aux_expr_norec_int      -> subt
   
   | _NEGATE_LIVE _aux_expr                          -> live_except
   | _NEGATE_ALL _aux_expr                           -> all_except
