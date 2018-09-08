@@ -851,8 +851,8 @@ that state 0 (symbol `.`) in an icon should represent the hex color #303030 (Gol
 says that state 1 (the symbol `A`) represents the hex color #D0D0D0, and so on.
 The cellstate's symbol also can be written instead of its number, as in `. 303030` / `A D0D0D0` / `B 9CF` (notice, no colon)
 if it's easier to read.  
-In the future, Nutshell will come with a utility to aid in creating these icons
-(accessible as `nutshell-ca icon genrule <nutshell file>`)
+Nutshell comes with a utility to aid in creating these icons
+(accessible as `nutshell-ca icon genrule <nutshell file> <outdir>`)
 that generates a B/S012345678 ruletable whose `@COLORS` segment mirrors the colors in the nutshell file's `@ICONS`.
 
 The rule of each RLE is ignored; just choose one with enough cellstates for its pattern to be pastable into Golly.
@@ -870,3 +870,6 @@ In this case you may append to the gradient line a bracketed number indicating t
 `?  <hex color> <optional separator> <hex color> [<n_states>]`.
 
 `@COLORS` colors will always take precedence over the gradient, except when the cellstate in `@COLORS` has an \*asterisk before it.
+
+**Additionally:** If you have a Golly ruletable with its own `@ICONS` and do not wish to convert it to the Nutshell format manually,
+there is a tool `nutshell-ca icon convert <ruletable filepath> <outdir>` which can do it for you.

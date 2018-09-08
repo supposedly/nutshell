@@ -7,9 +7,18 @@ DEFAULT_HEADER = '''\
 '''
 
 cli = CLI("A transpiler from the 'Nutshell' rule-table format to Golly's")
-transpile = cli.command('transpile', aliases=['t'], XOR='preview|transpile', OR='not nothing')
-preview = cli.command('preview', aliases=['p'], XOR='preview|transpile', OR='not nothing')
+preview = cli.command(
+  'preview', "Preview a single Nutshell transition's result",
+  aliases=['p'], XOR='preview|transpile', OR='not nothing'
+  )
+transpile = cli.command(
+  'transpile', 'Transpile from Nutshell to Golly ruletable format',
+  aliases=['t'], XOR='preview|transpile', OR='not nothing'
+  )
 transpile.main_grp = Group(XOR='find|normal')
+
+# to be imported and then added to
+icon = cli.command('icon', 'Tools related to the @ICONS section', aliases=['i'], OR='not nothing')
 
 
 @cli.clump(XOR='verbose|quiet')
@@ -64,7 +73,7 @@ def header(text=''):
 
 @transpile.main_grp.flag(short='s', default=False)
 def comment_src():
-    """Comment each tabel source line above the final table line(s) it transpiles to"""
+    """Comment each Nutshell @TABLE line above the Golly line(s) it transpiles to"""
     return True
 
 

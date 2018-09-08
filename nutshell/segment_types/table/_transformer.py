@@ -2,19 +2,21 @@ from functools import wraps
 from inspect import signature
 from itertools import chain, repeat
 from operator import attrgetter
+from pkg_resources import resource_filename
 
 import bidict
 import lark
 from lark import Transformer, Tree, Discard, v_args
 
-from nutshell.common.errors import *
 from nutshell.common.utils import KILL_WS
-from . import _symutils as symutils
+from nutshell.common.errors import *
 from ._classes import *
+from . import _symutils as symutils
 
 SPECIALS = {'...', '_', 'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'}
-#with open('nutshell/segment_types/table/lark_assets/grammar.lark') as f:
-#    NUTSHELL_GRAMMAR = f.read()
+
+with open(resource_filename('nutshell', 'segment_types/table/lark_assets/grammar.lark')) as f:
+    NUTSHELL_GRAMMAR = f.read()
 
 
 def fix(meta):

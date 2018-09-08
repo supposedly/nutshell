@@ -2,6 +2,8 @@ import setuptools
 
 packages = [
   'nutshell',
+  'nutshell.tools',
+  'nutshell.tools.icons',
   'nutshell.common',
   'nutshell.segment_types',
   'nutshell.segment_types.colors',
@@ -17,8 +19,8 @@ setuptools.setup(
   version='0.2.0',
   author='wright',
   packages=packages,
-  package_data={'nutshell/segment_types/table/lark_assets': 'nutshell/segment_types/table/lark_assets/grammar.lark'},
-  #include_package_data=True,
+  package_data={'nutshell': ['nutshell/segment_types/table/lark_assets/grammar.lark']},
+  include_package_data=True,
   url='https://github.com/eltrhn/nutshell',
   description="Transpiler from an alternative CA-rule-spec language to Golly's",
   install_requires=['bidict', 'ergo>=0.4.4', 'lark-parser'],

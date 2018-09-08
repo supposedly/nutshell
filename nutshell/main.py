@@ -5,9 +5,9 @@ from inspect import cleandoc
 
 from ergo.misc import ErgoNamespace
 
-from nutshell import segmentor, compiler
-from nutshell.cli import cli
+from nutshell import segmentor, compiler, tools
 from nutshell.common.utils import printq
+from nutshell.cli import cli
 
 
 def transpile(fp, *, preview=False, find=None):
@@ -61,11 +61,14 @@ def write_rule(**kwargs):
 
 def main():
     cli.prepare(strict=True, propagate_unknowns=True)
-    if cli.result is None:
+    inp = cli.result
+    if inp is None:
         return
-    if 'transpile' in cli.result:
-        res = _transpile(cli.result.transpile)
-    else:
-        res = _preview(cli.result.preview)
+    if 'transpile' in inp:
+        res = _transpile(inp.transpile)
+    elif 'preview' in inp:
+        res = _preview(inp.preview)
+    elif 'icon' in inp:
+        res = tools.dispatch(inp.icon)
     for val in res:
         printq(*val, sep='\n')
