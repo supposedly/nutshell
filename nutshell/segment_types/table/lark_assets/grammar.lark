@@ -89,7 +89,7 @@ ref_operation: (STATE | reference) _MULT INT    -> repeat_int
   | (STATE | reference) _MULT _ref_expr_no_int  -> int_to_var_length
   | _ref_expr_no_int _MULT INT                  -> repeat_var
   
-  | _ref_expr_no_int _subt _ref_expr            -> subt
+  | _ref_expr_no_int _subt _ref_expr_norec_int  -> subt
   
   | _NEGATE_LIVE _ref_expr                      -> live_except
   | _NEGATE_ALL _ref_expr                       -> all_except
