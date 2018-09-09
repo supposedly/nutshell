@@ -335,6 +335,28 @@ class Binding(Reference):
         return f'Binding[{self.cdir}]'
 
 
+class InlineBinding:
+    def __init__(self, val, tbl, *, context):
+        self.ctx = context
+        self.val = val
+        self._tbl = tbl
+        self.bind = None
+        self.given = False
+    
+    def __repr__(self):
+        return f'[{self.val}]'
+    
+    def set(self, cdir):
+        self.bind = Binding(self._tbl.check_cdir(str(cdir), self.ctx, return_int=False, enforce_int=True), context=self.ctx)
+        return self
+    
+    def give(self):
+        if self.given:
+            return self.bind
+        self.given = True
+        return self.val
+
+
 class Mapping(Reference):
     def __init__(self, cdir, map_to, **kw):
         super().__init__(cdir, **kw)

@@ -2,7 +2,7 @@ from itertools import permutations
 from math import ceil
 
 from nutshell.common.utils import LazyProperty
-from nutshell.common.classes import AdditiveDict
+from ._classes import InlineBinding
 
 oneDimensional, vonNeumann, hexagonal, Moore = _GOLLY_LENGTHS = 2, 4, 6, 8
 Any = None
@@ -221,7 +221,19 @@ class Permute(Napkin):
         # filler algo courtesy of Thomas Russell on math.stackexchange
         # https://math.stackexchange.com/a/1081084
         filler = (ceil((tally-k+1)/empties) for k in range(1, 1+empties))
-        return list(AdditiveDict((val, num or str(next(filler))) for val, num in values))
+        return list(_AdditiveDict(
+          (val.set(idx) if isinstance(val, InlineBinding) else val, num or str(next(filler)))
+          for idx, (val, num) in enumerate(values, 1)
+          ))
+
+
+class _AdditiveDict(dict):
+    def __init__(self, it):
+        for key, val in it:
+            self[key] = self.get(key, 0) + int(val or 1)
+    
+    def __iter__(self):
+        return (i.give() if isinstance(i, InlineBinding) else i for k, v in self.items() for i in [k]*v)
 
 
 NAMES = {
@@ -229,7 +241,6 @@ NAMES = {
   for cls in (i for i in globals().values() if hasattr(i, 'expanded'))
   for name in getattr(cls, 'name', [cls.__name__.lower()])
   }
-
 GOLLY_SYMS = {
   # tuples sorted in order of expansion amount (listing it as well)
   oneDimensional: ((Permute, 2), (NoSymmetry, 1)),

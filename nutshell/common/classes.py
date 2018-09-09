@@ -76,12 +76,3 @@ class ColorMixin:  # XXX: this feels weird being a class? ...but it's also a mix
             return struct.pack('BBB', *color).hex().upper()
         except (ValueError, TypeError, struct.error):
             raise TypeError(lno, f'Invalid color value {color!r} (attempting to convert from Golly RGB format to hex)')
-
-
-class AdditiveDict(dict):
-    def __init__(self, it):
-        for key, val in it:
-            self[key] = self.get(key, 0) + int(val or 1)
-    
-    def __iter__(self):
-        return (i for k, v in self.items() for i in [k]*v)

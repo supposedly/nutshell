@@ -60,7 +60,18 @@ class Table:
         
         trans = Preprocess(tbl=self)
         parser = lark.Lark(NUTSHELL_GRAMMAR, parser='lalr', start='table', propagate_positions=True)
-        self._data = trans.transform(parser.parse('\n'.join(self._src)))
+        try:
+            self._data = trans.transform(parser.parse('\n'.join(self._src)))
+        except lark.exceptions.UnexpectedCharacters as e:
+            raise SyntaxErr(
+              (e.line, e.column, 1+e.column),
+              f"Unexpected character {{span!r}} {f'(expected {e.allowed})' if e.allowed else ''}"
+              )
+        except lark.exceptions.UnexpectedToken as e:
+            raise SyntaxErr(
+              (e.line, e.column, 1+e.column),
+              f"Unexpected token {{span!r}} (expected {'/'.join(e.expected)})"
+              )
         if len(self.sym_types) <= 1 and not hasattr(next(iter(self.sym_types), None), 'fallback'):
             self.final = [t.fix_vars() for t in self._data]
         else:
@@ -111,6 +122,24 @@ class Table:
     def add_sym_type(self, name):
         self.sym_types.add(symutils.get_sym_type(name))
     
+    def check_cdir(self, cdir, meta, *, return_int=True, enforce_int=False):
+        if enforce_int and hasattr(self.symmetries, 'special') and not cdir.isdigit():
+            raise SyntaxErr(
+              meta,
+              f"Compass directions have no meaning under {self.directives['symmetries']} symmetry. "
+              f'Instead, refer to previous states using numbers 0..8: here, {cdir} would be {self.neighborhood[cdir]}'
+              )
+        try:
+            if return_int:
+                return int(cdir) if cdir.isdigit() else self.neighborhood[str(cdir)]
+            return int(cdir != '0') and self.neighborhood.inv[int(cdir)] if cdir.isdigit() else str(cdir)
+        except KeyError:
+            pre = 'Transition index' if cdir.isdigit() else 'Compass direction'
+            raise ReferenceErr(
+              meta,
+              f"{pre} {cdir} does not exist in {self.directives['neighborhood']} neighborhood"
+              )
+    
     def match(self, tr):
         printq('Complete!\n\nSearching for match...')
         start, *in_napkin, end = tr
@@ -119,7 +148,7 @@ class Table:
         in_trs = [(start, *napkin, end) for napkin in self.symmetries(in_napkin).expand()]
         for tr in self._data:
             for in_tr in in_trs:
-                for cur_len, (in_state, tr_state) in enumerate(zip(in_tr, tr), 1):
+                for cur_len, (in_state, tr_state) in enumerate(zip(in_tr, tr), -1):
                     if in_state != '*' and not (in_state in tr_state if isinstance(tr_state, Iterable) else in_state == getattr(tr_state, 'value', tr_state)):
                         if cur_len == self.trlen:
                             lno, start, end = tr.ctx

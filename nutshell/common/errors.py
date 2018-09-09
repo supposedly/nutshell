@@ -19,6 +19,7 @@ class NutshellException(SystemExit):
             if self.span is not None:
                 begin, end = self.span
                 code.append(f"      {' ' * (begin - 1)}{'^' * (end - begin)}")
+                self.msg = msg = msg.format(span=segment[self.lno-1][begin-1:end-1])
             code.append(f'  {msg}')
         else:
             code = [

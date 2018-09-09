@@ -2,7 +2,6 @@ from itertools import permutations, chain, repeat
 
 from nutshell.segment_types.table._napkins import *
 from .utils import LazyProperty
-from .classes import AdditiveDict
 
 
 class ReflectVertical(Napkin):
@@ -57,6 +56,6 @@ class AlternatingPermute(Permute):
     
     @staticmethod
     def special(values, length):
-        s, t = Permute.special, length // 2
+        permute_sp, length = Permute.special, length // 2
         orth, diag = values[::2], values[1::2]
-        return chain.from_iterable(zip(s(orth, t), s(diag, t)))
+        return chain.from_iterable(zip(permute_sp(orth, length), permute_sp(diag, length)))

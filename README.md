@@ -78,13 +78,13 @@ after or before the keyword `transpile`/`t` with no difference):
 
 ## Glossary of Nutshell-specific terms
 - **variable**: Either a literal statelist or a name referring to one. 
-- **expression**: Anything that resolves to a statelist, including varnames and operations.
-- **state list** (or state-list, statelist): An ordered sequence of cellstates or expressions (written literally).
-  This is referred to as a "variable" in Golly, but here it's better to distinguish it from the prior terms. 
-- **directive**: A declaration following the form `name: value` that describes anything about a ruletable.
+- **expression**: Anything that resolves to a statelist: statelists themselves, varnames, and/or operations.
+- **statelist** (or state-list, state list): An ordered sequence of cellstates or expressions, written literally.
+  This is referred to as a "variable" in Golly, but in Nutshell it's more important to distinguish it from the prior terms. 
+- **directive**: A declaration following the form `name: value` that describes something about a ruletable.
 - **term**: One individual element of a transition napkin.
-- **napkin** (or transition napkin): Referring to the cells in another's neighborhood, including their states. Coined by
-  conwaylife forum contributor 83bismuth38. (In contrast, the term "neighborhood" refers only to the positions of these cells)
+- **napkin** (or transition napkin): Refers to the cells in another cell's neighborhood *including* each one's state. Coined by
+  Conwaylife forum contributor 83bismuth38. (In contrast, the term "neighborhood" refers only to the positions of these cells)
 
 ## What's new
 ### Directives
@@ -96,7 +96,7 @@ this will be elaborated upon later on.
 # Nutshell
 @TABLE
 states: 5
-symmetries: rotate 4 reflect
+symmetries: rotate4 reflect
 neighborhood: von Neumann
 ```
 ```rb
@@ -107,13 +107,13 @@ n_states: 5
 symmetries: rotate4reflect
 ```
 
-In addition, the `symmetries` directive can be used multiple times within a file, allowing the writer to switch symmetries
+Additionally, the `symmetries` directive can be used multiple times within a file, allowing the writer to switch symmetries
 partway through a rule. During transpilation, differently-symmetried transitions will be expanded into the "lowest"
 (least-expressive) Golly symmetry type specified overall.
 
 ### Transitions
 Semicolons are allowed alongside commas to separate different terms, and as a visual aid their use as a "final" separator
-(that is, separating a transition from its resultant cellstate) is strongly encouraged.
+(that is, separating a transition's napkin from its resultant cellstate) is strongly encouraged.
 ```rb
 # Nutshell
 neighborhood: von Neumann
@@ -205,7 +205,8 @@ var _random_name_B.0 = {4, 5}
 
 _random_name_A.0, 3, _random_name_B.1, 6, 7, 8, 9, 0, 1, 10
 ```
-The varnames "live" and "any" are predefined in Nutshell, assigned respectively to a rule's *nonzero cellstates* and *all* of its cellstates.
+The varnames "live" and "any" are predefined in Nutshell, assigned respectively to a rule's *nonzero* cellstates and *all* of its
+cellstates.
 ```rb
 # Nutshell
 states: 5
@@ -330,8 +331,8 @@ course) which gets messy and tedious to keep track of, making it an easy source 
 
 Nutshell's key innovation (and the only thing, in fact, that it mandates be done differently than in Golly besides also eschewing
 the `var` keyword) is in noting that the *name* of a variable doesn't need to hold any particular meaning, only its value within
-a given transition. Thus, rather than binding to a variable's name, we can simply use... some other way of referring to nothing except
-the value it holds at a given point.
+a given transition. Thus, rather than binding to a variable's name, we can simply use... some other way of referring to nothing
+except the value it holds at a given point.
 
 #### Bindings
 This is handled in a straightforward manner by using compass directions as "indices" of a transition.
@@ -358,11 +359,37 @@ compass-direction ranges&nbsp;-- Nutshell enforces the use of numbers, not compa
 For instance, under `permute` symmetry, the Golly transition `0, some_var, 0, 0, 0, 0, 0, 0, 0, some_var` is
 replicated as `0, some_var ~ 1, 0; [1]` and not `0, some_var ~ 1, 0; [N]`.
 
+Multiple successive bindings to a previous term, as long as it is an expression, can be compressed like so:
+```rb
+# Nutshell
+neighborhood: von Neumann
+
+0, N..W [any]; 1
+```
+```rb
+# Golly
+0, any.0, any.0, any.0, any.0, 1
+```
+```rb
+# Nutshell
+symmetries: permute
+neighborhood: von Neumann
+
+0, [(1, 2)] ~ 2, [any]; [1]
+```
+```rb
+# Golly
+var _random_name.0 = {1, 2}
+
+0, _random_name.0, _random_name.0, any.0, any.0, _random_name.0
+```
+The first transition is equivalent to `0, any, E..W [N]; [N]` and the other to `0, (1, 2), [1] ~ 1, any, [2] ~ 1`.
+
 #### Mappings
 Now that we've introduced binding by compass-direction index rather than by name, we can extend the concept into a second
 type of reference: *mapping* one variable to another.
 For example, "mapping" the variable (0, 1, 2) to the variable (2, 3, 4) says if the former is 0 to return 2, if 1 then to
-return 3, and if 2 then to return 4; this single mapping can therefore replace what would otherwise require a separate transition
+return 3, and if 2 then to return 4; this single mapping can thus replace what would otherwise require a separate transition
 for each of 0->1, 1->2, and 3->4. The syntax is `[compass direction: expression]`, like an extension to the binding syntax:
 ```rb
 # Nutshell
@@ -392,13 +419,13 @@ A statelist used in a mapping can end with an ellipsis, `...`, which indicates t
 mapped to the last value:
 ```rb
 # Nutshell
-(1, 2, 3, 4, 5), [0: (3, 5, ...)], NE..NW any; 1
+(1, 2, 3, 4, 5), [0: (3, 5, ...)], NE..NW 0; 1
 ```
 ```rb
 # Golly
 var _random_name.0 = {2, 3, 4, 5}
 
-1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0
+1, 3, 0, 0, 0, 0, 0, 0, 0, 1
 _random_name.0, 5, 0, 0, 0, 0, 0, 0, 0, 1
 ```
 If a variable is too small to map to, an error will be raised that can be rectified by either (a) filling it out with more
@@ -755,10 +782,11 @@ As shown by the ellipses, there are three things you need to define within your 
   Similarly, `ReflectHorizontal((2, 4, 6, 8)).expanded` returns `[(2, 4, 6, 8), (2, 8, 6, 4)]`, **as does**
   `ReflectHorizontal((2, 8, 6, 4)).expanded`, because the vonNeumann-neighborhood napkin `2,4,6,8` reflected horizontally is `2,8,6,4` and
   so both are equivalent under reflect_horizontal symmetry.  
-  (The sequence type that `expanded` returns doesn't matter as long as it's some iterable&nbsp;-- but (a) its individual elements must all be
-  hashable, and (b) it must not contain any occurrences of itself. It's thus probably best to have `expanded` return a sequence of
-  tuples.)  
-  After that, save your file in a directory accessible from the directory of the nutshell file you wish to use the symmetry type from&nbsp;--
+  (The sequence type that `expanded` returns doesn't matter as long as it's some iterable&nbsp;-- but (a) its individual elements must
+  all be hashable, and (b) it must not contain any occurrences of itself. For this reason it's probably best to have `expanded` return a
+  sequence of tuples.)  
+  After that, save your file in a directory accessible from the directory of the nutshell file you wish to use the symmetry type
+  from&nbsp;--
   and you're done! It'll be accessible from a Nutshell rule as `<import path to containing file>.<class name>`. For instance, the symmetry
   type above will be accessible as `symmetries: custom_symmetries.MySymmetries` if it's saved in a file called
   `custom_symmetries.py` in the same directory as the nutshell file it's used from.  
