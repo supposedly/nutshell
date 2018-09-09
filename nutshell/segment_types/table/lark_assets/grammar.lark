@@ -6,12 +6,15 @@ line: NAME ":" _WS? /.+/      -> directive
   | transition _aux?          -> transition
 
 transition: _expr (_sep tr_state)+ _sep _tr_expr     -> main  //Can't have (STATE | reference) here in LALR
-tr_state: [(COMPASS_DIR | crange) _WS] _tr_expr
+tr_state: [prefix _WS] _tr_expr
   | crange _WS (_tr_expr | inline_binding)
   | inline_binding                                   -> permute_shorthand
   | (_tr_expr | inline_binding) _PERMUTE /[^,;]+/    -> permute_shorthand  //Doesn't make sense to allow cdir *and* permute_shorthand in the same tr_state
+
 inline_binding: "[" _tr_expr_no_int "]"
-crange: COMPASS_DIR ".." COMPASS_DIR 
+prefix: COMPASS_DIR               -> cdir
+  | crange
+crange: COMPASS_DIR ".." COMPASS_DIR
 
 _PERMUTE: _WS? "~" _WS?
 _sep: ("," | ";") _WS?  //If this is a terminal rather than a rule it interferes with "," in var-related rules below
