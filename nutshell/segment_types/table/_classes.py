@@ -38,12 +38,16 @@ class VarName:
         return getattr(self.name, attr)
     
     @classmethod
-    def random(cls, rep=0):
-        """
-        Generates a statelist with a random name.
-        Method of random generation liable to change.
-        """
-        return cls(f'_{random.randrange(10**15)}', rep)
+    def new_generator(cls, seed=0):
+        it = count(seed)
+        def anonymous(rep=0):
+            """
+            Generates a name for an anonymous statelist.
+            Method of name generation liable to change.
+            """
+            i = next(it)
+            return cls(f'_{chr(i % 26 + 97)}{i // 26}', rep)
+        return anonymous
 
 
 class SpecialVar(tuple):
@@ -240,7 +244,7 @@ class Transition:
                 varname.rep = max(varname.rep, seen[varname])
                 ret.append(f'{varname}.{seen[varname]}')
             else:
-                varname = VarName.random(rep=0)
+                varname = self.tbl.new_varname()
                 seen[varname] = 0
                 variables.inv[varname] = i.untether()
                 ret.append(f'{varname}.0')
@@ -266,7 +270,7 @@ class Transition:
             elif i.untether() in variables:
                 ret.append(f'{variables[i.untether()]}')
             else:
-                varname = VarName.random(rep=0)
+                varname = self.tbl.new_varname()
                 seen[varname] = 0
                 variables.inv[varname] = i.untether()
                 ret.append(f'{varname}')  # XXX: Faster overall to append varname as a string like this or to preserve variable tuple and assign name in second 'fix' step?

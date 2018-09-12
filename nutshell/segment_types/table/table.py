@@ -57,6 +57,8 @@ class Table:
         self.sym_types = set()
         self.transitions = []
         self._constants = {}
+
+        self.new_varname = VarName.new_generator()
         
         trans = Preprocess(tbl=self)
         parser = lark.Lark(NUTSHELL_GRAMMAR, parser='lalr', start='table', propagate_positions=True)

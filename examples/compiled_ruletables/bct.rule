@@ -53,52 +53,88 @@ var vacdata.0 = {0, 1, 2}
 var vacdata.1 = vacdata.0
 var vacrdata.0 = {0, 12, 13}
 var vacddata.0 = {0, 16, 17}
-var _716888888775130.0 = {14, 15}
-var _188603385896403.0 = {10, 11}
+var _a0.0 = {14, 15}
+var _b0.0 = {10, 11}
 
+# 16: vacddata, (1, 2), NE..W any, 5; [N: (16, 17)]
 vacddata.0, 1, any.0, any.1, any.2, any.3, any.4, any.5, 5, 16
 vacddata.0, 2, any.0, any.1, any.2, any.3, any.4, any.5, 5, 17
+# 17: ddata, 0, NE..W any, 5; 0
 ddata.0, 0, any.0, any.1, any.2, any.3, any.4, any.5, 5, 0
+# 19: vacrdata, (16, 17), NE..NW any; [N: (12, 13)]
 vacrdata.0, 16, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 12
 vacrdata.0, 17, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 13
+# 21: vacdata, (12, 13), 5, E..NW any; [N: (1, 2)]
 vacdata.0, 12, 5, any.0, any.1, any.2, any.3, any.4, any.5, 1
 vacdata.0, 13, 5, any.0, any.1, any.2, any.3, any.4, any.5, 2
+# 24: vacrdata, W rdata, NW..SW any; [W]
 vacrdata.0, any.0, any.1, any.2, any.3, any.4, any.5, rdata.0, any.6, rdata.0
+# 25: rdata, W 0, NW..SW any; 0
 rdata.0, any.0, any.1, any.2, any.3, any.4, any.5, 0, any.6, 0
+# 29: 0, 5, NE..SW any, 0, rdata; 14
 0, 5, any.0, any.1, any.2, any.3, any.4, 0, rdata.0, 14
+# 31: 0, 5, data, 0, SE..NW any; 14
 0, 5, data.0, 0, any.0, any.1, any.2, any.3, any.4, 14
-_716888888775130.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
+# 33: (14, 15), N..NW any; 0
+_a0.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
+# 33: S[0: (15, 5)]
 any.0, 14, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 15
 any.0, 15, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 5
+# 35: 5, SE ddata, S..E 0; 0
 5, 0, 0, 0, ddata.0, 0, 0, 0, 0, 0
+# 36: 5, SW data, W..S 0; 0
 5, 0, 0, 0, 0, 0, data.0, 0, 0, 0
+# 39: (3, 4), rdata, NE..NW any; [0: (10, 11)]
 3, rdata.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 10
 4, rdata.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 11
+# 42: data, E 5, SE..NE any; 0
 data.0, any.0, any.1, 5, any.2, any.3, any.4, any.5, any.6, 0
+# 50: (3, 4), NE 2, E 4, SE..N any; [0: (8, 9)]
 3, any.0, 2, 4, any.1, any.2, any.3, any.4, any.5, 8
 4, any.0, 2, 4, any.1, any.2, any.3, any.4, any.5, 9
+# 53: (3, 4), NE 1, E 4, SE..N any; [0: (6, 7)]
 3, any.0, 1, 4, any.1, any.2, any.3, any.4, any.5, 6
 4, any.0, 1, 4, any.1, any.2, any.3, any.4, any.5, 7
+# 56: 4, data, NE..NW any; 7
 4, data.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 7
+# 57: 7, N..NW any; 0
 7, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
+# 57: S[(11, _, ...)]
 0, 7, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 11
+# 60: 8, N..NW any; 1
 8, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 1
+# 60: S[(10, _, ...)]
 0, 8, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 10
+# 62: 9, N..NW any; 2
 9, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 2
+# 62: S[(11, _, ...)]
 0, 9, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 11
-_188603385896403.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
+# 65: (10, 11), N..NW any; 0
+_b0.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
+# 65: S[0: (3, 4)]
 any.0, 10, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 3
 any.0, 11, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 4
+# 69: data, E 0, SE any, S data, SW..NE any; [S]
 data.0, any.0, any.1, 0, any.2, data.1, any.3, any.4, any.5, data.1
+# 71: data, E 0, SE data, S..NE any; [SE]
 data.0, any.0, any.1, 0, data.1, any.2, any.3, any.4, any.5, data.1
+# 72: data, data, 0, E..NW any; 0
 data.0, data.1, 0, any.0, any.1, any.2, any.3, any.4, any.5, 0
+# 75: 3, data, NE..NW any; 6
 3, data.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 6
+# 76: 6, N..NW any; 0
 6, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
+# 76: S:10
 any.0, 6, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 10
+# 79: 0, E data, SE 3, S..NE any; 0
 0, any.0, any.1, data.0, 3, any.2, any.3, any.4, any.5, 0
+# 82: data, data, NE..NW any; [0]
 data.0, data.1, any.0, any.1, any.2, any.3, any.4, any.5, any.6, data.0
+# 83: 0, data, any, data, SE..NW any; 0
 0, data.0, any.0, data.1, any.1, any.2, any.3, any.4, any.5, 0
+# 86: 0, any, data, data, SE..NW any; 0
 0, any.0, data.0, data.1, any.1, any.2, any.3, any.4, any.5, 0
+# 87: vacdata, E vacdata, SE..NE any; [E]
 vacdata.0, any.0, any.1, vacdata.1, any.2, any.3, any.4, any.5, any.6, vacdata.1
 
 @COLORS

@@ -71,7 +71,7 @@ def header(text=''):
     return text or DEFAULT_HEADER
 
 
-@transpile.main_grp.flag(short='s', default=False)
+@transpile.main_grp.flag(short='s', aliases=['source'], default=False)
 def comment_src():
     """Comment each Nutshell @TABLE line above the Golly line(s) it transpiles to"""
     return True
