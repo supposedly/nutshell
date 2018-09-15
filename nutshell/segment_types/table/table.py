@@ -67,7 +67,7 @@ class Table:
         except lark.exceptions.UnexpectedCharacters as e:
             raise SyntaxErr(
               (e.line, e.column, 1+e.column),
-              f"Unexpected character {{span!r}} {f'(expected {e.allowed})' if e.allowed else ''}"
+              f"Unexpected character {{span!r}}{f' (expected {e.allowed})' if e.allowed else ''}"
               )
         except lark.exceptions.UnexpectedToken as e:
             raise SyntaxErr(

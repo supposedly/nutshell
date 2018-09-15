@@ -1,7 +1,9 @@
 
 # CA rules “in a nutshell”
 
-[![Discord](https://img.shields.io/badge/Chat-on%20Discord-7289da.svg?logo=discord&logoWidth=17)](https://discord.gg/BV6zxM9)  
+[![Discord](https://img.shields.io/badge/chat-on%20Discord-7289da.svg?logo=discord&logoWidth=17)](https://discord.gg/BV6zxM9)
+｜
+[![Conwaylife.com](https://img.shields.io/badge/discuss-on%20Conwaylife.com-000.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAABmJLR0QABgAMABkbch97AAAACXBIWXMAAC4jAAAuIwF4pT92AAAAB3RJTUUH4gkOBRobRhT0twAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAABTSURBVCjPY/z//z8DuYAFixg+0xiROUwMFAAWXBLsvFJw9s/Pz0jTjAMge4mRImczYgnt/0R6gZGFiBDGCagX2sjOo7nNVAltcgKMkSoBxkiOZgAGwxRNuTqWVQAAAABJRU5ErkJggg==)](http://conwaylife.com/forums/viewtopic.php?f=7&t=3361)  
 A transpiler from a reimagined Golly ruletable language to the traditional format. See [`examples/`](/examples) for examples, and if none
 of this makes any sense to you and you aren't sure how you got here, check out the [layman's README](documents/LAYMAN-README.md).
 
@@ -234,10 +236,15 @@ Variables can contain or be represented by "operations", with the binary `*` and
 These operations don't have to be assigned to variable names beforehand, by the way. All of what's described below is perfectly
 valid if used directly in a transition, just like the "on-the-spot" state-lists mentioned above.
 
-Note: the precedence rules can be skirted by placing operations in their own single-element statelists such as in `(any-3)*2`.
+Note: The binary operators are left-associative. Precedence rules can be skirted by placing operations in their own single-element
+statelists, like `(any-3)*2`.
+
+An exclamation mark followed by an expression (as a whole line) will cause the expression's result to be printed: `!(1, 2, 3)-(3, 4)`
+will print `(1, 2)`, for instance, and `!any` will print the contents of variable `any`. This can help in debugging complex,
+multi-operation variable expressions, should need be.
 
 #### n * m ("Multiplication")
-Left-associative and not commutative. Has the highest precedence.
+Not commutative. Has the highest precedence.
 ```rb
 # Nutshell
 a = (1, 2) * 2  # variable 'times' integer (repeats the variable m times)
@@ -256,7 +263,7 @@ var e.0 = {2, 2, 2, 2, 1, 1, 0, 0, 0}
 ```
 
 #### n - m ("Subtraction")
-Acts as a difference operation does between two sets.
+Acts as a difference operation does between two sets. Has the lowest precedence.
 ```rb
 # Nutshell
 a = (1, 2, 3, 1) - 1    # variable 'minus' cellstate (removes the cellstate from the variable)
@@ -273,7 +280,7 @@ var d.0 = {3, 4}
 ```
 
 #### -n, --n ("Negation")
-These are shorthand for, respectively, `live-n` and `any-n`. Has higher precedence than the above.
+These are shorthand for, respectively, `live-n` and `any-n`. Has higher precedence than "subtraction".
 ```rb
 # Nutshell
 states: 4
