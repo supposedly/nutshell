@@ -11,7 +11,9 @@ from nutshell.main import transpile, write_rule
 from nutshell.common.utils import RAND_SEED, random as nutshell_rand
 
 ARGV = sys.argv + [None, None][len(sys.argv):]
-cli.commands['transpile']._defaults['comment_src'] = True
+_defaults = cli.commands['transpile']._defaults
+_defaults['comment_src'] = '#### line {line}: {span} ####'
+_defaults['preserve_comments'] = True
 
 def test_codecov():
     for fname in list(os.walk('./examples/nutshells'))[0][2]:

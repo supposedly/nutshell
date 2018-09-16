@@ -1,4 +1,4 @@
-table: (line _COMMENT? _NL? | _NL)+
+table: (_WS? (line end_bs? | comment) _NL?)+
 
 line: NAME ":" _WS? /.+/      -> directive
   | NAME _WS? "=" _WS? _expr  -> var_decl
@@ -33,15 +33,15 @@ SYMMETRY_NAME: /(?<![\w\.])(?!(?:[NS][EW]?|[EW])(?![\w\.]))[\w\.]+/
 _NORMAL_ARROW: _WS? "->" _WS?
 _HOIST_ARROW: _WS? "=>" _WS?
 
-auxiliary: cdir_delay ":" STATE                                                -> aux_bare
-  | cdir_delay "[" _aux_expr_no_int "]"                                        -> aux_map_self
+auxiliary: cdir_delay ":" STATE                                               -> aux_bare
+  | cdir_delay "[" _aux_expr_no_int "]"                                       -> aux_map_self
   | cdir_delay "[" (COMPASS_DIR | _digit_bind) "]"                            -> aux_bind_self
   | cdir_delay "[" (COMPASS_DIR | _digit_bind) ":" _WS? _aux_expr_no_int "]"  -> aux_map_other
 
-// I'm not sure why I need to specify the "0" explicitly there,
-// considering that a 0 is already included in COMPASS_DIR.
-// (If I don't put it above, Lark will tell me it expected _MULT rather
-// than the right square bracket for any "aux_bind_self" sequence. idgi)
+// I'm not sure why I need to specify the _digit_bind explicitly and w/ strings
+// there; if I include the digits in the COMPASS_DIR regex or actually any regex,
+// Lark will tell me it expected _MULT rather than the right square bracket for
+// any "aux_bind_self" sequence. idgi)
 
 cdir_delay: COMPASS_DIR ["+" INT]
 
@@ -149,11 +149,9 @@ NAME: /(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\w))[A-Za-z]\w*/
 
 STATE: /\d+/
 INT: /[0123456789]+/
-_WS: /((?!\n)\s)+/
+_WS: WS_INLINE
 _NL:  NEWLINE
 
-_COMMENT: /\s*#.*/
-_SURROUNDING_WS: /^\s+|\s+$/m
-%ignore _COMMENT
-%ignore _SURROUNDING_WS
-%import common.NEWLINE
+end_bs: /[ \t]+(?:#.*)?$/m
+comment: /#.*/
+%import common (NEWLINE, WS_INLINE)

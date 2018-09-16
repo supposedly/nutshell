@@ -36,9 +36,9 @@ class Table:
 
     def __init__(self, tbl, start=0, *, dep: ['@NUTSHELL'] = None):
         self._src = tbl
-        self._src[:] = [i.split('#')[0].strip() for i in tbl]  # Lark chokes on comments for reasons unknown otherwise :/
         self._start = start
         self._n_states = 0
+        self.comments = {}
         self._nbhd = self._trlen = None
         dep, = dep
         

@@ -14,15 +14,19 @@ def _handle_rule(rulefile, include_header, seg):
 
 
 def _iter_transitions(tbl):
-    if not cli.result.transpile.comment_src:
-        yield from (', '.join(map(str, tr)) for tr in tbl)
-        return
+    src, cmt = cli.result.transpile.comment_src, cli.result.transpile.preserve_comments
     seen = set()
     for tr in tbl:
         if tr.ctx not in seen:
             seen.add(tr.ctx)
             lno, start, end = tr.ctx
-            yield f"# {lno}: {tbl[lno-1][start-1:end-1]}"
+            if src:
+                yield from ('', src.format(line=lno, span=tbl[lno-1][start-1:end-1]))
+            if cmt:
+                yield from (tbl.comments.pop(cmt_lno) for cmt_lno in list(tbl.comments) if cmt_lno < lno)
+            if lno in tbl.comments:
+                yield '{}{}'.format(', '.join(map(str, tr)), tbl.comments.pop(lno))
+                continue
         yield ', '.join(map(str, tr))
 
 

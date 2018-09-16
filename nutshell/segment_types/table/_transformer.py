@@ -15,8 +15,12 @@ from . import _symutils as symutils
 
 SPECIALS = {'...', '_', 'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'}
 
-with open(resource_filename('nutshell', 'segment_types/table/lark_assets/grammar.lark')) as f:
-    NUTSHELL_GRAMMAR = f.read()
+try:
+    with open(resource_filename('nutshell', 'segment_types/table/lark_assets/grammar.lark')) as f:
+        NUTSHELL_GRAMMAR = f.read()
+except FileNotFoundError:
+    with open('nutshell/segment_types/table/lark_assets/grammar.lark') as f:
+        NUTSHELL_GRAMMAR = f.read()
 
 
 def fix(meta):
@@ -116,6 +120,17 @@ class Preprocess(Transformer):
     @inline
     def print_var(self, meta, var):
         print(self.kill_string(var, meta))
+        raise Discard
+    
+    @inline
+    def comment(self, meta, text):
+        self._tbl.comments[meta[0]] = text
+        raise Discard
+    
+    @inline
+    def end_bs(self, meta, text):
+        if '#' in text:
+            self._tbl.comments[meta[0]] = text
         raise Discard
     
     @inline

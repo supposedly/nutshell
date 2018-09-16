@@ -3,8 +3,9 @@
 `nutshells/` contains example nutshell files, and `compiled_ruletables/` contains their transpiled Golly-ruletable output;
 filenames are shared between the two directories, so e.g. [nutshells/bct.ruel](nutshells/bct.ruel) transpiles to the file
 under [examples/bct.rule](examples/bct.rule).  
-Transpilation is done with the `-s` option, so the files in the latter directory have comments preceding each group of
-`@TABLE` lines showing what Nutshell line (and specific snippet thereof) it came from.
+Transpilation is done with the `-s` and `-c` options, so the files in the latter directory have comments preceding each group of
+`@TABLE` lines showing what Nutshell line (and specific snippet thereof) it came from as well as preserving the original Nutshell
+file's comments where applicable.
 
 Notable examples:
 - [Brainfuck](nutshells/bf.ruel); for more info, see [here](https://gist.github.com/eltrhn/f2b4e931418cf8369efefca0fd233a0f).

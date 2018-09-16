@@ -115,25 +115,39 @@ var _l0.0 = {24, 25, 26, 27}
 var _m0.0 = {16, 17, 18, 19}
 var _n0.0 = {11, 12, 13, 14}
 
-# 20: 1, N..NW any; 1
+
+#### line 20: 1, N..NW any; 1 ####
 1, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 1
-# 24: anyO; N southZero, NE any, E any, SE..SW any, W eastZero, NW any; 21
+
+#### line 24: anyO; N southZero, NE any, E any, SE..SW any, W eastZero, NW any; 21 ####
+# OR instruction setup
+# output-0 cases first to override later ones
 anyO.0, southZero.0, any.0, any.1, any.2, any.3, any.4, eastZero.0, any.5, 21
-# 25: anyO; N southZero, NE any, E westZero, SE..SW any, W any, NW any; 22
+
+#### line 25: anyO; N southZero, NE any, E westZero, SE..SW any, W any, NW any; 22 ####
 anyO.0, southZero.0, any.0, westZero.0, any.1, any.2, any.3, any.4, any.5, 22
-# 26: anyO; N..NE any, E any, SE any, S northZero, SW any, W eastZero, NW any; 20
+
+#### line 26: anyO; N..NE any, E any, SE any, S northZero, SW any, W eastZero, NW any; 20 ####
 anyO.0, any.0, any.1, any.2, any.3, northZero.0, any.4, eastZero.0, any.5, 20
-# 27: anyO; N..NE any, E 5, SE any, S northZero, SW any, W any, NW any; 23
+
+#### line 27: anyO; N..NE any, E 5, SE any, S northZero, SW any, W any, NW any; 23 ####
 anyO.0, any.0, any.1, 5, any.2, northZero.0, any.3, any.4, any.5, 23
-# 29: anyO; N south, NE..SW any, W east, NW any; 25
+
+#### line 29: anyO; N south, NE..SW any, W east, NW any; 25 ####
+# the rest (output-1 cases)
 anyO.0, south.0, any.0, any.1, any.2, any.3, any.4, east.0, any.5, 25
-# 30: anyO; N south, NE any, E west, SE..NW any; 26
+
+#### line 30: anyO; N south, NE any, E west, SE..NW any; 26 ####
 anyO.0, south.0, any.0, west.0, any.1, any.2, any.3, any.4, any.5, 26
-# 31: anyO; N..SE any, S north, SW any, W east, NW any; 24
+
+#### line 31: anyO; N..SE any, S north, SW any, W east, NW any; 24 ####
 anyO.0, any.0, any.1, any.2, any.3, north.0, any.4, east.0, any.5, 24
-# 32: anyO; N..NE any, E west, SE any, S north, SW..NW any; 27
+
+#### line 32: anyO; N..NE any, E west, SE any, S north, SW..NW any; 27 ####
 anyO.0, any.0, any.1, west.0, any.2, north.0, any.3, any.4, any.5, 27
-# 35: anyO; N south, NE..NW any; [N: (13 * southZero, 18, ...)]
+
+#### line 35: anyO; N south, NE..NW any; [N: (13 * southZero, 18, ...)] ####
+# NOT instruction setup
 anyO.0, 4, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 13
 anyO.0, 31, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 13
 anyO.0, 48, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 13
@@ -142,7 +156,8 @@ anyO.0, 19, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 13
 anyO.0, 22, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 13
 anyO.0, 21, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 13
 anyO.0, _a0.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 18
-# 36: anyO; N..NE any, E west, SE..NW any; [E: (14 * westZero, 19, ...)]
+
+#### line 36: anyO; N..NE any, E west, SE..NW any; [E: (14 * westZero, 19, ...)] ####
 anyO.0, any.0, any.1, 5, any.2, any.3, any.4, any.5, any.6, 14
 anyO.0, any.0, any.1, 32, any.2, any.3, any.4, any.5, any.6, 14
 anyO.0, any.0, any.1, 49, any.2, any.3, any.4, any.5, any.6, 14
@@ -151,7 +166,8 @@ anyO.0, any.0, any.1, 18, any.2, any.3, any.4, any.5, any.6, 14
 anyO.0, any.0, any.1, 23, any.2, any.3, any.4, any.5, any.6, 14
 anyO.0, any.0, any.1, 22, any.2, any.3, any.4, any.5, any.6, 14
 anyO.0, any.0, any.1, _b0.0, any.2, any.3, any.4, any.5, any.6, 19
-# 37: anyO; N..SE any, S north, SW..NW any; [S: (11 * northZero, 16, ...)]
+
+#### line 37: anyO; N..SE any, S north, SW..NW any; [S: (11 * northZero, 16, ...)] ####
 anyO.0, any.0, any.1, any.2, any.3, 2, any.4, any.5, any.6, 11
 anyO.0, any.0, any.1, any.2, any.3, 29, any.4, any.5, any.6, 11
 anyO.0, any.0, any.1, any.2, any.3, 46, any.4, any.5, any.6, 11
@@ -160,7 +176,8 @@ anyO.0, any.0, any.1, any.2, any.3, 19, any.4, any.5, any.6, 11
 anyO.0, any.0, any.1, any.2, any.3, 23, any.4, any.5, any.6, 11
 anyO.0, any.0, any.1, any.2, any.3, 20, any.4, any.5, any.6, 11
 anyO.0, any.0, any.1, any.2, any.3, _c0.0, any.4, any.5, any.6, 16
-# 38: anyO; N..SW any, W east, NW any; [W: (12 * eastZero, 17, ...)]
+
+#### line 38: anyO; N..SW any, W east, NW any; [W: (12 * eastZero, 17, ...)] ####
 anyO.0, any.0, any.1, any.2, any.3, any.4, any.5, 3, any.6, 12
 anyO.0, any.0, any.1, any.2, any.3, any.4, any.5, 30, any.6, 12
 anyO.0, any.0, any.1, any.2, any.3, any.4, any.5, 47, any.6, 12
@@ -169,7 +186,9 @@ anyO.0, any.0, any.1, any.2, any.3, any.4, any.5, 18, any.6, 12
 anyO.0, any.0, any.1, any.2, any.3, any.4, any.5, 20, any.6, 12
 anyO.0, any.0, any.1, any.2, any.3, any.4, any.5, 21, any.6, 12
 anyO.0, any.0, any.1, any.2, any.3, any.4, any.5, _d0.0, any.6, 17
-# 41: anyR; N south, NE..NW any; [N: (32 * southZero, 34, ...)]
+
+#### line 41: anyR; N south, NE..NW any; [N: (32 * southZero, 34, ...)] ####
+# Rotation setup
 anyR.0, 4, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 32
 anyR.0, 31, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 32
 anyR.0, 48, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 32
@@ -178,7 +197,8 @@ anyR.0, 19, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 32
 anyR.0, 22, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 32
 anyR.0, 21, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 32
 anyR.0, _a0.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 34
-# 42: anyR; N..NE any, E west, SE..NW any; [E: (29 * westZero, 35, ...)]
+
+#### line 42: anyR; N..NE any, E west, SE..NW any; [E: (29 * westZero, 35, ...)] ####
 anyR.0, any.0, any.1, 5, any.2, any.3, any.4, any.5, any.6, 29
 anyR.0, any.0, any.1, 32, any.2, any.3, any.4, any.5, any.6, 29
 anyR.0, any.0, any.1, 49, any.2, any.3, any.4, any.5, any.6, 29
@@ -187,7 +207,8 @@ anyR.0, any.0, any.1, 18, any.2, any.3, any.4, any.5, any.6, 29
 anyR.0, any.0, any.1, 23, any.2, any.3, any.4, any.5, any.6, 29
 anyR.0, any.0, any.1, 22, any.2, any.3, any.4, any.5, any.6, 29
 anyR.0, any.0, any.1, _b0.0, any.2, any.3, any.4, any.5, any.6, 35
-# 43: anyR; N..SE any, S north, SW..NW any; [S: (30 * northZero, 36, ...)]
+
+#### line 43: anyR; N..SE any, S north, SW..NW any; [S: (30 * northZero, 36, ...)] ####
 anyR.0, any.0, any.1, any.2, any.3, 2, any.4, any.5, any.6, 30
 anyR.0, any.0, any.1, any.2, any.3, 29, any.4, any.5, any.6, 30
 anyR.0, any.0, any.1, any.2, any.3, 46, any.4, any.5, any.6, 30
@@ -196,7 +217,8 @@ anyR.0, any.0, any.1, any.2, any.3, 19, any.4, any.5, any.6, 30
 anyR.0, any.0, any.1, any.2, any.3, 23, any.4, any.5, any.6, 30
 anyR.0, any.0, any.1, any.2, any.3, 20, any.4, any.5, any.6, 30
 anyR.0, any.0, any.1, any.2, any.3, _c0.0, any.4, any.5, any.6, 36
-# 44: anyR; N..SW any, W east, NW any; [W: (31 * eastZero, 33, ...)]
+
+#### line 44: anyR; N..SW any, W east, NW any; [W: (31 * eastZero, 33, ...)] ####
 anyR.0, any.0, any.1, any.2, any.3, any.4, any.5, 3, any.6, 31
 anyR.0, any.0, any.1, any.2, any.3, any.4, any.5, 30, any.6, 31
 anyR.0, any.0, any.1, any.2, any.3, any.4, any.5, 47, any.6, 31
@@ -205,7 +227,9 @@ anyR.0, any.0, any.1, any.2, any.3, any.4, any.5, 18, any.6, 31
 anyR.0, any.0, any.1, any.2, any.3, any.4, any.5, 20, any.6, 31
 anyR.0, any.0, any.1, any.2, any.3, any.4, any.5, 21, any.6, 31
 anyR.0, any.0, any.1, any.2, any.3, any.4, any.5, _d0.0, any.6, 33
-# 47: anyD; N south, NE..NW any; [N: (40 * southZero, 44, ...)]
+
+#### line 47: anyD; N south, NE..NW any; [N: (40 * southZero, 44, ...)] ####
+# Delay setup
 anyD.0, 4, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 40
 anyD.0, 31, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 40
 anyD.0, 48, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 40
@@ -214,7 +238,8 @@ anyD.0, 19, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 40
 anyD.0, 22, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 40
 anyD.0, 21, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 40
 anyD.0, _a0.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 44
-# 48: anyD; N..NE any, E west, SE..NW any; [E: (41 * westZero, 45, ...)]
+
+#### line 48: anyD; N..NE any, E west, SE..NW any; [E: (41 * westZero, 45, ...)] ####
 anyD.0, any.0, any.1, 5, any.2, any.3, any.4, any.5, any.6, 41
 anyD.0, any.0, any.1, 32, any.2, any.3, any.4, any.5, any.6, 41
 anyD.0, any.0, any.1, 49, any.2, any.3, any.4, any.5, any.6, 41
@@ -223,7 +248,8 @@ anyD.0, any.0, any.1, 18, any.2, any.3, any.4, any.5, any.6, 41
 anyD.0, any.0, any.1, 23, any.2, any.3, any.4, any.5, any.6, 41
 anyD.0, any.0, any.1, 22, any.2, any.3, any.4, any.5, any.6, 41
 anyD.0, any.0, any.1, _b0.0, any.2, any.3, any.4, any.5, any.6, 45
-# 49: anyD; N..SE any, S north, SW..NW any; [S: (38 * northZero, 42, ...)]
+
+#### line 49: anyD; N..SE any, S north, SW..NW any; [S: (38 * northZero, 42, ...)] ####
 anyD.0, any.0, any.1, any.2, any.3, 2, any.4, any.5, any.6, 38
 anyD.0, any.0, any.1, any.2, any.3, 29, any.4, any.5, any.6, 38
 anyD.0, any.0, any.1, any.2, any.3, 46, any.4, any.5, any.6, 38
@@ -232,7 +258,8 @@ anyD.0, any.0, any.1, any.2, any.3, 19, any.4, any.5, any.6, 38
 anyD.0, any.0, any.1, any.2, any.3, 23, any.4, any.5, any.6, 38
 anyD.0, any.0, any.1, any.2, any.3, 20, any.4, any.5, any.6, 38
 anyD.0, any.0, any.1, any.2, any.3, _c0.0, any.4, any.5, any.6, 42
-# 50: anyD; N..SW any, W east, NW any; [W: (39 * eastZero, 43, ...)]
+
+#### line 50: anyD; N..SW any, W east, NW any; [W: (39 * eastZero, 43, ...)] ####
 anyD.0, any.0, any.1, any.2, any.3, any.4, any.5, 3, any.6, 39
 anyD.0, any.0, any.1, any.2, any.3, any.4, any.5, 30, any.6, 39
 anyD.0, any.0, any.1, any.2, any.3, any.4, any.5, 47, any.6, 39
@@ -241,7 +268,9 @@ anyD.0, any.0, any.1, any.2, any.3, any.4, any.5, 18, any.6, 39
 anyD.0, any.0, any.1, any.2, any.3, any.4, any.5, 20, any.6, 39
 anyD.0, any.0, any.1, any.2, any.3, any.4, any.5, 21, any.6, 39
 anyD.0, any.0, any.1, any.2, any.3, any.4, any.5, _d0.0, any.6, 43
-# 52: (38 .. 45); N..NW any; [0: (46 .. 53)]
+
+#### line 52: (38 .. 45); N..NW any; [0: (46 .. 53)] ####
+# Actual delay
 38, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 46
 39, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 47
 40, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 48
@@ -250,19 +279,29 @@ anyD.0, any.0, any.1, any.2, any.3, any.4, any.5, _d0.0, any.6, 43
 43, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 51
 44, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 52
 45, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 53
-# 56: north; N south, NE..NW any; 0
+
+#### line 56: north; N south, NE..NW any; 0 ####
+# Pointers annihilate mutually on collision
+# even
 north.0, south.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 0
-# 57: east; N..NE any, E west, SE..NW any; 0
+
+#### line 57: east; N..NE any, E west, SE..NW any; 0 ####
 east.0, any.0, any.1, west.0, any.2, any.3, any.4, any.5, any.6, 0
-# 58: south; N..SE any, S north, SW..NW any; 0
+
+#### line 58: south; N..SE any, S north, SW..NW any; 0 ####
 south.0, any.0, any.1, any.2, any.3, north.0, any.4, any.5, any.6, 0
-# 59: west; N..SW any, W east, NW any; 0
+
+#### line 59: west; N..SW any, W east, NW any; 0 ####
 west.0, any.0, any.1, any.2, any.3, any.4, any.5, east.0, any.6, 0
-# 61: 0; N south, NE..SE any, S north, SW..NW any; 0
+
+#### line 61: 0; N south, NE..SE any, S north, SW..NW any; 0 ####
+# odd (meh)
 0, south.0, any.0, any.1, any.2, north.0, any.3, any.4, any.5, 0
-# 62: 0; NW..NE any, E west, SE..SW any, W east; 0
+
+#### line 62: 0; NW..NE any, E west, SE..SW any, W east; 0 ####
 0, any.0, any.1, west.0, any.2, any.3, any.4, east.0, any.5, 0
-# 63: 0; N south, NE any, E (0 * west, west), SE..SW any, W [E: (east, 0, ...)], NW any; 0
+
+#### line 63: 0; N south, NE any, E (0 * west, west), SE..SW any, W [E: (east, 0, ...)], NW any; 0 ####
 0, south.0, any.0, 0, any.1, any.2, any.3, 3, any.4, 0
 0, south.0, any.0, 0, any.1, any.2, any.3, 30, any.4, 0
 0, south.0, any.0, 0, any.1, any.2, any.3, 47, any.4, 0
@@ -278,7 +317,8 @@ west.0, any.0, any.1, any.2, any.3, any.4, any.5, east.0, any.6, 0
 0, south.0, any.0, 0, any.1, any.2, any.3, 24, any.4, 0
 0, south.0, any.0, 0, any.1, any.2, any.3, 25, any.4, 0
 0, south.0, any.0, west.0, any.1, any.2, any.3, 0, any.4, 0
-# 64: 0; NW..NE any, E (0 * west, west), SE any, S north, SW any, W [E: (east, 0, ...)]; 0
+
+#### line 64: 0; NW..NE any, E (0 * west, west), SE any, S north, SW any, W [E: (east, 0, ...)]; 0 ####
 0, any.0, any.1, 0, any.2, north.0, any.3, 3, any.4, 0
 0, any.0, any.1, 0, any.2, north.0, any.3, 30, any.4, 0
 0, any.0, any.1, 0, any.2, north.0, any.3, 47, any.4, 0
@@ -294,120 +334,175 @@ west.0, any.0, any.1, any.2, any.3, any.4, any.5, east.0, any.6, 0
 0, any.0, any.1, 0, any.2, north.0, any.3, 24, any.4, 0
 0, any.0, any.1, 0, any.2, north.0, any.3, 25, any.4, 0
 0, any.0, any.1, west.0, any.2, north.0, any.3, 0, any.4, 0
-# 67: (2, 3, 4, 5); N..NW any; 0
+
+#### line 67: (2, 3, 4, 5); N..NW any; 0 ####
+# Pointer movement
 _e0.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
-# 67: N[0: (2, _, ...)]
+
+#### line 67: N[0: (2, _, ...)] ####
 any.0, any.1, any.2, any.3, any.4, 2, any.5, any.6, any.7, 2
-# 67: E[0: (_, 3, _, _)]
+
+#### line 67: E[0: (_, 3, _, _)] ####
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, 3, any.7, 3
-# 67: S[0: (_, _, 4, _)]
+
+#### line 67: S[0: (_, _, 4, _)] ####
 any.0, 4, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 4
-# 67: W[0: (_, _, _, 5)]
+
+#### line 67: W[0: (_, _, _, 5)] ####
 any.0, any.1, any.2, 5, any.3, any.4, any.5, any.6, any.7, 5
-# 68: (6, 7, 8, 9); N..NW any; 0
+
+#### line 68: (6, 7, 8, 9); N..NW any; 0 ####
 _f0.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
-# 68: N[0: (6, _, ...)]
+
+#### line 68: N[0: (6, _, ...)] ####
 any.0, any.1, any.2, any.3, any.4, 6, any.5, any.6, any.7, 6
-# 68: E[0: (_, 7, _, _)]
+
+#### line 68: E[0: (_, 7, _, _)] ####
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, 7, any.7, 7
-# 68: S[0: (_, _, 8, _)]
+
+#### line 68: S[0: (_, _, 8, _)] ####
 any.0, 8, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 8
-# 68: W[0: (_, _, _, 9)]
+
+#### line 68: W[0: (_, _, _, 9)] ####
 any.0, any.1, any.2, 9, any.3, any.4, any.5, any.6, any.7, 9
-# 71: (29, 30, 31, 32); N..NW any; 28
+
+#### line 71: (29, 30, 31, 32); N..NW any; 28 ####
+# Output from rotation
 _g0.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 28
-# 71: N[0: (2, _, ...)]
+
+#### line 71: N[0: (2, _, ...)] ####
 any.0, any.1, any.2, any.3, any.4, 29, any.5, any.6, any.7, 2
-# 71: E[0: (_, 3, _, _)]
+
+#### line 71: E[0: (_, 3, _, _)] ####
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, 30, any.7, 3
-# 71: S[0: (_, _, 4, _)]
+
+#### line 71: S[0: (_, _, 4, _)] ####
 any.0, 31, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 4
-# 71: W[0: (_, _, _, 5)]
+
+#### line 71: W[0: (_, _, _, 5)] ####
 any.0, any.1, any.2, 32, any.3, any.4, any.5, any.6, any.7, 5
-# 72: (33, 34, 35, 36); N..NW any; 28
+
+#### line 72: (33, 34, 35, 36); N..NW any; 28 ####
 _h0.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 28
-# 72: N[0: (6, _, ...)]
+
+#### line 72: N[0: (6, _, ...)] ####
 any.0, any.1, any.2, any.3, any.4, 33, any.5, any.6, any.7, 6
-# 72: E[0: (_, 7, _, _)]
+
+#### line 72: E[0: (_, 7, _, _)] ####
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, 34, any.7, 7
-# 72: S[0: (_, _, 8, _)]
+
+#### line 72: S[0: (_, _, 8, _)] ####
 any.0, 35, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 8
-# 72: W[0: (_, _, _, 9)]
+
+#### line 72: W[0: (_, _, _, 9)] ####
 any.0, any.1, any.2, 36, any.3, any.4, any.5, any.6, any.7, 9
-# 75: (46, 47, 48, 49); N..NW any; 37
+
+#### line 75: (46, 47, 48, 49); N..NW any; 37 ####
+# Output from delay
 _i0.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 37
-# 75: N[0: (2, _, ...)]
+
+#### line 75: N[0: (2, _, ...)] ####
 any.0, any.1, any.2, any.3, any.4, 46, any.5, any.6, any.7, 2
-# 75: E[0: (_, 3, _, _)]
+
+#### line 75: E[0: (_, 3, _, _)] ####
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, 47, any.7, 3
-# 75: S[0: (_, _, 4, _)]
+
+#### line 75: S[0: (_, _, 4, _)] ####
 any.0, 48, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 4
-# 75: W[0: (_, _, _, 5)]
+
+#### line 75: W[0: (_, _, _, 5)] ####
 any.0, any.1, any.2, 49, any.3, any.4, any.5, any.6, any.7, 5
-# 76: (50, 51, 52, 53); N..NW any; 37
+
+#### line 76: (50, 51, 52, 53); N..NW any; 37 ####
 _j0.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 37
-# 76: N[0: (6, _, ...)]
+
+#### line 76: N[0: (6, _, ...)] ####
 any.0, any.1, any.2, any.3, any.4, 50, any.5, any.6, any.7, 6
-# 76: E[0: (_, 7, _, _)]
+
+#### line 76: E[0: (_, 7, _, _)] ####
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, 51, any.7, 7
-# 76: S[0: (_, _, 8, _)]
+
+#### line 76: S[0: (_, _, 8, _)] ####
 any.0, 52, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 8
-# 76: W[0: (_, _, _, 9)]
+
+#### line 76: W[0: (_, _, _, 9)] ####
 any.0, any.1, any.2, 53, any.3, any.4, any.5, any.6, any.7, 9
-# 79: (20, 21, 22, 23); N..NW any; 10
+
+#### line 79: (20, 21, 22, 23); N..NW any; 10 ####
+# Doubled output from OR
 _k0.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 10
-# 79: N[0: (2, _, _, 2)]
+
+#### line 79: N[0: (2, _, _, 2)] ####
 any.0, any.1, any.2, any.3, any.4, 20, any.5, any.6, any.7, 2
 any.0, any.1, any.2, any.3, any.4, 23, any.5, any.6, any.7, 2
-# 79: E[0: (3, 3, _, _)]
+
+#### line 79: E[0: (3, 3, _, _)] ####
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, 20, any.7, 3
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, 21, any.7, 3
-# 79: S[0: (_, 4, 4, _)]
+
+#### line 79: S[0: (_, 4, 4, _)] ####
 any.0, 21, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 4
 any.0, 22, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 4
-# 79: W[0: (_, _, 5, 5)]
+
+#### line 79: W[0: (_, _, 5, 5)] ####
 any.0, any.1, any.2, 22, any.3, any.4, any.5, any.6, any.7, 5
 any.0, any.1, any.2, 23, any.3, any.4, any.5, any.6, any.7, 5
-# 80: (24, 25, 26, 27); N..NW any; 10
+
+#### line 80: (24, 25, 26, 27); N..NW any; 10 ####
 _l0.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 10
-# 80: N[0: (6, _, _, 6)]
+
+#### line 80: N[0: (6, _, _, 6)] ####
 any.0, any.1, any.2, any.3, any.4, 24, any.5, any.6, any.7, 6
 any.0, any.1, any.2, any.3, any.4, 27, any.5, any.6, any.7, 6
-# 80: E[0: (7, 7, _, _)]
+
+#### line 80: E[0: (7, 7, _, _)] ####
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, 24, any.7, 7
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, 25, any.7, 7
-# 80: S[0: (_, 8, 8, _)]
+
+#### line 80: S[0: (_, 8, 8, _)] ####
 any.0, 25, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 8
 any.0, 26, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 8
-# 80: W[0: (_, _, 9, 9)]
+
+#### line 80: W[0: (_, _, 9, 9)] ####
 any.0, any.1, any.2, 26, any.3, any.4, any.5, any.6, any.7, 9
 any.0, any.1, any.2, 27, any.3, any.4, any.5, any.6, any.7, 9
-# 83: (16, 17, 18, 19); N..NW any; 10
+
+#### line 83: (16, 17, 18, 19); N..NW any; 10 ####
+# Doubled output from NOT
 _m0.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 10
-# 83: N[0: (_, 3, _, 5)]
+
+#### line 83: N[0: (_, 3, _, 5)] ####
 any.0, any.1, any.2, any.3, any.4, 17, any.5, any.6, any.7, 3
 any.0, any.1, any.2, any.3, any.4, 19, any.5, any.6, any.7, 5
-# 83: E[0: (2, _, 4, _)]
+
+#### line 83: E[0: (2, _, 4, _)] ####
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, 16, any.7, 2
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, 18, any.7, 4
-# 83: S[0: (_, 3, _, 5)]
+
+#### line 83: S[0: (_, 3, _, 5)] ####
 any.0, 17, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 3
 any.0, 19, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 5
-# 83: W[0: (2, _, 4, _)]
+
+#### line 83: W[0: (2, _, 4, _)] ####
 any.0, any.1, any.2, 16, any.3, any.4, any.5, any.6, any.7, 2
 any.0, any.1, any.2, 18, any.3, any.4, any.5, any.6, any.7, 4
-# 84: (11, 12, 13, 14); N..NW any; 10
+
+#### line 84: (11, 12, 13, 14); N..NW any; 10 ####
 _n0.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 10
-# 84: N[0: (_, 7, _, 9)]
+
+#### line 84: N[0: (_, 7, _, 9)] ####
 any.0, any.1, any.2, any.3, any.4, 12, any.5, any.6, any.7, 7
 any.0, any.1, any.2, any.3, any.4, 14, any.5, any.6, any.7, 9
-# 84: E[0: (6, _, 8, _)]
+
+#### line 84: E[0: (6, _, 8, _)] ####
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, 11, any.7, 6
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, 13, any.7, 8
-# 84: S[0: (_, 7, _, 9)]
+
+#### line 84: S[0: (_, 7, _, 9)] ####
 any.0, 12, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 7
 any.0, 14, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 9
-# 84: W[0: (6, _, 8, _)]
+
+#### line 84: W[0: (6, _, 8, _)] ####
 any.0, any.1, any.2, 11, any.3, any.4, any.5, any.6, any.7, 6
 any.0, any.1, any.2, 13, any.3, any.4, any.5, any.6, any.7, 8
 

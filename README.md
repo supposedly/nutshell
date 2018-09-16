@@ -56,7 +56,7 @@ not work for you, you may instead `git clone` Nutshell as in step 2.ii above and
 from its root directory as a substitute for `nutshell-ca`.
 
 ```
-$ nutshell-ca transpile [infile] [outdir] [-v | -q | -s | -p | -t | -f]
+$ nutshell-ca transpile [infile] [outdir] [-v | -q | -s | -c | -p | -t | -f]
 (alternatively, `nutshell-ca t ...')
 ```
 The output file will be written to `outdir` with a .rule extension and the same filename as `infile`.  
@@ -64,9 +64,11 @@ Supported flags, though there's more info in `--help` (note that `-v` and `-q` c
 after or before the keyword `transpile`/`t` with no difference):
   - `-v`: Verbose. Can be repeated up to four times, causing more info to be displayed each time.
   - `-q`: Quiet. Opposite of the above, but only has one level.
-  - `-s`: Source. Writes each original nutshell line, as a comment, above the line(s) it compiles
+  - `-s`: Source. Writes each Nusthell `@TABLE` line, as a comment, above the line(s) it compiles
           to in the final ruletable output. (If the compiled line is from an auxiliary-transition
           specifier, the specifier is printed instead along with its line number as normal.)
+  - `-c`: Preserve comments. Causes comments in the Nutshell's `@TABLE` to be copied into the final
+          output as faithfully as possible (i.e. as closely as possible to their original positions).
   - `-t [HEADER]`: Change the "COMPILED FROM NUTSHELL" header that is added by default to transpiled
                    rules. (If `-t` is given no argument the header will be removed)
   - `-f TRANSITION`: Find a certain transition defined within a table section; requires, of course, that

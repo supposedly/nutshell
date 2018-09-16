@@ -50,7 +50,7 @@ vacrdata = {0, 12, 13}
 vacddata = {0, 16, 17}
 
 
-# If a shifter is encountered, reflect + shift data tape down 2 cell
+## If a shifter is encountered, reflect + shift data tape down 2 cells
 # go right
 vacddata, (1, 2), NE..W any, 5; [N: (16, 17)]
 ddata, 0, NE..W any, 5; 0
@@ -63,7 +63,7 @@ vacdata, (12, 13), 5, E..NW any; [N: (1, 2)]
 vacrdata, W rdata, NW..SW any; [W]
 rdata, W 0, NW..SW any; 0
 
-# shift the shifter down two as well
+## shift the shifter down two as well
 # right
 0, 5, NE..SW any, 0, rdata; 14
 # left
@@ -86,10 +86,10 @@ data, E 5, SE..NE any; 0
 # ----
 # check the x in 1x
 # leftmost bit 1?
-(3, 4), NE 2, E 4, SE..N any; [0: (8, 9)] # copy+shift down
+(3, 4), NE 2, E 4, SE..N any; [0: (8, 9)]  # copy+shift down
 # ----
 # leftmost bit 0?
-(3, 4), NE 1, E 4, SE..N any; [0: (6, 7)] # just shift down
+(3, 4), NE 1, E 4, SE..N any; [0: (6, 7)]  # just shift down
 # ----
 # shift the 1 in 1x down
 4, data, NE..NW any; 7

@@ -7,14 +7,17 @@ DEFAULT_HEADER = '''\
 '''
 
 cli = CLI("A transpiler from the 'Nutshell' rule-table format to Golly's")
+
 preview = cli.command(
   'preview', "Preview a single Nutshell transition's result",
   aliases=['p'], XOR='preview|transpile', OR='not nothing'
   )
+
 transpile = cli.command(
   'transpile', 'Transpile from Nutshell to Golly ruletable format',
   aliases=['t'], XOR='preview|transpile', OR='not nothing'
   )
+
 transpile.main_grp = Group(XOR='find|normal')
 
 # to be imported and then added to
@@ -68,12 +71,26 @@ def outdirs(path: str.split):
 @transpile.main_grp.flag(short='t', default=DEFAULT_HEADER)
 def header(text=''):
     """Change or hide 'COMPILED FROM NUTSHELL' header"""
-    return text or DEFAULT_HEADER
+    return text
 
 
-@transpile.main_grp.flag(short='s', aliases=['source'], default=False)
-def comment_src():
-    """Comment each Nutshell @TABLE line above the Golly line(s) it transpiles to"""
+@transpile.main_grp.flag(short='s', aliases=['source'], default=None)
+def comment_src(format_string='#### line {line}: {span} ####'):
+    """
+    Comment each Nutshell @TABLE line above the Golly line(s) it transpiles to
+    
+    Argument is a Python-style format string which, if given, will be treated as:
+        yourstring.format(line=<LINE NUMBER>, span=<SPECIFIC TEXT FROM ORIGINAL LINE>)
+    ...and then used to format the source-comment output.
+    
+    It should start with a # symbol to be treated as a comment by Golly. Default is '#### line {line}: {span} ####'.
+    """
+    return format_string
+
+
+@transpile.main_grp.flag(short='c', aliases=['comments'], default=False)
+def preserve_comments():
+    """Transfer original Nutshell @TABLE comments into Golly output"""
     return True
 
 

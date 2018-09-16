@@ -23,18 +23,26 @@ var any.2 = any.0
 var any.3 = any.0
 var live.0 = {1, 2, 3, 4}
 
-# 9: wait, N..W any; [0: move]
+
+#### line 9: wait, N..W any; [0: move] ####
+# A waiting car starts moving on the next tick
 3, any.0, any.1, any.2, any.3, 1
 4, any.0, any.1, any.2, any.3, 2
-# 12: 1, N..W any; [S: (0, 3, ...)]
+
+#### line 12: 1, N..W any; [S: (0, 3, ...)] ####
+# A downward-bound car moves down if the cell below it is 0, else stays put and becomes a 'waiting'
 1, any.0, any.1, 0, any.2, 0
 1, any.0, any.1, live.0, any.2, 3
-# 12: S[(3, _, ...)]
+
+#### line 12: S[(3, _, ...)] ####
 0, 1, any.0, any.1, any.2, 3
-# 14: 2, N..W any; [E: (0, 4, ...)]
+
+#### line 14: 2, N..W any; [E: (0, 4, ...)] ####
+# A rightward-bound car moves right if it can, else ditto
 2, any.0, 0, any.1, any.2, 0
 2, any.0, live.0, any.1, any.2, 4
-# 14: E[(4, _, ...)]
+
+#### line 14: E[(4, _, ...)] ####
 0, any.0, any.1, any.2, 2, 4
 
 @COLORS
