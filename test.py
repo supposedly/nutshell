@@ -29,6 +29,7 @@ if __name__ == '__main__':
         walk = list(os.walk('./examples/nutshells'))[0][2]
         if main == 'run':
             for fname in walk:
+                print(fname)
                 if len(ARGV) < 3 or fname.split('.')[0] in ARGV[2:]:
                     write_rule(infiles=['./examples/nutshells/' + fname], outdirs=['./examples/compiled_ruletables/'], find=False)
                 nutshell_rand.seed(RAND_SEED)

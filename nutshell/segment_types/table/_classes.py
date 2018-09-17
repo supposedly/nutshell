@@ -671,8 +671,10 @@ class Auxiliary:
     
     def from_binding(self, tr):
         within = self.resultant.within(tr)
+        # if isinstance(within, ResolvedBinding):
+        #    raise Reshape(self.resultant.cdir)
         if isinstance(within, ResolvedBinding):
-            within.cdir = '0'
+            within.cdir = Coord.from_name(within.cdir, self.tbl).move(*self.orig).name
         return TransitionGroup.from_seq(
           self._make_tr(tr, within), self.tbl, context=self.ctx, symmetries=self.symmetries
         ).expand(tr)
@@ -697,7 +699,10 @@ class Coord(tuple):
        'S': (0, -1),
       'SW': (-1, -1),
        'W': (-1, 0),
-      'NW': (-1, 1)
+      'NW': (-1, 1),
+      # XXX: if anything weird starts happening with (0, 0) coordinates a likely cause will be my putting this here
+      # (I added it to make Coord.from_name('0') doable without a special conditional)
+      '0': (0, 0),
       }
     _DIRMAP = dict(zip(_DIRS, range(8)))
     _NAMES = {**{v: k for k, v in _OFFSETS.items()}, (0, 0): '0'}

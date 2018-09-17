@@ -21,7 +21,7 @@ def _iter_transitions(tbl):
             seen.add(tr.ctx)
             lno, start, end = tr.ctx
             if src:
-                yield from ('', src.format(line=lno, span=tbl[lno-1][start-1:end-1]))
+                yield from ('', src.format(line=lno+tbl.start, span=tbl[lno-1][start-1:end-1]))
             if cmt:
                 yield from (tbl.comments.pop(cmt_lno) for cmt_lno in list(tbl.comments) if cmt_lno < lno)
             if lno in tbl.comments:

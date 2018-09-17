@@ -36,7 +36,7 @@ class Table:
 
     def __init__(self, tbl, start=0, *, dep: ['@NUTSHELL'] = None):
         self._src = tbl
-        self._start = start
+        self.start = start
         self._n_states = 0
         self.comments = {}
         self._nbhd = self._trlen = None
@@ -156,7 +156,7 @@ class Table:
                             lno, start, end = tr.ctx
                             return (
                               'No match\n\n'
-                              f'Impossible match!\nOverridden on line {self._start+lno} by:\n  {self[lno-1]}\n'
+                              f'Impossible match!\nOverridden on line {self.start+lno} by:\n  {self[lno-1]}\n'
                               f"""{"" if start == 1 else f"  {' '*(start-1)}{'^'*(end-start)}"}\n"""  # TODO FIXME: deuglify
                               f"Specifically (compiled line):\n  {', '.join(map(str, tr.fix_vars()))}"
                               )
@@ -165,7 +165,7 @@ class Table:
                     lno, start, end = tr.ctx
                     return (
                       'Found!\n\n'
-                      f'Line {self._start+lno}:\n  {self[lno-1]}\n'
+                      f'Line {self.start+lno}:\n  {self[lno-1]}\n'
                       f"""{"" if start == 1 else f"  {' '*(start-1)}{'^'*(end-start)}"}\n"""  # TODO FIXME: deuglify
                       f"Compiled line:\n  {', '.join(map(str, tr.fix_vars()))}"
                       )
