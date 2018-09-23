@@ -19,7 +19,6 @@ setuptools.setup(
   version='0.2.0',
   author='wright',
   packages=packages,
-  package_data={'nutshell': ['nutshell/segment_types/table/lark_assets/grammar.lark']},
   include_package_data=True,
   url='https://github.com/eltrhn/nutshell',
   description="Transpiler from an alternative CA-rule-spec language to Golly's",
