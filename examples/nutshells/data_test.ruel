@@ -18,10 +18,6 @@ x = 15, y = 15, rule = data_test
 10.G2$12.I!
 
 @TABLE
-states: 11
-neighborhood: Moore
-symmetries: none
-
 vacdata = (0, Data)
 up = (Prompt, DataOut)
 out = (ZeroOut, DataOut)

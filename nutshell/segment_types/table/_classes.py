@@ -20,7 +20,7 @@ class VarName:
     
     def __init__(self, name, rep=-1):
         self.name = str(name)
-        self.rep = rep
+        self.rep = Rep(rep)
     
     def __hash__(self):
         return hash(self.name)
@@ -50,15 +50,10 @@ class VarName:
         return anonymous
 
 
-class SpecialVar(tuple):
-    """Non-overwritable."""
-    def __eq__(self, other):
-        return type(other) is type(self) and super().__eq__(other)
-    def __hash__(self):
-        return super().__hash__()
-    def __repr__(self):
-        return f'SpecialVar({super().__repr__()})'
-
+class Rep(int):
+    def __iadd__(self, other):
+        super().__iadd__(self, other)
+        print(self)
 
 class TransitionGroup:
     def __init__(self, tbl, initial, napkin, resultant, *, context, symmetries=None):

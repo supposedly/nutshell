@@ -3,8 +3,6 @@
 From "RockScissorsPaperLife" by Dave Greene.
 
 @TABLE
-states: 4
-neighborhood: Moore
 symmetries: permute
 
 # Dead cells for State 1

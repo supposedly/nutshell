@@ -236,10 +236,6 @@ x = 9, y = 13, rule = //11
 
 
 @TABLE
-states: 96
-neighborhood: Moore
-symmetries: none
-
 anyPrgm = (PLUS..COMMA)
 prgm = anyPrgm - (L_BRACK, R_BRACK)
 vac = (0, anyPrgm)

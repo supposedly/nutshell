@@ -29,19 +29,18 @@ It's just here for reference, and perhaps eventually to establish consistency if
   - One space should be used after commas/semicolons in a variable or transition, and after the colon in a mapping.
     - **Yes**: `0, any, (3, 4), [E: (5, 6)]; 1`
     - **No**: `0,any,(3,4),[E:(5,6)];1`
-  - No whitespace, however, should be used immediately inside the "mouth" of a parenthesis/square bracket nor before a comma/(semi-)colon, though.
-    (In some cases this also might not be correctly-parsable)
+  - No whitespace, however, should be used immediately inside the "mouth" of a parenthesis/square bracket nor before a comma/(semi-)colon, though. Some cases of this will probably result in a syntax error.
     - **No**: `0 , any ,( 3 ,4 ) ,[ E :( 5 ,6 ) ] ;1`
     - **No**: `x = ( 1 , 2 ,3 )`
-  - The output-specifier arrow, `->`, should be surrounded by one or two spaces (same amount) on each side,
-    and individual compass-direction specifiers after it should be separated by two spaces.
+  - The auxiliary-transition arrows, `->` and `=>`, should be surrounded by one or two spaces (same amount) on each side,
+    and individual compass-direction specifiers thereafter should be separated by two spaces.
     - **Yes**: `(...); 1 -> S:3  N[aVariable]  SE[anotherVar]`
-    - **No**: `(...); 1->S:3 N[aVariable] SE[anotherVar]`
-  - Multiple output specifiers on one line should be ordered clockwise from north to northwest.
+    - **No**: `(...); 1->S:3 N[aVariable]SE[anotherVar]`
+  - Multiple auxiliaries on one line should be ordered clockwise from north to northwest.
     - **Yes**: `-> N[var]  SE:0  NW[N]`
     - **No**: `-> SE:0  NW[N]  N[var]`
   - "Operators" -- currently, `-` for "subtraction" and `*` for "multiplication" -- should be surrounded by one space if at the "top level"
-    of a transition or var assignment, and preferably-but-not-mandatorily surrounded by the same if located within a variable literal.
+    of a transition or var assignment, and preferably-but-not-mandatorily surrounded by the same if within a variable literal.
     - **Yes**: `varA - varB, [0: (2, varC * 3)], (varD - varE) * 3; 1`
     - **Sure**: `varA - varB, [0: (2, varC*3)], (varD-varE) * 3; 1`
     - **Meh**: `varA-varB, [0: (2, varC*3)], (varD-varE)*3; 1`
@@ -82,7 +81,7 @@ It's just here for reference, and perhaps eventually to establish consistency if
   1: A description of state 1 {CONSTANT_NAME}
 
    @TABLE
-  # [directives omitted...]
+  # [directives...]
   OTHER_CONSTANT_NAME = 2
   normalVarName = (1, 2, 3)
   ```
@@ -137,13 +136,11 @@ It's just here for reference, and perhaps eventually to establish consistency if
 
   a, [0: (1, 2)], 3, b, {1, 3}; 5
   ```
-- Prefer the symbolic compass-direction constants (`N`, `NE`, `E`, ..., `NW`) over their raw numbers (`0`, ...). Within output specifiers, 
-  in fact, the numbers cannot be used at all.
 
 ### @COLORS, @ICONS
 
-- Avoid using ranges-with-step rather than specifying individual states unless there's a clear regularity or relationship in the states
-  indicated by the range. (See [readme](../README) for "range with step")
+- Avoid using range-with-step literals rather than specifying individual states unless there's a clear regularity or relationship
+  in the states indicated by the range. (See [readme](../README) for "range with step")
 - No preference in `@ICONS` between specifying RLE-state colors using `. A B C ...` vs. `0 1 2 3 ...`, but don't mix the two. Use two
   spaces after single-character symbols of the former variant and one space otherwise.
   - **Sure**:

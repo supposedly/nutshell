@@ -1,7 +1,0 @@
-@NUTSHELL tst
-@TABLE
-states: 2
-symmetries: nutshell.AlternatingPermute
-neighborhood: Moore
-
-0, 0, 0, 0, 0, 1, 1, 1, 1, 1

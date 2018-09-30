@@ -43,81 +43,81 @@ var _b0.0 = {5, 6}
 var _c0.0 = {8, 10}
 
 
-#### line 30: signal, 0, live, E..W 0, live; 0 ####
+#### line 26: signal, 0, live, E..W 0, live; 0 ####
 signal.0, 0, live.0, 0, 0, 0, 0, 0, live.1, 0
 
-#### line 30: N[0: (1, 0, ...)] ####
+#### line 26: N[0: (1, 0, ...)] ####
 0, any.0, any.1, live.0, 0, 7, 0, live.1, any.2, 1
 0, any.0, any.1, live.0, 0, _a0.0, 0, live.1, any.2, 0
 
-#### line 32: 2, 0, NE..NW any; 0 ####
+#### line 28: 2, 0, NE..NW any; 0 ####
 2, 0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 0
 
-#### line 32: N:2 ####
+#### line 28: N:2 ####
 0, any.0, any.1, any.2, any.3, 2, any.4, any.5, any.6, 2
 
-#### line 34: vacdata, S up, SW any, W 0, NW..SE any; [0: (6, 5)] ####
+#### line 30: vacdata, S up, SW any, W 0, NW..SE any; [0: (6, 5)] ####
 0, any.0, any.1, any.2, any.3, up.0, any.4, 0, any.5, 6
 1, any.0, any.1, any.2, any.3, up.0, any.4, 0, any.5, 5
 
-#### line 35: (6, 5), N..NW any; [0: vacdata] ####
+#### line 31: (6, 5), N..NW any; [0: vacdata] ####
 6, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
 5, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 1
 
-#### line 35: N[(6, 5, _, ...)] ####
+#### line 31: N[(6, 5, _, ...)] ####
 0, any.0, any.1, any.2, any.3, _b0.0, any.4, any.5, any.6, 6
 1, any.0, any.1, any.2, any.3, _b0.0, any.4, any.5, any.6, 5
 
-#### line 37: up, N..NW any; [0: vacdata] ####
+#### line 33: up, N..NW any; [0: vacdata] ####
 2, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
 3, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 1
 
-#### line 37: N[(4, 3, _, ...)] ####
+#### line 33: N[(4, 3, _, ...)] ####
 0, any.0, any.1, any.2, any.3, up.0, any.4, any.5, any.6, 4
 1, any.0, any.1, any.2, any.3, up.0, any.4, any.5, any.6, 3
 
-#### line 39: out, N..NW any; [0: vacdata] ####
+#### line 35: out, N..NW any; [0: vacdata] ####
 4, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
 3, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 1
 
-#### line 39: N[(4, 3, _, ...)] ####
+#### line 35: N[(4, 3, _, ...)] ####
 0, any.0, any.1, any.2, any.3, out.0, any.4, any.5, any.6, 4
 1, any.0, any.1, any.2, any.3, out.0, any.4, any.5, any.6, 3
 
-#### line 39: NW[(_, 3, _, ...)] ####
+#### line 35: NW[(_, 3, _, ...)] ####
 1, any.0, any.1, any.2, out.0, any.3, any.4, any.5, any.6, 3
 
-#### line 41: 7, N..NW any; 0 ####
+#### line 37: 7, N..NW any; 0 ####
 7, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
 
-#### line 41: N[(7, 8, ...)] ####
+#### line 37: N[(7, 8, ...)] ####
 0, any.0, any.1, any.2, any.3, 7, any.4, any.5, any.6, 7
 live.0, any.0, any.1, any.2, any.3, 7, any.4, any.5, any.6, 8
 
-#### line 42: 9, N..NW any; 0 ####
+#### line 38: 9, N..NW any; 0 ####
 9, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
 
-#### line 42: N[(9, 10, ...)] ####
+#### line 38: N[(9, 10, ...)] ####
 0, any.0, any.1, any.2, any.3, 9, any.4, any.5, any.6, 9
 live.0, any.0, any.1, any.2, any.3, 9, any.4, any.5, any.6, 10
 
-#### line 44: 1, SE 10, S..E any; [NW: (0, 10, ...)] ####
+#### line 40: 1, SE 10, S..E any; [NW: (0, 10, ...)] ####
 1, any.0, any.1, any.2, 10, any.3, any.4, any.5, 0, 0
 1, any.0, any.1, any.2, 10, any.3, any.4, any.5, live.0, 10
 
-#### line 45: vacdata, SE 8, S..E any; [0: (1, 8)] ####
+#### line 41: vacdata, SE 8, S..E any; [0: (1, 8)] ####
 0, any.0, any.1, any.2, 8, any.3, any.4, any.5, any.6, 1
 1, any.0, any.1, any.2, 8, any.3, any.4, any.5, any.6, 8
 
-#### line 46: 0, SE 8, S..E any; [NW: (1, 8, ...)] ####
+#### line 42: 0, SE 8, S..E any; [NW: (1, 8, ...)] ####
 0, any.0, any.1, any.2, 8, any.3, any.4, any.5, 0, 1
 0, any.0, any.1, any.2, 8, any.3, any.4, any.5, live.0, 8
 
-#### line 48: 10, SE 0, S..E any; [NW: (vacdata, ...)] ####
+#### line 44: 10, SE 0, S..E any; [NW: (vacdata, ...)] ####
 10, any.0, any.1, any.2, 0, any.3, any.4, any.5, 0, 0
 10, any.0, any.1, any.2, 0, any.3, any.4, any.5, live.0, 1
 
-#### line 49: (8, 10), N..NW any; 1 ####
+#### line 45: (8, 10), N..NW any; 1 ####
 _c0.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 1
 
 @ICONS

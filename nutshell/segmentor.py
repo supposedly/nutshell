@@ -47,9 +47,10 @@ def parse(fp):
         annot = getattr(inspect.signature(converter).parameters.get('dep'), 'annotation', None) or {}
         try:
             parts[label] = converter(segment, seg_lno, **(annot and {'dep': [parts.get(i) for i in annot]}))
-        except errors.NutshellException as exc:
-            if exc.lno is None:
-                raise exc.__class__(None, exc.msg, label)
-            raise exc.__class__(exc.lno, exc.msg, label, segment, seg_lno)
+        except errors.NutshellException as e:
+            if e.lno is None:
+                # note, this doesn't pass segment
+                raise e.__class__(None, e.msg, label)
+            raise e.__class__(e.lno, e.msg, label, segment, shift=e.shift or seg_lno)
     
     return parts

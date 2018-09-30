@@ -92,8 +92,20 @@ after or before the keyword `transpile`/`t` with no difference):
 
 ## What's new
 ### Directives
-The `n_states` directive's name has been changed to `states` (though the former can still be used),
-and all directives ignore whitespace in their values&nbsp;-- so one may write, say, `symmetries: rotate 4` or
+First off: no directive is mandatory in Nutshell. Here is each directive's default value (i.e. the value it's
+initialized to before `@TABLE` is parsed):
+
+- `neighborhood: Moore`
+- `symmetries: none`
+- `states: ?`
+
+Two things to note regarding the final item: first, that the `n_states` directive (though still usable by that name)
+has been changed to `states`, and second that it accepts a value of `?`, which tells Nutshell to infer the amount
+of cellstates in a rule by checking the maximum cellstate value referred to -- be it in a statelist, constant declaration,
+or a literal number in a transition napkin. This means that the writer needn't bother keeping track of how many cellstates
+a rule uses, and because `?` is `states`'s default value, it also means that a rule doesn't have to specify `states:` at all.
+
+Additionally, all directives ignore whitespace in their values&nbsp;-- so one may write, say, `symmetries: rotate 4` or
 `neighborhood: von Neumann`. The `symmetries` directive can take a Python import path for *custom symmetry types*;
 this will be elaborated upon later on.
 ```rb
@@ -111,9 +123,10 @@ n_states: 5
 symmetries: rotate4reflect
 ```
 
-Additionally, the `symmetries` directive can be used multiple times within a file, allowing the writer to switch symmetries
+Lastly, the `symmetries` directive can be used multiple times within a file, allowing the writer to switch symmetries
 partway through a rule. During transpilation, differently-symmetried transitions will be expanded into the "lowest"
-(least-expressive) Golly symmetry type specified overall.
+(least-expressive) Golly symmetry type specified overall. (There is also, unlike in Golly, no enforced ordering of
+the `neighborhood` and `symmetries` directives; either can come before the other.)
 
 ### Transitions
 Semicolons are allowed alongside commas to separate different terms, and as a visual aid their use as a "final" separator

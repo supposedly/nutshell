@@ -5,13 +5,13 @@ from functools import partial
 from itertools import chain, cycle, islice, zip_longest
 
 import bidict
-import lark
 
 from nutshell.common.classes import TableRange
 from nutshell.common.utils import printv, printq
 from nutshell.common.errors import *
+from .lark_assets import parser as lark_standalone
 from ._transformer import Preprocess, NUTSHELL_GRAMMAR
-from ._classes import SpecialVar, VarName, StateList
+from ._classes import VarName, StateList
 from . import _symutils as symutils
 
 
@@ -35,6 +35,11 @@ class Table:
     hush = True
 
     def __init__(self, tbl, start=0, *, dep: ['@NUTSHELL'] = None):
+        # parser or lexer dies if there are blank lines right at the start
+        # so idk
+        while not tbl[0].split('#', 1)[0].strip():
+            del tbl[0]
+            start += 1
         self._src = tbl
         self.start = start
         self._n_states = 0
@@ -52,7 +57,7 @@ class Table:
             if self._constants:
                 self._n_states = max(self._constants.values())
         
-        self.directives = {'neighborhood': 'Moore', 'states': self._n_states}  # {'symmetries': [[what should the default symmetries be??]]}
+        self.directives = {'neighborhood': 'Moore', 'symmetries': 'none', 'states': self._n_states}
         self.vars = Bidict()  # {VarName(name) | str(name) :: Variable(value)}
         self.sym_types = set()
         self.transitions = []
@@ -61,19 +66,25 @@ class Table:
         self.new_varname = VarName.new_generator()
         
         trans = Preprocess(tbl=self)
-        parser = lark.Lark(NUTSHELL_GRAMMAR, parser='lalr', start='table', propagate_positions=True)
+        parser = lark_standalone.Lark_StandAlone(tbl=self)
         try:
-            self._data = trans.transform(parser.parse('\n'.join(self._src)))
-        except lark.exceptions.UnexpectedCharacters as e:
+            _parsed = parser.parse('\n'.join(self._src))
+        except lark_standalone.UnexpectedCharacters as e:
             raise SyntaxErr(
               (e.line, e.column, 1+e.column),
-              f"Unexpected character {{span!r}}{f' (expected {e.allowed})' if e.allowed else ''}"
+              f"Unexpected character {{span!r}}{f' (expected {e.allowed})' if e.allowed else ''}",
+              shift=self.start
               )
-        except lark.exceptions.UnexpectedToken as e:
+        except lark_standalone.UnexpectedToken as e:
             raise SyntaxErr(
               (e.line, e.column, 1+e.column),
-              f"Unexpected token {{span!r}} (expected {'/'.join(e.expected)})"
+              f"Unexpected token {{span!r}} (expected {'/'.join(e.expected)})",
+              shift=self.start
               )
+        else:
+            self.vars[VarName('any')] = StateList(range(self.n_states), context=None)
+            self.vars[VarName('live')] = StateList(range(1, self.n_states), context=None)
+        self._data = trans.transform(_parsed)
         if len(self.sym_types) <= 1 and not hasattr(next(iter(self.sym_types), None), 'fallback'):
             self.final = [t.fix_vars() for t in self._data]
         else:
@@ -114,13 +125,10 @@ class Table:
             value = int(value)
         except (TypeError, ValueError):
             if value == '?':
-                self.vars[VarName('any')] = StateList(range(self.n_states), context=None)
-                self.vars[VarName('live')] = StateList(range(1, self.n_states), context=None)
+                self.directives['states'] = self._n_states
         else:
-            self._n_states = value
-            self.vars[VarName('any')] = StateList(range(value), context=None)
-            self.vars[VarName('live')] = StateList(range(1, value), context=None)
-
+            self._n_states = self.directives['states'] = value
+    
     def add_sym_type(self, name):
         self.sym_types.add(symutils.get_sym_type(name))
     

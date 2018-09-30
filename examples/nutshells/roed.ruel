@@ -74,10 +74,6 @@ http://esolangs.org/wiki/Roie
     53: w {D_W1}
     
 @TABLE
-states: 54
-neighborhood: Moore
-symmetries: none
-
 anyO = (O .. O_NW1)
 anyR = (R .. R_W1)
 anyD = (D, D_N0 .. D_W1)

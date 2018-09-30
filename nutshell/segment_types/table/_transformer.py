@@ -5,8 +5,7 @@ from operator import attrgetter
 from pkg_resources import resource_filename
 
 import bidict
-import lark
-from lark import Transformer, Tree, Discard, v_args
+from .lark_assets.parser import Transformer, Tree, Discard, v_args
 
 from nutshell.common.utils import KILL_WS
 from nutshell.common.errors import *
@@ -138,11 +137,6 @@ class Preprocess(Transformer):
         val = val.translate(KILL_WS)
         self.directives[str(name)] = val
         if name in ('n_states', 'states'):
-            if val == '?':
-                raise UnsupportedFeature(
-                  fix(meta),
-                  f"`{name}: ?` is currently not supported. Please specify your rule's number of states explicitly :("
-                  )
             self._tbl.n_states = val
         if name == 'symmetries':
             self._tbl.add_sym_type(val)

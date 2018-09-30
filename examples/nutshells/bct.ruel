@@ -37,11 +37,6 @@ EBEBEB: 1 12 16  # lighter gray
 00FFFF: 5 14 15  # cyan
 
 @TABLE
-states: 18
-neighborhood: Moore
-symmetries: none
-
-
 data = {1, 2}
 rdata = {12, 13}
 ddata = {16, 17}

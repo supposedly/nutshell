@@ -1,6 +1,6 @@
 """Errors to be raised during nutshell parsing."""
 class NutshellException(SystemExit):
-    def __init__(self, lno: int, msg: str, seg_name: str = None, segment: list = None, shift: int = 0):
+    def __init__(self, lno: int, msg: str, seg_name: str = None, segment: list = None, *, shift: int = 0):
         """
         lno: line number error occurred on
         msg: error message
@@ -9,6 +9,7 @@ class NutshellException(SystemExit):
         """
         start = f'\n  {self.__class__.__name__}' if seg_name is None else f'\n  {self.__class__.__name__} in {seg_name}'
         self.lno, self.span, self.msg = lno, None, msg
+        self.shift = shift
         if isinstance(lno, tuple):
             self.lno, *self.span = lno
         if isinstance(segment, list):

@@ -57,66 +57,66 @@ var _a0.0 = {14, 15}
 var _b0.0 = {10, 11}
 
 
-#### line 55: vacddata, (1, 2), NE..W any, 5; [N: (16, 17)] ####
+#### line 50: vacddata, (1, 2), NE..W any, 5; [N: (16, 17)] ####
 ## If a shifter is encountered, reflect + shift data tape down 2 cells
 # go right
 vacddata.0, 1, any.0, any.1, any.2, any.3, any.4, any.5, 5, 16
 vacddata.0, 2, any.0, any.1, any.2, any.3, any.4, any.5, 5, 17
 
-#### line 56: ddata, 0, NE..W any, 5; 0 ####
+#### line 51: ddata, 0, NE..W any, 5; 0 ####
 ddata.0, 0, any.0, any.1, any.2, any.3, any.4, any.5, 5, 0
 
-#### line 58: vacrdata, (16, 17), NE..NW any; [N: (12, 13)] ####
+#### line 53: vacrdata, (16, 17), NE..NW any; [N: (12, 13)] ####
 # pull down
 vacrdata.0, 16, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 12
 vacrdata.0, 17, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 13
 
-#### line 60: vacdata, (12, 13), 5, E..NW any; [N: (1, 2)] ####
+#### line 55: vacdata, (12, 13), 5, E..NW any; [N: (1, 2)] ####
 # go left
 vacdata.0, 12, 5, any.0, any.1, any.2, any.3, any.4, any.5, 1
 vacdata.0, 13, 5, any.0, any.1, any.2, any.3, any.4, any.5, 2
 
-#### line 63: vacrdata, W rdata, NW..SW any; [W] ####
+#### line 58: vacrdata, W rdata, NW..SW any; [W] ####
 # Move rightward-moving data to the right
 vacrdata.0, any.0, any.1, any.2, any.3, any.4, any.5, rdata.0, any.6, rdata.0
 
-#### line 64: rdata, W 0, NW..SW any; 0 ####
+#### line 59: rdata, W 0, NW..SW any; 0 ####
 rdata.0, any.0, any.1, any.2, any.3, any.4, any.5, 0, any.6, 0
 
-#### line 68: 0, 5, NE..SW any, 0, rdata; 14 ####
+#### line 63: 0, 5, NE..SW any, 0, rdata; 14 ####
 ## shift the shifter down two as well
 # right
 0, 5, any.0, any.1, any.2, any.3, any.4, 0, rdata.0, 14
 
-#### line 70: 0, 5, data, 0, SE..NW any; 14 ####
+#### line 65: 0, 5, data, 0, SE..NW any; 14 ####
 # left
 0, 5, data.0, 0, any.0, any.1, any.2, any.3, any.4, 14
 
-#### line 72: (14, 15), N..NW any; 0 ####
+#### line 67: (14, 15), N..NW any; 0 ####
 # finally
 _a0.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
 
-#### line 72: S[0: (15, 5)] ####
+#### line 67: S[0: (15, 5)] ####
 any.0, 14, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 15
 any.0, 15, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 5
 
-#### line 74: 5, SE ddata, S..E 0; 0 ####
+#### line 69: 5, SE ddata, S..E 0; 0 ####
 # delete shifter at end of its input stream
 5, 0, 0, 0, ddata.0, 0, 0, 0, 0, 0
 
-#### line 75: 5, SW data, W..S 0; 0 ####
+#### line 70: 5, SW data, W..S 0; 0 ####
 5, 0, 0, 0, 0, 0, data.0, 0, 0, 0
 
-#### line 78: (3, 4), rdata, NE..NW any; [0: (10, 11)] ####
+#### line 73: (3, 4), rdata, NE..NW any; [0: (10, 11)] ####
 # Shift prgm tape down 1 if rightward data above it
 3, rdata.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 10
 4, rdata.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 11
 
-#### line 81: data, E 5, SE..NE any; 0 ####
+#### line 76: data, E 5, SE..NE any; 0 ####
 # If a data bit has a shifter to its right, don't attempt to copy it
 data.0, any.0, any.1, 5, any.2, any.3, any.4, any.5, any.6, 0
 
-#### line 89: (3, 4), NE 2, E 4, SE..N any; [0: (8, 9)] ####
+#### line 84: (3, 4), NE 2, E 4, SE..N any; [0: (8, 9)] ####
 # If a prgm-tape 1 is encountered, shift it downward
 # and append the command to its left (by copying+shifting down) onto the right end of the data tape,
 # if the leftmost bit is 1 -- otherwise just shift it down
@@ -126,85 +126,85 @@ data.0, any.0, any.1, 5, any.2, any.3, any.4, any.5, any.6, 0
 3, any.0, 2, 4, any.1, any.2, any.3, any.4, any.5, 8  # copy+shift down
 4, any.0, 2, 4, any.1, any.2, any.3, any.4, any.5, 9
 
-#### line 92: (3, 4), NE 1, E 4, SE..N any; [0: (6, 7)] ####
+#### line 87: (3, 4), NE 1, E 4, SE..N any; [0: (6, 7)] ####
 # ----
 # leftmost bit 0?
 3, any.0, 1, 4, any.1, any.2, any.3, any.4, any.5, 6  # just shift down
 4, any.0, 1, 4, any.1, any.2, any.3, any.4, any.5, 7
 
-#### line 95: 4, data, NE..NW any; 7 ####
+#### line 90: 4, data, NE..NW any; 7 ####
 # ----
 # shift the 1 in 1x down
 4, data.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 7
 
-#### line 96: 7, N..NW any; 0 ####
+#### line 91: 7, N..NW any; 0 ####
 7, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
 
-#### line 96: S[(11, _, ...)] ####
+#### line 91: S[(11, _, ...)] ####
 0, 7, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 11
 
-#### line 99: 8, N..NW any; 1 ####
+#### line 94: 8, N..NW any; 1 ####
 # ----
 # state 8 becomes state 1 and below it state 3
 8, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 1
 
-#### line 99: S[(10, _, ...)] ####
+#### line 94: S[(10, _, ...)] ####
 0, 8, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 10
 
-#### line 101: 9, N..NW any; 2 ####
+#### line 96: 9, N..NW any; 2 ####
 # state 9 becomes state 2 and below it state 4
 9, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 2
 
-#### line 101: S[(11, _, ...)] ####
+#### line 96: S[(11, _, ...)] ####
 0, 9, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 11
 
-#### line 104: (10, 11), N..NW any; 0 ####
+#### line 99: (10, 11), N..NW any; 0 ####
 # ----
 # states 10 and 11 become 3 and 4 moving down
 _b0.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
 
-#### line 104: S[0: (3, 4)] ####
+#### line 99: S[0: (3, 4)] ####
 any.0, 10, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 3
 any.0, 11, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 4
 
-#### line 108: data, E 0, SE any, S data, SW..NE any; [S] ####
+#### line 103: data, E 0, SE any, S data, SW..NE any; [S] ####
 # If a bit of data has reached the right end of the tape, append it
 # and delete the waiting data
 data.0, any.0, any.1, 0, any.2, data.1, any.3, any.4, any.5, data.1
 
-#### line 110: data, E 0, SE data, S..NE any; [SE] ####
+#### line 105: data, E 0, SE data, S..NE any; [SE] ####
 # next line accounts for single-item data tape being appended to
 data.0, any.0, any.1, 0, data.1, any.2, any.3, any.4, any.5, data.1
 
-#### line 111: data, data, 0, E..NW any; 0 ####
+#### line 106: data, data, 0, E..NW any; 0 ####
 data.0, data.1, 0, any.0, any.1, any.2, any.3, any.4, any.5, 0
 
-#### line 114: 3, data, NE..NW any; 6 ####
+#### line 109: 3, data, NE..NW any; 6 ####
 # If a prgm-tape 0 is encountered, shift it down and delete the leftmost data-tape bit
 3, data.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 6
 
-#### line 115: 6, N..NW any; 0 ####
+#### line 110: 6, N..NW any; 0 ####
 6, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0  # 3
 
-#### line 115: S:10 ####
+#### line 110: S:10 ####
 any.0, 6, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 10
 
-#### line 118: 0, E data, SE 3, S..NE any; 0 ####
+#### line 113: 0, E data, SE 3, S..NE any; 0 ####
 # Delete the leftmost bit if a program-tape 0 is encountered
 0, any.0, any.1, data.0, 3, any.2, any.3, any.4, any.5, 0
 
-#### line 121: data, data, NE..NW any; [0] ####
+#### line 116: data, data, NE..NW any; [0] ####
 # Keep a data-tape bit in place if it's waiting below the data tape (to prepare for moving to the end)
 data.0, data.1, any.0, any.1, any.2, any.3, any.4, any.5, any.6, data.0
 
-#### line 122: 0, data, any, data, SE..NW any; 0 ####
+#### line 117: 0, data, any, data, SE..NW any; 0 ####
 0, data.0, any.0, data.1, any.1, any.2, any.3, any.4, any.5, 0
 
-#### line 125: 0, any, data, data, SE..NW any; 0 ####
+#### line 120: 0, any, data, data, SE..NW any; 0 ####
 # Move data tape to the left otherwise
 0, any.0, data.0, data.1, any.1, any.2, any.3, any.4, any.5, 0
 
-#### line 126: vacdata, E vacdata, SE..NE any; [E] ####
+#### line 121: vacdata, E vacdata, SE..NE any; [E] ####
 vacdata.0, any.0, any.1, vacdata.1, any.2, any.3, any.4, any.5, any.6, vacdata.1
 
 @COLORS

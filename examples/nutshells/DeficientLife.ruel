@@ -1,8 +1,5 @@
 @NUTSHELL DeficientLife
 @TABLE
-states: 12
-neighborhood: Moore
-
 # Birth
 symmetries: rotate4reflect
 0, 0, -2, E..S 0, -2, 0, -2; 2
