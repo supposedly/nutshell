@@ -833,22 +833,49 @@ description of each state. Take the following example:
 
 ```rb
 @NUTSHELL foo
-
-1: Stationary data {DATA}
-3: Signal-transferring data
-4: Signal over vacuum {SIGNAL}
+1: Data
+2: Signal over empty space {SIGNAL}
+: {DATA_SIGNAL} Signal moving through data
+3: {GUN} Gun, releases one signal every other tick
+: {GUN_2} "Dormant" gun in between signals
 
 @TABLE
 ...
 ```
 
-The names `DATA` and `SIGNAL` will be usable within the aforementioned segments as aliases for, respectively, cellstates `1` and `4`.  
-It is strongly recommended albeit nowhere required that constant names be written in `UPPERCASE` or at least `PascalCase` and normal
-variable names in `lowercase`, `camelCase`, or `snake_case`; the initial capitals help visually distinguish constants from multi-state variables.
+Note the following few things:
+- There is no curly-bracketed {NAME} on the first line, but it does have a number + colon at the start.
+- The second and fourth lines have both a number + colon at the start *and* a curly-bracketed {NAME}.
+- The third and fifth lines have an initial colon and a bracketed {NAME}, but no number before the colon.
 
-For the actual registration of a constant, all that matters is that its line in `@NUTSHELL` start with `<number>:` and contain anywhere a
-pair of `{braces}` that enclose the constant's name. The braced part and any whitespace separating it from the previous word will be removed
-from the final `@RULE` segment in the output file.
+What they mean:
+- There will be no named constant aliased to the cellstate "1", but that state will be 'reserved'. (Stay
+  tuned for this term's definition.)
+- The names SIGNAL and GUN will be usable in later segments as aliases for, respectively, cellstates
+  2 and 3. The literal numbers 2 and 3 can also be used, and they'll refer to the same cellstates;
+  they are also 'reserved'.
+- The names DATA_SIGNAL and GUN_2 will be usable in later segments, but we don't intend to use their
+  numerical cellstate values at all.  
+  During transpilation, these names will be given cellstates in sequential order, starting from 1 and
+  *skipping* any previously-'reserved' cellstates.
+
+The above will transpile to this, also stripping the {NAME}s:
+
+```rb
+@RULE foo
+1: Data
+2: Signal over empty space
+4: Signal moving through data
+3: Gun, releases one signal every other tick
+5: "Dormant" gun in between signals
+```
+...and all references to constants will be replaced with their appropriate cellstate value. **Note that
+Nutshell does not stop you from using the cellstate of an "auto-numbered" constant**, so if you accidentally
+or purposely refer to `4` and `5` in your `@TABLE` or elsewhere there won't be an error thrown -- make
+sure you can keep track of your constants!
+
+Also: it is *strongly* recommended that constant names start with an uppercase letter and variable names with
+a lowercase one. The initial capital helps visually distinguish the former from the latter.
 
 ### The `@COLORS` segment
 This segment allows multiple states with the same color to be defined on the same line as each other, and for a color to be

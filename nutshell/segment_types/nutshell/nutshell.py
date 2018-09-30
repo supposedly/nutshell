@@ -1,11 +1,13 @@
 import re
+from itertools import count
 from collections.abc import MutableSequence
 
 from nutshell.common.errors import ValueErr
 
 
 class NutshellSegment(MutableSequence):
-    _rCONST = re.compile(r'(\s*)(\d+):(.*?)\s*\{\s*(.+)\s*}(.*)')
+    _rCONST = re.compile(r'(\s*)(\d+)?:(.*?)\s*\{\s*(.+)\s*}(.*)')
+    _rSTATE = re.compile(r'(\s*)(\d+)?:(.*?)()(.*)')  # allow states to be 'reserved' even with no {CONSTANT} name
     
     def __init__(self, segment, start=0):
         self.constants = {}
@@ -37,16 +39,36 @@ class NutshellSegment(MutableSequence):
         Where <name> is the constant's name.
         Additionally, {<name>} is removed from final @RULE output.
         """
-        for lno, match in enumerate(map(self._rCONST.match, self)):
+        taken = set()
+        later = {}
+        for lno, match in enumerate(self._rCONST.match(i) or self._rSTATE.match(i) for i in self):
             if match is not None:
                 _0, state, _1, name, _2 = match.groups()
+                if not name:
+                    # technically needs a None check...
+                    # but state's not going to have any other falsey val
+                    if state:
+                        taken.add(int(state))
+                    continue
                 if name in self.constants:
                     raise ValueErr(lno, f'Duplicate constant {name!r}')
                 if name in ignore:
                     self[lno] = f'{_0}{state}:{_1}{_2}  (BAD CONSTANT NAME {name!r})'
                 else:
-                    self.constants[name] = int(state)
-                    self[lno] = f'{_0}{state}:{_1}{_2}'
+                    if state:
+                        self.constants[name] = int(state)
+                        self[lno] = f'{_0}{state}:{_1}{_2}'
+                    else:
+                        self.constants[name] = None
+                        later[lno] = (_0, name, _1, _2)
+        taken.update(i for i in self.constants.values() if i is not None)
+        nums = count(1)
+        for k, v in self.constants.items():
+            if v is None:
+                v = self.constants[k] = next(i for i in nums if i not in taken)
+                taken.add(v)
+        for lno, (_0, name, _1, _2) in later.items():
+            self[lno] = f'{_0}{self.constants[name]}:{_1}{_2}'
     
     def _get_constant(self, match):
         return str(self.constants[match[0]])
