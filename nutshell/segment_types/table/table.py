@@ -85,6 +85,7 @@ class Table:
             self.vars[VarName('any')] = StateList(range(self.n_states), context=None)
             self.vars[VarName('live')] = StateList(range(1, self.n_states), context=None)
         self._data = trans.transform(_parsed)
+        
         if len(self.sym_types) <= 1 and not hasattr(next(iter(self.sym_types), None), 'fallback'):
             self.final = [t.fix_vars() for t in self._data]
         else:

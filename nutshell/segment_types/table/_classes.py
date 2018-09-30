@@ -20,7 +20,7 @@ class VarName:
     
     def __init__(self, name, rep=-1):
         self.name = str(name)
-        self.rep = Rep(rep)
+        self.rep = rep
     
     def __hash__(self):
         return hash(self.name)
@@ -40,20 +40,15 @@ class VarName:
     @classmethod
     def new_generator(cls, seed=0):
         it = count(seed)
-        def anonymous(rep=0):
+        def _anonymous(rep=0):
             """
             Generates a name for an anonymous statelist.
             Method of name generation liable to change.
             """
             i = next(it)
             return cls(f'_{chr(i % 26 + 97)}{i // 26}', rep)
-        return anonymous
+        return _anonymous
 
-
-class Rep(int):
-    def __iadd__(self, other):
-        super().__iadd__(self, other)
-        print(self)
 
 class TransitionGroup:
     def __init__(self, tbl, initial, napkin, resultant, *, context, symmetries=None):
@@ -283,10 +278,11 @@ class Transition:
                     varname.rep = max(varname.rep, int(tag))
                 else:
                     seen[i] = set()
-        tag_counter = count()
         for i in tr:
+            tag_counter = count()
             if isinstance(i, str) and i.isidentifier():
                 tag = next(j for j in tag_counter if j not in seen[i])
+                seen[i].add(tag)
                 ret.append(f'{i}.{tag}')
                 varname = variables[variables.inv[i]]  # (ew, but converting string to varname)
                 varname.rep = max(varname.rep, tag)
