@@ -397,7 +397,7 @@ neighborhood: von Neumann
 symmetries: permute
 neighborhood: von Neumann
 
-0, [(1, 2)] ~ 2, [any]; [1]
+0, [(1, 2)] ~ 3, [any]; [1]
 ```
 ```rb
 # Golly
@@ -405,7 +405,7 @@ var _random_name.0 = {1, 2}
 
 0, _random_name.0, _random_name.0, any.0, any.0, _random_name.0
 ```
-The first transition is equivalent to `0, any, E..W [N]; [N]` and the other to `0, (1, 2), [1] ~ 1, any, [2] ~ 1`.
+The first transition is equivalent to `0, any, E..W [N]; [N]` and the other to `0, (1, 2) ~ 1, [1] ~ 2, any ~ 1, [3]; [1]`.
 
 #### Mappings
 Now that we've introduced binding by compass-direction index rather than by name, we can extend the concept into a second

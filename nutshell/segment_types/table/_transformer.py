@@ -320,11 +320,11 @@ class Preprocess(Transformer):
     
     @inline
     def range(self, meta, start, stop):
-        return tuple(range(int(start), 1+int(stop)))
+        return StateList(range(int(start), 1+int(stop)))
     
     @inline
     def range_step(self, meta, step, start, stop):
-        return tuple(range(int(start), 1+int(stop), int(step)))
+        return StateList(range(int(start), 1+int(stop), int(step)))
     
     @inline
     def noref_repeat_int(self, meta, num, multiplier):
@@ -340,7 +340,7 @@ class Preprocess(Transformer):
     
     @inline
     def noref_subt(self, meta, minuend, subtrhnd):
-        return tuple(i for i in self.kill_string(minuend, meta) if i not in self.kill_string(subtrhnd, meta, li=True))
+        return StateList(i for i in self.kill_string(minuend, meta) if i not in self.kill_string(subtrhnd, meta, li=True))
     
     @inline
     def noref_live_except(self, meta, subtrhnd):
