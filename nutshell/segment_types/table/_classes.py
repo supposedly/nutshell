@@ -323,6 +323,8 @@ class Binding(Reference):
         # surrounding environment must raise Reshape on its behalf.
         r = tr[self.cdir]
         while isinstance(r, Expandable) and not isinstance(r, StateList):
+            if r.cdir == self.cdir:
+                raise ValueErr(self.ctx, 'Term references itself')
             r = r.within(tr)
         return ResolvedBinding(self.cdir, r) if isinstance(r, StateList) else r
     
@@ -339,7 +341,7 @@ class InlineBinding:
         self.given = False
     
     def __repr__(self):
-        return f'[{self.val}]'
+        return f'Inline[{self.val}]<{self.bind}>'
     
     def set(self, cdir):
         self.bind = Binding(self._tbl.check_cdir(str(cdir), self.ctx, return_int=False, enforce_int=True), context=self.ctx)

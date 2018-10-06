@@ -404,4 +404,4 @@ class Preprocess(Transformer):
     
     @inline
     def inline_binding(self, meta, val):
-        return InlineBinding(val, self._tbl, context=meta)
+        return InlineBinding(self.kill_string(val, meta), self._tbl, context=meta)
