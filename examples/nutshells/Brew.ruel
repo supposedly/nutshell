@@ -1,0 +1,22 @@
+@NUTSHELL Brew
+
+From 83bismuth38.
+Nutshell actually shines here. Three lines of transitions!!
+(And generalizable to N states by just changing the second directive to `states: N`)
+
+@TABLE
+symmetries: permute
+states: 4
+# ^ necessary because we don't use any actual cellstates below besides `1`.
+# But if the last line were `(1, 2, 3), any; [0: (2, 3, 0)]` then the `states: 4`
+# could be inferred just fine (from that the highest state referred to is 3)
+
+any, [live] ~ 3, --[1]; [1]
+live, [0] ~ 2, --[0]; [0]
+live, any; [0: (live-1, 0)]
+
+@COLORS
+000: 0
+F00: 1
+0F0: 2
+00F: 3

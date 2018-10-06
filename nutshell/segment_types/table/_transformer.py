@@ -137,7 +137,7 @@ class Preprocess(Transformer):
         val = val.translate(KILL_WS)
         self.directives[str(name)] = val
         if name in ('n_states', 'states'):
-            self._tbl.n_states = val
+            self._tbl.update_special_vars(val)
         if name == 'symmetries':
             self._tbl.add_sym_type(val)
         raise Discard

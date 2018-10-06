@@ -63,6 +63,7 @@ class Table:
         self.transitions = []
         self._constants = {}
 
+        self.specials = {'any': VarName('any'), 'live': VarName('live')}
         self.new_varname = VarName.new_generator()
         
         trans = Preprocess(tbl=self)
@@ -82,8 +83,7 @@ class Table:
               shift=self.start
               )
         else:
-            self.vars[VarName('any')] = StateList(range(self.n_states), context=None)
-            self.vars[VarName('live')] = StateList(range(1, self.n_states), context=None)
+            self.update_special_vars()
         self._data = trans.transform(_parsed)
         
         if len(self.sym_types) <= 1 and not hasattr(next(iter(self.sym_types), None), 'fallback'):
@@ -129,6 +129,12 @@ class Table:
                 self.directives['states'] = self._n_states
         else:
             self._n_states = self.directives['states'] = value
+    
+    def update_special_vars(self, value=None):
+        if value is not None:
+            self.n_states = value
+        self.vars[self.specials['any']] = StateList(range(self.n_states), context=None)
+        self.vars[self.specials['live']] = StateList(range(1, self.n_states), context=None)
     
     def add_sym_type(self, name):
         self.sym_types.add(symutils.get_sym_type(name))
