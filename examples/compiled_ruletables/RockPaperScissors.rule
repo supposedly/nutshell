@@ -10,7 +10,7 @@ neighborhood: Moore
 symmetries: permute
 n_states: 4
 
-var any.0 = {0, 1, 2, 3}
+var any.0 = {0,1,2,3}
 var any.1 = any.0
 var any.2 = any.0
 var any.3 = any.0
@@ -19,27 +19,27 @@ var any.5 = any.0
 var any.6 = any.0
 var any.7 = any.0
 var any.8 = any.0
-var deadA.0 = {0, 2, 3}
+var deadA.0 = {0,2,3}
 var deadA.1 = deadA.0
 var deadA.2 = deadA.0
 var deadA.3 = deadA.0
 var deadA.4 = deadA.0
 var deadA.5 = deadA.0
-var deadB.0 = {0, 1, 3}
+var deadB.0 = {0,1,3}
 var deadB.1 = deadB.0
 var deadB.2 = deadB.0
 var deadB.3 = deadB.0
 var deadB.4 = deadB.0
 var deadB.5 = deadB.0
-var deadC.0 = {0, 1, 2}
+var deadC.0 = {0,1,2}
 var deadC.1 = deadC.0
 var deadC.2 = deadC.0
 var deadC.3 = deadC.0
 var deadC.4 = deadC.0
 var deadC.5 = deadC.0
-var _a0.0 = {0, 1}
-var _b0.0 = {0, 2}
-var _c0.0 = {0, 3}
+var _a0.0 = {0,1}
+var _b0.0 = {0,2}
+var _c0.0 = {0,3}
 
 
 #### line 16: {0, 1}, 1 ~ 3, 3 ~ 3, deadC; 3 ####

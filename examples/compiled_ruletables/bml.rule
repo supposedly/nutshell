@@ -17,11 +17,11 @@ neighborhood: vonNeumann
 symmetries: none
 n_states: 5
 
-var any.0 = {0, 1, 2, 3, 4}
+var any.0 = {0,1,2,3,4}
 var any.1 = any.0
 var any.2 = any.0
 var any.3 = any.0
-var live.0 = {1, 2, 3, 4}
+var live.0 = {1,2,3,4}
 
 
 #### line 19: wait, N..W any; [0: move] ####

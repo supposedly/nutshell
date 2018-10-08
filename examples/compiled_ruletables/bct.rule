@@ -37,7 +37,7 @@ neighborhood: Moore
 symmetries: none
 n_states: 18
 
-var any.0 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17}
+var any.0 = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17}
 var any.1 = any.0
 var any.2 = any.0
 var any.3 = any.0
@@ -45,16 +45,16 @@ var any.4 = any.0
 var any.5 = any.0
 var any.6 = any.0
 var any.7 = any.0
-var data.0 = {1, 2}
+var data.0 = {1,2}
 var data.1 = data.0
-var rdata.0 = {12, 13}
-var ddata.0 = {16, 17}
-var vacdata.0 = {0, 1, 2}
+var rdata.0 = {12,13}
+var ddata.0 = {16,17}
+var vacdata.0 = {0,1,2}
 var vacdata.1 = vacdata.0
-var vacrdata.0 = {0, 12, 13}
-var vacddata.0 = {0, 16, 17}
-var _a0.0 = {14, 15}
-var _b0.0 = {10, 11}
+var vacrdata.0 = {0,12,13}
+var vacddata.0 = {0,16,17}
+var _a0.0 = {14,15}
+var _b0.0 = {10,11}
 
 
 #### line 50: vacddata, (1, 2), NE..W any, 5; [N: (16, 17)] ####

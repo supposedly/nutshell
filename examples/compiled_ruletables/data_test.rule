@@ -25,7 +25,7 @@ neighborhood: Moore
 symmetries: none
 n_states: 11
 
-var any.0 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+var any.0 = {0,1,2,3,4,5,6,7,8,9,10}
 var any.1 = any.0
 var any.2 = any.0
 var any.3 = any.0
@@ -33,14 +33,14 @@ var any.4 = any.0
 var any.5 = any.0
 var any.6 = any.0
 var any.7 = any.0
-var live.0 = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+var live.0 = {1,2,3,4,5,6,7,8,9,10}
 var live.1 = live.0
-var up.0 = {2, 3}
-var out.0 = {3, 4}
-var signal.0 = {9, 2, 7}
-var _a0.0 = {9, 2}
-var _b0.0 = {5, 6}
-var _c0.0 = {8, 10}
+var up.0 = {2,3}
+var out.0 = {3,4}
+var signal.0 = {9,2,7}
+var _a0.0 = {9,2}
+var _b0.0 = {5,6}
+var _c0.0 = {8,10}
 
 
 #### line 26: signal, 0, live, E..W 0, live; 0 ####

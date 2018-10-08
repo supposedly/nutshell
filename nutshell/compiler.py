@@ -39,12 +39,12 @@ def _handle_table(rulefile, tbl):
     for directive, value in tbl.directives.items():
         rulefile.append(f'{directive}: {value}')
     rulefile.append('')
-    for var, value in tbl.vars.items():
+    for var, states in tbl.vars.items():
         if var.rep == -1:
             continue
         # set() removes duplicates and gives braces
-        # XXX: Golly gives up reading variables past a certain length; maybe not a good idea to keep spaces...?
-        rulefile.append(f'var {var.name}.0 = {set(value)}')
+        # Golly gives up reading variables past a certain length so we unfortunately have to .replace(' ', '')
+        rulefile.append(f'var {var.name}.0 = ' + f'{set(states)}'.replace(' ', ''))
         rulefile.extend(f'var {var.name}.{suf} = {var.name}.0' for suf in range(1, 1 + var.rep))
     rulefile.append('')
     rulefile.extend(_iter_transitions(tbl))
