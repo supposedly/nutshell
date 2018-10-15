@@ -37,7 +37,7 @@ class Table:
     def __init__(self, tbl, start=0, *, dep: ['@NUTSHELL'] = None):
         # parser or lexer dies if there are blank lines right at the start
         # so idk
-        while not tbl[0].split('#', 1)[0].strip():
+        while tbl and not tbl[0].split('#', 1)[0].strip():
             del tbl[0]
             start += 1
         self._src = tbl
@@ -65,6 +65,12 @@ class Table:
 
         self.specials = {'any': VarName('any'), 'live': VarName('live')}
         self.new_varname = VarName.new_generator()
+        
+        if not tbl:
+            self._src = ['']  # for compiler.py's sentinel check
+            self.final = []
+            self._n_states = self.directives['n_states'] = max(2, self.directives.pop('states', 2))
+            return
         
         trans = Preprocess(tbl=self)
         parser = lark_standalone.Lark_StandAlone(tbl=self)

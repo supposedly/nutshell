@@ -38,9 +38,10 @@ class Icon:
         yield from self.ascii
 
     @classmethod
-    def set_height(cls, dims):
-        max_dim = max(map(max, zip(*dims)))
-        cls.HEIGHT = min(filter(max_dim.__le__, (7, 15, 31)), key=lambda x: abs(max_dim-x))
+    def set_height(cls, dims=None, max_dim=None):
+        if max_dim is None:
+            max_dim = max(map(max, zip(*dims)))
+        cls.HEIGHT = min(filter(max_dim.__le__, (7, 15, 31)), key=lambda x: abs(max_dim - x))
     
     @classmethod
     def solid_color(cls, color):
@@ -48,7 +49,7 @@ class Icon:
     
     @staticmethod
     def _fix_two(s):
-        if not any('.' in i != ('.', '.') for i in zip(*[iter(s)]*2)):
+        if not any('.' in i and i != ('.', '.') for i in zip(*[iter(s)]*2)):
             return s
         return s[1:] + '.'
     
@@ -79,8 +80,12 @@ class IconArray:
         self.colormap, _start_state_def = self._parse_colors()
         self._states = self._sep_states(_start_state_def)
         
-        # this mess just constructs a "sequence" of (x, y) coords to pass to set_height(), grabbed from the RLEs in self._states.values()
-        Icon.set_height(map(lambda x: map(int, chain.from_iterable(self._rDIMS.findall(x))), filter(self._rDIMS.match, chain.from_iterable(self._states.values()))))
+        # this just constructs a series of (x, y) dimensions to pass to set_height(), grabbed from the RLEs in self._states.values()
+        Icon.set_height(
+          map(int, chain.from_iterable(self._rDIMS.findall(i)))
+          for i in
+          filter(self._rDIMS.match, chain.from_iterable(self._states.values()))
+          )
         
         self.icons = {state: list(Icon(''.join(rle))) for state, (_dims, *rle) in self._states.items()}
         self._fill_missing_states()
@@ -103,7 +108,7 @@ class IconArray:
     def _parse_colors(self, start=1):
         colormap = IShouldntHaveToDoThisBidict()
         lno = start
-        for lno, line in enumerate(map(str.strip, self._src), 1):
+        for lno, line in enumerate((i.split('#')[0].strip() for i in self._src), 1):
             if line.startswith('?'):
                 # Can put n_states in brackets if no TABLE section to grab it from
                 pre, *post = map(str.strip, line.split('[', 1))
@@ -121,7 +126,7 @@ class IconArray:
                 continue
             state, color = match[1].strip().strip(':'), match[2]
             colormap[SYMBOL_MAP[int(state)] if state.isdigit() else maybe_double(state)] = ColorMixin.pack(color).upper()
-        return colormap, lno
+        return colormap, lno-1  # -1 because lno is potentially a cellstate-containing comment
     
     def _sep_states(self, start) -> dict:
         states = defaultdict(list)
