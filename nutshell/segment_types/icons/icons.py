@@ -10,7 +10,7 @@ from nutshell.common.classes import TableRange, ColorMixin
 from nutshell.common.utils import random
 from nutshell.common.errors import *
 
-TWO_STATE = str.maketrans('bo', '.A', ' \t')  # do str.strip()'s job as well
+TWO_STATE = str.maketrans('bo', '.A')
 
 
 class IShouldntHaveToDoThisBidict(bidict.bidict):
@@ -128,7 +128,7 @@ class IconArray:
         cur_states = set()
         _last_comment = 0
         seq = self._src[start-1:] if self._nutshell is None else self._nutshell.replace_iter(self._src[start-1:])
-        for lno, line in enumerate(map(str.translate, seq, repeat(TWO_STATE)), start):
+        for lno, line in enumerate(map(str.strip, seq), start):
             if not line:
                 continue
             if line.startswith('#'):
@@ -144,6 +144,7 @@ class IconArray:
                     raise ValueErr(lno, f'States {cur_states.intersection(states)} were already assigned an icon')
                 _last_comment = lno
                 continue
+            line = line.translate(TWO_STATE)
             for state in cur_states:
                 states[state].append(line)
         return states
