@@ -65,7 +65,7 @@ class Icon:
 
 class IconArray:
     _rDIMS = re.compile(r'\s*x\s*=\s*(\d+),\s*y\s*=\s*(\d+)')
-    _rCOLOR = re.compile(r'(\d+:\s*|[.A-Z]|[p-y][A-O]\s+)(\d{0,3}\s+\d{0,3}\s+\d{0,3}|[0-9A-F]{6}|[0-9A-F]{3}).*')
+    _rCOLOR = re.compile(r'(\d+:\s*|[.A-Z]\s+|[p-y][A-O]\s+)(\d{0,3}\s+\d{0,3}\s+\d{0,3}|[0-9A-F]{6}|[0-9A-F]{3}).*')
     
     def __init__(self, segment, start=0, *, dep: ['@COLORS', '@TABLE', '@NUTSHELL'] = None):
         self._src = segment
