@@ -25,7 +25,12 @@ class ColorSegment(ColorMixin):
               for state in TableRange.try_iter(states.split())
               }
         except ValueError:
-            lno, state = next((i, state) for i, (_, states) in self.colors for state in TableRange.try_iter(states.split()) if not state.lstrip('*').isdigit())
+            lno, state = next(
+              (i, state)
+              for i, (_, states) in self.colors
+              for state in TableRange.try_iter(states.split())
+              if not state.lstrip('*').isdigit()
+              )
             raise ValueErr(lno, f'State {state} is not an integer')
         except TypeError as e:
             raise ValueErr(*e.args)
@@ -41,9 +46,9 @@ class ColorSegment(ColorMixin):
             # and so won't be accessible by ColorSegment[int-type cellstate])
             try:
                 self._packed_dict = {
-                  int(j) if j.isdigit() else j.lstrip('*'): self.pack(color.strip(), lno)
-                  for lno, (color, state) in self.colors
-                  for j in state.split()
+                  int(st) if st.isdigit() else st.lstrip('*'): self.pack(color.strip(), lno)
+                  for lno, (color, states) in self.colors
+                  for st in TableRange.try_iter(states.split())
                   }
             except TypeError as e:
                 raise ValueErr(*e.args)
