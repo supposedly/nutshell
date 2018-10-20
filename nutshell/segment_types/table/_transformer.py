@@ -350,6 +350,18 @@ class Preprocess(Transformer):
     def noref_all_except(self, meta, subtrhnd):
         return self.noref_subt(('any', subtrhnd), meta)
     
+    @inline
+    def noref_rot_right(self, meta, statelist, amt):
+        amt = int(amt) % len(statelist)
+        statelist = self.kill_string(statelist, meta)
+        return statelist[-amt:] + statelist[:-amt]
+    
+    @inline
+    def noref_rot_left(self, meta, statelist, amt):
+        amt = int(amt) % len(statelist)
+        statelist = self.kill_string(statelist, meta)
+        return statelist[amt:] + statelist[:amt]
+    
     def noref_var(self, children, meta):
         ret = []
         m = fix(meta)
@@ -385,6 +397,18 @@ class Preprocess(Transformer):
     @inline
     def subt(self, meta, var, subtrhnd):
         return Subt(self.kill_string(var, meta), StateList(self.kill_string(subtrhnd, meta), context=meta), context=meta)
+    
+    @inline
+    def rot_right(self, meta, statelist, amt):
+        amt = int(amt) % len(statelist)
+        statelist = self.kill_string(statelist, meta)
+        return statelist[-amt:] + statelist[:-amt]
+    
+    @inline
+    def rot_left(self, meta, statelist, amt):
+        amt = int(amt) % len(statelist)
+        statelist = self.kill_string(statelist, meta)
+        return statelist[amt:] + statelist[:amt]
     
     @inline
     def live_except(self, meta, subtrhnd):

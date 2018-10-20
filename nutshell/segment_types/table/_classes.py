@@ -462,6 +462,8 @@ class StateList(Expandable):
         return self._tuple.__eq__(other)
     
     def __getitem__(self, item):
+        if isinstance(item, slice):
+            return self.__class__(self._tuple.__getitem__(item), context=self.ctx)
         return self._tuple.__getitem__(item)
     
     def __hash__(self):
@@ -476,21 +478,26 @@ class StateList(Expandable):
     def __repr__(self):
         return f"{''.join(filter(str.isupper, self.__class__.__name__))}{self._tuple.__repr__()}"
     
+    def __add__(self, other):
+        if isinstance(other, (StateList, Iterable)):
+            return self.__class__((*self, *other), context=self.ctx)
+        return NotImplemented
+    
     def __mul__(self, other):
         if isinstance(other, int):
-            return StateList(self._tuple*other)
+            return self.__class__(self._tuple*other, context=self.ctx)
         return NotImplemented
     
     def __rmul__(self, other):
         if isinstance(other, int):
-            return StateList([other]*len(self._tuple))
+            return self.__class__([other]*len(self._tuple), context=self.ctx)
         return NotImplemented
     
     def __sub__(self, other):
         if type(other) is type(self):
-            return StateList([i for i in self if i not in other])
+            return self.__class__([i for i in self if i not in other], context=self.ctx)
         if isinstance(other, int):
-            return StateList([i for i in self if i != other])
+            return self.__class__([i for i in self if i != other], context=self.ctx)
         return NotImplemented
     
     def bind(self, val, idx, tr):
