@@ -246,7 +246,8 @@ Varnames are alphanumeric (and case-sensitive) with three exceptions:
 - The name as a whole cannot match one of the eight compass directions: `N`, `E`, `S`, `W`, `NE`, `SE`, `SW`, `NW`.
 
 ### Operations
-Variables can contain or be represented by "operations", with the binary `*` and `-` operators & the unary `-` and `--` operators.
+Variables can contain or be represented by "operations", with the binary `*`, `-` and `<<`/`>>` operators
+& the unary `-` and `--` operators.
 
 These operations don't have to be assigned to variable names beforehand, by the way. All of what's described below is perfectly
 valid if used directly in a transition, just like the "on-the-spot" state-lists mentioned above.
@@ -256,7 +257,7 @@ statelists, like `(any-3)*2`.
 
 An exclamation mark followed by an expression (as a whole line) will cause the expression's result to be printed: `!(1, 2, 3)-(3, 4)`
 will print `(1, 2)`, for instance, and `!any` will print the contents of variable `any`. This can help in debugging complex,
-multi-operation variable expressions, should need be.
+multi-operation variable expressions if need be.
 
 #### n * m ("Multiplication")
 Not commutative. Has the highest precedence.
@@ -293,6 +294,27 @@ var b.0 = {1}
 var c.0 = {3}
 var d.0 = {3, 4}
 ```
+
+#### n >> m, n << m ("Rotation")
+Rotates a statelist in either direction. `m` is modulo'd by the statelist's length.
+```rb
+# Nutshell
+a = (1, 2, 3)
+b = a << 1
+
+0, N..W 0, NW a; [NW: a >> 1]
+```
+```rb
+# Golly
+var a.0 = {1, 2, 3}
+var b.0 = {2, 3, 1}
+
+0, 0, 0, 0, 0, 0, 0, 0, 1, 3
+0, 0, 0, 0, 0, 0, 0, 0, 2, 1
+0, 0, 0, 0, 0, 0, 0, 0, 3, 2
+```
+Be aware that, unlike in this example, ordering is unlikely to be reflected / preserved in Golly output; order does
+not matter to Golly, anyway. It can alsways be seen, however, in the states of each transition a mapping produces.
 
 #### -n, --n ("Negation")
 These are shorthand for, respectively, `live-n` and `any-n`. Has higher precedence than "subtraction".

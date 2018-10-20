@@ -429,3 +429,12 @@ class Preprocess(Transformer):
     @inline
     def inline_binding(self, meta, val):
         return InlineBinding(self.kill_string(val, meta), self._tbl, context=meta)
+
+    def rulestring_transition(self, children, meta):
+        raise UnsupportedFeature(fix(meta), 'Hensel-rulestring transition napkins are currently not supported')
+    
+    def rulestring_tr(self, children, meta):
+        raise UnsupportedFeature(fix(meta), 'Hensel-rulestring transition napkins are currently not supported')
+    
+    def special_rulestring_tr(self, children, meta):
+        raise UnsupportedFeature(fix(meta), 'Hensel-rulestring transition napkins with modifiers are currently not supported')
