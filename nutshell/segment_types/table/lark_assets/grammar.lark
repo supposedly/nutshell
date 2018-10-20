@@ -1,11 +1,19 @@
 table: (_WS? (line end_bs? | comment) _NL?)+
 
 line: NAME ":" _WS? /.+/      -> directive
-  | NAME _WS? "=" _WS? _expr  -> var_decl
+  | NAME _WS? "=" _WS? _expr     -> var_decl
   | "!" _expr_no_int          -> print_var
   | transition _aux?          -> transition
+  | rulestring_tr _aux?       -> rulestring_transition
 
-transition: _expr (_sep tr_state)+ _sep _tr_expr     -> main  //Can't have (STATE | reference) here in LALR
+rulestring_tr: _expr _sep _HENSEL_OPEN hensel_rulestring _HENSEL_SEP _expr _HENSEL_SEP _expr _HENSEL_CLOSE _sep (STATE | reference)  -> rulestring_tr
+  | _expr _sep _HENSEL_OPEN hensel_rulestring _WS NAME _HENSEL_SEP _expr _HENSEL_SEP _expr _HENSEL_CLOSE _sep (STATE | reference)    -> special_rulestring_tr
+
+_HENSEL_OPEN: _WS? "<" _WS?
+_HENSEL_CLOSE: _WS? ">" _WS?
+_HENSEL_SEP: _WS? "/" _WS?
+
+transition: _expr (_sep tr_state)+ _sep _tr_expr -> main  //Can't have (STATE | reference) here in LALR
 tr_state: [prefix _WS] _tr_expr
   | crange _WS (_tr_expr | inline_binding)
   | inline_binding                                   -> permute_shorthand
@@ -41,7 +49,7 @@ auxiliary: cdir_delay ":" STATE                                               ->
 // I'm not sure why I need to specify the _digit_bind explicitly and w/ strings
 // there; if I include the digits in the COMPASS_DIR regex or actually any regex,
 // Lark will tell me it expected _MULT rather than the right square bracket for
-// any "aux_bind_self" sequence. idgi)
+// any "aux_bind_self" sequence. idgi
 
 cdir_delay: COMPASS_DIR ["+" INT]
 
@@ -66,6 +74,9 @@ operation: STATE _MULT INT    -> noref_repeat_int
   
   | _expr_no_int _subt _expr_norec_int  -> noref_subt
   
+  | _expr_no_int _RROT INT    -> noref_rot_right
+  | _expr_no_int _LROT INT    -> noref_rot_left
+  
   | _NEGATE_LIVE _expr        -> noref_live_except
   | _NEGATE_ALL _expr         -> noref_all_except
 
@@ -80,6 +91,9 @@ tr_operation: (STATE | reference) _MULT INT    -> repeat_int
   | _tr_expr_no_int _MULT INT                  -> repeat_var
   
   | _tr_expr_no_int _subt _tr_expr_norec_int   -> subt
+  
+  | _tr_expr_no_int _RROT INT                  -> rot_right
+  | _tr_expr_no_int _LROT INT                  -> rot_left
   
   | _NEGATE_LIVE _tr_expr                      -> live_except
   | _NEGATE_ALL _tr_expr                       -> all_except
@@ -96,6 +110,9 @@ ref_operation: (STATE | reference) _MULT INT    -> repeat_int
   
   | _ref_expr_no_int _subt _ref_expr_norec_int  -> subt
   
+  | _ref_expr_no_int _RROT INT                  -> rot_right
+  | _ref_expr_no_int _LROT INT                  -> rot_left
+  
   | _NEGATE_LIVE _ref_expr                      -> live_except
   | _NEGATE_ALL _ref_expr                       -> all_except
 
@@ -110,6 +127,9 @@ aux_operation: (STATE | aux_reference) _MULT INT    -> repeat_int
   | _aux_expr_no_int _MULT INT                      -> repeat_var
   
   | _aux_expr_no_int _subt _aux_expr_norec_int      -> subt
+  
+  | _aux_expr_no_int _RROT INT                      -> rot_right
+  | _aux_expr_no_int _LROT INT                      -> rot_left
   
   | _NEGATE_LIVE _aux_expr                          -> live_except
   | _NEGATE_ALL _aux_expr                           -> all_except
@@ -135,6 +155,8 @@ EXTEND_LAST: "..."
 _subt: _SUBT | "-" _WS?  //Annoying, but the second variant needs to be specified or it gets confused between subt and negate_all
 _MULT: _WS? "*" _WS?
 _SUBT: _WS? "-" _WS?
+_RROT: _WS? ">>" _WS?
+_LROT: _WS? "<<" _WS?
 
 _NEGATE_LIVE: "-"
 _NEGATE_ALL: "--"
@@ -146,6 +168,8 @@ COMPASS_DIR: /NE|SE|SW|NW|N|E|S|W/
 // Thanks to Dr. Memes#1508 (<@138628718968045568>) from Discord TCD
 // Modified later to switch from only accepting [A-Za-z]+ sans compass dirs to accepting [A-Za-z]\w* sans the same
 NAME: /(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\w))[A-Za-z]\w*/
+
+hensel_rulestring: /(?:[0-8]-?[cekainyqjrtwz]*)+/ // not too strict
 
 STATE: /\d+/
 INT: /[0123456789]+/
