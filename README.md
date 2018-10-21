@@ -246,14 +246,14 @@ Varnames are alphanumeric (and case-sensitive) with three exceptions:
 - The name as a whole cannot match one of the eight compass directions: `N`, `E`, `S`, `W`, `NE`, `SE`, `SW`, `NW`.
 
 ### Operations
-Variables can contain or be represented by "operations", with the binary `*`, `-` and `<<`/`>>` operators
-& the unary `-` and `--` operators.
+Variables can contain or be represented by "operations", with the binary operators `*`, `-`, and `<<`/`>>` or the
+unary operators `-` and `--`.
 
-These operations don't have to be assigned to variable names beforehand, by the way. All of what's described below is perfectly
+These operations also don't need to be assigned to variable names beforehand. All of the expressions below are perfectly
 valid if used directly in a transition, just like the "on-the-spot" state-lists mentioned above.
 
-Note: The binary operators are left-associative. Precedence rules can be skirted by placing operations in their own single-element
-statelists, like `(any-3)*2`.
+Note: The binary operators are left-associative. Precedence rules can be skirted by placing operations in their own
+single-element statelists, like `(any-3)*2`.
 
 An exclamation mark followed by an expression (as a whole line) will cause the expression's result to be printed: `!(1, 2, 3)-(3, 4)`
 will print `(1, 2)`, for instance, and `!any` will print the contents of variable `any`. This can help in debugging complex,
@@ -266,7 +266,7 @@ Not commutative. Has the highest precedence.
 a = (1, 2) * 2  # variable 'times' integer (repeats the variable m times)
 b = 2 * (1, 2)  # cellstate 'times' variable (repeats the cellstate to match the variable's length)
 c = 0 * 3       # cellstate 'times' integer (repeats the cellstate m times)
-d = b * 3 * 2   # operations can be chained if needed (probably won't be needed)
+d = b * 3 * 2   # operations can be chained if needed
 e = (2*b, 1*(1,2), 0*3)  # ...and, like all expressions, can be placed inside a literal statelist
 ```
 ```rb
@@ -313,8 +313,11 @@ var b.0 = {2, 3, 1}
 0, 0, 0, 0, 0, 0, 0, 0, 2, 1
 0, 0, 0, 0, 0, 0, 0, 0, 3, 2
 ```
-Be aware that, unlike in this example, ordering is unlikely to be reflected / preserved in Golly output; order does
-not matter to Golly, anyway. It can alsways be seen, however, in the states of each transition a mapping produces.
+Be aware that ordering is unlikely to be reflected / preserved in Golly output, because variables are converted
+into Python [set objects](https://en.wikipedia.org/wiki/Set_%28abstract_data_type%29) just before being written
+to the Golly rulefile; this means that it's just as likely for the above to result in `var a.0 = {1, 2, 3}` and
+`var b.0 = {1, 2 3}`. The Nutshell-enforced ordering can always be observed, however, in the result of an operation
+(like mapping) that spreads a variable out over multiple transitions.
 
 #### -n, --n ("Negation")
 These are shorthand for, respectively, `live-n` and `any-n`. Has higher precedence than "subtraction".
@@ -342,7 +345,7 @@ in practice, but... you never know.
 
 #### Ranges
 Though not exactly an operation, a range of cellstates can be expressed as two numbers (lower and upper bound) separated by double..dots,
-with an optional step included.
+optionally with a step greater than 1.
 ```rb
 # Nutshell
 a = (3..6)         # lower..upper
@@ -373,8 +376,8 @@ This doesn't seem bad at all on a small scale. It's convenient to be able to do 
 large project, this forces each variable definition to be duplicated up to nine times (depending on the neighborhood, of
 course) which gets messy and tedious to keep track of, making it an easy source of headaches and bugs and often both.
 
-Nutshell's key innovation (and the only thing, in fact, that it mandates be done differently than in Golly besides also eschewing
-the `var` keyword) is in noting that the *name* of a variable doesn't need to hold any particular meaning, only its value within
+Nutshell's key innovation (and the only supra-syntactical thing, in fact, that it mandates be done differently than in Golly's `@TABLE`)
+is in noting that the *name* of a variable doesn't need to hold any particular meaning, only its value within
 a given transition. Thus, rather than binding to a variable's name, we can simply use... some other way of referring to nothing
 except the value it holds at a given point.
 
