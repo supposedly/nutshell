@@ -14,10 +14,12 @@ from ._transformer import Preprocess, NUTSHELL_GRAMMAR
 from ._classes import VarName, StateList
 from . import _symutils as symutils
 
+# no need to catch \s*,\s* because directive values are translated with KILL_WS
+CUSTOM_NBHD = re.compile(r'(?:[NS][EW]?|[EW])(?:,(?:[NS][EW]?|[EW]))*')
 
 def generate_cardinals(d):
     """{'name': ('N', 'E', ...)} >>> {'name': {'N' :: 1, 'E' :: 2, ...}}"""
-    return {k: bidict.bidict(map(reversed, enumerate(v, 1))) for k, v in d.items()}
+    return {k: bidict.bidict(enumerate(v, 1)).inv for k, v in d.items()}
 
 
 class Bidict(bidict.bidict):
@@ -58,6 +60,7 @@ class Table:
                 self._n_states = max(self._constants.values())
         
         self.directives = {'neighborhood': 'Moore', 'symmetries': 'none', 'states': self._n_states}
+        self.standard_nbhd, self.nbhd_assigned = True, False
         self.vars = Bidict()  # {VarName(name) | str(name) :: Variable(value)}
         self.sym_types = set()
         self.transitions = []
@@ -95,9 +98,9 @@ class Table:
         if len(self.sym_types) <= 1 and not hasattr(next(iter(self.sym_types), None), 'fallback'):
             self.final = [t.fix_vars() for t in self._data]
         else:
-            min_sym = symutils.find_min_sym_type(self.sym_types, self.trlen)
-            self.directives['symmetries'] = min_sym.name[0] if hasattr(min_sym, 'name') else min_sym.__name__.lower()
-            self.final = [new_tr for tr in self._data for new_tr in tr.in_symmetry(min_sym)]
+            MinSym = symutils.find_min_sym_type(self.sym_types, self.trlen)
+            self.directives['symmetries'] = MinSym.name[0] if hasattr(MinSym, 'name') else MinSym.__name__.lower()
+            self.final = [new_tr for tr in self._data for new_tr in tr.in_symmetry(MinSym)]
         self.directives['n_states'] = self.directives.pop('states')
     
     def __getitem__(self, item):
@@ -111,6 +114,18 @@ class Table:
         if self._nbhd is None:
             self._nbhd = self.CARDINALS[self.directives['neighborhood']]
         return self._nbhd
+    
+    @neighborhood.setter
+    def neighborhood(self, val):
+        if CUSTOM_NBHD.fullmatch(val):
+            self._nbhd = bidict.bidict(enumerate(val.split(','), 1)).inv
+            self.standard_nbhd = False
+        elif val in self.CARDINALS:
+            self._nbhd = self.CARDINALS[val]
+            self.standard_nbhd = True
+        else:
+            raise ValueError
+        self._trlen = None
 
     @property
     def trlen(self):
@@ -160,7 +175,7 @@ class Table:
             pre = 'Transition index' if cdir.isdigit() else 'Compass direction'
             raise ReferenceErr(
               meta,
-              f"{pre} {cdir} does not exist in {self.directives['neighborhood']} neighborhood"
+              f"{pre} {cdir} does not exist in neighborhood {self.directives['neighborhood']!r}"
               )
     
     def match(self, tr):

@@ -4,7 +4,7 @@ from math import ceil
 from nutshell.common.utils import LazyProperty
 from ._classes import InlineBinding
 
-oneDimensional, vonNeumann, hexagonal, Moore = _GOLLY_LENGTHS = 2, 4, 6, 8
+oneDimensional, vonNeumann, hexagonal, Moore = 2, 4, 6, 8
 Any = None
 
 
@@ -15,18 +15,20 @@ class _NapkinMeta(type):
             # or has symmetries preimplemented itself
             return
         if isinstance(attrs.get('fallback'), (str, _NapkinMeta)):
-            cls.fallback = {None: NAMES[cls.fallback] if isinstance(cls.fallback, str) else cls.fallback}
+            cls.fallback = {Any: NAMES[cls.fallback] if isinstance(cls.fallback, str) else cls.fallback}
         if isinstance(attrs.get('fallback'), dict):
             cls.fallback = {k: NAMES[v] if isinstance(v, str) else v for k, v in cls.fallback.items()}
-            if None in cls.fallback and cls.neighborhoods is not None:
+            if Any in cls.fallback and cls.neighborhoods is not Any:
                 cls.fallback = {
-                  **{k: cls.fallback[None] for k in cls.neighborhoods},
-                  **{k: v for k, v in cls.fallback.items() if k is not None}  # we do want the user-set ones to override the cls.fallback[None]s where possible, so this goes after
+                  **{k: cls.fallback[Any] for k in cls.neighborhoods},
+                  # We do want the user-set ones to override the
+                  # cls.fallback[Any]s where possible, so this goes 2nd
+                  **{k: v for k, v in cls.fallback.items() if k is not Any}
                   }
         cls.symmetries = {
           n: set(cls(range(n)).expanded)
           for n in
-          (_GOLLY_LENGTHS if cls.neighborhoods is None else cls.neighborhoods)
+          (range(1, 9) if cls.neighborhoods is Any else cls.neighborhoods)
           }
         cls.sym_lens = {n: len(v) for n, v in cls.symmetries.items()}
         if 'clear' in attrs:
@@ -83,7 +85,7 @@ class HexNapkin(Napkin):
     @staticmethod
     def reflection_of(seq):
         """
-        Golly devs chose to anchor reflection on upper-right cell instead of upper
+        Any devs chose to anchor reflection on upper-right cell instead of upper
         cell -- so we can't just reverse seq[1:] :(
         """
         return sorted((seq, tuple(seq[i] for i in (4, 2, 3, 1, 0, 5))))

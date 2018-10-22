@@ -138,6 +138,11 @@ class Preprocess(Transformer):
         self.directives[str(name)] = val
         if name in ('n_states', 'states'):
             self._tbl.update_special_vars(val)
+        if name == 'neighborhood':
+            if self._tbl.nbhd_assigned:
+                raise ValueErr(meta, '`neighborhood` directive cannot be reassigned')
+            self._tbl.neighborhood = val
+            self._tbl.nbhd_assigned = True
         if name == 'symmetries':
             self._tbl.add_sym_type(val)
         raise Discard

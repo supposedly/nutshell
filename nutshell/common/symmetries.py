@@ -19,7 +19,7 @@ class Rotate2(OrthNapkin):
     """
     Rotate2 allowing Moore and vonNeumann (and 1D, but...).
     """
-    neighborhoods = Any
+    neighborhoods = range(2, 9)  # neighborhood of size 1 can't be rotated by 2
     fallback = {Any: NoSymmetry, hexagonal: Rotate2}  # the Rotate2 is Golly's, not this one
     
     @property

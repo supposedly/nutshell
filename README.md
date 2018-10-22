@@ -22,6 +22,7 @@ of this makes any sense to you and you aren't sure how you got here, check out t
         <!--
         - ["Multiplication"](#n--m-multiplication)
         - ["Subtraction"](#n---m-subtraction)
+        - ["Rotation"](#n--m-n--m-rotation)
         - ["Negation"](#-n---n-negation)
         - [Ranges](#ranges)
         -->
@@ -34,6 +35,7 @@ of this makes any sense to you and you aren't sure how you got here, check out t
         <!--
         - [Precedence and "hoisting"](#precedence-and-hoisting)
         -->
+    - [Custom neighborhoods](#custom-neighborhoods)
     - [Custom symmetry types](#custom-symmetry-types)
 * [Non-table-related changes](#non-table-related-changes)
     - [The `@NUTSHELL` segment](#the-nutshell-segment)
@@ -106,8 +108,8 @@ or a literal number in a transition napkin. This means that the writer needn't b
 a rule uses, and because `?` is `states`'s default value, it also means that a rule doesn't have to specify `states:` at all.
 
 Additionally, all directives ignore whitespace in their values&nbsp;-- so one may write, say, `symmetries: rotate 4` or
-`neighborhood: von Neumann`. The `symmetries` directive can take a Python import path for *custom symmetry types*;
-this will be elaborated upon later on.
+`neighborhood: von Neumann`. The `symmetries` directive can take a Python import path for *custom symmetry types*, and
+the `neighborhood` directive a series of compass directions for a *custom neighborhood*; these will be elaborated upon later on.
 ```rb
 # Nutshell
 @TABLE
@@ -772,8 +774,27 @@ This indicates to Nutshell that the auxiliary should remain "stationary" while t
 If it were written here as `rotate4!(N[N])` instead of `none!(N[N])`, the Golly output would contain a rotate4 expansion of
 each of the final four lines.
 
+### Custom neighborhoods
+The `neighborhood` directive can be given a comma-delimited list of compass directions rather than a name, which then makes
+the CA use those compass directions (in the listed order) as its neighborhood. Nutshell will then expand all transitions
+into the smallest encompassing Golly neighborhood.
+
+```rb
+# Nutshell
+neighborhood: N, SE, SW
+0, 1, 2, 3; 4
+2, N 4, SE 2, SW any; 1
+```
+```rb
+# Golly
+neighborhood: Moore
+
+0, 1, any.0, any.1, 2, any.2, 3, any.3, any.4, 4
+2, 4, any.0, any.1, 2, any.3, any.4, any.5, any.6, 1
+```
+
 ### Custom symmetry types
-The implementation of the above-mentioned symmetry-switching allows, conveniently, for nonstandard symmetries to be defined and
+The implementation of the above-mentioned symmetry-switching also allows, conveniently, for nonstandard symmetries to be defined and
 then simply expanded by Nutshell into one of Golly's symmetry types. Provided by Nutshell is a small "standard library" of sorts
 that comes with the following:
 
@@ -805,7 +826,7 @@ As shown by the ellipses, there are three things you need to define within your 
 - `neighborhoods`: a tuple containing the *length* of each neighborhood that your symmetries support. These are ultimately just integers, but Nutshell has the constants `oneDimensional`,
   `vonNeumann`, `hexagonal`, and `Moore` defined respectively as `2`, `4`, `6`, and `8` for clarity.  
   For example, on a symmetry type meant for the Moore and vonNeumann neighborhoods, one would assign `neighborhoods = vonNeumann, Moore` (with no particular ordering required).  
-  **If you want to support all neighborhoods Golly offers**, write `neighborhoods = Any` instead; `Any` is another Nutshell constant name, aliased to the Python value `None`.
+  **If you want to support all potential range-1 neighborhoods**, write `neighborhoods = Any` instead; `Any` is another Nutshell constant name, aliased to the Python value `None`.
 - `fallback`: Either the name, as a string, of a Golly symmetry which is a superset of (or perhaps equivalent to) yours and thus can be expanded to during transpilation... or,
   if your symmetry type supports more than one neighborhood for which different appropriate Golly symmetries are available, a dictionary of {`neighborhood length`: `Golly symmetry`}.
   to the same effect. (`Any`, aka Python `None`, can be used in this dict as well.)  

@@ -3,6 +3,7 @@ from contextlib import suppress
 from functools import partial
 from itertools import count, cycle
 
+from . import _neighborhoods as nbhds
 from nutshell.common.utils import random
 from nutshell.common.errors import *
 from .lark_assets.exceptions import *
@@ -36,6 +37,9 @@ class VarName:
     
     def __getattr__(self, attr):
         return getattr(self.name, attr)
+    
+    def update_rep(self, val):
+        self.rep = max(self.rep, val)
     
     @classmethod
     def new_generator(cls, seed=0):
@@ -231,13 +235,18 @@ class Transition:
             elif i.untether() in variables:
                 varname = variables[i.untether()]
                 seen[varname] += 1
-                varname.rep = max(varname.rep, seen[varname])
+                varname.update_rep(seen[varname])
                 ret.append(f'{varname}.{seen[varname]}')
             else:
                 varname = self.tbl.new_varname()
                 seen[varname] = 0
                 variables.inv[varname] = i.untether()
                 ret.append(f'{varname}.0')
+        if not self.tbl.standard_nbhd:
+            return FinalTransition(
+              [ret[0], *nbhds.gollyize(self.tbl, ret[1:-1], 1 + seen.get('any', 0)), ret[-1]],
+              context=self.ctx
+              )
         return FinalTransition(ret, context=self.ctx)
     
     def fix_partial(self):
@@ -254,7 +263,7 @@ class Transition:
                 varname = variables[i.untether()]
                 if '.' not in ret[cdir]:
                     seen[varname] = 1
-                    varname.rep = max(varname.rep, 1)
+                    varname.update_rep(1)
                     ret[cdir] = f'{varname}.0'
                 ret.append(ret[cdir])
             elif i.untether() in variables:
@@ -266,16 +275,17 @@ class Transition:
                 ret.append(f'{varname}')  # XXX: Faster overall to append varname as a string like this or to preserve variable tuple and assign name in second 'fix' step?
         return ret
     
-    def fix_final(self, tr, variables):
+    def fix_final(self, tr):
         ret = []
         seen = {}
+        variables = self.tbl.vars.inv
         for i in tr:
             if isinstance(i, str):
                 if '.' in i:
                     varname, tag = i.split('.')
                     seen.setdefault(varname, set()).add(int(tag))
-                    varname = variables[variables.inv[varname]]  # (ew, but converting string to varname)
-                    varname.rep = max(varname.rep, int(tag))
+                    # (ew, but converting string to varname)
+                    variables[variables.inv[varname]].update_rep(int(tag))
                 else:
                     seen[i] = set()
         for i in tr:
@@ -284,16 +294,20 @@ class Transition:
                 tag = next(j for j in tag_counter if j not in seen[i])
                 seen[i].add(tag)
                 ret.append(f'{i}.{tag}')
-                varname = variables[variables.inv[i]]  # (ew, but converting string to varname)
-                varname.rep = max(varname.rep, tag)
+                # (ew, but converting string to varname)
+                variables[variables.inv[i]].update_rep(int(tag))
             else:
                 ret.append(i)
+        if not self.tbl.standard_nbhd:
+            return FinalTransition(
+              [ret[0], *nbhds.gollyize(self.tbl, ret[1:-1], seen.get('any', {})), ret[-1]],
+              context=self.ctx
+              )
         return FinalTransition(ret, context=self.ctx)
     
-    def in_symmetry(self, new_sym):
-        variables = self.tbl.vars.inv
+    def in_symmetry(self, NewSymmetry):
         initial, *napkin, resultant = self.fix_partial()
-        return [self.fix_final([initial, *i, resultant], variables) for i in {new_sym(j) for j in self.symmetries(napkin).expand()}]
+        return [self.fix_final([initial, *i, resultant]) for i in {NewSymmetry(j) for j in self.symmetries(napkin).expand()}]
 
 
 class FinalTransition(list):
@@ -544,7 +558,10 @@ class TetheredVar(StateList):  # Tethered == bound to a transition
     def __init__(self, t, start=0, **kw):
         Expandable.__init__(self, **kw)
         self._tuple = self.unpack_vars_only(t) if isinstance(t, Iterable) else (t,)
-        self._set = {i.value for i in self._tuple}
+        # isinstance check is because StateList.__rmul__ returns self.__class__([other]*len(blah)) and that
+        # results in ints rather than varvalues
+        # should probably fix to a more-robust solution
+        self._set = {i.value for i in self._tuple} if isinstance(self._tuple[0], VarValue) else set(self._tuple)
         self.start = start
         self._d = {}
     
