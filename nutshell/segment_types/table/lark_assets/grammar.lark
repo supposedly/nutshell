@@ -1,7 +1,7 @@
 table: (_WS? (line end_bs? | comment) _NL?)+
 
 line: NAME ":" _WS? /.+/      -> directive
-  | NAME _WS? "=" _WS? _expr     -> var_decl
+  | NAME _WS? "=" _WS? _expr  -> var_decl
   | "!" _expr_no_int          -> print_var
   | transition _aux?          -> transition
   | rulestring_tr _aux?       -> rulestring_transition

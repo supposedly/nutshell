@@ -10,7 +10,7 @@ from .lark_assets.parser import Transformer, Tree, Discard, v_args
 from nutshell.common.utils import KILL_WS
 from nutshell.common.errors import *
 from ._classes import *
-from . import _symutils as symutils
+from . import _symutils as symutils, _neighborhoods as nbhoods
 
 SPECIALS = {'...', '_', 'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'}
 
@@ -434,12 +434,26 @@ class Preprocess(Transformer):
     @inline
     def inline_binding(self, meta, val):
         return InlineBinding(self.kill_string(val, meta), self._tbl, context=meta)
-
-    def rulestring_transition(self, children, meta):
-        raise UnsupportedFeature(fix(meta), 'Hensel-rulestring transition napkins are currently not supported')
     
-    def rulestring_tr(self, children, meta):
-        raise UnsupportedFeature(fix(meta), 'Hensel-rulestring transition napkins are currently not supported')
+    @inline
+    def hensel_rulestring(self, meta, rulestring):
+        nbhds = nbhoods.validate_hensel(rulestring)
+        if not nbhds:
+            raise SyntaxErr(meta, 'Invalid Hensel-notation rulestring')
+        if not nbhoods.check_hensel_within(self._tbl.neighborhood, rulestring, rulestring_nbhds=nbhds):
+            raise SyntaxErr(
+              meta,
+              f"Hensel-notation rulestring exceeds neighborhood {self.directives['neighborhood']!r}; "
+              f'In particular, {nbhoods.find_invalids(nbhds, self._tbl.neighborhood)!r}'
+              )
+        return nbhds
+    
+    @inline
+    def rulestring_tr(self, meta, rulestring, foreground, background):
+        ...
     
     def special_rulestring_tr(self, children, meta):
         raise UnsupportedFeature(fix(meta), 'Hensel-rulestring transition napkins with modifiers are currently not supported')
+
+    def rulestring_transition(self, children, meta):
+        raise UnsupportedFeature(fix(meta), 'Hensel-rulestring transition napkins are currently not supported')
