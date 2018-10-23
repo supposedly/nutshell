@@ -14,6 +14,7 @@ of this makes any sense to you and you aren't sure how you got here, check out t
 * [What's new](#whats-new)
     - [Directives](#directives)
     - [Transitions](#transitions)
+    - [Inline-rulestring transitions](#inline-rulestring-transitions)
     - [Variables](#variables)
       <!--
       - [Variable names](#variable-names)
@@ -193,6 +194,57 @@ any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, any.8, 0
 If the "unspecified" terms cannot be distributed perfectly into the table's neighborhood, precedence will be given to those
 that appear earlier; `2, 1, 0` under Moore, for instance, will expand into `2,2,2,1,1,1,0,0`, but `0, 1, 2` will expand into
 `0,0,0,1,1,1,2,2`.
+
+### Inline-rulestring transitions
+In addition to those normal Golly-style transitions, Nutshell allows the use of rulestring segments (either Hensel-style or totalistic)
+to specify a transition napkin.
+
+These transitions' syntax is `initial, <rulestring / background state(s) / foreground state(s)>; resultant`. Consider the
+[isotropic non-totalistic](http://conwaylife.com/wiki/Isotropic_non-totalistic_Life-like_cellular_automaton)
+rule _[tlife](http://conwaylife.com/forums/viewtopic.php?f=11&t=1831)_:
+```rb
+# Nutshell
+0, <3 / 0 / 1>; 1
+1, <2-i34q / 0 / 1>; 1
+
+symmetries: permute
+any, any; 0
+```
+[Its output file](https://gist.github.com/eltrhn/078db47f6b05199b8fbe349ef5f91fed) is a touch too big to paste, but it:
+1. Interprets `0, <3 / 0 / 1>; 1` as _"a state-`0` cell surrounded by `3` state-`0` cells (and otherwise state-`1` cells)
+   will turn into state `1`,"_ then expands this into the permute-symmetry transition `0, 1, 1, 1, 0, 0, 0, 0, 0, 1`.
+2. Interprets `1, <2-i34q / 0 / 1>; 1` as _"a state-`1` cell surrounded by a configuration matching `2-i`, `3`, or `4q`
+   of state-`0` cells (and state-`1` cells otherwise) will remain state `1`,"_ then expands this into the appropriate
+   rotate4reflect-symmetry transitions.
+3. Proceeds as though the user had typed these expanded transitions out themself.
+
+For another example, Life could be expressed as follows:
+```rb
+# Nutshell
+0, <3 / 0 / 1>; 1
+1, <23 / 0 / 1>; 1
+any, N..NW any; 0
+```
+
+NOTE: The below text may be unclear. Keep in mind that Nutshell allows the `symmetries` directive to be changed
+as many times as needed in a table.
+
+Each of the inline-rulestring lines comes with an implicit "transition-local" switch to `rotate4reflect` symmetry
+(if using a Hensel-exclusive rulestring with letters and whatnot) or to `permute` symmetry (if using a totalistic rulestring),
+but **other transitions are not affected**! This means that, in the Life table, the transition `any, N..NW any; 0` is actually
+still under `symmetries: none` and will thus cause the whole table to be normalized into the same; the tlife table
+has `symmetries: permute` to prevent this. In general, an inline-rulestring transition can be read as being preceded by a switch to
+either `symmetries: rotate4reflect` or `symmetries: permute` (whichever is appropriate) and being followed by a switch back to the
+previous symmetries.
+
+As with a normal transition, the resultant cellstate can be a binding or mapping; in case of the latter, it should be noted
+that non-totalistic napkins are filled in the same orientation as [the chart](http://www.ibiblio.org/lifepatterns/neighbors2.html),
+so a mapping like `[N: (3, 4, ...)]` will operate on every unique non-totalistic transition given, mapping from the north cell
+in that transition's charted orientation.  
+Totalistic napkins, on the other hand, are filled in sequentially, going clockwise from the north cell.  
+Both of these are mentioned for completeness's sake, but in general terms, the use of a mapping in the resultant state of an
+inline-rulestring transition __should be avoided__ thanks to potential for confusion. If a situation arises where you do need
+to know more about how it works, create an issue or ask about it in Nutshell's Discord server.
 
 ### Variables
 All variable names are unbound, always, because needing to define eight separate "any state" vars is ridiculous.
