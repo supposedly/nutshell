@@ -61,6 +61,7 @@ class Table:
         
         self.directives = {'neighborhood': 'Moore', 'symmetries': 'none', 'states': self._n_states}
         self.gollyize_nbhd = None
+        self.default_sym_used = False
         self.vars = Bidict()  # {VarName(name) | str(name) :: Variable(value)}
         self.sym_types = set()
         self.transitions = []
@@ -96,6 +97,11 @@ class Table:
         self._data = trans.transform(_parsed)
         
         if len(self.sym_types) <= 1 and not hasattr(next(iter(self.sym_types), None), 'fallback'):
+            sym = next(iter(self.sym_types), None)
+            if sym is not None:
+                # force these to be equal (in the event of, say, inline-rulestring
+                # napkins' having been used, which don't update directives)
+                self.directives['symmetries'] = sym.name[0] if hasattr(sym, 'name') else sym.__name__.lower()
             self.final = [t.fix_vars() for t in self._data]
         else:
             MinSym = symutils.find_min_sym_type(self.sym_types, self.trlen)

@@ -13,6 +13,8 @@ from ._classes import *
 from . import _symutils as symutils, _neighborhoods as nbhoods
 
 SPECIALS = {'...', '_', 'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'}
+ROTATE_4_REFLECT = symutils.get_sym_type('rotate4reflect')
+PERMUTE = symutils.get_sym_type('permute')
 
 try:
     with open(resource_filename('nutshell', 'segment_types/table/lark_assets/grammar.lark')) as f:
@@ -170,6 +172,9 @@ class Preprocess(Transformer):
         return MetaTuple(meta, (self.kill_string(state, meta), permute[0] if permute else None))
     
     def main(self, children, meta):
+        if not self._tbl.default_sym_used and self.directives['symmetries'] == 'none':
+            self._tbl.default_sym_used = True
+            self._tbl.add_sym_type('none')
         initial, resultant = children.pop(0), children.pop(-1)
         try:
             initial = self.kill_string(initial, meta.line)
@@ -440,20 +445,71 @@ class Preprocess(Transformer):
         nbhds = nbhoods.validate_hensel(rulestring)
         if not nbhds:
             raise SyntaxErr(meta, 'Invalid Hensel-notation rulestring')
-        if not nbhoods.check_hensel_within(self._tbl.neighborhood, rulestring, rulestring_nbhds=nbhds):
+        if not nbhoods.check_hensel_within(rulestring, self._tbl.neighborhood, rulestring_nbhds=nbhds):
             raise SyntaxErr(
               meta,
               f"Hensel-notation rulestring exceeds neighborhood {self.directives['neighborhood']!r}; "
-              f'In particular, {nbhoods.find_invalids(nbhds, self._tbl.neighborhood)!r}'
+              f'in particular, {nbhoods.find_invalids(nbhds, self._tbl.neighborhood)!r}'
               )
         return nbhds
     
     @inline
-    def rulestring_tr(self, meta, rulestring, foreground, background):
-        ...
+    def rulestring_tr(self, meta, initial, rulestring_nbhds, background, foreground, resultant):
+        initial = self.kill_string(initial, meta)
+        resultant = self.kill_string(resultant, meta)
+        fg = self.kill_string(foreground, meta)
+        bg = self.kill_string(background, meta)
+        if isinstance(foreground, StateList):
+            self.vars[self._tbl.new_varname(-1)] = foreground
+        if isinstance(background, StateList):
+            self.vars[self._tbl.new_varname(-1)] = background
+        
+        r4r_nbhds, permute_nbhds = {}, set()
+        for nb_count, letters in rulestring_nbhds.items():
+            if len(letters) == len(nbhoods.R4R_NBHDS[nb_count]):
+                permute_nbhds.add(nb_count)
+            else:
+                r4r_nbhds[nb_count] = letters
+        
+        if permute_nbhds:
+            self._tbl.add_sym_type('permute')
+        if r4r_nbhds:
+            self._tbl.add_sym_type('rotate4reflect')
+        
+        ret = [
+          TransitionGroup(
+            self._tbl,
+            initial,
+            # XXX: probably suboptimal performance b/c [dot attr access] -> [getitem] -> [getitem]
+            {num: fg if cdir in nbhoods.R4R_NBHDS[nb_count][letter] else bg for cdir, num in self._tbl.neighborhood.items()},
+            resultant,
+            context=meta, symmetries=ROTATE_4_REFLECT
+            )
+          for nb_count, letters in r4r_nbhds.items()
+          for letter in letters
+        ]
+        ret.extend(
+          TransitionGroup(
+            self._tbl,
+            initial,
+            # XXX: probably suboptimal performance b/c [dot attr access] -> [getitem] -> [getitem]
+            {num: fg if num <= nb_count else bg for num in self._tbl.neighborhood.values()},
+            resultant,
+            context=meta, symmetries=PERMUTE
+            )
+          for nb_count in map(int, permute_nbhds)
+          )
+        return ret
+    
+    @inline
+    def rulestring_transition(self, meta, trs, aux_first=None, aux_second=None):
+        ret = []
+        for tr in trs:
+            if aux_first is not None and aux_first.meta == 'normal':
+                ret.extend(chain(tr.apply_aux(aux_second), tr.expand(), tr.apply_aux(aux_first)))
+            else:
+                ret.extend(chain(tr.apply_aux(aux_first), tr.expand(), tr.apply_aux(aux_second)))
+        return ret
     
     def special_rulestring_tr(self, children, meta):
         raise UnsupportedFeature(fix(meta), 'Hensel-rulestring transition napkins with modifiers are currently not supported')
-
-    def rulestring_transition(self, children, meta):
-        raise UnsupportedFeature(fix(meta), 'Hensel-rulestring transition napkins are currently not supported')
