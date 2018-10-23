@@ -408,16 +408,12 @@ class Preprocess(Transformer):
         return Subt(self.kill_string(var, meta), StateList(self.kill_string(subtrhnd, meta), context=meta), context=meta)
     
     @inline
-    def rot_right(self, meta, statelist, amt):
-        amt = int(amt) % len(statelist)
-        statelist = self.kill_string(statelist, meta)
-        return statelist[-amt:] + statelist[:-amt]
+    def rot_right(self, meta, var, amt):
+        return RotateRight(self.kill_string(var, meta), int(amt), context=meta)
     
     @inline
-    def rot_left(self, meta, statelist, amt):
-        amt = int(amt) % len(statelist)
-        statelist = self.kill_string(statelist, meta)
-        return statelist[amt:] + statelist[:amt]
+    def rot_left(self, meta, var, amt):
+        return RotateLeft(self.kill_string(var, meta), int(amt), context=meta)
     
     @inline
     def live_except(self, meta, subtrhnd):

@@ -459,6 +459,19 @@ class Subt(Operation):
         return self.a.within(tr) - self.b.within(tr)
 
 
+class RotateRight(Operation):
+    def within(self, tr):
+        statelist = self.a.within(tr)
+        amt = self.b % len(statelist)
+        return statelist[-amt:] + statelist[:-amt]
+
+class RotateLeft(Operation):
+    def within(self, tr):
+        statelist = self.a.within(tr)
+        amt = self.b % len(statelist)
+        return statelist[amt:] + statelist[:amt]
+
+
 class StateList(Expandable):
     def __init__(self, t, start=0, **kw):
         Expandable.__init__(self, **kw)
