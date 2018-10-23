@@ -12,7 +12,7 @@ from nutshell.common.errors import *
 from .lark_assets import parser as lark_standalone
 from ._transformer import Preprocess, NUTSHELL_GRAMMAR
 from ._classes import VarName, StateList
-from . import _symutils as symutils
+from . import _symutils as symutils, _neighborhoods as nbhds
 
 # no need to catch \s*,\s* because directive values are translated with KILL_WS
 CUSTOM_NBHD = re.compile(r'(?:[NS][EW]?|[EW])(?:,(?:[NS][EW]?|[EW]))*')
@@ -60,7 +60,7 @@ class Table:
                 self._n_states = max(self._constants.values())
         
         self.directives = {'neighborhood': 'Moore', 'symmetries': 'none', 'states': self._n_states}
-        self.standard_nbhd, self.nbhd_assigned = True, False
+        self.gollyize_nbhd = None
         self.vars = Bidict()  # {VarName(name) | str(name) :: Variable(value)}
         self.sym_types = set()
         self.transitions = []
@@ -118,13 +118,15 @@ class Table:
     @neighborhood.setter
     def neighborhood(self, val):
         if CUSTOM_NBHD.fullmatch(val):
-            self._nbhd = bidict.bidict(enumerate(val.split(','), 1)).inv
-            self.standard_nbhd = False
+            nbhd = val.split(',')
+            if len(nbhd) != len(set(nbhd)):
+                raise ValueError('Duplicate compass directions in neighborhood')
+            self._nbhd = bidict.bidict(enumerate(nbhd, 1)).inv
+            self.gollyize_nbhd = nbhds.get_gollyizer(self, nbhd)
         elif val in self.CARDINALS:
             self._nbhd = self.CARDINALS[val]
-            self.standard_nbhd = True
         else:
-            raise ValueError
+            raise ValueError('Unknown or invalid neighborhood')
         self._trlen = None
 
     @property

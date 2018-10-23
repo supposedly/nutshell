@@ -47,10 +47,8 @@ def infile(path: Path):
 @cmd.arg(required=True, default=None)
 def outdir(path: Path):
     """Directory to place output file in. Hyphen for stdout."""
-    # TODO: Once the awaitable shenanigans are implemented in ergo,
-    # make this `await ctx.arg('infile')` to be used in the output filename
-    # (could be done after parsing ofc but that's more annoying)
-    return StreamProxy(path / 'conv_icons.txt', alternate=sys.stdout, use_alternate=(path.name == '-'))
+    # path will be added to
+    return StreamProxy(path, alternate=sys.stdout, use_alternate=(path.name == '-'))
 
 
 @cmd.flag(default=False)
@@ -60,7 +58,6 @@ def different_name():
 
 def main(args):
     name, lines = args.infile
-    print(lines)
     ins = {chr_map.get(state, state): ColorMixin.unpack(value) for state, value in lines}
     if name is None:
         name = 'nutshell_generated'
@@ -71,7 +68,7 @@ def main(args):
             name = next_line.strip()[0]
         else:
             name = header[1]
-
+    args.outdir.path /= name
     with args.outdir as f:
         if args.different_name:
             f.write(f'@RULE {name}_icon_dev\n')

@@ -775,7 +775,7 @@ If it were written here as `rotate4!(N[N])` instead of `none!(N[N])`, the Golly 
 each of the final four lines.
 
 ### Custom neighborhoods
-The `neighborhood` directive can be given a comma-delimited list of compass directions rather than a name, which then makes
+The `neighborhood` directive can be given a comma-delimited list of compass directions rather than a name, which makes
 the CA use those compass directions (in the listed order) as its neighborhood. Nutshell will then expand all transitions
 into the smallest encompassing Golly neighborhood.
 

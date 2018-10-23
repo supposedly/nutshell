@@ -242,9 +242,9 @@ class Transition:
                 seen[varname] = 0
                 variables.inv[varname] = i.untether()
                 ret.append(f'{varname}.0')
-        if not self.tbl.standard_nbhd:
+        if self.tbl.gollyize_nbhd is not None:
             return FinalTransition(
-              [ret[0], *nbhds.gollyize(self.tbl, ret[1:-1], 1 + seen.get('any', 0)), ret[-1]],
+              [ret[0], *self.tbl.gollyize_nbhd(self.tbl, ret[1:-1], 1 + seen.get('any', 0)), ret[-1]],
               context=self.ctx
               )
         return FinalTransition(ret, context=self.ctx)
@@ -298,9 +298,9 @@ class Transition:
                 variables[variables.inv[i]].update_rep(int(tag))
             else:
                 ret.append(i)
-        if not self.tbl.standard_nbhd:
+        if self.tbl.gollyize_nbhd is not None:
             return FinalTransition(
-              [ret[0], *nbhds.gollyize(self.tbl, ret[1:-1], seen.get('any', {})), ret[-1]],
+              [ret[0], *self.tbl.gollyize_nbhd(self.tbl, ret[1:-1], seen.get('any', {})), ret[-1]],
               context=self.ctx
               )
         return FinalTransition(ret, context=self.ctx)

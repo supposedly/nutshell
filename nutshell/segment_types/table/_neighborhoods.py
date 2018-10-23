@@ -1,41 +1,48 @@
-from itertools import count
+from itertools import count, takewhile
 
-# Makes them easier to write/read
-N, NE, E, SE, S, SW, W, NW = 'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'
-
-F = frozenset
-NBHD_SETS = {
+NBHD_SETS = (
   # for containment-checking
-  F({E, W}): 'oneDimensional',
-  F({N, E, S, W}): 'vonNeumann',
-  F({N, E, SE, S, W, NW}): 'hexagonal',
-  F({N, NE, E, SE, S, SW, W, NW}): 'Moore',
-}
-del F
+  ({'E', 'W'}, 'oneDimensional'),
+  ({'N', 'E', 'S', 'W'}, 'vonNeumann'),
+  ({'N', 'E', 'SE', 'S', 'W', 'NW'}, 'hexagonal'),
+  ({'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'}, 'Moore'),
+)
 
 ORDERED_NBHDS = {
-  'oneDimensional': (E, W),
-  'vonNeumann': (N, E, S, W),
-  'hexagonal': (N, E, SE, S, W, NW),
-  'Moore': (N, NE, E, SE, S, SW, W, NW),
+  'oneDimensional': ('E', 'W'),
+  'vonNeumann': ('N', 'E', 'S', 'W'),
+  'hexagonal': ('N', 'E', 'SE', 'S', 'W', 'NW'),
+  'Moore': ('N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'),
 }
 
 
-def gollyize(tbl, napkin, anys):  # anys == usages of `any`
+def get_gollyizer(tbl, nbhd):
+    nbhd_set = set(nbhd)
+    for s, name in NBHD_SETS:
+        if nbhd_set <= s:
+            tbl.directives['neighborhood'] = name
+            if nbhd_set < s:
+                return fill.__get__(ORDERED_NBHDS[name])
+            return lambda tbl, napkin, _: reorder(ORDERED_NBHDS[name], tbl, napkin)
+    raise ValueError('Invalid (non-Moore-subset) neighborhood {nbhd_set}}')
+
+
+def reorder(ordered_nbhd, tbl, napkin):
+    nbhd = tbl.neighborhood.inv
+    d = {nbhd[k]: v for k, v in enumerate(napkin, 1)}
+    return [d[cdir] for cdir in ordered_nbhd]
+
+
+def fill(ordered_nbhd, tbl, napkin, anys):  # anys == usages of `any`
     if isinstance(anys, int):
         anys = set(range(anys))
     nbhd = tbl.neighborhood.inv
     d = {nbhd[k]: v for k, v in enumerate(napkin, 1)}
-    nbhd_set = set(tbl.neighborhood)
-    for s, name in NBHD_SETS.items():
-        if nbhd_set == s:
-            tbl.directives['neighborhood'] = name
-            return [d[dir] for dir in ORDERED_NBHDS[name]]
-        if nbhd_set < s:
-            break
-    tbl.directives['neighborhood'] = name
-    new_nbhd = ORDERED_NBHDS[name]
+    available_tags = [i for i in range(10) if i not in anys]
     # (ew, but grabbing VarName object)
-    tbl.vars.inv[tbl.vars['any']].update_rep(len(new_nbhd) - len(nbhd))
-    tag_counter = count()
-    return [d.get(cdir, f'any.{next(i for i in tag_counter if i not in anys)}') for cdir in new_nbhd]
+    tbl.vars.inv[tbl.vars['any']].update_rep(
+      max(anys) + len(ordered_nbhd) - len(nbhd) - sum(takewhile(max(anys).__gt__, available_tags))
+      )
+    tagged_names = (f'any.{i}' for i in available_tags)
+    # `or` because this needs lazy evaluation
+    return [d.get(cdir) or next(tagged_names) for cdir in ordered_nbhd]
