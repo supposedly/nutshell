@@ -416,6 +416,19 @@ class Mapping(Reference):
         raise ValueErr(self.ctx, f'Unknown map-from value: {val}')
 
 
+class InlineRulestringBinding:
+    def __init__(self, idx, *, context=None):
+        self.idx = idx
+        self.ctx = context
+
+
+class InlineRulestringMapping:
+    def __init__(self, idx, map_to, *, context=None):
+        self.idx = idx
+        self.map_to = map_to
+        self.ctx = context
+
+
 class Operation(Expandable):
     def __init__(self, a, b, **kw):
         super().__init__(**kw)

@@ -42,6 +42,38 @@ def _add_mod(modulus, index, add, start=1):
     return index % modulus + start
 
 
+# I don't know where to put this function
+def resolve_rs_ref(term, nb_count, letter, meta):
+    if not isinstance(term, (InlineRulestringBinding, InlineRulestringMapping)):
+        return term
+    
+    if letter is None:
+        if nb_count == '0':
+            if term.idx == 'FG':
+                raise ValueErr(meta, 'Reference to FG, but given rulestring includes 0, which has no foreground states')
+            new_cdir = 'N'
+        elif nb_count == '8':
+            if term.idx == 'BG':
+                raise ValueErr(meta, 'Reference to BG, but given rulestring includes 8, which has no background states')
+            new_cdir = 'N'
+        else:
+            new_cdir = 'N' if term.idx == 'FG' else 'NW' if term.idx == 'BG' else '0'
+    elif term.idx == 'BG':
+        new_cdir = nbhoods.BG_LOCATIONS[nb_count][letter]
+    elif term.idx == 'FG':
+        new_cdir = nbhoods.FG_LOCATIONS[nb_count][letter]
+    else:
+        new_cdir = '0'
+    
+    if isinstance(term, InlineRulestringBinding):
+        return Binding(new_cdir, context=term.ctx)
+    
+    if isinstance(term, InlineRulestringMapping):
+        return Mapping(new_cdir, term.map_to, context=term.ctx)
+    
+    return term
+
+
 class MetaTuple(tuple):  # eh
     def __new__(cls, meta, it):
         return super().__new__(cls, it)
@@ -71,9 +103,9 @@ class Preprocess(Transformer):
                 return self._tbl.vars[val]
             except KeyError:
                 raise ReferenceErr(
-                  meta,
+                  fix(meta),
                   f'Undefined variable {val}'
-                )
+                  )
         return val
     
     def kill_strings(self, val, meta):
@@ -429,16 +461,30 @@ class Preprocess(Transformer):
         return self.subt(('any', subtrhnd), meta)
     
     @inline
-    def mapping(self, meta, cdir, map_to):
-        return Mapping(self._tbl.check_cdir(cdir, meta, return_int=False, enforce_int=True), self.kill_string(map_to, meta), context=meta)
+    def inline_binding(self, meta, val):
+        return InlineBinding(self.kill_string(val, meta), self._tbl, context=meta)
     
     @inline
     def binding(self, meta, cdir):
         return Binding(self._tbl.check_cdir(cdir, meta, return_int=False, enforce_int=True), context=meta)
     
     @inline
-    def inline_binding(self, meta, val):
-        return InlineBinding(self.kill_string(val, meta), self._tbl, context=meta)
+    def mapping(self, meta, cdir, map_to):
+        return Mapping(self._tbl.check_cdir(cdir, meta, return_int=False, enforce_int=True), self.kill_string(map_to, meta), context=meta)
+    
+    @inline
+    def rs_binding(self, meta, idx):
+        if idx == '0':
+            return Binding('0', context=meta)
+        idx = 'BG' if idx == '1' else 'FG' if idx == 2 else str(idx)
+        return InlineRulestringBinding(idx, context=meta)
+    
+    @inline
+    def rs_mapping(self, meta, idx, map_to):
+        if idx == '0':
+            return Mapping('0', self.kill_string(map_to, meta), context=meta)
+        idx = 'BG' if idx == '1' else 'FG' if idx == 2 else str(idx)
+        return InlineRulestringMapping(idx, self.kill_string(map_to, meta), context=meta)
     
     @inline
     def hensel_rulestring(self, meta, rulestring):
@@ -482,7 +528,7 @@ class Preprocess(Transformer):
             initial,
             # XXX: probably suboptimal performance b/c [dot attr access] -> [getitem] -> [getitem]
             {num: fg if cdir in nbhoods.R4R_NBHDS[nb_count][letter] else bg for cdir, num in self._tbl.neighborhood.items()},
-            resultant,
+            resolve_rs_ref(resultant, nb_count, letter, meta),
             context=meta, symmetries=ROTATE_4_REFLECT
             )
           for nb_count, letters in r4r_nbhds.items()
@@ -492,9 +538,8 @@ class Preprocess(Transformer):
           TransitionGroup(
             self._tbl,
             initial,
-            # XXX: probably suboptimal performance b/c [dot attr access] -> [getitem] -> [getitem]
             {num: fg if num <= nb_count else bg for num in self._tbl.neighborhood.values()},
-            resultant,
+            resolve_rs_ref(resultant, nb_count, None, meta),
             context=meta, symmetries=PERMUTE
             )
           for nb_count in map(int, permute_nbhds)

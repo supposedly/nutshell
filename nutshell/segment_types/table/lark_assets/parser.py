@@ -926,11 +926,11 @@ LEXERS = {}
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
   '|\t'
-  '))+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  '))+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
    2: '_WS',
    3: 'STATE',
-   4: '__ANON_15',
+   4: '__ANON_16',
    5: '_NEGATE_ALL',
    6: '_VAR_OPEN',
    7: 'BANG',
@@ -945,7 +945,7 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[0] = (lexer_regexps)
 MRES = (
-[('(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)', {1: 'COMMA', 2: 'SEMICOLON'})]
+[]
 )
 LEXER_CALLBACK = (
 {}
@@ -956,16 +956,40 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[1] = (lexer_regexps)
 MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '__ANON_15',
+   3: '_WS',
+   4: '_NL',
+   5: 'STATE',
+   6: '__ANON_16',
+   7: '_NEGATE_ALL',
+   8: '_VAR_OPEN',
+   9: 'BANG',
+   10: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[2] = (lexer_regexps)
+MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
   '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
   '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
   '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
   '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
   '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<__ANON_2>\\.\\.)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<PLUS>\\+)|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<__ANON_2>\\.\\.)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<PLUS>\\+)|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_LROT',
    3: '_RROT',
@@ -973,11 +997,11 @@ MRES = (
    5: '_HENSEL_SEP',
    6: '_MULT',
    7: '_SUBT',
-   8: '__ANON_14',
+   8: '__ANON_15',
    9: '_WS',
    10: '_NL',
    11: 'STATE',
-   12: '__ANON_15',
+   12: '__ANON_16',
    13: '_NEGATE_ALL',
    14: '__ANON_2',
    15: '_VAR_CLOSE',
@@ -994,22 +1018,21 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[2] = (lexer_regexps)
+LEXERS[3] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
+  '|\t))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
-   2: '__ANON_14',
-   3: '_WS',
-   4: '_NL',
-   5: 'STATE',
-   6: '__ANON_15',
-   7: '_NEGATE_ALL',
-   8: '_VAR_OPEN',
-   9: 'BANG',
-   10: '_NEGATE_LIVE'})]
+   2: '_WS',
+   3: '_NL',
+   4: 'STATE',
+   5: '__ANON_16',
+   6: '_NEGATE_ALL',
+   7: '_VAR_OPEN',
+   8: 'BANG',
+   9: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1018,15 +1041,53 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[3] = (lexer_regexps)
+LEXERS[4] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
+  '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_LROT',
+   3: '_RROT',
+   4: '_HENSEL_CLOSE',
+   5: '_HENSEL_SEP',
+   6: '_MULT',
+   7: '_SUBT',
+   8: '__ANON_15',
+   9: '_WS',
+   10: '_NL',
+   11: 'STATE',
+   12: '__ANON_16',
+   13: '_NEGATE_ALL',
+   14: '_VAR_CLOSE',
+   15: '_VAR_OPEN',
+   16: 'BANG',
+   17: 'COMMA',
+   18: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[5] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
   '|\t'
-  '))+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  '))+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
    2: '_WS',
    3: 'STATE',
-   4: '__ANON_15',
+   4: '__ANON_16',
    5: '_NEGATE_ALL',
    6: '_VAR_OPEN',
    7: 'BANG',
@@ -1039,56 +1100,9 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[4] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME', 2: 'STATE', 3: '_NEGATE_ALL', 4: '_VAR_OPEN', 5: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[5] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_NORMAL_ARROW',
-   4: '__ANON_14',
-   5: '_WS',
-   6: '_NL',
-   7: 'STATE',
-   8: '__ANON_15',
-   9: '_NEGATE_ALL',
-   10: '_VAR_OPEN',
-   11: 'BANG',
-   12: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
 LEXERS[6] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: 'STATE',
-   3: '__ANON_15',
-   4: '_NEGATE_ALL',
-   5: '_VAR_OPEN',
-   6: 'BANG',
-   7: '_NEGATE_LIVE'})]
+[('(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)', {1: 'COMMA', 2: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1101,18 +1115,18 @@ LEXERS[7] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
   '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
   ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
    2: '_HOIST_ARROW',
    3: '_NORMAL_ARROW',
-   4: '__ANON_14',
+   4: '__ANON_15',
    5: '_WS',
    6: '_NL',
    7: 'STATE',
-   8: '__ANON_15',
+   8: '__ANON_16',
    9: '_NEGATE_ALL',
    10: '_VAR_OPEN',
    11: 'BANG',
@@ -1127,19 +1141,8 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[8] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
-  '|\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_WS',
-   3: '_NL',
-   4: 'STATE',
-   5: '__ANON_15',
-   6: '_NEGATE_ALL',
-   7: '_VAR_OPEN',
-   8: 'BANG',
-   9: '_NEGATE_LIVE'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME', 2: 'STATE', 3: '_NEGATE_ALL', 4: '_VAR_OPEN', 5: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1156,10 +1159,10 @@ MRES = (
   '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
   '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
   '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_LROT',
    3: '_RROT',
@@ -1167,11 +1170,11 @@ MRES = (
    5: '_HENSEL_SEP',
    6: '_MULT',
    7: '_SUBT',
-   8: '__ANON_14',
+   8: '__ANON_15',
    9: '_WS',
    10: '_NL',
    11: 'STATE',
-   12: '__ANON_15',
+   12: '__ANON_16',
    13: '_NEGATE_ALL',
    14: '_VAR_CLOSE',
    15: '_VAR_OPEN',
@@ -1188,16 +1191,74 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[10] = (lexer_regexps)
 MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_NORMAL_ARROW',
+   4: '__ANON_15',
+   5: '_WS',
+   6: '_NL',
+   7: 'STATE',
+   8: '__ANON_16',
+   9: '_NEGATE_ALL',
+   10: '_VAR_OPEN',
+   11: 'BANG',
+   12: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[11] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: 'STATE',
+   3: '__ANON_16',
+   4: '_NEGATE_ALL',
+   5: '_VAR_OPEN',
+   6: 'BANG',
+   7: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[12] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME', 2: 'STATE', 3: '_NEGATE_ALL', 4: '_VAR_OPEN', 5: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[13] = (lexer_regexps)
+MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
   '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
   '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
   '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
   '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
   '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COLON>\\:)|(?P<COMMA>\\,)|(?P<EQUAL>\\=)|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_LROT',
    3: '_RROT',
@@ -1205,11 +1266,49 @@ MRES = (
    5: '_HENSEL_SEP',
    6: '_MULT',
    7: '_SUBT',
-   8: '__ANON_14',
+   8: '__ANON_15',
    9: '_WS',
    10: '_NL',
    11: 'STATE',
-   12: '__ANON_15',
+   12: '__ANON_16',
+   13: '_NEGATE_ALL',
+   14: '_VAR_CLOSE',
+   15: '_VAR_OPEN',
+   16: 'BANG',
+   17: 'COMMA',
+   18: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[14] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
+  '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COLON>\\:)|(?P<COMMA>\\,)|(?P<EQUAL>\\=)|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_LROT',
+   3: '_RROT',
+   4: '_HENSEL_CLOSE',
+   5: '_HENSEL_SEP',
+   6: '_MULT',
+   7: '_SUBT',
+   8: '__ANON_15',
+   9: '_WS',
+   10: '_NL',
+   11: 'STATE',
+   12: '__ANON_16',
    13: '_NEGATE_ALL',
    14: '_VAR_CLOSE',
    15: '_VAR_OPEN',
@@ -1226,117 +1325,17 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[11] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME', 2: 'STATE', 3: '_NEGATE_ALL', 4: '_VAR_OPEN', 5: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[12] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
-  '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_LROT',
-   3: '_RROT',
-   4: '_HENSEL_CLOSE',
-   5: '_HENSEL_SEP',
-   6: '_MULT',
-   7: '_SUBT',
-   8: '__ANON_14',
-   9: '_WS',
-   10: '_NL',
-   11: 'STATE',
-   12: '__ANON_15',
-   13: '_NEGATE_ALL',
-   14: '_VAR_CLOSE',
-   15: '_VAR_OPEN',
-   16: 'BANG',
-   17: 'COMMA',
-   18: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[13] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME', 2: 'STATE', 3: '_NEGATE_ALL', 4: '_VAR_OPEN', 5: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[14] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
-  '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_LROT',
-   3: '_RROT',
-   4: '_HENSEL_CLOSE',
-   5: '_HENSEL_SEP',
-   6: '_MULT',
-   7: '_SUBT',
-   8: '__ANON_14',
-   9: '_WS',
-   10: '_NL',
-   11: 'STATE',
-   12: '__ANON_15',
-   13: '_NEGATE_ALL',
-   14: '_VAR_CLOSE',
-   15: '_VAR_OPEN',
-   16: 'BANG',
-   17: 'COMMA',
-   18: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
 LEXERS[15] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
   '|\t))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
    2: '_WS',
    3: '_NL',
    4: 'STATE',
-   5: '__ANON_15',
+   5: '__ANON_16',
    6: '_NEGATE_ALL',
    7: '_VAR_OPEN',
    8: 'BANG',
@@ -1351,16 +1350,28 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[16] = (lexer_regexps)
 MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME', 2: 'STATE', 3: '_NEGATE_ALL', 4: '_VAR_OPEN', 5: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[17] = (lexer_regexps)
+MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
   '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
   '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
   '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
   '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
   '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_LROT',
    3: '_RROT',
@@ -1368,11 +1379,11 @@ MRES = (
    5: '_HENSEL_SEP',
    6: '_MULT',
    7: '_SUBT',
-   8: '__ANON_14',
+   8: '__ANON_15',
    9: '_WS',
    10: '_NL',
    11: 'STATE',
-   12: '__ANON_15',
+   12: '__ANON_16',
    13: '_NEGATE_ALL',
    14: '_VAR_CLOSE',
    15: '_VAR_OPEN',
@@ -1387,7 +1398,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[17] = (lexer_regexps)
+LEXERS[18] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME', 2: 'STATE', 3: '_NEGATE_ALL', 4: '_VAR_OPEN', 5: '_NEGATE_LIVE'})]
@@ -1399,7 +1410,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[18] = (lexer_regexps)
+LEXERS[19] = (lexer_regexps)
 MRES = (
 []
 )
@@ -1410,30 +1421,21 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[19] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HENSEL_OPEN>(?:(?:(?:\\ '
-  '|\t))+)?\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<STATE>\\d+)|(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HENSEL_OPEN',
-   3: 'STATE',
-   4: 'COMPASS_DIR',
-   5: '_NEGATE_ALL',
-   6: '_VAR_OPEN',
-   7: 'LSQB',
-   8: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
 LEXERS[20] = (lexer_regexps)
 MRES = (
-[('(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)', {1: 'COMMA', 2: 'SEMICOLON'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
+  '|\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_WS',
+   3: '_NL',
+   4: 'STATE',
+   5: '__ANON_16',
+   6: '_NEGATE_ALL',
+   7: '_VAR_OPEN',
+   8: 'BANG',
+   9: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1444,18 +1446,17 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[21] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HENSEL_OPEN>(?:(?:(?:\\ '
-  '|\t))+)?\\<(?:(?:(?:\\ |\t))+)?)|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<STATE>\\d+)|(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
+  '|\t'
+  '))+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
-   2: '_HENSEL_OPEN',
-   3: '_WS',
-   4: 'STATE',
-   5: 'COMPASS_DIR',
-   6: '_NEGATE_ALL',
-   7: '_VAR_OPEN',
-   8: 'LSQB',
-   9: '_NEGATE_LIVE'})]
+   2: '_WS',
+   3: 'STATE',
+   4: '__ANON_16',
+   5: '_NEGATE_ALL',
+   6: '_VAR_OPEN',
+   7: 'BANG',
+   8: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1466,17 +1467,18 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[22] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HENSEL_OPEN>(?:(?:(?:\\ '
-  '|\t))+)?\\<(?:(?:(?:\\ |\t))+)?)|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<STATE>\\d+)|(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
+  '|\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
-   2: '_HENSEL_OPEN',
-   3: '_WS',
+   2: '_WS',
+   3: '_NL',
    4: 'STATE',
-   5: 'COMPASS_DIR',
+   5: '__ANON_16',
    6: '_NEGATE_ALL',
    7: '_VAR_OPEN',
-   8: 'LSQB',
+   8: 'BANG',
    9: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
@@ -1499,7 +1501,8 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[24] = (lexer_regexps)
 MRES = (
-[('(?P<INT>[0123456789]+)|(?P<_WS>(?:(?:\\ |\t))+)', {1: 'INT', 2: '_WS'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<INT>[0123456789]+)|(?P<STATE>\\d+)|(?P<_VAR_OPEN>[({])',
+  {1: 'NAME', 2: 'INT', 3: 'STATE', 4: '_VAR_OPEN'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1510,7 +1513,7 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[25] = (lexer_regexps)
 MRES = (
-[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<STATE>\\d+)', {1: '_WS', 2: 'STATE'})]
+[('(?P<INT>[0123456789]+)|(?P<_WS>(?:(?:\\ |\t))+)', {1: 'INT', 2: '_WS'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1521,8 +1524,7 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[26] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<INT>[0123456789]+)|(?P<STATE>\\d+)|(?P<_VAR_OPEN>[({])',
-  {1: 'NAME', 2: 'INT', 3: 'STATE', 4: '_VAR_OPEN'})]
+[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<STATE>\\d+)', {1: '_WS', 2: 'STATE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1534,58 +1536,12 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
 LEXERS[27] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
-  '|\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_WS',
-   3: '_NL',
-   4: 'STATE',
-   5: '__ANON_15',
-   6: '_NEGATE_ALL',
-   7: '_VAR_OPEN',
-   8: 'BANG',
-   9: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[28] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
-  '|\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_WS',
-   3: '_NL',
-   4: 'STATE',
-   5: '__ANON_15',
-   6: '_NEGATE_ALL',
-   7: '_VAR_OPEN',
-   8: 'BANG',
-   9: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[29] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
   '|\t'
-  '))+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  '))+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
    2: '_WS',
    3: 'STATE',
-   4: '__ANON_15',
+   4: '__ANON_16',
    5: '_NEGATE_ALL',
    6: '_VAR_OPEN',
    7: 'BANG',
@@ -1598,36 +1554,12 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[30] = (lexer_regexps)
+LEXERS[28] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '__ANON_14',
-   3: '_WS',
-   4: '_NL',
-   5: 'STATE',
-   6: '__ANON_15',
-   7: '_NEGATE_ALL',
-   8: '_VAR_OPEN',
-   9: 'BANG',
-   10: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[31] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
    2: 'STATE',
-   3: '__ANON_15',
+   3: '__ANON_16',
    4: '_NEGATE_ALL',
    5: '_VAR_OPEN',
    6: 'BANG',
@@ -1640,17 +1572,41 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[32] = (lexer_regexps)
+LEXERS[29] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '__ANON_15',
+   3: '_WS',
+   4: '_NL',
+   5: 'STATE',
+   6: '__ANON_16',
+   7: '_NEGATE_ALL',
+   8: '_VAR_OPEN',
+   9: 'BANG',
+   10: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[30] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
   '|\t))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
    2: '_WS',
    3: '_NL',
    4: 'STATE',
-   5: '__ANON_15',
+   5: '__ANON_16',
    6: '_NEGATE_ALL',
    7: '_VAR_OPEN',
    8: 'BANG',
@@ -1663,39 +1619,55 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[33] = (lexer_regexps)
+LEXERS[31] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
-  '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_LROT',
-   3: '_RROT',
-   4: '_HENSEL_CLOSE',
-   5: '_HENSEL_SEP',
-   6: '_MULT',
-   7: '_SUBT',
-   8: '__ANON_14',
-   9: '_WS',
-   10: '_NL',
-   11: 'STATE',
-   12: '__ANON_15',
-   13: '_NEGATE_ALL',
-   14: '_VAR_CLOSE',
-   15: '_VAR_OPEN',
-   16: 'BANG',
-   17: 'COMMA',
-   18: 'SEMICOLON'})]
+[('(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)', {1: 'COMMA', 2: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[32] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HENSEL_OPEN>(?:(?:(?:\\ '
+  '|\t))+)?\\<(?:(?:(?:\\ |\t))+)?)|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<STATE>\\d+)|(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HENSEL_OPEN',
+   3: '_WS',
+   4: 'STATE',
+   5: 'COMPASS_DIR',
+   6: '_NEGATE_ALL',
+   7: '_VAR_OPEN',
+   8: 'LSQB',
+   9: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[33] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HENSEL_OPEN>(?:(?:(?:\\ '
+  '|\t))+)?\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<STATE>\\d+)|(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HENSEL_OPEN',
+   3: 'STATE',
+   4: 'COMPASS_DIR',
+   5: '_NEGATE_ALL',
+   6: '_VAR_OPEN',
+   7: 'LSQB',
+   8: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -1703,7 +1675,18 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[34] = (lexer_regexps)
 MRES = (
-[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HENSEL_OPEN>(?:(?:(?:\\ '
+  '|\t))+)?\\<(?:(?:(?:\\ |\t))+)?)|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<STATE>\\d+)|(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HENSEL_OPEN',
+   3: '_WS',
+   4: 'STATE',
+   5: 'COMPASS_DIR',
+   6: '_NEGATE_ALL',
+   7: '_VAR_OPEN',
+   8: 'LSQB',
+   9: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1714,37 +1697,23 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[35] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
-  '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
-   2: '_LROT',
-   3: '_RROT',
-   4: '_HENSEL_CLOSE',
-   5: '_HENSEL_SEP',
-   6: '_MULT',
-   7: '_SUBT',
-   8: '__ANON_14',
-   9: '_WS',
-   10: '_NL',
-   11: 'STATE',
-   12: '__ANON_15',
-   13: '_NEGATE_ALL',
-   14: '_VAR_CLOSE',
-   15: '_VAR_OPEN',
-   16: 'BANG',
-   17: 'COMMA',
-   18: 'SEMICOLON'})]
+   2: '__ANON_15',
+   3: '_WS',
+   4: '_NL',
+   5: 'STATE',
+   6: '__ANON_16',
+   7: '_NEGATE_ALL',
+   8: '_VAR_OPEN',
+   9: 'BANG',
+   10: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -1753,17 +1722,17 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
 LEXERS[36] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
+  '|\t))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
   ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
    2: '_NORMAL_ARROW',
-   3: '__ANON_14',
+   3: '__ANON_15',
    4: '_WS',
    5: '_NL',
    6: 'STATE',
-   7: '__ANON_15',
+   7: '__ANON_16',
    8: '_NEGATE_ALL',
    9: '_VAR_OPEN',
    10: 'BANG',
@@ -1778,22 +1747,8 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[37] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '__ANON_14',
-   4: '_WS',
-   5: '_NL',
-   6: 'STATE',
-   7: '__ANON_15',
-   8: '_NEGATE_ALL',
-   9: '_VAR_OPEN',
-   10: 'BANG',
-   11: '_NEGATE_LIVE'})]
+[('(?P<SYMMETRY_NAME>(?<![\\w\\.])(?!(?:[NS][EW]?|[EW])(?![\\w\\.]))[\\w\\.]+)|(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)',
+  {1: 'SYMMETRY_NAME', 2: 'COMPASS_DIR'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1804,8 +1759,22 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[38] = (lexer_regexps)
 MRES = (
-[('(?P<SYMMETRY_NAME>(?<![\\w\\.])(?!(?:[NS][EW]?|[EW])(?![\\w\\.]))[\\w\\.]+)|(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)',
-  {1: 'SYMMETRY_NAME', 2: 'COMPASS_DIR'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '__ANON_15',
+   4: '_WS',
+   5: '_NL',
+   6: 'STATE',
+   7: '__ANON_16',
+   8: '_NEGATE_ALL',
+   9: '_VAR_OPEN',
+   10: 'BANG',
+   11: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1828,20 +1797,7 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[40] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '__ANON_14',
-   3: '_WS',
-   4: '_NL',
-   5: 'STATE',
-   6: '__ANON_15',
-   7: '_NEGATE_ALL',
-   8: '_VAR_OPEN',
-   9: 'BANG',
-   10: '_NEGATE_LIVE'})]
+[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1852,23 +1808,37 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[41] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
+  '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
-   2: '__ANON_14',
-   3: '_WS',
-   4: '_NL',
-   5: 'STATE',
-   6: '__ANON_15',
-   7: '_NEGATE_ALL',
-   8: '_VAR_OPEN',
-   9: 'BANG',
-   10: '_NEGATE_LIVE'})]
+   2: '_LROT',
+   3: '_RROT',
+   4: '_HENSEL_CLOSE',
+   5: '_HENSEL_SEP',
+   6: '_MULT',
+   7: '_SUBT',
+   8: '__ANON_15',
+   9: '_WS',
+   10: '_NL',
+   11: 'STATE',
+   12: '__ANON_16',
+   13: '_NEGATE_ALL',
+   14: '_VAR_CLOSE',
+   15: '_VAR_OPEN',
+   16: 'BANG',
+   17: 'COMMA',
+   18: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -1876,22 +1846,37 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[42] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
-  '|\t))+)|(?P<_NL>(?:(?:\r'
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
+  '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
-   2: '_WS',
-   3: '_NL',
-   4: 'STATE',
-   5: '__ANON_15',
-   6: '_NEGATE_ALL',
-   7: '_VAR_OPEN',
-   8: 'BANG',
-   9: '_NEGATE_LIVE'})]
+   2: '_LROT',
+   3: '_RROT',
+   4: '_HENSEL_CLOSE',
+   5: '_HENSEL_SEP',
+   6: '_MULT',
+   7: '_SUBT',
+   8: '__ANON_15',
+   9: '_WS',
+   10: '_NL',
+   11: 'STATE',
+   12: '__ANON_16',
+   13: '_NEGATE_ALL',
+   14: '_VAR_CLOSE',
+   15: '_VAR_OPEN',
+   16: 'BANG',
+   17: 'COMMA',
+   18: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -1899,16 +1884,16 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[43] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<__ANON_14>(?m:[ \t'
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<__ANON_15>(?m:[ \t'
   ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
-   2: '__ANON_14',
+   2: '__ANON_15',
    3: '_WS',
    4: '_NL',
    5: 'STATE',
-   6: '__ANON_15',
+   6: '__ANON_16',
    7: '_NEGATE_ALL',
    8: '_VAR_OPEN',
    9: 'BANG',
@@ -1923,17 +1908,20 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[44] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
-  '|\t'
-  '))+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
-   2: '_WS',
-   3: 'STATE',
-   4: '__ANON_15',
-   5: '_NEGATE_ALL',
-   6: '_VAR_OPEN',
-   7: 'BANG',
-   8: '_NEGATE_LIVE'})]
+   2: '__ANON_15',
+   3: '_WS',
+   4: '_NL',
+   5: 'STATE',
+   6: '__ANON_16',
+   7: '_NEGATE_ALL',
+   8: '_VAR_OPEN',
+   9: 'BANG',
+   10: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -1943,6 +1931,73 @@ lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[45] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
+  '|\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_WS',
+   3: '_NL',
+   4: 'STATE',
+   5: '__ANON_16',
+   6: '_NEGATE_ALL',
+   7: '_VAR_OPEN',
+   8: 'BANG',
+   9: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[46] = (lexer_regexps)
+MRES = (
+[('(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<__ANON_2>\\.\\.)|(?P<PLUS>\\+)',
+  {1: '_MULT', 2: '_WS', 3: '__ANON_2', 4: 'PLUS'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[47] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
+  '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
+  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)',
+  {1: 'NAME',
+   2: '_LROT',
+   3: '_RROT',
+   4: '_MULT',
+   5: '_SUBT',
+   6: '__ANON_15',
+   7: '_WS',
+   8: '_NL',
+   9: 'STATE',
+   10: '__ANON_16',
+   11: '_NEGATE_ALL',
+   12: '_VAR_OPEN',
+   13: 'BANG'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[48] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
   '|\t'
@@ -1961,40 +2016,18 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[46] = (lexer_regexps)
-MRES = (
-[('(?P<INT>[0123456789]+)', {1: 'INT'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[47] = (lexer_regexps)
-MRES = (
-[('(?P<INT>[0123456789]+)', {1: 'INT'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[48] = (lexer_regexps)
-MRES = (
-[('(?P<INT>[0123456789]+)', {1: 'INT'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
 LEXERS[49] = (lexer_regexps)
+MRES = (
+[('(?P<INT>[0123456789]+)', {1: 'INT'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[50] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_VAR_OPEN>[({])',
   {1: 'NAME', 2: 'STATE', 3: '_VAR_OPEN'})]
@@ -2006,7 +2039,18 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[50] = (lexer_regexps)
+LEXERS[51] = (lexer_regexps)
+MRES = (
+[('(?P<INT>[0123456789]+)', {1: 'INT'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[52] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)',
   {1: 'NAME', 2: 'STATE', 3: '_VAR_OPEN', 4: 'LEAVE_ALONE', 5: 'LSQB'})]
@@ -2018,9 +2062,9 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[51] = (lexer_regexps)
+LEXERS[53] = (lexer_regexps)
 MRES = (
-[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<__ANON_0>.+)', {1: '_WS', 2: '__ANON_0'})]
+[('(?P<INT>[0123456789]+)', {1: 'INT'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -2029,7 +2073,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[52] = (lexer_regexps)
+LEXERS[54] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
   '|\t'
@@ -2048,7 +2092,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[53] = (lexer_regexps)
+LEXERS[55] = (lexer_regexps)
 MRES = (
 [('(?P<EQUAL>\\=)', {1: 'EQUAL'})]
 )
@@ -2059,83 +2103,12 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[54] = (lexer_regexps)
+LEXERS[56] = (lexer_regexps)
 MRES = (
-[('(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<__ANON_2>\\.\\.)|(?P<PLUS>\\+)',
-  {1: '_MULT', 2: '_WS', 3: '__ANON_2', 4: 'PLUS'})]
+[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<__ANON_0>.+)', {1: '_WS', 2: '__ANON_0'})]
 )
 LEXER_CALLBACK = (
 {}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[55] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
-  '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
-  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)',
-  {1: 'NAME',
-   2: '_LROT',
-   3: '_RROT',
-   4: '_MULT',
-   5: '_SUBT',
-   6: '__ANON_14',
-   7: '_WS',
-   8: '_NL',
-   9: 'STATE',
-   10: '__ANON_15',
-   11: '_NEGATE_ALL',
-   12: '_VAR_OPEN',
-   13: 'BANG'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[56] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
-  '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_LROT',
-   3: '_RROT',
-   4: '_HENSEL_CLOSE',
-   5: '_HENSEL_SEP',
-   6: '_MULT',
-   7: '_SUBT',
-   8: '__ANON_14',
-   9: '_WS',
-   10: '_NL',
-   11: 'STATE',
-   12: '__ANON_15',
-   13: '_NEGATE_ALL',
-   14: '_VAR_CLOSE',
-   15: '_VAR_OPEN',
-   16: 'BANG',
-   17: 'COMMA',
-   18: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -2149,10 +2122,10 @@ MRES = (
   '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
   '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
   '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_LROT',
    3: '_RROT',
@@ -2160,11 +2133,11 @@ MRES = (
    5: '_HENSEL_SEP',
    6: '_MULT',
    7: '_SUBT',
-   8: '__ANON_14',
+   8: '__ANON_15',
    9: '_WS',
    10: '_NL',
    11: 'STATE',
-   12: '__ANON_15',
+   12: '__ANON_16',
    13: '_NEGATE_ALL',
    14: '_VAR_CLOSE',
    15: '_VAR_OPEN',
@@ -2181,10 +2154,37 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[58] = (lexer_regexps)
 MRES = (
-[]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
+  '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_LROT',
+   3: '_RROT',
+   4: '_HENSEL_CLOSE',
+   5: '_HENSEL_SEP',
+   6: '_MULT',
+   7: '_SUBT',
+   8: '__ANON_15',
+   9: '_WS',
+   10: '_NL',
+   11: 'STATE',
+   12: '__ANON_16',
+   13: '_NEGATE_ALL',
+   14: '_VAR_CLOSE',
+   15: '_VAR_OPEN',
+   16: 'BANG',
+   17: 'COMMA',
+   18: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -2192,13 +2192,17 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[59] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
+  '|\t'
+  '))+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
-   2: 'STATE',
-   3: '_NEGATE_ALL',
-   4: '_VAR_OPEN',
-   5: 'LSQB',
-   6: '_NEGATE_LIVE'})]
+   2: '_WS',
+   3: 'STATE',
+   4: '__ANON_16',
+   5: '_NEGATE_ALL',
+   6: '_VAR_OPEN',
+   7: 'BANG',
+   8: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -2209,42 +2213,10 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[60] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
-  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
-  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<__ANON_2>\\.\\.)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<PLUS>\\+)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_MULT',
-   7: '_PERMUTE',
-   8: '_SUBT',
-   9: '__ANON_14',
-   10: '_WS',
-   11: '_NL',
-   12: 'STATE',
-   13: '__ANON_15',
-   14: '_NEGATE_ALL',
-   15: '__ANON_2',
-   16: '_VAR_CLOSE',
-   17: '_VAR_OPEN',
-   18: 'BANG',
-   19: 'COMMA',
-   20: 'PLUS',
-   21: 'RSQB',
-   22: 'SEMICOLON'})]
+[('(?P<INT>[0123456789]+)|(?P<_WS>(?:(?:\\ |\t))+)', {1: 'INT', 2: '_WS'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -2252,9 +2224,7 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[61] = (lexer_regexps)
 MRES = (
-[('(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
-  {1: '_PERMUTE', 2: 'COMMA', 3: 'SEMICOLON'})]
+[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<STATE>\\d+)', {1: '_WS', 2: 'STATE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -2265,7 +2235,8 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[62] = (lexer_regexps)
 MRES = (
-[('(?P<_WS>(?:(?:\\ |\t))+)', {1: '_WS'})]
+[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<__ANON_2>\\.\\.)|(?P<PLUS>\\+)',
+  {1: '_WS', 2: '__ANON_2', 3: 'PLUS'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -2276,10 +2247,37 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[63] = (lexer_regexps)
 MRES = (
-[('(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)', {1: 'COMMA', 2: 'SEMICOLON'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
+  '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_LROT',
+   3: '_RROT',
+   4: '_HENSEL_CLOSE',
+   5: '_HENSEL_SEP',
+   6: '_MULT',
+   7: '_SUBT',
+   8: '__ANON_15',
+   9: '_WS',
+   10: '_NL',
+   11: 'STATE',
+   12: '__ANON_16',
+   13: '_NEGATE_ALL',
+   14: '_VAR_CLOSE',
+   15: '_VAR_OPEN',
+   16: 'BANG',
+   17: 'COMMA',
+   18: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -2287,12 +2285,37 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[64] = (lexer_regexps)
 MRES = (
-[('(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
-  {1: '_PERMUTE', 2: 'COMMA', 3: 'SEMICOLON'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
+  '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_LROT',
+   3: '_RROT',
+   4: '_HENSEL_CLOSE',
+   5: '_HENSEL_SEP',
+   6: '_MULT',
+   7: '_SUBT',
+   8: '__ANON_15',
+   9: '_WS',
+   10: '_NL',
+   11: 'STATE',
+   12: '__ANON_16',
+   13: '_NEGATE_ALL',
+   14: '_VAR_CLOSE',
+   15: '_VAR_OPEN',
+   16: 'BANG',
+   17: 'COMMA',
+   18: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -2300,16 +2323,37 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[65] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
+  '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
-   2: 'STATE',
-   3: '_NEGATE_ALL',
-   4: '_VAR_OPEN',
-   5: 'LSQB',
-   6: '_NEGATE_LIVE'})]
+   2: '_LROT',
+   3: '_RROT',
+   4: '_HENSEL_CLOSE',
+   5: '_HENSEL_SEP',
+   6: '_MULT',
+   7: '_SUBT',
+   8: '__ANON_15',
+   9: '_WS',
+   10: '_NL',
+   11: 'STATE',
+   12: '__ANON_16',
+   13: '_NEGATE_ALL',
+   14: '_VAR_CLOSE',
+   15: '_VAR_OPEN',
+   16: 'BANG',
+   17: 'COMMA',
+   18: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -2317,13 +2361,83 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[66] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
+  '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
-   2: 'STATE',
-   3: '_NEGATE_ALL',
-   4: '_VAR_OPEN',
-   5: 'LSQB',
-   6: '_NEGATE_LIVE'})]
+   2: '_LROT',
+   3: '_RROT',
+   4: '_HENSEL_CLOSE',
+   5: '_HENSEL_SEP',
+   6: '_MULT',
+   7: '_SUBT',
+   8: '__ANON_15',
+   9: '_WS',
+   10: '_NL',
+   11: 'STATE',
+   12: '__ANON_16',
+   13: '_NEGATE_ALL',
+   14: '_VAR_CLOSE',
+   15: '_VAR_OPEN',
+   16: 'BANG',
+   17: 'COMMA',
+   18: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[67] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
+  '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_LROT',
+   3: '_RROT',
+   4: '_HENSEL_CLOSE',
+   5: '_HENSEL_SEP',
+   6: '_MULT',
+   7: '_SUBT',
+   8: '__ANON_15',
+   9: '_WS',
+   10: '_NL',
+   11: 'STATE',
+   12: '__ANON_16',
+   13: '_NEGATE_ALL',
+   14: '_VAR_CLOSE',
+   15: '_VAR_OPEN',
+   16: 'BANG',
+   17: 'COMMA',
+   18: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[68] = (lexer_regexps)
+MRES = (
+[('(?P<INT>[0123456789]+)', {1: 'INT'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -2332,7 +2446,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[67] = (lexer_regexps)
+LEXERS[69] = (lexer_regexps)
 MRES = (
 [('(?P<_WS>(?:(?:\\ |\t))+)|(?P<__ANON_2>\\.\\.)', {1: '_WS', 2: '__ANON_2'})]
 )
@@ -2343,39 +2457,43 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[68] = (lexer_regexps)
+LEXERS[70] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
   '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
   '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
   '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
-  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
-  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_HOIST_ARROW',
    3: '_LROT',
    4: '_NORMAL_ARROW',
    5: '_RROT',
-   6: '_MULT',
-   7: '_PERMUTE',
-   8: '_SUBT',
-   9: '__ANON_14',
-   10: '_WS',
-   11: '_NL',
-   12: 'STATE',
-   13: '__ANON_15',
-   14: '_NEGATE_ALL',
-   15: '_VAR_CLOSE',
-   16: '_VAR_OPEN',
-   17: 'BANG',
-   18: 'COMMA',
-   19: 'RSQB',
-   20: 'SEMICOLON'})]
+   6: '_HENSEL_CLOSE',
+   7: '_HENSEL_SEP',
+   8: '_MULT',
+   9: '_PERMUTE',
+   10: '_SUBT',
+   11: '__ANON_15',
+   12: '_WS',
+   13: '_NL',
+   14: 'STATE',
+   15: '__ANON_16',
+   16: '_NEGATE_ALL',
+   17: '_VAR_CLOSE',
+   18: '_VAR_OPEN',
+   19: 'BANG',
+   20: 'COMMA',
+   21: 'RSQB',
+   22: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
@@ -2384,37 +2502,9 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[69] = (lexer_regexps)
+LEXERS[71] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: 'STATE',
-   3: 'COMPASS_DIR',
-   4: '_NEGATE_ALL',
-   5: '_VAR_OPEN',
-   6: 'LSQB',
-   7: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{'STATE': [('(?P<__ANON_10>7$)|(?P<__ANON_11>8$)|(?P<__ANON_12>9$)|(?P<__ANON_3>0$)|(?P<__ANON_4>1$)|(?P<__ANON_5>2$)|(?P<__ANON_6>3$)|(?P<__ANON_7>4$)|(?P<__ANON_8>5$)|(?P<__ANON_9>6$)',
-            {1: '__ANON_10',
-             2: '__ANON_11',
-             3: '__ANON_12',
-             4: '__ANON_3',
-             5: '__ANON_4',
-             6: '__ANON_5',
-             7: '__ANON_6',
-             8: '__ANON_7',
-             9: '__ANON_8',
-             10: '__ANON_9'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[70] = (lexer_regexps)
-MRES = (
-[('(?P<_WS>(?:(?:\\ |\t))+)', {1: '_WS'})]
+[('(?P<STATE>\\d+)', {1: 'STATE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -2423,50 +2513,21 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[71] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
-  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
-  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_MULT',
-   7: '_PERMUTE',
-   8: '_SUBT',
-   9: '__ANON_14',
-   10: '_WS',
-   11: '_NL',
-   12: 'STATE',
-   13: '__ANON_15',
-   14: '_NEGATE_ALL',
-   15: '_VAR_CLOSE',
-   16: '_VAR_OPEN',
-   17: 'BANG',
-   18: 'COMMA',
-   19: 'RSQB',
-   20: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
 LEXERS[72] = (lexer_regexps)
 MRES = (
-[('(?P<__ANON_13>(?:[0-8]-?[cekainyqjrtwz]*)+)', {1: '__ANON_13'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
+  '|\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_WS',
+   3: '_NL',
+   4: 'STATE',
+   5: '__ANON_16',
+   6: '_NEGATE_ALL',
+   7: '_VAR_OPEN',
+   8: 'BANG',
+   9: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -2477,40 +2538,23 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[73] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
-  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
-  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_MULT',
-   7: '_PERMUTE',
-   8: '_SUBT',
-   9: '__ANON_14',
-   10: '_WS',
-   11: '_NL',
-   12: 'STATE',
-   13: '__ANON_15',
-   14: '_NEGATE_ALL',
-   15: '_VAR_CLOSE',
-   16: '_VAR_OPEN',
-   17: 'BANG',
-   18: 'COMMA',
-   19: 'RSQB',
-   20: 'SEMICOLON'})]
+   2: '__ANON_15',
+   3: '_WS',
+   4: '_NL',
+   5: 'STATE',
+   6: '__ANON_16',
+   7: '_NEGATE_ALL',
+   8: '_VAR_OPEN',
+   9: 'BANG',
+   10: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -2518,40 +2562,20 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[74] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
-  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
-  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
+  '|\t'
+  '))+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_MULT',
-   7: '_PERMUTE',
-   8: '_SUBT',
-   9: '__ANON_14',
-   10: '_WS',
-   11: '_NL',
-   12: 'STATE',
-   13: '__ANON_15',
-   14: '_NEGATE_ALL',
-   15: '_VAR_CLOSE',
-   16: '_VAR_OPEN',
-   17: 'BANG',
-   18: 'COMMA',
-   19: 'RSQB',
-   20: 'SEMICOLON'})]
+   2: '_WS',
+   3: 'STATE',
+   4: '__ANON_16',
+   5: '_NEGATE_ALL',
+   6: '_VAR_OPEN',
+   7: 'BANG',
+   8: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -2559,40 +2583,22 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[75] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
-  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
-  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
+  '|\t))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_MULT',
-   7: '_PERMUTE',
-   8: '_SUBT',
-   9: '__ANON_14',
-   10: '_WS',
-   11: '_NL',
-   12: 'STATE',
-   13: '__ANON_15',
-   14: '_NEGATE_ALL',
-   15: '_VAR_CLOSE',
-   16: '_VAR_OPEN',
-   17: 'BANG',
-   18: 'COMMA',
-   19: 'RSQB',
-   20: 'SEMICOLON'})]
+   2: '_WS',
+   3: '_NL',
+   4: 'STATE',
+   5: '__ANON_16',
+   6: '_NEGATE_ALL',
+   7: '_VAR_OPEN',
+   8: 'BANG',
+   9: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -2600,40 +2606,20 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[76] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
-  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
-  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
+  '|\t'
+  '))+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_MULT',
-   7: '_PERMUTE',
-   8: '_SUBT',
-   9: '__ANON_14',
-   10: '_WS',
-   11: '_NL',
-   12: 'STATE',
-   13: '__ANON_15',
-   14: '_NEGATE_ALL',
-   15: '_VAR_CLOSE',
-   16: '_VAR_OPEN',
-   17: 'BANG',
-   18: 'COMMA',
-   19: 'RSQB',
-   20: 'SEMICOLON'})]
+   2: '_WS',
+   3: 'STATE',
+   4: '__ANON_16',
+   5: '_NEGATE_ALL',
+   6: '_VAR_OPEN',
+   7: 'BANG',
+   8: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -2680,6 +2666,455 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[79] = (lexer_regexps)
 MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
+  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
+  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_MULT',
+   7: '_PERMUTE',
+   8: '_SUBT',
+   9: '__ANON_15',
+   10: '_WS',
+   11: '_NL',
+   12: 'STATE',
+   13: '__ANON_16',
+   14: '_NEGATE_ALL',
+   15: '_VAR_CLOSE',
+   16: '_VAR_OPEN',
+   17: 'BANG',
+   18: 'COMMA',
+   19: 'RSQB',
+   20: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[80] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
+  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
+  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<__ANON_2>\\.\\.)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<PLUS>\\+)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_MULT',
+   7: '_PERMUTE',
+   8: '_SUBT',
+   9: '__ANON_15',
+   10: '_WS',
+   11: '_NL',
+   12: 'STATE',
+   13: '__ANON_16',
+   14: '_NEGATE_ALL',
+   15: '__ANON_2',
+   16: '_VAR_CLOSE',
+   17: '_VAR_OPEN',
+   18: 'BANG',
+   19: 'COMMA',
+   20: 'PLUS',
+   21: 'RSQB',
+   22: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[81] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
+  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
+  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_MULT',
+   7: '_PERMUTE',
+   8: '_SUBT',
+   9: '__ANON_15',
+   10: '_WS',
+   11: '_NL',
+   12: 'STATE',
+   13: '__ANON_16',
+   14: '_NEGATE_ALL',
+   15: '_VAR_CLOSE',
+   16: '_VAR_OPEN',
+   17: 'BANG',
+   18: 'COMMA',
+   19: 'RSQB',
+   20: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[82] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: 'STATE',
+   3: 'COMPASS_DIR',
+   4: '_NEGATE_ALL',
+   5: '_VAR_OPEN',
+   6: 'LSQB',
+   7: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{'STATE': [('(?P<__ANON_10>6$)|(?P<__ANON_11>7$)|(?P<__ANON_12>8$)|(?P<__ANON_13>9$)|(?P<__ANON_4>0$)|(?P<__ANON_5>1$)|(?P<__ANON_6>2$)|(?P<__ANON_7>3$)|(?P<__ANON_8>4$)|(?P<__ANON_9>5$)',
+            {1: '__ANON_10',
+             2: '__ANON_11',
+             3: '__ANON_12',
+             4: '__ANON_13',
+             5: '__ANON_4',
+             6: '__ANON_5',
+             7: '__ANON_6',
+             8: '__ANON_7',
+             9: '__ANON_8',
+             10: '__ANON_9'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[83] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: 'STATE',
+   3: '_NEGATE_ALL',
+   4: '_VAR_OPEN',
+   5: 'LSQB',
+   6: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[84] = (lexer_regexps)
+MRES = (
+[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<__ANON_2>\\.\\.)', {1: '_WS', 2: '__ANON_2'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[85] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: 'STATE',
+   3: '_NEGATE_ALL',
+   4: '_VAR_OPEN',
+   5: 'LSQB',
+   6: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[86] = (lexer_regexps)
+MRES = (
+[('(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
+  {1: '_PERMUTE', 2: 'COMMA', 3: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[87] = (lexer_regexps)
+MRES = (
+[('(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
+  {1: '_PERMUTE', 2: 'COMMA', 3: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[88] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
+  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
+  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_MULT',
+   7: '_PERMUTE',
+   8: '_SUBT',
+   9: '__ANON_15',
+   10: '_WS',
+   11: '_NL',
+   12: 'STATE',
+   13: '__ANON_16',
+   14: '_NEGATE_ALL',
+   15: '_VAR_CLOSE',
+   16: '_VAR_OPEN',
+   17: 'BANG',
+   18: 'COMMA',
+   19: 'RSQB',
+   20: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[89] = (lexer_regexps)
+MRES = (
+[('(?P<__ANON_14>(?:[0-8]-?[cekainyqjrtwz]*)+)', {1: '__ANON_14'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[90] = (lexer_regexps)
+MRES = (
+[('(?P<_WS>(?:(?:\\ |\t))+)', {1: '_WS'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[91] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
+  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
+  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_MULT',
+   7: '_PERMUTE',
+   8: '_SUBT',
+   9: '__ANON_15',
+   10: '_WS',
+   11: '_NL',
+   12: 'STATE',
+   13: '__ANON_16',
+   14: '_NEGATE_ALL',
+   15: '_VAR_CLOSE',
+   16: '_VAR_OPEN',
+   17: 'BANG',
+   18: 'COMMA',
+   19: 'RSQB',
+   20: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[92] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
+  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
+  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_MULT',
+   7: '_PERMUTE',
+   8: '_SUBT',
+   9: '__ANON_15',
+   10: '_WS',
+   11: '_NL',
+   12: 'STATE',
+   13: '__ANON_16',
+   14: '_NEGATE_ALL',
+   15: '_VAR_CLOSE',
+   16: '_VAR_OPEN',
+   17: 'BANG',
+   18: 'COMMA',
+   19: 'RSQB',
+   20: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[93] = (lexer_regexps)
+MRES = (
+[('(?P<_WS>(?:(?:\\ |\t))+)', {1: '_WS'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[94] = (lexer_regexps)
+MRES = (
+[('(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)', {1: 'COMMA', 2: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[95] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
+  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
+  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_MULT',
+   7: '_PERMUTE',
+   8: '_SUBT',
+   9: '__ANON_15',
+   10: '_WS',
+   11: '_NL',
+   12: 'STATE',
+   13: '__ANON_16',
+   14: '_NEGATE_ALL',
+   15: '_VAR_CLOSE',
+   16: '_VAR_OPEN',
+   17: 'BANG',
+   18: 'COMMA',
+   19: 'RSQB',
+   20: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[96] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: 'STATE',
+   3: '_NEGATE_ALL',
+   4: '_VAR_OPEN',
+   5: 'LSQB',
+   6: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[97] = (lexer_regexps)
+MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HENSEL_OPEN>(?:(?:(?:\\ '
   '|\t))+)?\\<(?:(?:(?:\\ |\t'
   '))+)?)|(?P<STATE>\\d+)|(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
@@ -2699,408 +3134,18 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[80] = (lexer_regexps)
+LEXERS[98] = (lexer_regexps)
 MRES = (
-[('(?P<INT>[0123456789]+)|(?P<_WS>(?:(?:\\ |\t))+)', {1: 'INT', 2: '_WS'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[81] = (lexer_regexps)
-MRES = (
-[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<STATE>\\d+)', {1: '_WS', 2: 'STATE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[82] = (lexer_regexps)
-MRES = (
-[('(?P<INT>[0123456789]+)', {1: 'INT'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[83] = (lexer_regexps)
-MRES = (
-[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<__ANON_2>\\.\\.)', {1: '_WS', 2: '__ANON_2'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[84] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_HENSEL_CLOSE',
-   7: '_HENSEL_SEP',
-   8: '_MULT',
-   9: '_PERMUTE',
-   10: '_SUBT',
-   11: '__ANON_14',
-   12: '_WS',
-   13: '_NL',
-   14: 'STATE',
-   15: '__ANON_15',
-   16: '_NEGATE_ALL',
-   17: '_VAR_CLOSE',
-   18: '_VAR_OPEN',
-   19: 'BANG',
-   20: 'COMMA',
-   21: 'RSQB',
-   22: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[85] = (lexer_regexps)
-MRES = (
-[('(?P<STATE>\\d+)', {1: 'STATE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[86] = (lexer_regexps)
-MRES = (
-[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<__ANON_2>\\.\\.)|(?P<PLUS>\\+)',
-  {1: '_WS', 2: '__ANON_2', 3: 'PLUS'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[87] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
-  '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_LROT',
-   3: '_RROT',
-   4: '_HENSEL_CLOSE',
-   5: '_HENSEL_SEP',
-   6: '_MULT',
-   7: '_SUBT',
-   8: '__ANON_14',
-   9: '_WS',
-   10: '_NL',
-   11: 'STATE',
-   12: '__ANON_15',
-   13: '_NEGATE_ALL',
-   14: '_VAR_CLOSE',
-   15: '_VAR_OPEN',
-   16: 'BANG',
-   17: 'COMMA',
-   18: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[88] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
-  '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_LROT',
-   3: '_RROT',
-   4: '_HENSEL_CLOSE',
-   5: '_HENSEL_SEP',
-   6: '_MULT',
-   7: '_SUBT',
-   8: '__ANON_14',
-   9: '_WS',
-   10: '_NL',
-   11: 'STATE',
-   12: '__ANON_15',
-   13: '_NEGATE_ALL',
-   14: '_VAR_CLOSE',
-   15: '_VAR_OPEN',
-   16: 'BANG',
-   17: 'COMMA',
-   18: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[89] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
-  '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_LROT',
-   3: '_RROT',
-   4: '_HENSEL_CLOSE',
-   5: '_HENSEL_SEP',
-   6: '_MULT',
-   7: '_SUBT',
-   8: '__ANON_14',
-   9: '_WS',
-   10: '_NL',
-   11: 'STATE',
-   12: '__ANON_15',
-   13: '_NEGATE_ALL',
-   14: '_VAR_CLOSE',
-   15: '_VAR_OPEN',
-   16: 'BANG',
-   17: 'COMMA',
-   18: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[90] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
-  '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_LROT',
-   3: '_RROT',
-   4: '_HENSEL_CLOSE',
-   5: '_HENSEL_SEP',
-   6: '_MULT',
-   7: '_SUBT',
-   8: '__ANON_14',
-   9: '_WS',
-   10: '_NL',
-   11: 'STATE',
-   12: '__ANON_15',
-   13: '_NEGATE_ALL',
-   14: '_VAR_CLOSE',
-   15: '_VAR_OPEN',
-   16: 'BANG',
-   17: 'COMMA',
-   18: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[91] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
-  '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_LROT',
-   3: '_RROT',
-   4: '_HENSEL_CLOSE',
-   5: '_HENSEL_SEP',
-   6: '_MULT',
-   7: '_SUBT',
-   8: '__ANON_14',
-   9: '_WS',
-   10: '_NL',
-   11: 'STATE',
-   12: '__ANON_15',
-   13: '_NEGATE_ALL',
-   14: '_VAR_CLOSE',
-   15: '_VAR_OPEN',
-   16: 'BANG',
-   17: 'COMMA',
-   18: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[92] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
-  '|\t'
-  '))+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_WS',
-   3: 'STATE',
-   4: '__ANON_15',
-   5: '_NEGATE_ALL',
-   6: '_VAR_OPEN',
-   7: 'BANG',
-   8: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[93] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
-  '|\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_WS',
-   3: '_NL',
-   4: 'STATE',
-   5: '__ANON_15',
-   6: '_NEGATE_ALL',
-   7: '_VAR_OPEN',
-   8: 'BANG',
-   9: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[94] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
-  '|\t'
-  '))+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_WS',
-   3: 'STATE',
-   4: '__ANON_15',
-   5: '_NEGATE_ALL',
-   6: '_VAR_OPEN',
-   7: 'BANG',
-   8: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[95] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
-  '|\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_WS',
-   3: '_NL',
-   4: 'STATE',
-   5: '__ANON_15',
-   6: '_NEGATE_ALL',
-   7: '_VAR_OPEN',
-   8: 'BANG',
-   9: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[96] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<__ANON_14>(?m:[ \t'
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<__ANON_15>(?m:[ \t'
   ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
-   2: '__ANON_14',
+   2: '__ANON_15',
    3: '_WS',
    4: '_NL',
    5: 'STATE',
-   6: '__ANON_15',
+   6: '__ANON_16',
    7: '_NEGATE_ALL',
    8: '_VAR_OPEN',
    9: 'BANG',
@@ -3113,19 +3158,9 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[97] = (lexer_regexps)
+LEXERS[99] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
-  '|\t'
-  '))+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_WS',
-   3: 'STATE',
-   4: '__ANON_15',
-   5: '_NEGATE_ALL',
-   6: '_VAR_OPEN',
-   7: 'BANG',
-   8: '_NEGATE_LIVE'})]
+[('(?P<COLON>\\:)|(?P<LSQB>\\[)', {1: 'COLON', 2: 'LSQB'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -3134,45 +3169,173 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[98] = (lexer_regexps)
+LEXERS[100] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
-  '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_LROT',
-   3: '_RROT',
-   4: '_HENSEL_CLOSE',
-   5: '_HENSEL_SEP',
-   6: '_MULT',
-   7: '_SUBT',
-   8: '__ANON_14',
-   9: '_WS',
-   10: '_NL',
-   11: 'STATE',
-   12: '__ANON_15',
-   13: '_NEGATE_ALL',
-   14: '_VAR_CLOSE',
-   15: '_VAR_OPEN',
-   16: 'BANG',
-   17: 'COMMA',
-   18: 'SEMICOLON'})]
+[('(?P<COLON>\\:)|(?P<LSQB>\\[)|(?P<PLUS>\\+)',
+  {1: 'COLON', 2: 'LSQB', 3: 'PLUS'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[99] = (lexer_regexps)
+LEXERS[101] = (lexer_regexps)
+MRES = (
+[('(?P<BANG>\\!)|(?P<LPAR>\\()', {1: 'BANG', 2: 'LPAR'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[102] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_NORMAL_ARROW',
+   4: '__ANON_15',
+   5: '_WS',
+   6: '_NL',
+   7: 'STATE',
+   8: '__ANON_16',
+   9: '_NEGATE_ALL',
+   10: '_VAR_OPEN',
+   11: 'BANG',
+   12: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[103] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_NORMAL_ARROW',
+   4: '__ANON_15',
+   5: '_WS',
+   6: '_NL',
+   7: 'STATE',
+   8: '__ANON_16',
+   9: '_NEGATE_ALL',
+   10: '_VAR_OPEN',
+   11: 'BANG',
+   12: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[104] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_NORMAL_ARROW',
+   3: '__ANON_15',
+   4: '_WS',
+   5: '_NL',
+   6: 'STATE',
+   7: '__ANON_16',
+   8: '_NEGATE_ALL',
+   9: '_VAR_OPEN',
+   10: 'BANG',
+   11: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[105] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '__ANON_15',
+   3: '_WS',
+   4: '_NL',
+   5: 'STATE',
+   6: '__ANON_16',
+   7: '_NEGATE_ALL',
+   8: '_VAR_OPEN',
+   9: 'BANG',
+   10: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[106] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '__ANON_15',
+   4: '_WS',
+   5: '_NL',
+   6: 'STATE',
+   7: '__ANON_16',
+   8: '_NEGATE_ALL',
+   9: '_VAR_OPEN',
+   10: 'BANG',
+   11: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[107] = (lexer_regexps)
+MRES = (
+[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[108] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
   '|\t'
@@ -3191,18 +3354,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[100] = (lexer_regexps)
-MRES = (
-[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[101] = (lexer_regexps)
+LEXERS[109] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
   '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
@@ -3210,10 +3362,10 @@ MRES = (
   '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
   '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
   '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_LROT',
    3: '_RROT',
@@ -3221,11 +3373,11 @@ MRES = (
    5: '_HENSEL_SEP',
    6: '_MULT',
    7: '_SUBT',
-   8: '__ANON_14',
+   8: '__ANON_15',
    9: '_WS',
    10: '_NL',
    11: 'STATE',
-   12: '__ANON_15',
+   12: '__ANON_16',
    13: '_NEGATE_ALL',
    14: '_VAR_CLOSE',
    15: '_VAR_OPEN',
@@ -3240,191 +3392,39 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[102] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '__ANON_14',
-   3: '_WS',
-   4: '_NL',
-   5: 'STATE',
-   6: '__ANON_15',
-   7: '_NEGATE_ALL',
-   8: '_VAR_OPEN',
-   9: 'BANG',
-   10: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[103] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '__ANON_14',
-   3: '_WS',
-   4: '_NL',
-   5: 'STATE',
-   6: '__ANON_15',
-   7: '_NEGATE_ALL',
-   8: '_VAR_OPEN',
-   9: 'BANG',
-   10: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[104] = (lexer_regexps)
-MRES = (
-[('(?P<BANG>\\!)|(?P<LPAR>\\()', {1: 'BANG', 2: 'LPAR'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[105] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_NORMAL_ARROW',
-   4: '__ANON_14',
-   5: '_WS',
-   6: '_NL',
-   7: 'STATE',
-   8: '__ANON_15',
-   9: '_NEGATE_ALL',
-   10: '_VAR_OPEN',
-   11: 'BANG',
-   12: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[106] = (lexer_regexps)
-MRES = (
-[('(?P<COLON>\\:)|(?P<LSQB>\\[)', {1: 'COLON', 2: 'LSQB'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[107] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_NORMAL_ARROW',
-   4: '__ANON_14',
-   5: '_WS',
-   6: '_NL',
-   7: 'STATE',
-   8: '__ANON_15',
-   9: '_NEGATE_ALL',
-   10: '_VAR_OPEN',
-   11: 'BANG',
-   12: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[108] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_NORMAL_ARROW',
-   3: '__ANON_14',
-   4: '_WS',
-   5: '_NL',
-   6: 'STATE',
-   7: '__ANON_15',
-   8: '_NEGATE_ALL',
-   9: '_VAR_OPEN',
-   10: 'BANG',
-   11: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[109] = (lexer_regexps)
-MRES = (
-[('(?P<COLON>\\:)|(?P<LSQB>\\[)|(?P<PLUS>\\+)',
-  {1: 'COLON', 2: 'LSQB', 3: 'PLUS'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
 LEXERS[110] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
+  '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '__ANON_14',
-   4: '_WS',
-   5: '_NL',
-   6: 'STATE',
-   7: '__ANON_15',
-   8: '_NEGATE_ALL',
-   9: '_VAR_OPEN',
-   10: 'BANG',
-   11: '_NEGATE_LIVE'})]
+   2: '_LROT',
+   3: '_RROT',
+   4: '_HENSEL_CLOSE',
+   5: '_HENSEL_SEP',
+   6: '_MULT',
+   7: '_SUBT',
+   8: '__ANON_15',
+   9: '_WS',
+   10: '_NL',
+   11: 'STATE',
+   12: '__ANON_16',
+   13: '_NEGATE_ALL',
+   14: '_VAR_CLOSE',
+   15: '_VAR_OPEN',
+   16: 'BANG',
+   17: 'COMMA',
+   18: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -3433,35 +3433,14 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
 LEXERS[111] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
-  '|\t'
-  '))+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_WS',
-   3: 'STATE',
-   4: '__ANON_15',
-   5: '_NEGATE_ALL',
-   6: '_VAR_OPEN',
-   7: 'BANG',
-   8: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[112] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
   '|\t))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
    2: '_WS',
    3: '_NL',
    4: 'STATE',
-   5: '__ANON_15',
+   5: '__ANON_16',
    6: '_NEGATE_ALL',
    7: '_VAR_OPEN',
    8: 'BANG',
@@ -3474,15 +3453,36 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
+LEXERS[112] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
+  '|\t'
+  '))+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_WS',
+   3: 'STATE',
+   4: '__ANON_16',
+   5: '_NEGATE_ALL',
+   6: '_VAR_OPEN',
+   7: 'BANG',
+   8: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
 LEXERS[113] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
   '|\t'
-  '))+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  '))+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
    2: '_WS',
    3: 'STATE',
-   4: '__ANON_15',
+   4: '__ANON_16',
    5: '_NEGATE_ALL',
    6: '_VAR_OPEN',
    7: 'BANG',
@@ -3515,10 +3515,10 @@ MRES = (
   '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
   '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
   '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_LROT',
    3: '_RROT',
@@ -3526,11 +3526,11 @@ MRES = (
    5: '_HENSEL_SEP',
    6: '_MULT',
    7: '_SUBT',
-   8: '__ANON_14',
+   8: '__ANON_15',
    9: '_WS',
    10: '_NL',
    11: 'STATE',
-   12: '__ANON_15',
+   12: '__ANON_16',
    13: '_NEGATE_ALL',
    14: '_VAR_CLOSE',
    15: '_VAR_OPEN',
@@ -3553,10 +3553,10 @@ MRES = (
   '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
   '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
   '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<__ANON_2>\\.\\.)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<PLUS>\\+)|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_LROT',
    3: '_RROT',
@@ -3564,17 +3564,19 @@ MRES = (
    5: '_HENSEL_SEP',
    6: '_MULT',
    7: '_SUBT',
-   8: '__ANON_14',
+   8: '__ANON_15',
    9: '_WS',
    10: '_NL',
    11: 'STATE',
-   12: '__ANON_15',
+   12: '__ANON_16',
    13: '_NEGATE_ALL',
-   14: '_VAR_CLOSE',
-   15: '_VAR_OPEN',
-   16: 'BANG',
-   17: 'COMMA',
-   18: 'SEMICOLON'})]
+   14: '__ANON_2',
+   15: '_VAR_CLOSE',
+   16: '_VAR_OPEN',
+   17: 'BANG',
+   18: 'COMMA',
+   19: 'PLUS',
+   20: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
@@ -3591,10 +3593,10 @@ MRES = (
   '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
   '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
   '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_LROT',
    3: '_RROT',
@@ -3602,11 +3604,11 @@ MRES = (
    5: '_HENSEL_SEP',
    6: '_MULT',
    7: '_SUBT',
-   8: '__ANON_14',
+   8: '__ANON_15',
    9: '_WS',
    10: '_NL',
    11: 'STATE',
-   12: '__ANON_15',
+   12: '__ANON_16',
    13: '_NEGATE_ALL',
    14: '_VAR_CLOSE',
    15: '_VAR_OPEN',
@@ -3629,10 +3631,10 @@ MRES = (
   '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
   '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
   '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<__ANON_2>\\.\\.)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<PLUS>\\+)|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_LROT',
    3: '_RROT',
@@ -3640,19 +3642,17 @@ MRES = (
    5: '_HENSEL_SEP',
    6: '_MULT',
    7: '_SUBT',
-   8: '__ANON_14',
+   8: '__ANON_15',
    9: '_WS',
    10: '_NL',
    11: 'STATE',
-   12: '__ANON_15',
+   12: '__ANON_16',
    13: '_NEGATE_ALL',
-   14: '__ANON_2',
-   15: '_VAR_CLOSE',
-   16: '_VAR_OPEN',
-   17: 'BANG',
-   18: 'COMMA',
-   19: 'PLUS',
-   20: 'SEMICOLON'})]
+   14: '_VAR_CLOSE',
+   15: '_VAR_OPEN',
+   16: 'BANG',
+   17: 'COMMA',
+   18: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
@@ -3669,10 +3669,10 @@ MRES = (
   '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
   '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
   '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_LROT',
    3: '_RROT',
@@ -3680,11 +3680,11 @@ MRES = (
    5: '_HENSEL_SEP',
    6: '_MULT',
    7: '_SUBT',
-   8: '__ANON_14',
+   8: '__ANON_15',
    9: '_WS',
    10: '_NL',
    11: 'STATE',
-   12: '__ANON_15',
+   12: '__ANON_16',
    13: '_NEGATE_ALL',
    14: '_VAR_CLOSE',
    15: '_VAR_OPEN',
@@ -3707,10 +3707,10 @@ MRES = (
   '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
   '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
   '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_LROT',
    3: '_RROT',
@@ -3718,11 +3718,11 @@ MRES = (
    5: '_HENSEL_SEP',
    6: '_MULT',
    7: '_SUBT',
-   8: '__ANON_14',
+   8: '__ANON_15',
    9: '_WS',
    10: '_NL',
    11: 'STATE',
-   12: '__ANON_15',
+   12: '__ANON_16',
    13: '_NEGATE_ALL',
    14: '_VAR_CLOSE',
    15: '_VAR_OPEN',
@@ -3739,27 +3739,16 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[121] = (lexer_regexps)
 MRES = (
-[('(?P<__ANON_0>.+)', {1: '__ANON_0'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[122] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<__ANON_14>(?m:[ \t'
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<__ANON_15>(?m:[ \t'
   ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
-   2: '__ANON_14',
+   2: '__ANON_15',
    3: '_WS',
    4: '_NL',
    5: 'STATE',
-   6: '__ANON_15',
+   6: '__ANON_16',
    7: '_NEGATE_ALL',
    8: '_VAR_OPEN',
    9: 'BANG',
@@ -3772,7 +3761,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[123] = (lexer_regexps)
+LEXERS[122] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME', 2: 'STATE', 3: '_NEGATE_ALL', 4: '_VAR_OPEN', 5: '_NEGATE_LIVE'})]
@@ -3784,31 +3773,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[124] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '__ANON_14',
-   3: '_WS',
-   4: '_NL',
-   5: 'STATE',
-   6: '__ANON_15',
-   7: '_NEGATE_ALL',
-   8: '_VAR_OPEN',
-   9: 'BANG',
-   10: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[125] = (lexer_regexps)
+LEXERS[123] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
   '|\t'
@@ -3827,42 +3792,47 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[126] = (lexer_regexps)
+LEXERS[124] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
-  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
-  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_MULT',
-   7: '_PERMUTE',
-   8: '_SUBT',
-   9: '__ANON_14',
-   10: '_WS',
-   11: '_NL',
-   12: 'STATE',
-   13: '__ANON_15',
-   14: '_NEGATE_ALL',
-   15: '_VAR_CLOSE',
-   16: '_VAR_OPEN',
-   17: 'BANG',
-   18: 'COMMA',
-   19: 'RSQB',
-   20: 'SEMICOLON'})]
+   2: '__ANON_15',
+   3: '_WS',
+   4: '_NL',
+   5: 'STATE',
+   6: '__ANON_16',
+   7: '_NEGATE_ALL',
+   8: '_VAR_OPEN',
+   9: 'BANG',
+   10: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[125] = (lexer_regexps)
+MRES = (
+[('(?P<__ANON_0>.+)', {1: '__ANON_0'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[126] = (lexer_regexps)
+MRES = (
+[('(?P<INT>[0123456789]+)', {1: 'INT'})]
+)
+LEXER_CALLBACK = (
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -3870,18 +3840,7 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[127] = (lexer_regexps)
 MRES = (
-[('(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)|(?P<__ANON_10>7)|(?P<__ANON_11>8)|(?P<__ANON_12>9)|(?P<__ANON_3>0)|(?P<__ANON_4>1)|(?P<__ANON_5>2)|(?P<__ANON_6>3)|(?P<__ANON_7>4)|(?P<__ANON_8>5)|(?P<__ANON_9>6)',
-  {1: 'COMPASS_DIR',
-   2: '__ANON_10',
-   3: '__ANON_11',
-   4: '__ANON_12',
-   5: '__ANON_3',
-   6: '__ANON_4',
-   7: '__ANON_5',
-   8: '__ANON_6',
-   9: '__ANON_7',
-   10: '__ANON_8',
-   11: '__ANON_9'})]
+[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<__ANON_2>\\.\\.)', {1: '_WS', 2: '__ANON_2'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -3891,6 +3850,269 @@ lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[128] = (lexer_regexps)
+MRES = (
+[('(?P<STATE>\\d+)', {1: 'STATE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[129] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_HENSEL_CLOSE',
+   7: '_HENSEL_SEP',
+   8: '_MULT',
+   9: '_PERMUTE',
+   10: '_SUBT',
+   11: '__ANON_15',
+   12: '_WS',
+   13: '_NL',
+   14: 'STATE',
+   15: '__ANON_16',
+   16: '_NEGATE_ALL',
+   17: '_VAR_CLOSE',
+   18: '_VAR_OPEN',
+   19: 'BANG',
+   20: 'COMMA',
+   21: 'RSQB',
+   22: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[130] = (lexer_regexps)
+MRES = (
+[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<__ANON_2>\\.\\.)', {1: '_WS', 2: '__ANON_2'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[131] = (lexer_regexps)
+MRES = (
+[('(?P<__ANON_2>\\.\\.)', {1: '__ANON_2'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[132] = (lexer_regexps)
+MRES = (
+[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<STATE>\\d+)', {1: '_WS', 2: 'STATE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[133] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_HENSEL_CLOSE',
+   7: '_HENSEL_SEP',
+   8: '_MULT',
+   9: '_PERMUTE',
+   10: '_SUBT',
+   11: '__ANON_15',
+   12: '_WS',
+   13: '_NL',
+   14: 'STATE',
+   15: '__ANON_16',
+   16: '_NEGATE_ALL',
+   17: '_VAR_CLOSE',
+   18: '_VAR_OPEN',
+   19: 'BANG',
+   20: 'COMMA',
+   21: 'RSQB',
+   22: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[134] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
+  '|\t'
+  '))+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_WS',
+   3: 'STATE',
+   4: '__ANON_16',
+   5: '_NEGATE_ALL',
+   6: '_VAR_OPEN',
+   7: 'BANG',
+   8: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[135] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
+  '|\t'
+  '))+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_WS',
+   3: 'STATE',
+   4: '__ANON_16',
+   5: '_NEGATE_ALL',
+   6: '_VAR_OPEN',
+   7: 'BANG',
+   8: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[136] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
+  '|\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_WS',
+   3: '_NL',
+   4: 'STATE',
+   5: '__ANON_16',
+   6: '_NEGATE_ALL',
+   7: '_VAR_OPEN',
+   8: 'BANG',
+   9: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[137] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
+  '|\t'
+  '))+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_WS',
+   3: 'STATE',
+   4: '__ANON_16',
+   5: '_NEGATE_ALL',
+   6: '_VAR_OPEN',
+   7: 'BANG',
+   8: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[138] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
+  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_NORMAL_ARROW',
+   4: '_PERMUTE',
+   5: '__ANON_15',
+   6: '_WS',
+   7: '_NL',
+   8: 'STATE',
+   9: '__ANON_16',
+   10: '_NEGATE_ALL',
+   11: '_VAR_OPEN',
+   12: 'BANG',
+   13: 'COMMA',
+   14: 'SEMICOLON',
+   15: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[139] = (lexer_regexps)
+MRES = (
+[('(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)', {1: 'COMMA', 2: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[140] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<INT>[0123456789]+)|(?P<STATE>\\d+)|(?P<_VAR_OPEN>[({])',
   {1: 'NAME', 2: 'INT', 3: 'STATE', 4: '_VAR_OPEN'})]
@@ -3902,210 +4124,10 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[129] = (lexer_regexps)
-MRES = (
-[('(?P<__ANON_1>[^,;]+)', {1: '__ANON_1'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[130] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: 'STATE',
-   3: '_NEGATE_ALL',
-   4: '_VAR_OPEN',
-   5: 'LSQB',
-   6: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[131] = (lexer_regexps)
-MRES = (
-[('(?P<__ANON_1>[^,;]+)', {1: '__ANON_1'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[132] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
-  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
-  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_MULT',
-   7: '_PERMUTE',
-   8: '_SUBT',
-   9: '__ANON_14',
-   10: '_WS',
-   11: '_NL',
-   12: 'STATE',
-   13: '__ANON_15',
-   14: '_NEGATE_ALL',
-   15: '_VAR_CLOSE',
-   16: '_VAR_OPEN',
-   17: 'BANG',
-   18: 'COMMA',
-   19: 'RSQB',
-   20: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[133] = (lexer_regexps)
-MRES = (
-[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[134] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
-  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
-  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_MULT',
-   7: '_PERMUTE',
-   8: '_SUBT',
-   9: '__ANON_14',
-   10: '_WS',
-   11: '_NL',
-   12: 'STATE',
-   13: '__ANON_15',
-   14: '_NEGATE_ALL',
-   15: '_VAR_CLOSE',
-   16: '_VAR_OPEN',
-   17: 'BANG',
-   18: 'COMMA',
-   19: 'RSQB',
-   20: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[135] = (lexer_regexps)
-MRES = (
-[('(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)', {1: 'COMPASS_DIR'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[136] = (lexer_regexps)
-MRES = (
-[('(?P<INT>[0123456789]+)', {1: 'INT'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[137] = (lexer_regexps)
-MRES = (
-[('(?P<INT>[0123456789]+)', {1: 'INT'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[138] = (lexer_regexps)
-MRES = (
-[('(?P<INT>[0123456789]+)', {1: 'INT'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[139] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)',
-  {1: 'NAME', 2: 'STATE', 3: '_VAR_OPEN', 4: 'LSQB'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[140] = (lexer_regexps)
-MRES = (
-[('(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<__ANON_2>\\.\\.)|(?P<PLUS>\\+)',
-  {1: '_MULT', 2: '_WS', 3: '__ANON_2', 4: 'PLUS'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
 LEXERS[141] = (lexer_regexps)
 MRES = (
-[('(?P<COLON>\\:)|(?P<RSQB>\\])', {1: 'COLON', 2: 'RSQB'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<INT>[0123456789]+)|(?P<STATE>\\d+)|(?P<_VAR_OPEN>[({])',
+  {1: 'NAME', 2: 'INT', 3: 'STATE', 4: '_VAR_OPEN'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -4127,7 +4149,9 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[143] = (lexer_regexps)
 MRES = (
-[('(?P<COLON>\\:)|(?P<RSQB>\\])', {1: 'COLON', 2: 'RSQB'})]
+[('(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<__ANON_2>\\.\\.)|(?P<PLUS>\\+)',
+  {1: '_MULT', 2: '_WS', 3: '__ANON_2', 4: 'PLUS'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -4149,14 +4173,21 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[145] = (lexer_regexps)
 MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t))+)?)|(?P<RSQB>\\])',
-  {1: '_LROT', 2: '_RROT', 3: '_MULT', 4: '_SUBT', 5: 'RSQB'})]
+[('(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)|(?P<__ANON_10>6)|(?P<__ANON_11>7)|(?P<__ANON_12>8)|(?P<__ANON_13>9)|(?P<__ANON_4>0)|(?P<__ANON_5>1)|(?P<__ANON_6>2)|(?P<__ANON_7>3)|(?P<__ANON_8>4)|(?P<__ANON_9>5)',
+  {1: 'COMPASS_DIR',
+   2: '__ANON_10',
+   3: '__ANON_11',
+   4: '__ANON_12',
+   5: '__ANON_13',
+   6: '__ANON_4',
+   7: '__ANON_5',
+   8: '__ANON_6',
+   9: '__ANON_7',
+   10: '__ANON_8',
+   11: '__ANON_9'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -4186,10 +4217,14 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[148] = (lexer_regexps)
 MRES = (
-[('(?P<COLON>\\:)|(?P<RSQB>\\])', {1: 'COLON', 2: 'RSQB'})]
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t))+)?)|(?P<RSQB>\\])',
+  {1: '_LROT', 2: '_RROT', 3: '_MULT', 4: '_SUBT', 5: 'RSQB'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -4263,6 +4298,236 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[155] = (lexer_regexps)
 MRES = (
+[('(?P<COLON>\\:)|(?P<RSQB>\\])', {1: 'COLON', 2: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[156] = (lexer_regexps)
+MRES = (
+[('(?P<COLON>\\:)|(?P<RSQB>\\])', {1: 'COLON', 2: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[157] = (lexer_regexps)
+MRES = (
+[('(?P<COLON>\\:)|(?P<RSQB>\\])', {1: 'COLON', 2: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[158] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
+  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
+  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_MULT',
+   7: '_PERMUTE',
+   8: '_SUBT',
+   9: '__ANON_15',
+   10: '_WS',
+   11: '_NL',
+   12: 'STATE',
+   13: '__ANON_16',
+   14: '_NEGATE_ALL',
+   15: '_VAR_CLOSE',
+   16: '_VAR_OPEN',
+   17: 'BANG',
+   18: 'COMMA',
+   19: 'RSQB',
+   20: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[159] = (lexer_regexps)
+MRES = (
+[('(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)', {1: 'COMPASS_DIR'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[160] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
+  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
+  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_MULT',
+   7: '_PERMUTE',
+   8: '_SUBT',
+   9: '__ANON_15',
+   10: '_WS',
+   11: '_NL',
+   12: 'STATE',
+   13: '__ANON_16',
+   14: '_NEGATE_ALL',
+   15: '_VAR_CLOSE',
+   16: '_VAR_OPEN',
+   17: 'BANG',
+   18: 'COMMA',
+   19: 'RSQB',
+   20: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[161] = (lexer_regexps)
+MRES = (
+[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[162] = (lexer_regexps)
+MRES = (
+[('(?P<__ANON_1>[^,;]+)', {1: '__ANON_1'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[163] = (lexer_regexps)
+MRES = (
+[('(?P<__ANON_1>[^,;]+)', {1: '__ANON_1'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[164] = (lexer_regexps)
+MRES = (
+[('(?P<INT>[0123456789]+)', {1: 'INT'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[165] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)',
+  {1: 'NAME', 2: 'STATE', 3: '_VAR_OPEN', 4: 'LSQB'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[166] = (lexer_regexps)
+MRES = (
+[('(?P<INT>[0123456789]+)', {1: 'INT'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[167] = (lexer_regexps)
+MRES = (
+[('(?P<INT>[0123456789]+)', {1: 'INT'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[168] = (lexer_regexps)
+MRES = (
+[('(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t))+)?\\/(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_WS>(?:(?:\\ |\t))+)',
+  {1: '_HENSEL_SEP', 2: '_WS'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[169] = (lexer_regexps)
+MRES = (
+[('(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t))+)?\\/(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_WS>(?:(?:\\ |\t))+)',
+  {1: '_HENSEL_SEP', 2: '_WS'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[170] = (lexer_regexps)
+MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
    2: 'STATE',
@@ -4278,300 +4543,15 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[156] = (lexer_regexps)
-MRES = (
-[('(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t))+)?\\/(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_WS>(?:(?:\\ |\t))+)',
-  {1: '_HENSEL_SEP', 2: '_WS'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[157] = (lexer_regexps)
-MRES = (
-[('(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t))+)?\\/(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_WS>(?:(?:\\ |\t))+)',
-  {1: '_HENSEL_SEP', 2: '_WS'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[158] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<INT>[0123456789]+)|(?P<STATE>\\d+)|(?P<_VAR_OPEN>[({])',
-  {1: 'NAME', 2: 'INT', 3: 'STATE', 4: '_VAR_OPEN'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[159] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
-  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_NORMAL_ARROW',
-   4: '_PERMUTE',
-   5: '__ANON_14',
-   6: '_WS',
-   7: '_NL',
-   8: 'STATE',
-   9: '__ANON_15',
-   10: '_NEGATE_ALL',
-   11: '_VAR_OPEN',
-   12: 'BANG',
-   13: 'COMMA',
-   14: 'SEMICOLON',
-   15: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[160] = (lexer_regexps)
-MRES = (
-[('(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)', {1: 'COMMA', 2: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[161] = (lexer_regexps)
-MRES = (
-[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<__ANON_2>\\.\\.)', {1: '_WS', 2: '__ANON_2'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[162] = (lexer_regexps)
-MRES = (
-[('(?P<INT>[0123456789]+)', {1: 'INT'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[163] = (lexer_regexps)
-MRES = (
-[('(?P<STATE>\\d+)', {1: 'STATE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[164] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_HENSEL_CLOSE',
-   7: '_HENSEL_SEP',
-   8: '_MULT',
-   9: '_PERMUTE',
-   10: '_SUBT',
-   11: '__ANON_14',
-   12: '_WS',
-   13: '_NL',
-   14: 'STATE',
-   15: '__ANON_15',
-   16: '_NEGATE_ALL',
-   17: '_VAR_CLOSE',
-   18: '_VAR_OPEN',
-   19: 'BANG',
-   20: 'COMMA',
-   21: 'RSQB',
-   22: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[165] = (lexer_regexps)
-MRES = (
-[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<__ANON_2>\\.\\.)', {1: '_WS', 2: '__ANON_2'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[166] = (lexer_regexps)
-MRES = (
-[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<STATE>\\d+)', {1: '_WS', 2: 'STATE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[167] = (lexer_regexps)
-MRES = (
-[('(?P<__ANON_2>\\.\\.)', {1: '__ANON_2'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[168] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_HENSEL_CLOSE',
-   7: '_HENSEL_SEP',
-   8: '_MULT',
-   9: '_PERMUTE',
-   10: '_SUBT',
-   11: '__ANON_14',
-   12: '_WS',
-   13: '_NL',
-   14: 'STATE',
-   15: '__ANON_15',
-   16: '_NEGATE_ALL',
-   17: '_VAR_CLOSE',
-   18: '_VAR_OPEN',
-   19: 'BANG',
-   20: 'COMMA',
-   21: 'RSQB',
-   22: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[169] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
-  '|\t'
-  '))+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_WS',
-   3: 'STATE',
-   4: '__ANON_15',
-   5: '_NEGATE_ALL',
-   6: '_VAR_OPEN',
-   7: 'BANG',
-   8: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[170] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
-  '|\t'
-  '))+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_WS',
-   3: 'STATE',
-   4: '__ANON_15',
-   5: '_NEGATE_ALL',
-   6: '_VAR_OPEN',
-   7: 'BANG',
-   8: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
 LEXERS[171] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
-  '|\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
-   2: '_WS',
-   3: '_NL',
-   4: 'STATE',
-   5: '__ANON_15',
-   6: '_NEGATE_ALL',
-   7: '_VAR_OPEN',
-   8: 'BANG',
-   9: '_NEGATE_LIVE'})]
+   2: 'STATE',
+   3: '_NEGATE_ALL',
+   4: '_VAR_OPEN',
+   5: 'LSQB',
+   6: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -4582,20 +4562,40 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[172] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
-  '|\t'
-  '))+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
+  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
+  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
-   2: '_WS',
-   3: 'STATE',
-   4: '__ANON_15',
-   5: '_NEGATE_ALL',
-   6: '_VAR_OPEN',
-   7: 'BANG',
-   8: '_NEGATE_LIVE'})]
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_MULT',
+   7: '_PERMUTE',
+   8: '_SUBT',
+   9: '__ANON_15',
+   10: '_WS',
+   11: '_NL',
+   12: 'STATE',
+   13: '__ANON_16',
+   14: '_NEGATE_ALL',
+   15: '_VAR_CLOSE',
+   16: '_VAR_OPEN',
+   17: 'BANG',
+   18: 'COMMA',
+   19: 'RSQB',
+   20: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -4603,11 +4603,28 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[173] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME', 2: 'STATE', 3: '_NEGATE_ALL', 4: '_VAR_OPEN', 5: '_NEGATE_LIVE'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: 'STATE',
+   3: 'COMPASS_DIR',
+   4: '_NEGATE_ALL',
+   5: '_VAR_OPEN',
+   6: 'LEAVE_ALONE',
+   7: 'LSQB',
+   8: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
-{}
+{'STATE': [('(?P<__ANON_10>6$)|(?P<__ANON_11>7$)|(?P<__ANON_12>8$)|(?P<__ANON_13>9$)|(?P<__ANON_4>0$)|(?P<__ANON_5>1$)|(?P<__ANON_6>2$)|(?P<__ANON_7>3$)|(?P<__ANON_8>4$)|(?P<__ANON_9>5$)',
+            {1: '__ANON_10',
+             2: '__ANON_11',
+             3: '__ANON_12',
+             4: '__ANON_13',
+             5: '__ANON_4',
+             6: '__ANON_5',
+             7: '__ANON_6',
+             8: '__ANON_7',
+             9: '__ANON_8',
+             10: '__ANON_9'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -4615,7 +4632,7 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[174] = (lexer_regexps)
 MRES = (
-[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+[('(?P<STATE>\\d+)', {1: 'STATE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -4625,6 +4642,136 @@ lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[175] = (lexer_regexps)
+MRES = (
+[('(?P<INT>[0123456789]+)', {1: 'INT'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[176] = (lexer_regexps)
+MRES = (
+[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)',
+  {1: '_WS', 2: 'COMPASS_DIR'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[177] = (lexer_regexps)
+MRES = (
+[('(?P<LPAR>\\()', {1: 'LPAR'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[178] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_NORMAL_ARROW',
+   4: '__ANON_15',
+   5: '_WS',
+   6: '_NL',
+   7: 'STATE',
+   8: '__ANON_16',
+   9: '_NEGATE_ALL',
+   10: '_VAR_OPEN',
+   11: 'BANG',
+   12: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[179] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_NORMAL_ARROW',
+   4: '__ANON_15',
+   5: '_WS',
+   6: '_NL',
+   7: 'STATE',
+   8: '__ANON_16',
+   9: '_NEGATE_ALL',
+   10: '_VAR_OPEN',
+   11: 'BANG',
+   12: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[180] = (lexer_regexps)
+MRES = (
+[('(?P<SYMMETRY_NAME>(?<![\\w\\.])(?!(?:[NS][EW]?|[EW])(?![\\w\\.]))[\\w\\.]+)|(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)',
+  {1: 'SYMMETRY_NAME', 2: 'COMPASS_DIR'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[181] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_NORMAL_ARROW',
+   4: '__ANON_15',
+   5: '_WS',
+   6: '_NL',
+   7: 'STATE',
+   8: '__ANON_16',
+   9: '_NEGATE_ALL',
+   10: '_VAR_OPEN',
+   11: 'BANG',
+   12: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[182] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
   '|\t'
@@ -4643,7 +4790,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[176] = (lexer_regexps)
+LEXERS[183] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_LROT>(?:(?:(?:\\ '
   '|\t))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
@@ -4651,10 +4798,10 @@ MRES = (
   '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
   '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
   '|\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_LROT',
    3: '_RROT',
@@ -4662,11 +4809,11 @@ MRES = (
    5: '_HENSEL_SEP',
    6: '_MULT',
    7: '_SUBT',
-   8: '__ANON_14',
+   8: '__ANON_15',
    9: '_WS',
    10: '_NL',
    11: 'STATE',
-   12: '__ANON_15',
+   12: '__ANON_16',
    13: '_NEGATE_ALL',
    14: '_VAR_CLOSE',
    15: '_VAR_OPEN',
@@ -4681,157 +4828,9 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[177] = (lexer_regexps)
-MRES = (
-[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)',
-  {1: '_WS', 2: 'COMPASS_DIR'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[178] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_NORMAL_ARROW',
-   4: '__ANON_14',
-   5: '_WS',
-   6: '_NL',
-   7: 'STATE',
-   8: '__ANON_15',
-   9: '_NEGATE_ALL',
-   10: '_VAR_OPEN',
-   11: 'BANG',
-   12: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[179] = (lexer_regexps)
-MRES = (
-[('(?P<LPAR>\\()', {1: 'LPAR'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[180] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_NORMAL_ARROW',
-   4: '__ANON_14',
-   5: '_WS',
-   6: '_NL',
-   7: 'STATE',
-   8: '__ANON_15',
-   9: '_NEGATE_ALL',
-   10: '_VAR_OPEN',
-   11: 'BANG',
-   12: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[181] = (lexer_regexps)
-MRES = (
-[('(?P<SYMMETRY_NAME>(?<![\\w\\.])(?!(?:[NS][EW]?|[EW])(?![\\w\\.]))[\\w\\.]+)|(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)',
-  {1: 'SYMMETRY_NAME', 2: 'COMPASS_DIR'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[182] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: 'STATE',
-   3: 'COMPASS_DIR',
-   4: '_NEGATE_ALL',
-   5: '_VAR_OPEN',
-   6: 'LEAVE_ALONE',
-   7: 'LSQB',
-   8: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{'STATE': [('(?P<__ANON_10>7$)|(?P<__ANON_11>8$)|(?P<__ANON_12>9$)|(?P<__ANON_3>0$)|(?P<__ANON_4>1$)|(?P<__ANON_5>2$)|(?P<__ANON_6>3$)|(?P<__ANON_7>4$)|(?P<__ANON_8>5$)|(?P<__ANON_9>6$)',
-            {1: '__ANON_10',
-             2: '__ANON_11',
-             3: '__ANON_12',
-             4: '__ANON_3',
-             5: '__ANON_4',
-             6: '__ANON_5',
-             7: '__ANON_6',
-             8: '__ANON_7',
-             9: '__ANON_8',
-             10: '__ANON_9'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[183] = (lexer_regexps)
-MRES = (
-[('(?P<STATE>\\d+)', {1: 'STATE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
 LEXERS[184] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_NORMAL_ARROW',
-   4: '__ANON_14',
-   5: '_WS',
-   6: '_NL',
-   7: 'STATE',
-   8: '__ANON_15',
-   9: '_NEGATE_ALL',
-   10: '_VAR_OPEN',
-   11: 'BANG',
-   12: '_NEGATE_LIVE'})]
+[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -4842,7 +4841,8 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[185] = (lexer_regexps)
 MRES = (
-[('(?P<INT>[0123456789]+)', {1: 'INT'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME', 2: 'STATE', 3: '_NEGATE_ALL', 4: '_VAR_OPEN', 5: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -4855,11 +4855,11 @@ LEXERS[186] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
   '|\t'
-  '))+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  '))+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
    2: '_WS',
    3: 'STATE',
-   4: '__ANON_15',
+   4: '__ANON_16',
    5: '_NEGATE_ALL',
    6: '_VAR_OPEN',
    7: 'BANG',
@@ -4874,16 +4874,16 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[187] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<__ANON_14>(?m:[ \t'
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<__ANON_15>(?m:[ \t'
   ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
-   2: '__ANON_14',
+   2: '__ANON_15',
    3: '_WS',
    4: '_NL',
    5: 'STATE',
-   6: '__ANON_15',
+   6: '__ANON_16',
    7: '_NEGATE_ALL',
    8: '_VAR_OPEN',
    9: 'BANG',
@@ -4898,16 +4898,16 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[188] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<__ANON_14>(?m:[ \t'
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<__ANON_15>(?m:[ \t'
   ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
-   2: '__ANON_14',
+   2: '__ANON_15',
    3: '_WS',
    4: '_NL',
    5: 'STATE',
-   6: '__ANON_15',
+   6: '__ANON_16',
    7: '_NEGATE_ALL',
    8: '_VAR_OPEN',
    9: 'BANG',
@@ -4922,16 +4922,28 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[189] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<__ANON_14>(?m:[ \t'
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME', 2: 'STATE', 3: '_NEGATE_ALL', 4: '_VAR_OPEN', 5: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[190] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<__ANON_15>(?m:[ \t'
   ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
-   2: '__ANON_14',
+   2: '__ANON_15',
    3: '_WS',
    4: '_NL',
    5: 'STATE',
-   6: '__ANON_15',
+   6: '__ANON_16',
    7: '_NEGATE_ALL',
    8: '_VAR_OPEN',
    9: 'BANG',
@@ -4944,10 +4956,9 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[190] = (lexer_regexps)
+LEXERS[191] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME', 2: 'STATE', 3: '_NEGATE_ALL', 4: '_VAR_OPEN', 5: '_NEGATE_LIVE'})]
+[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<__ANON_2>\\.\\.)', {1: '_WS', 2: '__ANON_2'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -4956,83 +4967,12 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[191] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
-  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
-  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_MULT',
-   7: '_PERMUTE',
-   8: '_SUBT',
-   9: '__ANON_14',
-   10: '_WS',
-   11: '_NL',
-   12: 'STATE',
-   13: '__ANON_15',
-   14: '_NEGATE_ALL',
-   15: '_VAR_CLOSE',
-   16: '_VAR_OPEN',
-   17: 'BANG',
-   18: 'COMMA',
-   19: 'RSQB',
-   20: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
 LEXERS[192] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
-  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
-  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_MULT',
-   7: '_PERMUTE',
-   8: '_SUBT',
-   9: '__ANON_14',
-   10: '_WS',
-   11: '_NL',
-   12: 'STATE',
-   13: '__ANON_15',
-   14: '_NEGATE_ALL',
-   15: '_VAR_CLOSE',
-   16: '_VAR_OPEN',
-   17: 'BANG',
-   18: 'COMMA',
-   19: 'RSQB',
-   20: 'SEMICOLON'})]
+[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<STATE>\\d+)', {1: '_WS', 2: 'STATE'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -5040,40 +4980,10 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[193] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
-  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
-  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_MULT',
-   7: '_PERMUTE',
-   8: '_SUBT',
-   9: '__ANON_14',
-   10: '_WS',
-   11: '_NL',
-   12: 'STATE',
-   13: '__ANON_15',
-   14: '_NEGATE_ALL',
-   15: '_VAR_CLOSE',
-   16: '_VAR_OPEN',
-   17: 'BANG',
-   18: 'COMMA',
-   19: 'RSQB',
-   20: 'SEMICOLON'})]
+[('(?P<__ANON_2>\\.\\.)', {1: '__ANON_2'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -5085,33 +4995,37 @@ MRES = (
   '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
   '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
   '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
-  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
-  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_HOIST_ARROW',
    3: '_LROT',
    4: '_NORMAL_ARROW',
    5: '_RROT',
-   6: '_MULT',
-   7: '_PERMUTE',
-   8: '_SUBT',
-   9: '__ANON_14',
-   10: '_WS',
-   11: '_NL',
-   12: 'STATE',
-   13: '__ANON_15',
-   14: '_NEGATE_ALL',
-   15: '_VAR_CLOSE',
-   16: '_VAR_OPEN',
-   17: 'BANG',
-   18: 'COMMA',
-   19: 'RSQB',
-   20: 'SEMICOLON'})]
+   6: '_HENSEL_CLOSE',
+   7: '_HENSEL_SEP',
+   8: '_MULT',
+   9: '_PERMUTE',
+   10: '_SUBT',
+   11: '__ANON_15',
+   12: '_WS',
+   13: '_NL',
+   14: 'STATE',
+   15: '__ANON_16',
+   16: '_NEGATE_ALL',
+   17: '_VAR_CLOSE',
+   18: '_VAR_OPEN',
+   19: 'BANG',
+   20: 'COMMA',
+   21: 'RSQB',
+   22: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
@@ -5122,40 +5036,10 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[195] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
-  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
-  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_MULT',
-   7: '_PERMUTE',
-   8: '_SUBT',
-   9: '__ANON_14',
-   10: '_WS',
-   11: '_NL',
-   12: 'STATE',
-   13: '__ANON_15',
-   14: '_NEGATE_ALL',
-   15: '_VAR_CLOSE',
-   16: '_VAR_OPEN',
-   17: 'BANG',
-   18: 'COMMA',
-   19: 'RSQB',
-   20: 'SEMICOLON'})]
+[('(?P<__ANON_2>\\.\\.)', {1: '__ANON_2'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -5163,7 +5047,7 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[196] = (lexer_regexps)
 MRES = (
-[('(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)', {1: 'COMMA', 2: 'SEMICOLON'})]
+[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<STATE>\\d+)', {1: '_WS', 2: 'STATE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -5174,7 +5058,7 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[197] = (lexer_regexps)
 MRES = (
-[('(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)', {1: 'COMMA', 2: 'SEMICOLON'})]
+[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<STATE>\\d+)', {1: '_WS', 2: 'STATE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -5185,7 +5069,7 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[198] = (lexer_regexps)
 MRES = (
-[('(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)', {1: 'COMMA', 2: 'SEMICOLON'})]
+[('(?P<STATE>\\d+)', {1: 'STATE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -5196,10 +5080,44 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[199] = (lexer_regexps)
 MRES = (
-[('(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)', {1: 'COMMA', 2: 'SEMICOLON'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_HENSEL_CLOSE',
+   7: '_HENSEL_SEP',
+   8: '_MULT',
+   9: '_PERMUTE',
+   10: '_SUBT',
+   11: '__ANON_15',
+   12: '_WS',
+   13: '_NL',
+   14: 'STATE',
+   15: '__ANON_16',
+   16: '_NEGATE_ALL',
+   17: '_VAR_CLOSE',
+   18: '_VAR_OPEN',
+   19: 'BANG',
+   20: 'COMMA',
+   21: 'RSQB',
+   22: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -5207,7 +5125,17 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[200] = (lexer_regexps)
 MRES = (
-[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
+  '|\t'
+  '))+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_WS',
+   3: 'STATE',
+   4: '__ANON_16',
+   5: '_NEGATE_ALL',
+   6: '_VAR_OPEN',
+   7: 'BANG',
+   8: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -5218,19 +5146,40 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[201] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
-  '|\t'
-  '))+)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
+  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
+  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
-   2: '_WS',
-   3: 'STATE',
-   4: '_NEGATE_ALL',
-   5: '_VAR_OPEN',
-   6: 'LSQB',
-   7: '_NEGATE_LIVE'})]
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_MULT',
+   7: '_PERMUTE',
+   8: '_SUBT',
+   9: '__ANON_15',
+   10: '_WS',
+   11: '_NL',
+   12: 'STATE',
+   13: '__ANON_16',
+   14: '_NEGATE_ALL',
+   15: '_VAR_CLOSE',
+   16: '_VAR_OPEN',
+   17: 'BANG',
+   18: 'COMMA',
+   19: 'RSQB',
+   20: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -5245,10 +5194,10 @@ MRES = (
   '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
   '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
   '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_HOIST_ARROW',
    3: '_LROT',
@@ -5257,11 +5206,11 @@ MRES = (
    6: '_MULT',
    7: '_PERMUTE',
    8: '_SUBT',
-   9: '__ANON_14',
+   9: '__ANON_15',
    10: '_WS',
    11: '_NL',
    12: 'STATE',
-   13: '__ANON_15',
+   13: '__ANON_16',
    14: '_NEGATE_ALL',
    15: '_VAR_CLOSE',
    16: '_VAR_OPEN',
@@ -5286,10 +5235,10 @@ MRES = (
   '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
   '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
   '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_HOIST_ARROW',
    3: '_LROT',
@@ -5298,11 +5247,11 @@ MRES = (
    6: '_MULT',
    7: '_PERMUTE',
    8: '_SUBT',
-   9: '__ANON_14',
+   9: '__ANON_15',
    10: '_WS',
    11: '_NL',
    12: 'STATE',
-   13: '__ANON_15',
+   13: '__ANON_16',
    14: '_NEGATE_ALL',
    15: '_VAR_CLOSE',
    16: '_VAR_OPEN',
@@ -5320,10 +5269,40 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[204] = (lexer_regexps)
 MRES = (
-[('(?P<_WS>(?:(?:\\ |\t))+)', {1: '_WS'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
+  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
+  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_MULT',
+   7: '_PERMUTE',
+   8: '_SUBT',
+   9: '__ANON_15',
+   10: '_WS',
+   11: '_NL',
+   12: 'STATE',
+   13: '__ANON_16',
+   14: '_NEGATE_ALL',
+   15: '_VAR_CLOSE',
+   16: '_VAR_OPEN',
+   17: 'BANG',
+   18: 'COMMA',
+   19: 'RSQB',
+   20: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -5338,10 +5317,10 @@ MRES = (
   '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
   '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
   '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_HOIST_ARROW',
    3: '_LROT',
@@ -5350,11 +5329,11 @@ MRES = (
    6: '_MULT',
    7: '_PERMUTE',
    8: '_SUBT',
-   9: '__ANON_14',
+   9: '__ANON_15',
    10: '_WS',
    11: '_NL',
    12: 'STATE',
-   13: '__ANON_15',
+   13: '__ANON_16',
    14: '_NEGATE_ALL',
    15: '_VAR_CLOSE',
    16: '_VAR_OPEN',
@@ -5379,10 +5358,10 @@ MRES = (
   '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
   '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
   '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_HOIST_ARROW',
    3: '_LROT',
@@ -5391,11 +5370,11 @@ MRES = (
    6: '_MULT',
    7: '_PERMUTE',
    8: '_SUBT',
-   9: '__ANON_14',
+   9: '__ANON_15',
    10: '_WS',
    11: '_NL',
    12: 'STATE',
-   13: '__ANON_15',
+   13: '__ANON_16',
    14: '_NEGATE_ALL',
    15: '_VAR_CLOSE',
    16: '_VAR_OPEN',
@@ -5420,10 +5399,10 @@ MRES = (
   '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
   '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
   '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_HOIST_ARROW',
    3: '_LROT',
@@ -5432,11 +5411,11 @@ MRES = (
    6: '_MULT',
    7: '_PERMUTE',
    8: '_SUBT',
-   9: '__ANON_14',
+   9: '__ANON_15',
    10: '_WS',
    11: '_NL',
    12: 'STATE',
-   13: '__ANON_15',
+   13: '__ANON_16',
    14: '_NEGATE_ALL',
    15: '_VAR_CLOSE',
    16: '_VAR_OPEN',
@@ -5461,10 +5440,10 @@ MRES = (
   '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
   '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
   '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<__ANON_2>\\.\\.)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<PLUS>\\+)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_HOIST_ARROW',
    3: '_LROT',
@@ -5473,20 +5452,18 @@ MRES = (
    6: '_MULT',
    7: '_PERMUTE',
    8: '_SUBT',
-   9: '__ANON_14',
+   9: '__ANON_15',
    10: '_WS',
    11: '_NL',
    12: 'STATE',
-   13: '__ANON_15',
+   13: '__ANON_16',
    14: '_NEGATE_ALL',
-   15: '__ANON_2',
-   16: '_VAR_CLOSE',
-   17: '_VAR_OPEN',
-   18: 'BANG',
-   19: 'COMMA',
-   20: 'PLUS',
-   21: 'RSQB',
-   22: 'SEMICOLON'})]
+   15: '_VAR_CLOSE',
+   16: '_VAR_OPEN',
+   17: 'BANG',
+   18: 'COMMA',
+   19: 'RSQB',
+   20: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
@@ -5497,40 +5474,19 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[209] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
-  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
-  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
+  '|\t'
+  '))+)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_MULT',
-   7: '_PERMUTE',
-   8: '_SUBT',
-   9: '__ANON_14',
-   10: '_WS',
-   11: '_NL',
-   12: 'STATE',
-   13: '__ANON_15',
-   14: '_NEGATE_ALL',
-   15: '_VAR_CLOSE',
-   16: '_VAR_OPEN',
-   17: 'BANG',
-   18: 'COMMA',
-   19: 'RSQB',
-   20: 'SEMICOLON'})]
+   2: '_WS',
+   3: 'STATE',
+   4: '_NEGATE_ALL',
+   5: '_VAR_OPEN',
+   6: 'LSQB',
+   7: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -5538,40 +5494,12 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[210] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
-  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
-  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_MULT',
-   7: '_PERMUTE',
-   8: '_SUBT',
-   9: '__ANON_14',
-   10: '_WS',
-   11: '_NL',
-   12: 'STATE',
-   13: '__ANON_15',
-   14: '_NEGATE_ALL',
-   15: '_VAR_CLOSE',
-   16: '_VAR_OPEN',
-   17: 'BANG',
-   18: 'COMMA',
-   19: 'RSQB',
-   20: 'SEMICOLON'})]
+[('(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
+  {1: '_PERMUTE', 2: 'COMMA', 3: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -5586,10 +5514,10 @@ MRES = (
   '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
   '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
   '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_HOIST_ARROW',
    3: '_LROT',
@@ -5598,11 +5526,11 @@ MRES = (
    6: '_MULT',
    7: '_PERMUTE',
    8: '_SUBT',
-   9: '__ANON_14',
+   9: '__ANON_15',
    10: '_WS',
    11: '_NL',
    12: 'STATE',
-   13: '__ANON_15',
+   13: '__ANON_16',
    14: '_NEGATE_ALL',
    15: '_VAR_CLOSE',
    16: '_VAR_OPEN',
@@ -5620,47 +5548,6 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[212] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
-  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
-  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_MULT',
-   7: '_PERMUTE',
-   8: '_SUBT',
-   9: '__ANON_14',
-   10: '_WS',
-   11: '_NL',
-   12: 'STATE',
-   13: '__ANON_15',
-   14: '_NEGATE_ALL',
-   15: '_VAR_CLOSE',
-   16: '_VAR_OPEN',
-   17: 'BANG',
-   18: 'COMMA',
-   19: 'RSQB',
-   20: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[213] = (lexer_regexps)
-MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
   '|\t'
   '))+)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
@@ -5671,6 +5558,17 @@ MRES = (
    5: '_VAR_OPEN',
    6: 'LSQB',
    7: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[213] = (lexer_regexps)
+MRES = (
+[('(?P<_WS>(?:(?:\\ |\t))+)', {1: '_WS'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -5681,9 +5579,48 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[214] = (lexer_regexps)
 MRES = (
-[('(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)',
-  {1: '_PERMUTE', 2: 'COMMA', 3: 'SEMICOLON'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
+  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
+  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_MULT',
+   7: '_PERMUTE',
+   8: '_SUBT',
+   9: '__ANON_15',
+   10: '_WS',
+   11: '_NL',
+   12: 'STATE',
+   13: '__ANON_16',
+   14: '_NEGATE_ALL',
+   15: '_VAR_CLOSE',
+   16: '_VAR_OPEN',
+   17: 'BANG',
+   18: 'COMMA',
+   19: 'RSQB',
+   20: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[215] = (lexer_regexps)
+MRES = (
+[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -5692,7 +5629,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[215] = (lexer_regexps)
+LEXERS[216] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
   '|\t'
@@ -5712,7 +5649,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[216] = (lexer_regexps)
+LEXERS[217] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
   '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
@@ -5721,10 +5658,10 @@ MRES = (
   '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
   '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
   '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_HOIST_ARROW',
    3: '_LROT',
@@ -5733,11 +5670,11 @@ MRES = (
    6: '_MULT',
    7: '_PERMUTE',
    8: '_SUBT',
-   9: '__ANON_14',
+   9: '__ANON_15',
    10: '_WS',
    11: '_NL',
    12: 'STATE',
-   13: '__ANON_15',
+   13: '__ANON_16',
    14: '_NEGATE_ALL',
    15: '_VAR_CLOSE',
    16: '_VAR_OPEN',
@@ -5753,7 +5690,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[217] = (lexer_regexps)
+LEXERS[218] = (lexer_regexps)
 MRES = (
 [('(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)', {1: 'COMMA', 2: 'SEMICOLON'})]
 )
@@ -5764,22 +5701,9 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[218] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)',
-  {1: 'NAME'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
 LEXERS[219] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME', 2: 'STATE', 3: '_NEGATE_ALL', 4: '_VAR_OPEN', 5: '_NEGATE_LIVE'})]
+[('(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)', {1: 'COMMA', 2: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -5797,10 +5721,10 @@ MRES = (
   '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
   '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
   '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_HOIST_ARROW',
    3: '_LROT',
@@ -5809,11 +5733,11 @@ MRES = (
    6: '_MULT',
    7: '_PERMUTE',
    8: '_SUBT',
-   9: '__ANON_14',
+   9: '__ANON_15',
    10: '_WS',
    11: '_NL',
    12: 'STATE',
-   13: '__ANON_15',
+   13: '__ANON_16',
    14: '_NEGATE_ALL',
    15: '_VAR_CLOSE',
    16: '_VAR_OPEN',
@@ -5838,10 +5762,10 @@ MRES = (
   '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
   '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
   '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<__ANON_2>\\.\\.)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<PLUS>\\+)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_HOIST_ARROW',
    3: '_LROT',
@@ -5850,11 +5774,54 @@ MRES = (
    6: '_MULT',
    7: '_PERMUTE',
    8: '_SUBT',
-   9: '__ANON_14',
+   9: '__ANON_15',
    10: '_WS',
    11: '_NL',
    12: 'STATE',
-   13: '__ANON_15',
+   13: '__ANON_16',
+   14: '_NEGATE_ALL',
+   15: '__ANON_2',
+   16: '_VAR_CLOSE',
+   17: '_VAR_OPEN',
+   18: 'BANG',
+   19: 'COMMA',
+   20: 'PLUS',
+   21: 'RSQB',
+   22: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[222] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
+  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
+  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_MULT',
+   7: '_PERMUTE',
+   8: '_SUBT',
+   9: '__ANON_15',
+   10: '_WS',
+   11: '_NL',
+   12: 'STATE',
+   13: '__ANON_16',
    14: '_NEGATE_ALL',
    15: '_VAR_CLOSE',
    16: '_VAR_OPEN',
@@ -5870,23 +5837,42 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[222] = (lexer_regexps)
-MRES = (
-[('(?P<__ANON_2>\\.\\.)', {1: '__ANON_2'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
 LEXERS[223] = (lexer_regexps)
 MRES = (
-[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<STATE>\\d+)', {1: '_WS', 2: 'STATE'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
+  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
+  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_MULT',
+   7: '_PERMUTE',
+   8: '_SUBT',
+   9: '__ANON_15',
+   10: '_WS',
+   11: '_NL',
+   12: 'STATE',
+   13: '__ANON_16',
+   14: '_NEGATE_ALL',
+   15: '_VAR_CLOSE',
+   16: '_VAR_OPEN',
+   17: 'BANG',
+   18: 'COMMA',
+   19: 'RSQB',
+   20: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -5894,10 +5880,40 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[224] = (lexer_regexps)
 MRES = (
-[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<__ANON_2>\\.\\.)', {1: '_WS', 2: '__ANON_2'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
+  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
+  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_MULT',
+   7: '_PERMUTE',
+   8: '_SUBT',
+   9: '__ANON_15',
+   10: '_WS',
+   11: '_NL',
+   12: 'STATE',
+   13: '__ANON_16',
+   14: '_NEGATE_ALL',
+   15: '_VAR_CLOSE',
+   16: '_VAR_OPEN',
+   17: 'BANG',
+   18: 'COMMA',
+   19: 'RSQB',
+   20: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -5909,37 +5925,33 @@ MRES = (
   '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
   '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
   '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
+  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
+  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_HOIST_ARROW',
    3: '_LROT',
    4: '_NORMAL_ARROW',
    5: '_RROT',
-   6: '_HENSEL_CLOSE',
-   7: '_HENSEL_SEP',
-   8: '_MULT',
-   9: '_PERMUTE',
-   10: '_SUBT',
-   11: '__ANON_14',
-   12: '_WS',
-   13: '_NL',
-   14: 'STATE',
-   15: '__ANON_15',
-   16: '_NEGATE_ALL',
-   17: '_VAR_CLOSE',
-   18: '_VAR_OPEN',
-   19: 'BANG',
-   20: 'COMMA',
-   21: 'RSQB',
-   22: 'SEMICOLON'})]
+   6: '_MULT',
+   7: '_PERMUTE',
+   8: '_SUBT',
+   9: '__ANON_15',
+   10: '_WS',
+   11: '_NL',
+   12: 'STATE',
+   13: '__ANON_16',
+   14: '_NEGATE_ALL',
+   15: '_VAR_CLOSE',
+   16: '_VAR_OPEN',
+   17: 'BANG',
+   18: 'COMMA',
+   19: 'RSQB',
+   20: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
@@ -5950,74 +5962,37 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[226] = (lexer_regexps)
 MRES = (
-[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<STATE>\\d+)', {1: '_WS', 2: 'STATE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[227] = (lexer_regexps)
-MRES = (
-[('(?P<__ANON_2>\\.\\.)', {1: '__ANON_2'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[228] = (lexer_regexps)
-MRES = (
-[('(?P<STATE>\\d+)', {1: 'STATE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[229] = (lexer_regexps)
-MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
   '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
   '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
   '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
+  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
+  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_HOIST_ARROW',
    3: '_LROT',
    4: '_NORMAL_ARROW',
    5: '_RROT',
-   6: '_HENSEL_CLOSE',
-   7: '_HENSEL_SEP',
-   8: '_MULT',
-   9: '_PERMUTE',
-   10: '_SUBT',
-   11: '__ANON_14',
-   12: '_WS',
-   13: '_NL',
-   14: 'STATE',
-   15: '__ANON_15',
-   16: '_NEGATE_ALL',
-   17: '_VAR_CLOSE',
-   18: '_VAR_OPEN',
-   19: 'BANG',
-   20: 'COMMA',
-   21: 'RSQB',
-   22: 'SEMICOLON'})]
+   6: '_MULT',
+   7: '_PERMUTE',
+   8: '_SUBT',
+   9: '__ANON_15',
+   10: '_WS',
+   11: '_NL',
+   12: 'STATE',
+   13: '__ANON_16',
+   14: '_NEGATE_ALL',
+   15: '_VAR_CLOSE',
+   16: '_VAR_OPEN',
+   17: 'BANG',
+   18: 'COMMA',
+   19: 'RSQB',
+   20: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
@@ -6026,61 +6001,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[230] = (lexer_regexps)
-MRES = (
-[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<STATE>\\d+)', {1: '_WS', 2: 'STATE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[231] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
-  '|\t'
-  '))+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_WS',
-   3: 'STATE',
-   4: '__ANON_15',
-   5: '_NEGATE_ALL',
-   6: '_VAR_OPEN',
-   7: 'BANG',
-   8: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[232] = (lexer_regexps)
-MRES = (
-[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[233] = (lexer_regexps)
-MRES = (
-[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[234] = (lexer_regexps)
+LEXERS[227] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME', 2: 'STATE', 3: '_NEGATE_ALL', 4: '_VAR_OPEN', 5: '_NEGATE_LIVE'})]
@@ -6092,9 +6013,10 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[235] = (lexer_regexps)
+LEXERS[228] = (lexer_regexps)
 MRES = (
-[('(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)', {1: 'COMPASS_DIR'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)',
+  {1: 'NAME'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -6103,9 +6025,9 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[236] = (lexer_regexps)
+LEXERS[229] = (lexer_regexps)
 MRES = (
-[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<RPAR>\\))', {1: '_WS', 2: 'RPAR'})]
+[('(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)', {1: 'COMMA', 2: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -6114,26 +6036,9 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[237] = (lexer_regexps)
+LEXERS[230] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_NORMAL_ARROW',
-   4: '__ANON_14',
-   5: '_WS',
-   6: '_NL',
-   7: 'STATE',
-   8: '__ANON_15',
-   9: '_NEGATE_ALL',
-   10: '_VAR_OPEN',
-   11: 'BANG',
-   12: '_NEGATE_LIVE'})]
+[('(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)', {1: 'COMMA', 2: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -6142,10 +6047,9 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[238] = (lexer_regexps)
+LEXERS[231] = (lexer_regexps)
 MRES = (
-[('(?P<SYMMETRY_NAME>(?<![\\w\\.])(?!(?:[NS][EW]?|[EW])(?![\\w\\.]))[\\w\\.]+)|(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)',
-  {1: 'SYMMETRY_NAME', 2: 'COMPASS_DIR'})]
+[('(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)', {1: 'COMMA', 2: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -6154,81 +6058,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[239] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_NORMAL_ARROW',
-   4: '__ANON_14',
-   5: '_WS',
-   6: '_NL',
-   7: 'STATE',
-   8: '__ANON_15',
-   9: '_NEGATE_ALL',
-   10: '_VAR_OPEN',
-   11: 'BANG',
-   12: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[240] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_NORMAL_ARROW',
-   4: '__ANON_14',
-   5: '_WS',
-   6: '_NL',
-   7: 'STATE',
-   8: '__ANON_15',
-   9: '_NEGATE_ALL',
-   10: '_VAR_OPEN',
-   11: 'BANG',
-   12: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[241] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: 'STATE',
-   3: '_NEGATE_ALL',
-   4: '_VAR_OPEN',
-   5: 'LEAVE_ALONE',
-   6: 'LSQB',
-   7: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[242] = (lexer_regexps)
+LEXERS[232] = (lexer_regexps)
 MRES = (
 [('(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<__ANON_2>\\.\\.)|(?P<PLUS>\\+)',
@@ -6241,9 +6071,199 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
+LEXERS[233] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: 'STATE',
+   3: '_NEGATE_ALL',
+   4: '_VAR_OPEN',
+   5: 'LEAVE_ALONE',
+   6: 'LSQB',
+   7: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[234] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: 'STATE',
+   3: '_NEGATE_ALL',
+   4: '_VAR_OPEN',
+   5: 'LEAVE_ALONE',
+   6: 'LSQB',
+   7: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[235] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[236] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t))+)?)|(?P<RSQB>\\])',
+  {1: '_LROT', 2: '_RROT', 3: '_MULT', 4: '_SUBT', 5: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[237] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[238] = (lexer_regexps)
+MRES = (
+[('(?P<COLON>\\:)|(?P<RSQB>\\])', {1: 'COLON', 2: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[239] = (lexer_regexps)
+MRES = (
+[('(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)|(?P<__ANON_10>6)|(?P<__ANON_11>7)|(?P<__ANON_12>8)|(?P<__ANON_13>9)|(?P<__ANON_4>0)|(?P<__ANON_5>1)|(?P<__ANON_6>2)|(?P<__ANON_7>3)|(?P<__ANON_8>4)|(?P<__ANON_9>5)',
+  {1: 'COMPASS_DIR',
+   2: '__ANON_10',
+   3: '__ANON_11',
+   4: '__ANON_12',
+   5: '__ANON_13',
+   6: '__ANON_4',
+   7: '__ANON_5',
+   8: '__ANON_6',
+   9: '__ANON_7',
+   10: '__ANON_8',
+   11: '__ANON_9'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[240] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[241] = (lexer_regexps)
+MRES = (
+[('(?P<COLON>\\:)|(?P<RSQB>\\])', {1: 'COLON', 2: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[242] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
 LEXERS[243] = (lexer_regexps)
 MRES = (
-[('(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t))+)?)', {1: '_MULT'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: 'STATE',
+   3: '_NEGATE_ALL',
+   4: '_VAR_OPEN',
+   5: 'LEAVE_ALONE',
+   6: 'LSQB',
+   7: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -6254,14 +6274,7 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[244] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: 'STATE',
-   3: '_NEGATE_ALL',
-   4: '_VAR_OPEN',
-   5: 'LEAVE_ALONE',
-   6: 'LSQB',
-   7: '_NEGATE_LIVE'})]
+[('(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t))+)?)', {1: '_MULT'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -6294,10 +6307,21 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[246] = (lexer_regexps)
 MRES = (
-[('(?P<COLON>\\:)|(?P<RSQB>\\])', {1: 'COLON', 2: 'RSQB'})]
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -6305,196 +6329,20 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[247] = (lexer_regexps)
 MRES = (
-[('(?P<COLON>\\:)|(?P<RSQB>\\])', {1: 'COLON', 2: 'RSQB'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[248] = (lexer_regexps)
-MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t))+)?)|(?P<RSQB>\\])',
-  {1: '_LROT', 2: '_RROT', 3: '_MULT', 4: '_SUBT', 5: 'RSQB'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[249] = (lexer_regexps)
-MRES = (
-[('(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)|(?P<__ANON_10>7)|(?P<__ANON_11>8)|(?P<__ANON_12>9)|(?P<__ANON_3>0)|(?P<__ANON_4>1)|(?P<__ANON_5>2)|(?P<__ANON_6>3)|(?P<__ANON_7>4)|(?P<__ANON_8>5)|(?P<__ANON_9>6)',
-  {1: 'COMPASS_DIR',
-   2: '__ANON_10',
-   3: '__ANON_11',
-   4: '__ANON_12',
-   5: '__ANON_3',
-   6: '__ANON_4',
-   7: '__ANON_5',
-   8: '__ANON_6',
-   9: '__ANON_7',
-   10: '__ANON_8',
-   11: '__ANON_9'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[250] = (lexer_regexps)
-MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[251] = (lexer_regexps)
-MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[252] = (lexer_regexps)
-MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[253] = (lexer_regexps)
-MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[254] = (lexer_regexps)
-MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[255] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: 'STATE',
-   3: '_NEGATE_ALL',
-   4: '_VAR_OPEN',
-   5: 'LEAVE_ALONE',
-   6: 'LSQB',
-   7: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[256] = (lexer_regexps)
-MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
   '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
   ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<RPAR>\\))|(?P<_NEGATE_LIVE>\\-)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<RPAR>\\))|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
    2: '_HOIST_ARROW',
    3: '_NORMAL_ARROW',
-   4: '__ANON_14',
+   4: '__ANON_15',
    5: '_WS',
    6: '_NL',
    7: 'STATE',
-   8: '__ANON_15',
+   8: '__ANON_16',
    9: '_NEGATE_ALL',
    10: '_VAR_OPEN',
    11: 'BANG',
@@ -6508,7 +6356,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[257] = (lexer_regexps)
+LEXERS[248] = (lexer_regexps)
 MRES = (
 [('(?P<COLON>\\:)|(?P<LSQB>\\[)', {1: 'COLON', 2: 'LSQB'})]
 )
@@ -6519,18 +6367,170 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[258] = (lexer_regexps)
+LEXERS[249] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<__ANON_14>(?m:[ \t'
+[('(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)', {1: 'COMPASS_DIR'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[250] = (lexer_regexps)
+MRES = (
+[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<RPAR>\\))', {1: '_WS', 2: 'RPAR'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[251] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
   ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
-   2: '__ANON_14',
+   2: '_HOIST_ARROW',
+   3: '_NORMAL_ARROW',
+   4: '__ANON_15',
+   5: '_WS',
+   6: '_NL',
+   7: 'STATE',
+   8: '__ANON_16',
+   9: '_NEGATE_ALL',
+   10: '_VAR_OPEN',
+   11: 'BANG',
+   12: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[252] = (lexer_regexps)
+MRES = (
+[('(?P<SYMMETRY_NAME>(?<![\\w\\.])(?!(?:[NS][EW]?|[EW])(?![\\w\\.]))[\\w\\.]+)|(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)',
+  {1: 'SYMMETRY_NAME', 2: 'COMPASS_DIR'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[253] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_NORMAL_ARROW',
+   4: '__ANON_15',
+   5: '_WS',
+   6: '_NL',
+   7: 'STATE',
+   8: '__ANON_16',
+   9: '_NEGATE_ALL',
+   10: '_VAR_OPEN',
+   11: 'BANG',
+   12: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[254] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_NORMAL_ARROW',
+   4: '__ANON_15',
+   5: '_WS',
+   6: '_NL',
+   7: 'STATE',
+   8: '__ANON_16',
+   9: '_NEGATE_ALL',
+   10: '_VAR_OPEN',
+   11: 'BANG',
+   12: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[255] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME', 2: 'STATE', 3: '_NEGATE_ALL', 4: '_VAR_OPEN', 5: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[256] = (lexer_regexps)
+MRES = (
+[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[257] = (lexer_regexps)
+MRES = (
+[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[258] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '__ANON_15',
    3: '_WS',
    4: '_NL',
    5: 'STATE',
-   6: '__ANON_15',
+   6: '__ANON_16',
    7: '_NEGATE_ALL',
    8: '_VAR_OPEN',
    9: 'BANG',
@@ -6545,16 +6545,7 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[259] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
-  '|\t'
-  '))+)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_WS',
-   3: 'STATE',
-   4: '_NEGATE_ALL',
-   5: '_VAR_OPEN',
-   6: 'LSQB',
-   7: '_NEGATE_LIVE'})]
+[('(?P<__ANON_2>\\.\\.)', {1: '__ANON_2'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -6565,40 +6556,10 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[260] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
-  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
-  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_MULT',
-   7: '_PERMUTE',
-   8: '_SUBT',
-   9: '__ANON_14',
-   10: '_WS',
-   11: '_NL',
-   12: 'STATE',
-   13: '__ANON_15',
-   14: '_NEGATE_ALL',
-   15: '_VAR_CLOSE',
-   16: '_VAR_OPEN',
-   17: 'BANG',
-   18: 'COMMA',
-   19: 'RSQB',
-   20: 'SEMICOLON'})]
+[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<STATE>\\d+)', {1: '_WS', 2: 'STATE'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -6606,7 +6567,7 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[261] = (lexer_regexps)
 MRES = (
-[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+[('(?P<STATE>\\d+)', {1: 'STATE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -6617,16 +6578,44 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[262] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
-   2: 'STATE',
-   3: '_NEGATE_ALL',
-   4: '_VAR_OPEN',
-   5: 'LSQB',
-   6: '_NEGATE_LIVE'})]
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_HENSEL_CLOSE',
+   7: '_HENSEL_SEP',
+   8: '_MULT',
+   9: '_PERMUTE',
+   10: '_SUBT',
+   11: '__ANON_15',
+   12: '_WS',
+   13: '_NL',
+   14: 'STATE',
+   15: '__ANON_16',
+   16: '_NEGATE_ALL',
+   17: '_VAR_CLOSE',
+   18: '_VAR_OPEN',
+   19: 'BANG',
+   20: 'COMMA',
+   21: 'RSQB',
+   22: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -6634,13 +6623,7 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[263] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: 'STATE',
-   3: '_NEGATE_ALL',
-   4: '_VAR_OPEN',
-   5: 'LSQB',
-   6: '_NEGATE_LIVE'})]
+[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<STATE>\\d+)', {1: '_WS', 2: 'STATE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -6651,9 +6634,7 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[264] = (lexer_regexps)
 MRES = (
-[('(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<__ANON_2>\\.\\.)|(?P<PLUS>\\+)',
-  {1: '_MULT', 2: '_WS', 3: '__ANON_2', 4: 'PLUS'})]
+[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<STATE>\\d+)', {1: '_WS', 2: 'STATE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -6664,14 +6645,10 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[265] = (lexer_regexps)
 MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t))+)?)|(?P<RSQB>\\])',
-  {1: '_LROT', 2: '_RROT', 3: '_MULT', 4: '_SUBT', 5: 'RSQB'})]
+[('(?P<STATE>\\d+)', {1: 'STATE'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -6679,18 +6656,41 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[266] = (lexer_regexps)
 MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
   '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_HENSEL_CLOSE',
+   7: '_HENSEL_SEP',
+   8: '_MULT',
+   9: '_PERMUTE',
+   10: '_SUBT',
+   11: '__ANON_15',
+   12: '_WS',
+   13: '_NL',
+   14: 'STATE',
+   15: '__ANON_16',
+   16: '_NEGATE_ALL',
+   17: '_VAR_CLOSE',
+   18: '_VAR_OPEN',
+   19: 'BANG',
+   20: 'COMMA',
+   21: 'RSQB',
+   22: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
@@ -6701,7 +6701,7 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[267] = (lexer_regexps)
 MRES = (
-[('(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t))+)?)', {1: '_MULT'})]
+[('(?P<STATE>\\d+)', {1: 'STATE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -6712,16 +6712,44 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[268] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
-   2: 'STATE',
-   3: '_NEGATE_ALL',
-   4: '_VAR_OPEN',
-   5: 'LSQB',
-   6: '_NEGATE_LIVE'})]
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_HENSEL_CLOSE',
+   7: '_HENSEL_SEP',
+   8: '_MULT',
+   9: '_PERMUTE',
+   10: '_SUBT',
+   11: '__ANON_15',
+   12: '_WS',
+   13: '_NL',
+   14: 'STATE',
+   15: '__ANON_16',
+   16: '_NEGATE_ALL',
+   17: '_VAR_CLOSE',
+   18: '_VAR_OPEN',
+   19: 'BANG',
+   20: 'COMMA',
+   21: 'RSQB',
+   22: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -6729,16 +6757,44 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[269] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
-   2: 'STATE',
-   3: '_NEGATE_ALL',
-   4: '_VAR_OPEN',
-   5: 'LSQB',
-   6: '_NEGATE_LIVE'})]
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_HENSEL_CLOSE',
+   7: '_HENSEL_SEP',
+   8: '_MULT',
+   9: '_PERMUTE',
+   10: '_SUBT',
+   11: '__ANON_15',
+   12: '_WS',
+   13: '_NL',
+   14: 'STATE',
+   15: '__ANON_16',
+   16: '_NEGATE_ALL',
+   17: '_VAR_CLOSE',
+   18: '_VAR_OPEN',
+   19: 'BANG',
+   20: 'COMMA',
+   21: 'RSQB',
+   22: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -6746,13 +6802,9 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[270] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: 'STATE',
-   3: '_NEGATE_ALL',
-   4: '_VAR_OPEN',
-   5: 'LSQB',
-   6: '_NEGATE_LIVE'})]
+[('(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<__ANON_2>\\.\\.)|(?P<PLUS>\\+)',
+  {1: '_MULT', 2: '_WS', 3: '__ANON_2', 4: 'PLUS'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -6785,21 +6837,10 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[272] = (lexer_regexps)
 MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
+[('(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t))+)?)', {1: '_MULT'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -6807,21 +6848,16 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[273] = (lexer_regexps)
 MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: 'STATE',
+   3: '_NEGATE_ALL',
+   4: '_VAR_OPEN',
+   5: 'LSQB',
+   6: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -6861,793 +6897,27 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[276] = (lexer_regexps)
 MRES = (
-[('(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t))+)?\\/(?:(?:(?:\\ |\t))+)?)',
-  {1: '_HENSEL_SEP'})]
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[277] = (lexer_regexps)
-MRES = (
-[('(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t))+)?\\/(?:(?:(?:\\ |\t))+)?)',
-  {1: '_HENSEL_SEP'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[278] = (lexer_regexps)
-MRES = (
-[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<STATE>\\d+)', {1: '_WS', 2: 'STATE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[279] = (lexer_regexps)
-MRES = (
-[('(?P<STATE>\\d+)', {1: 'STATE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[280] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_HENSEL_CLOSE',
-   7: '_HENSEL_SEP',
-   8: '_MULT',
-   9: '_PERMUTE',
-   10: '_SUBT',
-   11: '__ANON_14',
-   12: '_WS',
-   13: '_NL',
-   14: 'STATE',
-   15: '__ANON_15',
-   16: '_NEGATE_ALL',
-   17: '_VAR_CLOSE',
-   18: '_VAR_OPEN',
-   19: 'BANG',
-   20: 'COMMA',
-   21: 'RSQB',
-   22: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[281] = (lexer_regexps)
-MRES = (
-[('(?P<__ANON_2>\\.\\.)', {1: '__ANON_2'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[282] = (lexer_regexps)
-MRES = (
-[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<STATE>\\d+)', {1: '_WS', 2: 'STATE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[283] = (lexer_regexps)
-MRES = (
-[('(?P<STATE>\\d+)', {1: 'STATE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[284] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_HENSEL_CLOSE',
-   7: '_HENSEL_SEP',
-   8: '_MULT',
-   9: '_PERMUTE',
-   10: '_SUBT',
-   11: '__ANON_14',
-   12: '_WS',
-   13: '_NL',
-   14: 'STATE',
-   15: '__ANON_15',
-   16: '_NEGATE_ALL',
-   17: '_VAR_CLOSE',
-   18: '_VAR_OPEN',
-   19: 'BANG',
-   20: 'COMMA',
-   21: 'RSQB',
-   22: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[285] = (lexer_regexps)
-MRES = (
-[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<STATE>\\d+)', {1: '_WS', 2: 'STATE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[286] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_HENSEL_CLOSE',
-   7: '_HENSEL_SEP',
-   8: '_MULT',
-   9: '_PERMUTE',
-   10: '_SUBT',
-   11: '__ANON_14',
-   12: '_WS',
-   13: '_NL',
-   14: 'STATE',
-   15: '__ANON_15',
-   16: '_NEGATE_ALL',
-   17: '_VAR_CLOSE',
-   18: '_VAR_OPEN',
-   19: 'BANG',
-   20: 'COMMA',
-   21: 'RSQB',
-   22: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[287] = (lexer_regexps)
-MRES = (
-[('(?P<STATE>\\d+)', {1: 'STATE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[288] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_HENSEL_CLOSE',
-   7: '_HENSEL_SEP',
-   8: '_MULT',
-   9: '_PERMUTE',
-   10: '_SUBT',
-   11: '__ANON_14',
-   12: '_WS',
-   13: '_NL',
-   14: 'STATE',
-   15: '__ANON_15',
-   16: '_NEGATE_ALL',
-   17: '_VAR_CLOSE',
-   18: '_VAR_OPEN',
-   19: 'BANG',
-   20: 'COMMA',
-   21: 'RSQB',
-   22: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[289] = (lexer_regexps)
-MRES = (
-[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[290] = (lexer_regexps)
-MRES = (
-[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<RPAR>\\))', {1: '_WS', 2: 'RPAR'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[291] = (lexer_regexps)
-MRES = (
-[('(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)|(?P<RPAR>\\))',
-  {1: 'COMPASS_DIR', 2: 'RPAR'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[292] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_NORMAL_ARROW',
-   4: '__ANON_14',
-   5: '_WS',
-   6: '_NL',
-   7: 'STATE',
-   8: '__ANON_15',
-   9: '_NEGATE_ALL',
-   10: '_VAR_OPEN',
-   11: 'BANG',
-   12: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[293] = (lexer_regexps)
-MRES = (
-[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<RPAR>\\))', {1: '_WS', 2: 'RPAR'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[294] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_NORMAL_ARROW',
-   4: '__ANON_14',
-   5: '_WS',
-   6: '_NL',
-   7: 'STATE',
-   8: '__ANON_15',
-   9: '_NEGATE_ALL',
-   10: '_VAR_OPEN',
-   11: 'BANG',
-   12: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[295] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_NORMAL_ARROW',
-   4: '__ANON_14',
-   5: '_WS',
-   6: '_NL',
-   7: 'STATE',
-   8: '__ANON_15',
-   9: '_NEGATE_ALL',
-   10: '_VAR_OPEN',
-   11: 'BANG',
-   12: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[296] = (lexer_regexps)
-MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<__ANON_2>\\.\\.)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<PLUS>\\+)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_WS',
-   6: '__ANON_2',
-   7: '_VAR_CLOSE',
-   8: 'COMMA',
-   9: 'PLUS',
-   10: 'RSQB'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[297] = (lexer_regexps)
-MRES = (
-[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[298] = (lexer_regexps)
-MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[299] = (lexer_regexps)
-MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[300] = (lexer_regexps)
-MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[301] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<INT>[0123456789]+)|(?P<STATE>\\d+)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)',
-  {1: 'NAME', 2: 'INT', 3: 'STATE', 4: '_VAR_OPEN', 5: 'LEAVE_ALONE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[302] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<INT>[0123456789]+)|(?P<STATE>\\d+)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)',
-  {1: 'NAME', 2: 'INT', 3: 'STATE', 4: '_VAR_OPEN', 5: 'LEAVE_ALONE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[303] = (lexer_regexps)
-MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[304] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<RPAR>\\))|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_NORMAL_ARROW',
-   4: '__ANON_14',
-   5: '_WS',
-   6: '_NL',
-   7: 'STATE',
-   8: '__ANON_15',
-   9: '_NEGATE_ALL',
-   10: '_VAR_OPEN',
-   11: 'BANG',
-   12: 'RPAR',
-   13: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[305] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
-  '|\t'
-  '))+)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_WS',
-   3: 'STATE',
-   4: '_NEGATE_ALL',
-   5: '_VAR_OPEN',
-   6: 'LEAVE_ALONE',
-   7: 'LSQB',
-   8: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[306] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
-  '|\t'
-  '))+)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_WS',
-   3: 'STATE',
-   4: '_NEGATE_ALL',
-   5: '_VAR_OPEN',
-   6: 'LEAVE_ALONE',
-   7: 'LSQB',
-   8: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[307] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<RPAR>\\))|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_NORMAL_ARROW',
-   4: '__ANON_14',
-   5: '_WS',
-   6: '_NL',
-   7: 'STATE',
-   8: '__ANON_15',
-   9: '_NEGATE_ALL',
-   10: '_VAR_OPEN',
-   11: 'BANG',
-   12: 'RPAR',
-   13: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[308] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)',
-  {1: 'NAME', 2: 'STATE', 3: '_VAR_OPEN', 4: 'LEAVE_ALONE', 5: 'LSQB'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[309] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<RPAR>\\))|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_NORMAL_ARROW',
-   4: '__ANON_14',
-   5: '_WS',
-   6: '_NL',
-   7: 'STATE',
-   8: '__ANON_15',
-   9: '_NEGATE_ALL',
-   10: '_VAR_OPEN',
-   11: 'BANG',
-   12: 'RPAR',
-   13: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[310] = (lexer_regexps)
-MRES = (
-[('(?P<INT>[0123456789]+)', {1: 'INT'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[311] = (lexer_regexps)
-MRES = (
-[('(?P<INT>[0123456789]+)', {1: 'INT'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[312] = (lexer_regexps)
-MRES = (
-[('(?P<INT>[0123456789]+)', {1: 'INT'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[313] = (lexer_regexps)
-MRES = (
-[('(?P<COLON>\\:)|(?P<RSQB>\\])', {1: 'COLON', 2: 'RSQB'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[314] = (lexer_regexps)
-MRES = (
-[('(?P<COLON>\\:)|(?P<RSQB>\\])', {1: 'COLON', 2: 'RSQB'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[315] = (lexer_regexps)
-MRES = (
-[('(?P<INT>[0123456789]+)', {1: 'INT'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[316] = (lexer_regexps)
-MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[317] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
@@ -7664,7 +6934,161 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[318] = (lexer_regexps)
+LEXERS[278] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[279] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: 'STATE',
+   3: '_NEGATE_ALL',
+   4: '_VAR_OPEN',
+   5: 'LSQB',
+   6: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[280] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[281] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t))+)?)|(?P<RSQB>\\])',
+  {1: '_LROT', 2: '_RROT', 3: '_MULT', 4: '_SUBT', 5: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[282] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: 'STATE',
+   3: '_NEGATE_ALL',
+   4: '_VAR_OPEN',
+   5: 'LSQB',
+   6: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[283] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
+  '|\t'
+  '))+)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_WS',
+   3: 'STATE',
+   4: '_NEGATE_ALL',
+   5: '_VAR_OPEN',
+   6: 'LSQB',
+   7: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[284] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
+  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
+  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_MULT',
+   7: '_PERMUTE',
+   8: '_SUBT',
+   9: '__ANON_15',
+   10: '_WS',
+   11: '_NL',
+   12: 'STATE',
+   13: '__ANON_16',
+   14: '_NEGATE_ALL',
+   15: '_VAR_CLOSE',
+   16: '_VAR_OPEN',
+   17: 'BANG',
+   18: 'COMMA',
+   19: 'RSQB',
+   20: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[285] = (lexer_regexps)
 MRES = (
 [('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
 )
@@ -7675,9 +7099,15 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[319] = (lexer_regexps)
+LEXERS[286] = (lexer_regexps)
 MRES = (
-[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: 'STATE',
+   3: '_NEGATE_ALL',
+   4: '_VAR_OPEN',
+   5: 'LSQB',
+   6: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -7686,7 +7116,43 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[320] = (lexer_regexps)
+LEXERS[287] = (lexer_regexps)
+MRES = (
+[('(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t))+)?\\/(?:(?:(?:\\ |\t))+)?)',
+  {1: '_HENSEL_SEP'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[288] = (lexer_regexps)
+MRES = (
+[('(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t))+)?\\/(?:(?:(?:\\ |\t))+)?)',
+  {1: '_HENSEL_SEP'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[289] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<INT>[0123456789]+)|(?P<STATE>\\d+)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)',
+  {1: 'NAME', 2: 'INT', 3: 'STATE', 4: '_VAR_OPEN', 5: 'LEAVE_ALONE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[290] = (lexer_regexps)
 MRES = (
 [('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
   '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
@@ -7712,7 +7178,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[321] = (lexer_regexps)
+LEXERS[291] = (lexer_regexps)
 MRES = (
 [('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
   '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
@@ -7726,6 +7192,610 @@ MRES = (
    5: '_VAR_CLOSE',
    6: 'COMMA',
    7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[292] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[293] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[294] = (lexer_regexps)
+MRES = (
+[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[295] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[296] = (lexer_regexps)
+MRES = (
+[('(?P<INT>[0123456789]+)', {1: 'INT'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[297] = (lexer_regexps)
+MRES = (
+[('(?P<INT>[0123456789]+)', {1: 'INT'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[298] = (lexer_regexps)
+MRES = (
+[('(?P<INT>[0123456789]+)', {1: 'INT'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[299] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)',
+  {1: 'NAME', 2: 'STATE', 3: '_VAR_OPEN', 4: 'LEAVE_ALONE', 5: 'LSQB'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[300] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<RPAR>\\))|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_NORMAL_ARROW',
+   4: '__ANON_15',
+   5: '_WS',
+   6: '_NL',
+   7: 'STATE',
+   8: '__ANON_16',
+   9: '_NEGATE_ALL',
+   10: '_VAR_OPEN',
+   11: 'BANG',
+   12: 'RPAR',
+   13: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[301] = (lexer_regexps)
+MRES = (
+[('(?P<INT>[0123456789]+)', {1: 'INT'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[302] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
+  '|\t'
+  '))+)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_WS',
+   3: 'STATE',
+   4: '_NEGATE_ALL',
+   5: '_VAR_OPEN',
+   6: 'LEAVE_ALONE',
+   7: 'LSQB',
+   8: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[303] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<RPAR>\\))|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_NORMAL_ARROW',
+   4: '__ANON_15',
+   5: '_WS',
+   6: '_NL',
+   7: 'STATE',
+   8: '__ANON_16',
+   9: '_NEGATE_ALL',
+   10: '_VAR_OPEN',
+   11: 'BANG',
+   12: 'RPAR',
+   13: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[304] = (lexer_regexps)
+MRES = (
+[('(?P<COLON>\\:)|(?P<RSQB>\\])', {1: 'COLON', 2: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[305] = (lexer_regexps)
+MRES = (
+[('(?P<COLON>\\:)|(?P<RSQB>\\])', {1: 'COLON', 2: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[306] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<RPAR>\\))|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_NORMAL_ARROW',
+   4: '__ANON_15',
+   5: '_WS',
+   6: '_NL',
+   7: 'STATE',
+   8: '__ANON_16',
+   9: '_NEGATE_ALL',
+   10: '_VAR_OPEN',
+   11: 'BANG',
+   12: 'RPAR',
+   13: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[307] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
+  '|\t'
+  '))+)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_WS',
+   3: 'STATE',
+   4: '_NEGATE_ALL',
+   5: '_VAR_OPEN',
+   6: 'LEAVE_ALONE',
+   7: 'LSQB',
+   8: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[308] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[309] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<INT>[0123456789]+)|(?P<STATE>\\d+)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)',
+  {1: 'NAME', 2: 'INT', 3: 'STATE', 4: '_VAR_OPEN', 5: 'LEAVE_ALONE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[310] = (lexer_regexps)
+MRES = (
+[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<RPAR>\\))', {1: '_WS', 2: 'RPAR'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[311] = (lexer_regexps)
+MRES = (
+[('(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)|(?P<RPAR>\\))',
+  {1: 'COMPASS_DIR', 2: 'RPAR'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[312] = (lexer_regexps)
+MRES = (
+[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<RPAR>\\))', {1: '_WS', 2: 'RPAR'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[313] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_NORMAL_ARROW',
+   4: '__ANON_15',
+   5: '_WS',
+   6: '_NL',
+   7: 'STATE',
+   8: '__ANON_16',
+   9: '_NEGATE_ALL',
+   10: '_VAR_OPEN',
+   11: 'BANG',
+   12: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[314] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_NORMAL_ARROW',
+   4: '__ANON_15',
+   5: '_WS',
+   6: '_NL',
+   7: 'STATE',
+   8: '__ANON_16',
+   9: '_NEGATE_ALL',
+   10: '_VAR_OPEN',
+   11: 'BANG',
+   12: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[315] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_NORMAL_ARROW',
+   4: '__ANON_15',
+   5: '_WS',
+   6: '_NL',
+   7: 'STATE',
+   8: '__ANON_16',
+   9: '_NEGATE_ALL',
+   10: '_VAR_OPEN',
+   11: 'BANG',
+   12: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[316] = (lexer_regexps)
+MRES = (
+[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[317] = (lexer_regexps)
+MRES = (
+[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<STATE>\\d+)', {1: '_WS', 2: 'STATE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[318] = (lexer_regexps)
+MRES = (
+[('(?P<STATE>\\d+)', {1: 'STATE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[319] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_HENSEL_CLOSE',
+   7: '_HENSEL_SEP',
+   8: '_MULT',
+   9: '_PERMUTE',
+   10: '_SUBT',
+   11: '__ANON_15',
+   12: '_WS',
+   13: '_NL',
+   14: 'STATE',
+   15: '__ANON_16',
+   16: '_NEGATE_ALL',
+   17: '_VAR_CLOSE',
+   18: '_VAR_OPEN',
+   19: 'BANG',
+   20: 'COMMA',
+   21: 'RSQB',
+   22: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[320] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_HENSEL_CLOSE',
+   7: '_HENSEL_SEP',
+   8: '_MULT',
+   9: '_PERMUTE',
+   10: '_SUBT',
+   11: '__ANON_15',
+   12: '_WS',
+   13: '_NL',
+   14: 'STATE',
+   15: '__ANON_16',
+   16: '_NEGATE_ALL',
+   17: '_VAR_CLOSE',
+   18: '_VAR_OPEN',
+   19: 'BANG',
+   20: 'COMMA',
+   21: 'RSQB',
+   22: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[321] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_HENSEL_CLOSE',
+   7: '_HENSEL_SEP',
+   8: '_MULT',
+   9: '_PERMUTE',
+   10: '_SUBT',
+   11: '__ANON_15',
+   12: '_WS',
+   13: '_NL',
+   14: 'STATE',
+   15: '__ANON_16',
+   16: '_NEGATE_ALL',
+   17: '_VAR_CLOSE',
+   18: '_VAR_OPEN',
+   19: 'BANG',
+   20: 'COMMA',
+   21: 'RSQB',
+   22: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
@@ -7736,21 +7806,10 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[322] = (lexer_regexps)
 MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
+[('(?P<STATE>\\d+)', {1: 'STATE'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -7758,18 +7817,41 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[323] = (lexer_regexps)
 MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
   '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_HENSEL_CLOSE',
+   7: '_HENSEL_SEP',
+   8: '_MULT',
+   9: '_PERMUTE',
+   10: '_SUBT',
+   11: '__ANON_15',
+   12: '_WS',
+   13: '_NL',
+   14: 'STATE',
+   15: '__ANON_16',
+   16: '_NEGATE_ALL',
+   17: '_VAR_CLOSE',
+   18: '_VAR_OPEN',
+   19: 'BANG',
+   20: 'COMMA',
+   21: 'RSQB',
+   22: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
@@ -7780,8 +7862,7 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[324] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<INT>[0123456789]+)|(?P<STATE>\\d+)|(?P<_VAR_OPEN>[({])',
-  {1: 'NAME', 2: 'INT', 3: 'STATE', 4: '_VAR_OPEN'})]
+[('(?P<STATE>\\d+)', {1: 'STATE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -7792,60 +7873,41 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[325] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)',
-  {1: 'NAME', 2: 'STATE', 3: '_VAR_OPEN', 4: 'LSQB'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[326] = (lexer_regexps)
-MRES = (
-[('(?P<INT>[0123456789]+)', {1: 'INT'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[327] = (lexer_regexps)
-MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
   '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
   '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
   '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
-  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
-  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_HOIST_ARROW',
    3: '_LROT',
    4: '_NORMAL_ARROW',
    5: '_RROT',
-   6: '_MULT',
-   7: '_PERMUTE',
-   8: '_SUBT',
-   9: '__ANON_14',
-   10: '_WS',
-   11: '_NL',
-   12: 'STATE',
-   13: '__ANON_15',
-   14: '_NEGATE_ALL',
-   15: '_VAR_CLOSE',
-   16: '_VAR_OPEN',
-   17: 'BANG',
-   18: 'COMMA',
-   19: 'RSQB',
-   20: 'SEMICOLON'})]
+   6: '_HENSEL_CLOSE',
+   7: '_HENSEL_SEP',
+   8: '_MULT',
+   9: '_PERMUTE',
+   10: '_SUBT',
+   11: '__ANON_15',
+   12: '_WS',
+   13: '_NL',
+   14: 'STATE',
+   15: '__ANON_16',
+   16: '_NEGATE_ALL',
+   17: '_VAR_CLOSE',
+   18: '_VAR_OPEN',
+   19: 'BANG',
+   20: 'COMMA',
+   21: 'RSQB',
+   22: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
@@ -7854,29 +7916,52 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[328] = (lexer_regexps)
+LEXERS[326] = (lexer_regexps)
 MRES = (
-[('(?P<INT>[0123456789]+)', {1: 'INT'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_HENSEL_CLOSE',
+   7: '_HENSEL_SEP',
+   8: '_MULT',
+   9: '_PERMUTE',
+   10: '_SUBT',
+   11: '__ANON_15',
+   12: '_WS',
+   13: '_NL',
+   14: 'STATE',
+   15: '__ANON_16',
+   16: '_NEGATE_ALL',
+   17: '_VAR_CLOSE',
+   18: '_VAR_OPEN',
+   19: 'BANG',
+   20: 'COMMA',
+   21: 'RSQB',
+   22: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[329] = (lexer_regexps)
-MRES = (
-[('(?P<INT>[0123456789]+)', {1: 'INT'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[330] = (lexer_regexps)
+LEXERS[327] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<INT>[0123456789]+)|(?P<STATE>\\d+)|(?P<_VAR_OPEN>[({])',
   {1: 'NAME', 2: 'INT', 3: 'STATE', 4: '_VAR_OPEN'})]
@@ -7888,12 +7973,83 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[331] = (lexer_regexps)
+LEXERS[328] = (lexer_regexps)
 MRES = (
-[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<INT>[0123456789]+)|(?P<STATE>\\d+)|(?P<_VAR_OPEN>[({])',
+  {1: 'NAME', 2: 'INT', 3: 'STATE', 4: '_VAR_OPEN'})]
 )
 LEXER_CALLBACK = (
 {}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[329] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<__ANON_2>\\.\\.)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<PLUS>\\+)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_WS',
+   6: '__ANON_2',
+   7: '_VAR_CLOSE',
+   8: 'COMMA',
+   9: 'PLUS',
+   10: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[330] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[331] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -7923,11 +8079,71 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[333] = (lexer_regexps)
 MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t))+)?)|(?P<RSQB>\\])',
-  {1: '_LROT', 2: '_RROT', 3: '_MULT', 4: '_SUBT', 5: 'RSQB'})]
+[('(?P<INT>[0123456789]+)', {1: 'INT'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[334] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)',
+  {1: 'NAME', 2: 'STATE', 3: '_VAR_OPEN', 4: 'LSQB'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[335] = (lexer_regexps)
+MRES = (
+[('(?P<INT>[0123456789]+)', {1: 'INT'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[336] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
+  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
+  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_MULT',
+   7: '_PERMUTE',
+   8: '_SUBT',
+   9: '__ANON_15',
+   10: '_WS',
+   11: '_NL',
+   12: 'STATE',
+   13: '__ANON_16',
+   14: '_NEGATE_ALL',
+   15: '_VAR_CLOSE',
+   16: '_VAR_OPEN',
+   17: 'BANG',
+   18: 'COMMA',
+   19: 'RSQB',
+   20: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
@@ -7936,7 +8152,29 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[334] = (lexer_regexps)
+LEXERS[337] = (lexer_regexps)
+MRES = (
+[('(?P<INT>[0123456789]+)', {1: 'INT'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[338] = (lexer_regexps)
+MRES = (
+[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[339] = (lexer_regexps)
 MRES = (
 [('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
   '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
@@ -7958,7 +8196,44 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[335] = (lexer_regexps)
+LEXERS[340] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t))+)?)|(?P<RSQB>\\])',
+  {1: '_LROT', 2: '_RROT', 3: '_MULT', 4: '_SUBT', 5: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[341] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[342] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
   '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
@@ -7967,10 +8242,10 @@ MRES = (
   '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
   '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
   '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
   '))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
   {1: 'NAME',
    2: '_HOIST_ARROW',
    3: '_LROT',
@@ -7979,11 +8254,11 @@ MRES = (
    6: '_MULT',
    7: '_PERMUTE',
    8: '_SUBT',
-   9: '__ANON_14',
+   9: '__ANON_15',
    10: '_WS',
    11: '_NL',
    12: 'STATE',
-   13: '__ANON_15',
+   13: '__ANON_16',
    14: '_NEGATE_ALL',
    15: '_VAR_CLOSE',
    16: '_VAR_OPEN',
@@ -7999,7 +8274,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[336] = (lexer_regexps)
+LEXERS[343] = (lexer_regexps)
 MRES = (
 [('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
   '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
@@ -8014,190 +8289,9 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[337] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME', 2: 'STATE', 3: '_NEGATE_ALL', 4: '_VAR_OPEN', 5: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[338] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME', 2: 'STATE', 3: '_NEGATE_ALL', 4: '_VAR_OPEN', 5: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[339] = (lexer_regexps)
-MRES = (
-[('(?P<STATE>\\d+)', {1: 'STATE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[340] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_HENSEL_CLOSE',
-   7: '_HENSEL_SEP',
-   8: '_MULT',
-   9: '_PERMUTE',
-   10: '_SUBT',
-   11: '__ANON_14',
-   12: '_WS',
-   13: '_NL',
-   14: 'STATE',
-   15: '__ANON_15',
-   16: '_NEGATE_ALL',
-   17: '_VAR_CLOSE',
-   18: '_VAR_OPEN',
-   19: 'BANG',
-   20: 'COMMA',
-   21: 'RSQB',
-   22: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[341] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_HENSEL_CLOSE',
-   7: '_HENSEL_SEP',
-   8: '_MULT',
-   9: '_PERMUTE',
-   10: '_SUBT',
-   11: '__ANON_14',
-   12: '_WS',
-   13: '_NL',
-   14: 'STATE',
-   15: '__ANON_15',
-   16: '_NEGATE_ALL',
-   17: '_VAR_CLOSE',
-   18: '_VAR_OPEN',
-   19: 'BANG',
-   20: 'COMMA',
-   21: 'RSQB',
-   22: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[342] = (lexer_regexps)
-MRES = (
-[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<STATE>\\d+)', {1: '_WS', 2: 'STATE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[343] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_HENSEL_CLOSE',
-   7: '_HENSEL_SEP',
-   8: '_MULT',
-   9: '_PERMUTE',
-   10: '_SUBT',
-   11: '__ANON_14',
-   12: '_WS',
-   13: '_NL',
-   14: 'STATE',
-   15: '__ANON_15',
-   16: '_NEGATE_ALL',
-   17: '_VAR_CLOSE',
-   18: '_VAR_OPEN',
-   19: 'BANG',
-   20: 'COMMA',
-   21: 'RSQB',
-   22: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
 LEXERS[344] = (lexer_regexps)
 MRES = (
-[('(?P<STATE>\\d+)', {1: 'STATE'})]
+[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -8208,44 +8302,16 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[345] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_HENSEL_CLOSE',
-   7: '_HENSEL_SEP',
-   8: '_MULT',
-   9: '_PERMUTE',
-   10: '_SUBT',
-   11: '__ANON_14',
-   12: '_WS',
-   13: '_NL',
-   14: 'STATE',
-   15: '__ANON_15',
-   16: '_NEGATE_ALL',
-   17: '_VAR_CLOSE',
-   18: '_VAR_OPEN',
-   19: 'BANG',
-   20: 'COMMA',
-   21: 'RSQB',
-   22: 'SEMICOLON'})]
+   2: 'STATE',
+   3: '_NEGATE_ALL',
+   4: '_VAR_OPEN',
+   5: 'LSQB',
+   6: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -8253,44 +8319,10 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[346] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_HENSEL_CLOSE',
-   7: '_HENSEL_SEP',
-   8: '_MULT',
-   9: '_PERMUTE',
-   10: '_SUBT',
-   11: '__ANON_14',
-   12: '_WS',
-   13: '_NL',
-   14: 'STATE',
-   15: '__ANON_15',
-   16: '_NEGATE_ALL',
-   17: '_VAR_CLOSE',
-   18: '_VAR_OPEN',
-   19: 'BANG',
-   20: 'COMMA',
-   21: 'RSQB',
-   22: 'SEMICOLON'})]
+[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -8298,7 +8330,8 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[347] = (lexer_regexps)
 MRES = (
-[('(?P<STATE>\\d+)', {1: 'STATE'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME', 2: 'STATE', 3: '_NEGATE_ALL', 4: '_VAR_OPEN', 5: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -8309,41 +8342,30 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[348] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME', 2: 'STATE', 3: '_NEGATE_ALL', 4: '_VAR_OPEN', 5: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[349] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
   '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_HENSEL_CLOSE',
-   7: '_HENSEL_SEP',
-   8: '_MULT',
-   9: '_PERMUTE',
-   10: '_SUBT',
-   11: '__ANON_14',
-   12: '_WS',
-   13: '_NL',
-   14: 'STATE',
-   15: '__ANON_15',
-   16: '_NEGATE_ALL',
-   17: '_VAR_CLOSE',
-   18: '_VAR_OPEN',
-   19: 'BANG',
-   20: 'COMMA',
-   21: 'RSQB',
-   22: 'SEMICOLON'})]
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
 )
 LEXER_CALLBACK = (
 {'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
@@ -8352,24 +8374,23 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[349] = (lexer_regexps)
-MRES = (
-[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<RPAR>\\))', {1: '_WS', 2: 'RPAR'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
 LEXERS[350] = (lexer_regexps)
 MRES = (
-[('(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)|(?P<RPAR>\\))',
-  {1: 'COMPASS_DIR', 2: 'RPAR'})]
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -8377,27 +8398,21 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[351] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_NORMAL_ARROW',
-   4: '__ANON_14',
-   5: '_WS',
-   6: '_NL',
-   7: 'STATE',
-   8: '__ANON_15',
-   9: '_NEGATE_ALL',
-   10: '_VAR_OPEN',
-   11: 'BANG',
-   12: '_NEGATE_LIVE'})]
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -8405,10 +8420,21 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[352] = (lexer_regexps)
 MRES = (
-[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<RPAR>\\))', {1: '_WS', 2: 'RPAR'})]
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -8416,27 +8442,21 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[353] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_NORMAL_ARROW',
-   4: '__ANON_14',
-   5: '_WS',
-   6: '_NL',
-   7: 'STATE',
-   8: '__ANON_15',
-   9: '_NEGATE_ALL',
-   10: '_VAR_OPEN',
-   11: 'BANG',
-   12: '_NEGATE_LIVE'})]
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -8444,11 +8464,21 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[354] = (lexer_regexps)
 MRES = (
-[('(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)|(?P<RPAR>\\))',
-  {1: 'COMPASS_DIR', 2: 'RPAR'})]
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -8456,33 +8486,49 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[355] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_NORMAL_ARROW',
-   4: '__ANON_14',
-   5: '_WS',
-   6: '_NL',
-   7: 'STATE',
-   8: '__ANON_15',
-   9: '_NEGATE_ALL',
-   10: '_VAR_OPEN',
-   11: 'BANG',
-   12: '_NEGATE_LIVE'})]
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[356] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[357] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
   '|\t'
@@ -8504,34 +8550,12 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[357] = (lexer_regexps)
+LEXERS[358] = (lexer_regexps)
 MRES = (
 [('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
 )
 LEXER_CALLBACK = (
 {}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[358] = (lexer_regexps)
-MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -8631,14 +8655,18 @@ MRES = (
   '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
   '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
   '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  '))+)?)|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<__ANON_2>\\.\\.)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<PLUS>\\+)|(?P<RSQB>\\])',
   {1: '_LROT',
    2: '_RROT',
    3: '_MULT',
    4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
+   5: '_WS',
+   6: '__ANON_2',
+   7: '_VAR_CLOSE',
+   8: 'COMMA',
+   9: 'PLUS',
+   10: 'RSQB'})]
 )
 LEXER_CALLBACK = (
 {'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
@@ -8737,6 +8765,60 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[368] = (lexer_regexps)
 MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: 'STATE',
+   3: '_NEGATE_ALL',
+   4: '_VAR_OPEN',
+   5: 'LEAVE_ALONE',
+   6: 'LSQB',
+   7: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[369] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t))+)?)|(?P<RSQB>\\])',
+  {1: '_LROT', 2: '_RROT', 3: '_MULT', 4: '_SUBT', 5: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[370] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
+  '|\t'
+  '))+)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_WS',
+   3: 'STATE',
+   4: '_NEGATE_ALL',
+   5: '_VAR_OPEN',
+   6: 'LEAVE_ALONE',
+   7: 'LSQB',
+   8: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[371] = (lexer_regexps)
+MRES = (
 [('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
   '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
   '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
@@ -8752,57 +8834,6 @@ MRES = (
 )
 LEXER_CALLBACK = (
 {'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[369] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: 'STATE',
-   3: '_NEGATE_ALL',
-   4: '_VAR_OPEN',
-   5: 'LEAVE_ALONE',
-   6: 'LSQB',
-   7: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[370] = (lexer_regexps)
-MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t))+)?)|(?P<RSQB>\\])',
-  {1: '_LROT', 2: '_RROT', 3: '_MULT', 4: '_SUBT', 5: 'RSQB'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[371] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: 'STATE',
-   3: '_NEGATE_ALL',
-   4: '_VAR_OPEN',
-   5: 'LEAVE_ALONE',
-   6: 'LSQB',
-   7: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -8813,8 +8844,15 @@ MRES = (
 [('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
   '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
   '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t))+)?)|(?P<RSQB>\\])',
-  {1: '_LROT', 2: '_RROT', 3: '_MULT', 4: '_SUBT', 5: 'RSQB'})]
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
 )
 LEXER_CALLBACK = (
 {'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
@@ -8825,25 +8863,20 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[373] = (lexer_regexps)
 MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<__ANON_2>\\.\\.)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<PLUS>\\+)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_WS',
-   6: '__ANON_2',
-   7: '_VAR_CLOSE',
-   8: 'COMMA',
-   9: 'PLUS',
-   10: 'RSQB'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
+  '|\t'
+  '))+)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_WS',
+   3: 'STATE',
+   4: '_NEGATE_ALL',
+   5: '_VAR_OPEN',
+   6: 'LEAVE_ALONE',
+   7: 'LSQB',
+   8: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -8851,21 +8884,17 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[374] = (lexer_regexps)
 MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: 'STATE',
+   3: '_NEGATE_ALL',
+   4: '_VAR_OPEN',
+   5: 'LEAVE_ALONE',
+   6: 'LSQB',
+   7: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -8876,15 +8905,8 @@ MRES = (
 [('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
   '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
   '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t))+)?)|(?P<RSQB>\\])',
+  {1: '_LROT', 2: '_RROT', 3: '_MULT', 4: '_SUBT', 5: 'RSQB'})]
 )
 LEXER_CALLBACK = (
 {'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
@@ -8939,21 +8961,10 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[378] = (lexer_regexps)
 MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
+[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<RPAR>\\))', {1: '_WS', 2: 'RPAR'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -8961,21 +8972,11 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[379] = (lexer_regexps)
 MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
+[('(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)|(?P<RPAR>\\))',
+  {1: 'COMPASS_DIR', 2: 'RPAR'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -8983,17 +8984,24 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[380] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
-  '|\t'
-  '))+)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
-   2: '_WS',
-   3: 'STATE',
-   4: '_NEGATE_ALL',
-   5: '_VAR_OPEN',
-   6: 'LEAVE_ALONE',
-   7: 'LSQB',
-   8: '_NEGATE_LIVE'})]
+   2: '_HOIST_ARROW',
+   3: '_NORMAL_ARROW',
+   4: '__ANON_15',
+   5: '_WS',
+   6: '_NL',
+   7: 'STATE',
+   8: '__ANON_16',
+   9: '_NEGATE_ALL',
+   10: '_VAR_OPEN',
+   11: 'BANG',
+   12: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -9004,21 +9012,10 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[381] = (lexer_regexps)
 MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
+[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<RPAR>\\))', {1: '_WS', 2: 'RPAR'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -9026,17 +9023,24 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[382] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
-  '|\t'
-  '))+)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
-   2: '_WS',
-   3: 'STATE',
-   4: '_NEGATE_ALL',
-   5: '_VAR_OPEN',
-   6: 'LEAVE_ALONE',
-   7: 'LSQB',
-   8: '_NEGATE_LIVE'})]
+   2: '_HOIST_ARROW',
+   3: '_NORMAL_ARROW',
+   4: '__ANON_15',
+   5: '_WS',
+   6: '_NL',
+   7: 'STATE',
+   8: '__ANON_16',
+   9: '_NEGATE_ALL',
+   10: '_VAR_OPEN',
+   11: 'BANG',
+   12: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -9047,21 +9051,27 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[383] = (lexer_regexps)
 MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_NORMAL_ARROW',
+   4: '__ANON_15',
+   5: '_WS',
+   6: '_NL',
+   7: 'STATE',
+   8: '__ANON_16',
+   9: '_NEGATE_ALL',
+   10: '_VAR_OPEN',
+   11: 'BANG',
+   12: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -9069,21 +9079,11 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[384] = (lexer_regexps)
 MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
+[('(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)|(?P<RPAR>\\))',
+  {1: 'COMPASS_DIR', 2: 'RPAR'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -9091,7 +9091,7 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[385] = (lexer_regexps)
 MRES = (
-[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+[('(?P<STATE>\\d+)', {1: 'STATE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -9102,18 +9102,41 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[386] = (lexer_regexps)
 MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
   '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_HENSEL_CLOSE',
+   7: '_HENSEL_SEP',
+   8: '_MULT',
+   9: '_PERMUTE',
+   10: '_SUBT',
+   11: '__ANON_15',
+   12: '_WS',
+   13: '_NL',
+   14: 'STATE',
+   15: '__ANON_16',
+   16: '_NEGATE_ALL',
+   17: '_VAR_CLOSE',
+   18: '_VAR_OPEN',
+   19: 'BANG',
+   20: 'COMMA',
+   21: 'RSQB',
+   22: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
@@ -9124,18 +9147,41 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[387] = (lexer_regexps)
 MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
   '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_HENSEL_CLOSE',
+   7: '_HENSEL_SEP',
+   8: '_MULT',
+   9: '_PERMUTE',
+   10: '_SUBT',
+   11: '__ANON_15',
+   12: '_WS',
+   13: '_NL',
+   14: 'STATE',
+   15: '__ANON_16',
+   16: '_NEGATE_ALL',
+   17: '_VAR_CLOSE',
+   18: '_VAR_OPEN',
+   19: 'BANG',
+   20: 'COMMA',
+   21: 'RSQB',
+   22: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
@@ -9146,18 +9192,41 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[388] = (lexer_regexps)
 MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
   '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_HENSEL_CLOSE',
+   7: '_HENSEL_SEP',
+   8: '_MULT',
+   9: '_PERMUTE',
+   10: '_SUBT',
+   11: '__ANON_15',
+   12: '_WS',
+   13: '_NL',
+   14: 'STATE',
+   15: '__ANON_16',
+   16: '_NEGATE_ALL',
+   17: '_VAR_CLOSE',
+   18: '_VAR_OPEN',
+   19: 'BANG',
+   20: 'COMMA',
+   21: 'RSQB',
+   22: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
@@ -9168,18 +9237,41 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[389] = (lexer_regexps)
 MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
   '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_HENSEL_CLOSE',
+   7: '_HENSEL_SEP',
+   8: '_MULT',
+   9: '_PERMUTE',
+   10: '_SUBT',
+   11: '__ANON_15',
+   12: '_WS',
+   13: '_NL',
+   14: 'STATE',
+   15: '__ANON_16',
+   16: '_NEGATE_ALL',
+   17: '_VAR_CLOSE',
+   18: '_VAR_OPEN',
+   19: 'BANG',
+   20: 'COMMA',
+   21: 'RSQB',
+   22: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
 {'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
@@ -9216,18 +9308,14 @@ MRES = (
   '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
   '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
   '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<__ANON_2>\\.\\.)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<PLUS>\\+)|(?P<RSQB>\\])',
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
   {1: '_LROT',
    2: '_RROT',
    3: '_MULT',
    4: '_SUBT',
-   5: '_WS',
-   6: '__ANON_2',
-   7: '_VAR_CLOSE',
-   8: 'COMMA',
-   9: 'PLUS',
-   10: 'RSQB'})]
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
 )
 LEXER_CALLBACK = (
 {'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
@@ -9374,14 +9462,18 @@ MRES = (
   '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
   '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
   '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  '))+)?)|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<__ANON_2>\\.\\.)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<PLUS>\\+)|(?P<RSQB>\\])',
   {1: '_LROT',
    2: '_RROT',
    3: '_MULT',
    4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
+   5: '_WS',
+   6: '__ANON_2',
+   7: '_VAR_CLOSE',
+   8: 'COMMA',
+   9: 'PLUS',
+   10: 'RSQB'})]
 )
 LEXER_CALLBACK = (
 {'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
@@ -9414,20 +9506,21 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[400] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
-  '|\t'
-  '))+)|(?P<STATE>\\d+)|(?P<EXTEND_LAST>\\.\\.\\.)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_WS',
-   3: 'STATE',
-   4: 'EXTEND_LAST',
-   5: '_NEGATE_ALL',
-   6: '_VAR_OPEN',
-   7: 'LSQB',
-   8: '_NEGATE_LIVE'})]
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -9435,10 +9528,21 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[401] = (lexer_regexps)
 MRES = (
-[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -9490,410 +9594,6 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[404] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
-  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
-  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_MULT',
-   7: '_PERMUTE',
-   8: '_SUBT',
-   9: '__ANON_14',
-   10: '_WS',
-   11: '_NL',
-   12: 'STATE',
-   13: '__ANON_15',
-   14: '_NEGATE_ALL',
-   15: '_VAR_CLOSE',
-   16: '_VAR_OPEN',
-   17: 'BANG',
-   18: 'COMMA',
-   19: 'RSQB',
-   20: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[405] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
-  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
-  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_MULT',
-   7: '_PERMUTE',
-   8: '_SUBT',
-   9: '__ANON_14',
-   10: '_WS',
-   11: '_NL',
-   12: 'STATE',
-   13: '__ANON_15',
-   14: '_NEGATE_ALL',
-   15: '_VAR_CLOSE',
-   16: '_VAR_OPEN',
-   17: 'BANG',
-   18: 'COMMA',
-   19: 'RSQB',
-   20: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[406] = (lexer_regexps)
-MRES = (
-[('(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t))+)?\\/(?:(?:(?:\\ |\t))+)?)',
-  {1: '_HENSEL_SEP'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[407] = (lexer_regexps)
-MRES = (
-[('(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t))+)?\\>(?:(?:(?:\\ |\t))+)?)',
-  {1: '_HENSEL_CLOSE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[408] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_HENSEL_CLOSE',
-   7: '_HENSEL_SEP',
-   8: '_MULT',
-   9: '_PERMUTE',
-   10: '_SUBT',
-   11: '__ANON_14',
-   12: '_WS',
-   13: '_NL',
-   14: 'STATE',
-   15: '__ANON_15',
-   16: '_NEGATE_ALL',
-   17: '_VAR_CLOSE',
-   18: '_VAR_OPEN',
-   19: 'BANG',
-   20: 'COMMA',
-   21: 'RSQB',
-   22: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[409] = (lexer_regexps)
-MRES = (
-[('(?P<STATE>\\d+)', {1: 'STATE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[410] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_HENSEL_CLOSE',
-   7: '_HENSEL_SEP',
-   8: '_MULT',
-   9: '_PERMUTE',
-   10: '_SUBT',
-   11: '__ANON_14',
-   12: '_WS',
-   13: '_NL',
-   14: 'STATE',
-   15: '__ANON_15',
-   16: '_NEGATE_ALL',
-   17: '_VAR_CLOSE',
-   18: '_VAR_OPEN',
-   19: 'BANG',
-   20: 'COMMA',
-   21: 'RSQB',
-   22: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[411] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_HENSEL_CLOSE',
-   7: '_HENSEL_SEP',
-   8: '_MULT',
-   9: '_PERMUTE',
-   10: '_SUBT',
-   11: '__ANON_14',
-   12: '_WS',
-   13: '_NL',
-   14: 'STATE',
-   15: '__ANON_15',
-   16: '_NEGATE_ALL',
-   17: '_VAR_CLOSE',
-   18: '_VAR_OPEN',
-   19: 'BANG',
-   20: 'COMMA',
-   21: 'RSQB',
-   22: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[412] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_HENSEL_CLOSE',
-   7: '_HENSEL_SEP',
-   8: '_MULT',
-   9: '_PERMUTE',
-   10: '_SUBT',
-   11: '__ANON_14',
-   12: '_WS',
-   13: '_NL',
-   14: 'STATE',
-   15: '__ANON_15',
-   16: '_NEGATE_ALL',
-   17: '_VAR_CLOSE',
-   18: '_VAR_OPEN',
-   19: 'BANG',
-   20: 'COMMA',
-   21: 'RSQB',
-   22: 'SEMICOLON'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[413] = (lexer_regexps)
-MRES = (
-[('(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)|(?P<RPAR>\\))',
-  {1: 'COMPASS_DIR', 2: 'RPAR'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[414] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_NORMAL_ARROW',
-   4: '__ANON_14',
-   5: '_WS',
-   6: '_NL',
-   7: 'STATE',
-   8: '__ANON_15',
-   9: '_NEGATE_ALL',
-   10: '_VAR_OPEN',
-   11: 'BANG',
-   12: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[415] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_NORMAL_ARROW',
-   4: '__ANON_14',
-   5: '_WS',
-   6: '_NL',
-   7: 'STATE',
-   8: '__ANON_15',
-   9: '_NEGATE_ALL',
-   10: '_VAR_OPEN',
-   11: 'BANG',
-   12: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[416] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_NORMAL_ARROW',
-   4: '__ANON_14',
-   5: '_WS',
-   6: '_NL',
-   7: 'STATE',
-   8: '__ANON_15',
-   9: '_NEGATE_ALL',
-   10: '_VAR_OPEN',
-   11: 'BANG',
-   12: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[417] = (lexer_regexps)
-MRES = (
-[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<RPAR>\\))', {1: '_WS', 2: 'RPAR'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[418] = (lexer_regexps)
-MRES = (
 [('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
 )
 LEXER_CALLBACK = (
@@ -9903,26 +9603,17 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[419] = (lexer_regexps)
+LEXERS[405] = (lexer_regexps)
 MRES = (
-[('(?P<_VAR_CLOSE>[)}])', {1: '_VAR_CLOSE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[420] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<EXTEND_LAST>\\.\\.\\.)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
+  '|\t'
+  '))+)|(?P<STATE>\\d+)|(?P<EXTEND_LAST>\\.\\.\\.)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
-   2: 'STATE',
-   3: 'EXTEND_LAST',
-   4: '_NEGATE_ALL',
-   5: '_VAR_OPEN',
-   6: 'LEAVE_ALONE',
+   2: '_WS',
+   3: 'STATE',
+   4: 'EXTEND_LAST',
+   5: '_NEGATE_ALL',
+   6: '_VAR_OPEN',
    7: 'LSQB',
    8: '_NEGATE_LIVE'})]
 )
@@ -9933,7 +9624,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[421] = (lexer_regexps)
+LEXERS[406] = (lexer_regexps)
 MRES = (
 [('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
   '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
@@ -9955,7 +9646,187 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[422] = (lexer_regexps)
+LEXERS[407] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[408] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
+  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
+  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_MULT',
+   7: '_PERMUTE',
+   8: '_SUBT',
+   9: '__ANON_15',
+   10: '_WS',
+   11: '_NL',
+   12: 'STATE',
+   13: '__ANON_16',
+   14: '_NEGATE_ALL',
+   15: '_VAR_CLOSE',
+   16: '_VAR_OPEN',
+   17: 'BANG',
+   18: 'COMMA',
+   19: 'RSQB',
+   20: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[409] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
+  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t'
+  '))+)?\\~(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_MULT',
+   7: '_PERMUTE',
+   8: '_SUBT',
+   9: '__ANON_15',
+   10: '_WS',
+   11: '_NL',
+   12: 'STATE',
+   13: '__ANON_16',
+   14: '_NEGATE_ALL',
+   15: '_VAR_CLOSE',
+   16: '_VAR_OPEN',
+   17: 'BANG',
+   18: 'COMMA',
+   19: 'RSQB',
+   20: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[410] = (lexer_regexps)
+MRES = (
+[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[411] = (lexer_regexps)
+MRES = (
+[('(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t))+)?\\>(?:(?:(?:\\ |\t))+)?)',
+  {1: '_HENSEL_CLOSE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[412] = (lexer_regexps)
+MRES = (
+[('(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t))+)?\\/(?:(?:(?:\\ |\t))+)?)',
+  {1: '_HENSEL_SEP'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[413] = (lexer_regexps)
+MRES = (
+[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[414] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<EXTEND_LAST>\\.\\.\\.)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: 'STATE',
+   3: 'EXTEND_LAST',
+   4: '_NEGATE_ALL',
+   5: '_VAR_OPEN',
+   6: 'LEAVE_ALONE',
+   7: 'LSQB',
+   8: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[415] = (lexer_regexps)
+MRES = (
+[('(?P<_VAR_CLOSE>[)}])', {1: '_VAR_CLOSE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[416] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
   '|\t'
@@ -9977,201 +9848,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[423] = (lexer_regexps)
-MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t))+)?)|(?P<RSQB>\\])',
-  {1: '_LROT', 2: '_RROT', 3: '_MULT', 4: '_SUBT', 5: 'RSQB'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[424] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<RPAR>\\))|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_NORMAL_ARROW',
-   4: '__ANON_14',
-   5: '_WS',
-   6: '_NL',
-   7: 'STATE',
-   8: '__ANON_15',
-   9: '_NEGATE_ALL',
-   10: '_VAR_OPEN',
-   11: 'BANG',
-   12: 'RPAR',
-   13: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[425] = (lexer_regexps)
-MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t))+)?)|(?P<RSQB>\\])',
-  {1: '_LROT', 2: '_RROT', 3: '_MULT', 4: '_SUBT', 5: 'RSQB'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[426] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<RPAR>\\))|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_NORMAL_ARROW',
-   4: '__ANON_14',
-   5: '_WS',
-   6: '_NL',
-   7: 'STATE',
-   8: '__ANON_15',
-   9: '_NEGATE_ALL',
-   10: '_VAR_OPEN',
-   11: 'BANG',
-   12: 'RPAR',
-   13: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[427] = (lexer_regexps)
-MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t))+)?)|(?P<RSQB>\\])',
-  {1: '_LROT', 2: '_RROT', 3: '_MULT', 4: '_SUBT', 5: 'RSQB'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[428] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: 'STATE',
-   3: '_NEGATE_ALL',
-   4: '_VAR_OPEN',
-   5: 'LEAVE_ALONE',
-   6: 'LSQB',
-   7: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[429] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: 'STATE',
-   3: '_NEGATE_ALL',
-   4: '_VAR_OPEN',
-   5: 'LEAVE_ALONE',
-   6: 'LSQB',
-   7: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[430] = (lexer_regexps)
-MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t))+)?)|(?P<RSQB>\\])',
-  {1: '_LROT', 2: '_RROT', 3: '_MULT', 4: '_SUBT', 5: 'RSQB'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[431] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<EXTEND_LAST>\\.\\.\\.)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: 'STATE',
-   3: 'EXTEND_LAST',
-   4: '_NEGATE_ALL',
-   5: '_VAR_OPEN',
-   6: 'LSQB',
-   7: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[432] = (lexer_regexps)
-MRES = (
-[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[433] = (lexer_regexps)
-MRES = (
-[('(?P<_VAR_CLOSE>[)}])', {1: '_VAR_CLOSE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[434] = (lexer_regexps)
+LEXERS[417] = (lexer_regexps)
 MRES = (
 [('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
   '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
@@ -10193,7 +9870,313 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[435] = (lexer_regexps)
+LEXERS[418] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t))+)?)|(?P<RSQB>\\])',
+  {1: '_LROT', 2: '_RROT', 3: '_MULT', 4: '_SUBT', 5: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[419] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<RPAR>\\))|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_NORMAL_ARROW',
+   4: '__ANON_15',
+   5: '_WS',
+   6: '_NL',
+   7: 'STATE',
+   8: '__ANON_16',
+   9: '_NEGATE_ALL',
+   10: '_VAR_OPEN',
+   11: 'BANG',
+   12: 'RPAR',
+   13: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[420] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t))+)?)|(?P<RSQB>\\])',
+  {1: '_LROT', 2: '_RROT', 3: '_MULT', 4: '_SUBT', 5: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[421] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: 'STATE',
+   3: '_NEGATE_ALL',
+   4: '_VAR_OPEN',
+   5: 'LEAVE_ALONE',
+   6: 'LSQB',
+   7: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[422] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t))+)?)|(?P<RSQB>\\])',
+  {1: '_LROT', 2: '_RROT', 3: '_MULT', 4: '_SUBT', 5: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[423] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: 'STATE',
+   3: '_NEGATE_ALL',
+   4: '_VAR_OPEN',
+   5: 'LEAVE_ALONE',
+   6: 'LSQB',
+   7: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[424] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t))+)?)|(?P<RSQB>\\])',
+  {1: '_LROT', 2: '_RROT', 3: '_MULT', 4: '_SUBT', 5: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[425] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<RPAR>\\))|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_NORMAL_ARROW',
+   4: '__ANON_15',
+   5: '_WS',
+   6: '_NL',
+   7: 'STATE',
+   8: '__ANON_16',
+   9: '_NEGATE_ALL',
+   10: '_VAR_OPEN',
+   11: 'BANG',
+   12: 'RPAR',
+   13: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[426] = (lexer_regexps)
+MRES = (
+[('(?P<COMPASS_DIR>NE|SE|SW|NW|N|E|S|W)|(?P<RPAR>\\))',
+  {1: 'COMPASS_DIR', 2: 'RPAR'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[427] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_NORMAL_ARROW',
+   4: '__ANON_15',
+   5: '_WS',
+   6: '_NL',
+   7: 'STATE',
+   8: '__ANON_16',
+   9: '_NEGATE_ALL',
+   10: '_VAR_OPEN',
+   11: 'BANG',
+   12: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[428] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_NORMAL_ARROW',
+   4: '__ANON_15',
+   5: '_WS',
+   6: '_NL',
+   7: 'STATE',
+   8: '__ANON_16',
+   9: '_NEGATE_ALL',
+   10: '_VAR_OPEN',
+   11: 'BANG',
+   12: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[429] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_NORMAL_ARROW',
+   4: '__ANON_15',
+   5: '_WS',
+   6: '_NL',
+   7: 'STATE',
+   8: '__ANON_16',
+   9: '_NEGATE_ALL',
+   10: '_VAR_OPEN',
+   11: 'BANG',
+   12: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[430] = (lexer_regexps)
+MRES = (
+[('(?P<_WS>(?:(?:\\ |\t))+)|(?P<RPAR>\\))', {1: '_WS', 2: 'RPAR'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[431] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
+  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
+  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_HENSEL_CLOSE',
+   7: '_HENSEL_SEP',
+   8: '_MULT',
+   9: '_PERMUTE',
+   10: '_SUBT',
+   11: '__ANON_15',
+   12: '_WS',
+   13: '_NL',
+   14: 'STATE',
+   15: '__ANON_16',
+   16: '_NEGATE_ALL',
+   17: '_VAR_CLOSE',
+   18: '_VAR_OPEN',
+   19: 'BANG',
+   20: 'COMMA',
+   21: 'RSQB',
+   22: 'SEMICOLON'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[432] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
   '|\t'
@@ -10214,10 +10197,60 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
+LEXERS[433] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[434] = (lexer_regexps)
+MRES = (
+[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[435] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<EXTEND_LAST>\\.\\.\\.)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: 'STATE',
+   3: 'EXTEND_LAST',
+   4: '_NEGATE_ALL',
+   5: '_VAR_OPEN',
+   6: 'LSQB',
+   7: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
 LEXERS[436] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME', 2: 'STATE', 3: '_NEGATE_ALL', 4: '_VAR_OPEN', 5: '_NEGATE_LIVE'})]
+[('(?P<_VAR_CLOSE>[)}])', {1: '_VAR_CLOSE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -10239,44 +10272,11 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[438] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
-  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
-  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t'
-  '))+)?\\>(?:(?:(?:\\ |\t))+)?)|(?P<_HENSEL_SEP>(?:(?:(?:\\ |\t'
-  '))+)?\\/(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ '
-  '|\t))+)?)|(?P<_PERMUTE>(?:(?:(?:\\ |\t))+)?\\~(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<__ANON_14>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
-  '))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])|(?P<SEMICOLON>\\;)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_LROT',
-   4: '_NORMAL_ARROW',
-   5: '_RROT',
-   6: '_HENSEL_CLOSE',
-   7: '_HENSEL_SEP',
-   8: '_MULT',
-   9: '_PERMUTE',
-   10: '_SUBT',
-   11: '__ANON_14',
-   12: '_WS',
-   13: '_NL',
-   14: 'STATE',
-   15: '__ANON_15',
-   16: '_NEGATE_ALL',
-   17: '_VAR_CLOSE',
-   18: '_VAR_OPEN',
-   19: 'BANG',
-   20: 'COMMA',
-   21: 'RSQB',
-   22: 'SEMICOLON'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME', 2: 'STATE', 3: '_NEGATE_ALL', 4: '_VAR_OPEN', 5: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -10284,24 +10284,7 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[439] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_NORMAL_ARROW',
-   4: '__ANON_14',
-   5: '_WS',
-   6: '_NL',
-   7: 'STATE',
-   8: '__ANON_15',
-   9: '_NEGATE_ALL',
-   10: '_VAR_OPEN',
-   11: 'BANG',
-   12: '_NEGATE_LIVE'})]
+[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -10311,6 +10294,17 @@ lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[440] = (lexer_regexps)
+MRES = (
+[('(?P<_VAR_CLOSE>[)}])', {1: '_VAR_CLOSE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[441] = (lexer_regexps)
 MRES = (
 [('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
   '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
@@ -10332,40 +10326,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[441] = (lexer_regexps)
-MRES = (
-[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
 LEXERS[442] = (lexer_regexps)
-MRES = (
-[('(?P<_VAR_CLOSE>[)}])', {1: '_VAR_CLOSE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[443] = (lexer_regexps)
-MRES = (
-[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[444] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<EXTEND_LAST>\\.\\.\\.)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LEAVE_ALONE>_)|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
@@ -10384,7 +10345,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[445] = (lexer_regexps)
+LEXERS[443] = (lexer_regexps)
 MRES = (
 [('(?P<_VAR_CLOSE>[)}])', {1: '_VAR_CLOSE'})]
 )
@@ -10395,22 +10356,33 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[446] = (lexer_regexps)
+LEXERS[444] = (lexer_regexps)
+MRES = (
+[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[445] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
   '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
   ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<RPAR>\\))|(?P<_NEGATE_LIVE>\\-)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<RPAR>\\))|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
    2: '_HOIST_ARROW',
    3: '_NORMAL_ARROW',
-   4: '__ANON_14',
+   4: '__ANON_15',
    5: '_WS',
    6: '_NL',
    7: 'STATE',
-   8: '__ANON_15',
+   8: '__ANON_16',
    9: '_NEGATE_ALL',
    10: '_VAR_OPEN',
    11: 'BANG',
@@ -10424,30 +10396,38 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[447] = (lexer_regexps)
+LEXERS[446] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<RPAR>\\))|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_NORMAL_ARROW',
-   4: '__ANON_14',
-   5: '_WS',
-   6: '_NL',
-   7: 'STATE',
-   8: '__ANON_15',
-   9: '_NEGATE_ALL',
-   10: '_VAR_OPEN',
-   11: 'BANG',
-   12: 'RPAR',
-   13: '_NEGATE_LIVE'})]
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[447] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t))+)?)|(?P<RSQB>\\])',
+  {1: '_LROT', 2: '_RROT', 3: '_MULT', 4: '_SUBT', 5: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -10492,14 +10472,28 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[450] = (lexer_regexps)
 MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t))+)?)|(?P<RSQB>\\])',
-  {1: '_LROT', 2: '_RROT', 3: '_MULT', 4: '_SUBT', 5: 'RSQB'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<RPAR>\\))|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_NORMAL_ARROW',
+   4: '__ANON_15',
+   5: '_WS',
+   6: '_NL',
+   7: 'STATE',
+   8: '__ANON_16',
+   9: '_NEGATE_ALL',
+   10: '_VAR_OPEN',
+   11: 'BANG',
+   12: 'RPAR',
+   13: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -10507,21 +10501,27 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[451] = (lexer_regexps)
 MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_NORMAL_ARROW',
+   4: '__ANON_15',
+   5: '_WS',
+   6: '_NL',
+   7: 'STATE',
+   8: '__ANON_16',
+   9: '_NEGATE_ALL',
+   10: '_VAR_OPEN',
+   11: 'BANG',
+   12: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -10529,7 +10529,14 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[452] = (lexer_regexps)
 MRES = (
-[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<EXTEND_LAST>\\.\\.\\.)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: 'STATE',
+   3: 'EXTEND_LAST',
+   4: '_NEGATE_ALL',
+   5: '_VAR_OPEN',
+   6: 'LSQB',
+   7: '_NEGATE_LIVE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -10551,6 +10558,39 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[454] = (lexer_regexps)
 MRES = (
+[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[455] = (lexer_regexps)
+MRES = (
+[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[456] = (lexer_regexps)
+MRES = (
+[('(?P<_VAR_CLOSE>[)}])', {1: '_VAR_CLOSE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[457] = (lexer_regexps)
+MRES = (
 [('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
   '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
   '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
@@ -10571,50 +10611,9 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[455] = (lexer_regexps)
-MRES = (
-[('(?P<_VAR_CLOSE>[)}])', {1: '_VAR_CLOSE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[456] = (lexer_regexps)
-MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<EXTEND_LAST>\\.\\.\\.)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: 'STATE',
-   3: 'EXTEND_LAST',
-   4: '_NEGATE_ALL',
-   5: '_VAR_OPEN',
-   6: 'LSQB',
-   7: '_NEGATE_LIVE'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[457] = (lexer_regexps)
-MRES = (
-[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
-)
-LEXER_CALLBACK = (
-{}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
 LEXERS[458] = (lexer_regexps)
 MRES = (
-[('(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t))+)?\\>(?:(?:(?:\\ |\t))+)?)',
-  {1: '_HENSEL_CLOSE'})]
+[('(?P<STATE>\\d+)|(?P<LSQB>\\[)', {1: 'STATE', 2: 'LSQB'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -10625,7 +10624,8 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[459] = (lexer_regexps)
 MRES = (
-[('(?P<STATE>\\d+)|(?P<LSQB>\\[)', {1: 'STATE', 2: 'LSQB'})]
+[('(?P<_HENSEL_CLOSE>(?:(?:(?:\\ |\t))+)?\\>(?:(?:(?:\\ |\t))+)?)',
+  {1: '_HENSEL_CLOSE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -10658,7 +10658,7 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[461] = (lexer_regexps)
 MRES = (
-[('(?P<_VAR_CLOSE>[)}])', {1: '_VAR_CLOSE'})]
+[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -10669,7 +10669,7 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[462] = (lexer_regexps)
 MRES = (
-[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+[('(?P<_VAR_CLOSE>[)}])', {1: '_VAR_CLOSE'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -10746,50 +10746,6 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[466] = (lexer_regexps)
 MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[467] = (lexer_regexps)
-MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
-)
-LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
-)
-lexer_regexps = LexerRegexps()
-lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
-lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
-                          for n, mres in LEXER_CALLBACK.items()}
-LEXERS[468] = (lexer_regexps)
-MRES = (
 [('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
 )
 LEXER_CALLBACK = (
@@ -10799,7 +10755,7 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[469] = (lexer_regexps)
+LEXERS[467] = (lexer_regexps)
 MRES = (
 [('(?P<_VAR_CLOSE>[)}])', {1: '_VAR_CLOSE'})]
 )
@@ -10810,33 +10766,66 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[470] = (lexer_regexps)
+LEXERS[468] = (lexer_regexps)
 MRES = (
-[('(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)', {1: 'COMMA', 2: 'SEMICOLON'})]
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[471] = (lexer_regexps)
+LEXERS[469] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[470] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
   '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
   ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
    2: '_HOIST_ARROW',
    3: '_NORMAL_ARROW',
-   4: '__ANON_14',
+   4: '__ANON_15',
    5: '_WS',
    6: '_NL',
    7: 'STATE',
-   8: '__ANON_15',
+   8: '__ANON_16',
    9: '_NEGATE_ALL',
    10: '_VAR_OPEN',
    11: 'BANG',
@@ -10849,22 +10838,33 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
+LEXERS[471] = (lexer_regexps)
+MRES = (
+[('(?P<__ANON_3>0|1|2|FG|BG)', {1: '__ANON_3'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
 LEXERS[472] = (lexer_regexps)
 MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
   '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
   ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
    2: '_HOIST_ARROW',
    3: '_NORMAL_ARROW',
-   4: '__ANON_14',
+   4: '__ANON_15',
    5: '_WS',
    6: '_NL',
    7: 'STATE',
-   8: '__ANON_15',
+   8: '__ANON_16',
    9: '_NEGATE_ALL',
    10: '_VAR_OPEN',
    11: 'BANG',
@@ -10879,21 +10879,10 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[473] = (lexer_regexps)
 MRES = (
-[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
-  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
-  {1: '_LROT',
-   2: '_RROT',
-   3: '_MULT',
-   4: '_SUBT',
-   5: '_VAR_CLOSE',
-   6: 'COMMA',
-   7: 'RSQB'})]
+[('(?P<COMMA>\\,)|(?P<SEMICOLON>\\;)', {1: 'COMMA', 2: 'SEMICOLON'})]
 )
 LEXER_CALLBACK = (
-{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+{}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -10923,10 +10912,21 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[475] = (lexer_regexps)
 MRES = (
-[('(?P<STATE>\\d+)|(?P<LSQB>\\[)', {1: 'STATE', 2: 'LSQB'})]
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
 )
 LEXER_CALLBACK = (
-{}
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
 )
 lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
@@ -10934,24 +10934,7 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[476] = (lexer_regexps)
 MRES = (
-[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
-  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
-  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
-  ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
-  {1: 'NAME',
-   2: '_HOIST_ARROW',
-   3: '_NORMAL_ARROW',
-   4: '__ANON_14',
-   5: '_WS',
-   6: '_NL',
-   7: 'STATE',
-   8: '__ANON_15',
-   9: '_NEGATE_ALL',
-   10: '_VAR_OPEN',
-   11: 'BANG',
-   12: '_NEGATE_LIVE'})]
+[('(?P<COLON>\\:)|(?P<RSQB>\\])', {1: 'COLON', 2: 'RSQB'})]
 )
 LEXER_CALLBACK = (
 {}
@@ -10962,20 +10945,89 @@ lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres
                           for n, mres in LEXER_CALLBACK.items()}
 LEXERS[477] = (lexer_regexps)
 MRES = (
+[('(?P<STATE>\\d+)|(?P<LSQB>\\[)', {1: 'STATE', 2: 'LSQB'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[478] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
+  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_MULT',
+   7: '_SUBT',
+   8: '__ANON_15',
+   9: '_WS',
+   10: '_NL',
+   11: 'STATE',
+   12: '__ANON_16',
+   13: '_NEGATE_ALL',
+   14: '_VAR_CLOSE',
+   15: '_VAR_OPEN',
+   16: 'BANG',
+   17: 'COMMA',
+   18: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[479] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
+  '|\t'
+  '))+)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_WS',
+   3: 'STATE',
+   4: '_NEGATE_ALL',
+   5: '_VAR_OPEN',
+   6: 'LSQB',
+   7: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[480] = (lexer_regexps)
+MRES = (
 [('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
   '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
-  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_14>(?m:[ \t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
   ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
   ')?\n'
-  ')+)|(?P<STATE>\\d+)|(?P<__ANON_15>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
   {1: 'NAME',
    2: '_HOIST_ARROW',
    3: '_NORMAL_ARROW',
-   4: '__ANON_14',
+   4: '__ANON_15',
    5: '_WS',
    6: '_NL',
    7: 'STATE',
-   8: '__ANON_15',
+   8: '__ANON_16',
    9: '_NEGATE_ALL',
    10: '_VAR_OPEN',
    11: 'BANG',
@@ -10988,7 +11040,1180 @@ lexer_regexps = LexerRegexps()
 lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
 lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
                           for n, mres in LEXER_CALLBACK.items()}
-LEXERS[478] = (lexer_regexps)
+LEXERS[481] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<__ANON_15>(?m:[ \t'
+  ']+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_NORMAL_ARROW',
+   4: '__ANON_15',
+   5: '_WS',
+   6: '_NL',
+   7: 'STATE',
+   8: '__ANON_16',
+   9: '_NEGATE_ALL',
+   10: '_VAR_OPEN',
+   11: 'BANG',
+   12: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[482] = (lexer_regexps)
+MRES = (
+[('(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<__ANON_2>\\.\\.)|(?P<PLUS>\\+)',
+  {1: '_MULT', 2: '_WS', 3: '__ANON_2', 4: 'PLUS'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[483] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: 'STATE',
+   3: '_NEGATE_ALL',
+   4: '_VAR_OPEN',
+   5: 'LSQB',
+   6: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[484] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t))+)?)|(?P<RSQB>\\])',
+  {1: '_LROT', 2: '_RROT', 3: '_MULT', 4: '_SUBT', 5: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[485] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: 'STATE',
+   3: '_NEGATE_ALL',
+   4: '_VAR_OPEN',
+   5: 'LSQB',
+   6: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[486] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: 'STATE',
+   3: '_NEGATE_ALL',
+   4: '_VAR_OPEN',
+   5: 'LSQB',
+   6: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[487] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[488] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[489] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[490] = (lexer_regexps)
+MRES = (
+[('(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t))+)?)', {1: '_MULT'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[491] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[492] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: 'STATE',
+   3: '_NEGATE_ALL',
+   4: '_VAR_OPEN',
+   5: 'LSQB',
+   6: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[493] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<INT>[0123456789]+)|(?P<STATE>\\d+)|(?P<_VAR_OPEN>[({])',
+  {1: 'NAME', 2: 'INT', 3: 'STATE', 4: '_VAR_OPEN'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[494] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<__ANON_2>\\.\\.)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<PLUS>\\+)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_WS',
+   6: '__ANON_2',
+   7: '_VAR_CLOSE',
+   8: 'COMMA',
+   9: 'PLUS',
+   10: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[495] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[496] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[497] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[498] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
+  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_MULT',
+   7: '_SUBT',
+   8: '__ANON_15',
+   9: '_WS',
+   10: '_NL',
+   11: 'STATE',
+   12: '__ANON_16',
+   13: '_NEGATE_ALL',
+   14: '_VAR_CLOSE',
+   15: '_VAR_OPEN',
+   16: 'BANG',
+   17: 'COMMA',
+   18: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[499] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)',
+  {1: 'NAME', 2: 'STATE', 3: '_VAR_OPEN', 4: 'LSQB'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[500] = (lexer_regexps)
+MRES = (
+[('(?P<INT>[0123456789]+)', {1: 'INT'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[501] = (lexer_regexps)
+MRES = (
+[('(?P<INT>[0123456789]+)', {1: 'INT'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[502] = (lexer_regexps)
+MRES = (
+[('(?P<INT>[0123456789]+)', {1: 'INT'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[503] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t))+)?)|(?P<RSQB>\\])',
+  {1: '_LROT', 2: '_RROT', 3: '_MULT', 4: '_SUBT', 5: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[504] = (lexer_regexps)
+MRES = (
+[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[505] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[506] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<INT>[0123456789]+)|(?P<STATE>\\d+)|(?P<_VAR_OPEN>[({])',
+  {1: 'NAME', 2: 'INT', 3: 'STATE', 4: '_VAR_OPEN'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[507] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[508] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[509] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[510] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[511] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[512] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[513] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<__ANON_2>\\.\\.)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<PLUS>\\+)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_WS',
+   6: '__ANON_2',
+   7: '_VAR_CLOSE',
+   8: 'COMMA',
+   9: 'PLUS',
+   10: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[514] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[515] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[516] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[517] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[518] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[519] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[520] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_HOIST_ARROW>(?:(?:(?:\\ '
+  '|\t))+)?\\=\\>(?:(?:(?:\\ |\t))+)?)|(?P<_LROT>(?:(?:(?:\\ |\t'
+  '))+)?\\<\\<(?:(?:(?:\\ |\t))+)?)|(?P<_NORMAL_ARROW>(?:(?:(?:\\ |\t'
+  '))+)?\\-\\>(?:(?:(?:\\ |\t))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t'
+  '))+)?\\>\\>(?:(?:(?:\\ |\t))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t'
+  '))+)?\\*(?:(?:(?:\\ |\t))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ '
+  '|\t))+)?)|(?P<__ANON_15>(?m:[ \t]+(?:#.*)?$))|(?P<_WS>(?:(?:\\ |\t'
+  '))+)|(?P<_NL>(?:(?:\r'
+  ')?\n'
+  ')+)|(?P<STATE>\\d+)|(?P<__ANON_16>#.*)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_CLOSE>[)}])|(?P<_VAR_OPEN>[({])|(?P<BANG>\\!)|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: 'NAME',
+   2: '_HOIST_ARROW',
+   3: '_LROT',
+   4: '_NORMAL_ARROW',
+   5: '_RROT',
+   6: '_MULT',
+   7: '_SUBT',
+   8: '__ANON_15',
+   9: '_WS',
+   10: '_NL',
+   11: 'STATE',
+   12: '__ANON_16',
+   13: '_NEGATE_ALL',
+   14: '_VAR_CLOSE',
+   15: '_VAR_OPEN',
+   16: 'BANG',
+   17: 'COMMA',
+   18: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[521] = (lexer_regexps)
+MRES = (
+[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[522] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
+  '|\t'
+  '))+)|(?P<STATE>\\d+)|(?P<EXTEND_LAST>\\.\\.\\.)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_WS',
+   3: 'STATE',
+   4: 'EXTEND_LAST',
+   5: '_NEGATE_ALL',
+   6: '_VAR_OPEN',
+   7: 'LSQB',
+   8: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[523] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[524] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[525] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[526] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[527] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<_WS>(?:(?:\\ '
+  '|\t'
+  '))+)|(?P<STATE>\\d+)|(?P<EXTEND_LAST>\\.\\.\\.)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: '_WS',
+   3: 'STATE',
+   4: 'EXTEND_LAST',
+   5: '_NEGATE_ALL',
+   6: '_VAR_OPEN',
+   7: 'LSQB',
+   8: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[528] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[529] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<EXTEND_LAST>\\.\\.\\.)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: 'STATE',
+   3: 'EXTEND_LAST',
+   4: '_NEGATE_ALL',
+   5: '_VAR_OPEN',
+   6: 'LSQB',
+   7: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[530] = (lexer_regexps)
+MRES = (
+[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[531] = (lexer_regexps)
+MRES = (
+[('(?P<_VAR_CLOSE>[)}])', {1: '_VAR_CLOSE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[532] = (lexer_regexps)
+MRES = (
+[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[533] = (lexer_regexps)
+MRES = (
+[('(?P<_VAR_CLOSE>[)}])', {1: '_VAR_CLOSE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[534] = (lexer_regexps)
+MRES = (
+[('(?P<NAME>(?<![A-Za-z])(?!(?:[NS][EW]?|[EW])(?!\\w))[A-Za-z]\\w*)|(?P<STATE>\\d+)|(?P<EXTEND_LAST>\\.\\.\\.)|(?P<_NEGATE_ALL>\\-\\-)|(?P<_VAR_OPEN>[({])|(?P<LSQB>\\[)|(?P<_NEGATE_LIVE>\\-)',
+  {1: 'NAME',
+   2: 'STATE',
+   3: 'EXTEND_LAST',
+   4: '_NEGATE_ALL',
+   5: '_VAR_OPEN',
+   6: 'LSQB',
+   7: '_NEGATE_LIVE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[535] = (lexer_regexps)
+MRES = (
+[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[536] = (lexer_regexps)
+MRES = (
+[('(?P<_VAR_CLOSE>[)}])', {1: '_VAR_CLOSE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[537] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[538] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[539] = (lexer_regexps)
+MRES = (
+[('(?P<_VAR_CLOSE>[)}])', {1: '_VAR_CLOSE'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[540] = (lexer_regexps)
+MRES = (
+[('(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)', {1: '_VAR_CLOSE', 2: 'COMMA'})]
+)
+LEXER_CALLBACK = (
+{}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[541] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[542] = (lexer_regexps)
+MRES = (
+[('(?P<_LROT>(?:(?:(?:\\ |\t))+)?\\<\\<(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_RROT>(?:(?:(?:\\ |\t))+)?\\>\\>(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_MULT>(?:(?:(?:\\ |\t))+)?\\*(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_SUBT>(?:(?:(?:\\ |\t))+)?\\-(?:(?:(?:\\ |\t'
+  '))+)?)|(?P<_VAR_CLOSE>[)}])|(?P<COMMA>\\,)|(?P<RSQB>\\])',
+  {1: '_LROT',
+   2: '_RROT',
+   3: '_MULT',
+   4: '_SUBT',
+   5: '_VAR_CLOSE',
+   6: 'COMMA',
+   7: 'RSQB'})]
+)
+LEXER_CALLBACK = (
+{'_SUBT': [('(?P<_NEGATE_LIVE>\\-$)', {1: '_NEGATE_LIVE'})]}
+)
+lexer_regexps = LexerRegexps()
+lexer_regexps.mres = [(re.compile(p), d) for p, d in MRES]
+lexer_regexps.callback = {n: UnlessCallback([(re.compile(p), d) for p, d in mres])
+                          for n, mres in LEXER_CALLBACK.items()}
+LEXERS[543] = (lexer_regexps)
 class ContextualLexer:
     def __init__(self):
         self.lexers = LEXERS
@@ -11006,875 +12231,986 @@ class ContextualLexer:
             l.state = self.parser_state
 RULES = {
   0: Rule(NonTerminal('table'), [NonTerminal('__anon_plus_0')], None, RuleOptions(False, False, None)),
-  1: Rule(NonTerminal('line'), [NonTerminal('transition'), NonTerminal('_aux')], 'transition', RuleOptions(False, False, None)),
-  2: Rule(NonTerminal('line'), [Terminal('NAME', False), Terminal('COLON', True), Terminal('__ANON_0', False)], 'directive', RuleOptions(False, False, None)),
-  3: Rule(NonTerminal('line'), [Terminal('BANG', True), NonTerminal('_expr_no_int')], 'print_var', RuleOptions(False, False, None)),
+  1: Rule(NonTerminal('line'), [Terminal('NAME', False), Terminal('_WS', True), Terminal('EQUAL', True), NonTerminal('_expr')], 'var_decl', RuleOptions(False, False, None)),
+  2: Rule(NonTerminal('line'), [Terminal('NAME', False), Terminal('EQUAL', True), Terminal('_WS', True), NonTerminal('_expr')], 'var_decl', RuleOptions(False, False, None)),
+  3: Rule(NonTerminal('line'), [Terminal('NAME', False), Terminal('_WS', True), Terminal('EQUAL', True), Terminal('_WS', True), NonTerminal('_expr')], 'var_decl', RuleOptions(False, False, None)),
   4: Rule(NonTerminal('line'), [NonTerminal('rulestring_tr'), NonTerminal('_aux')], 'rulestring_transition', RuleOptions(False, False, None)),
   5: Rule(NonTerminal('line'), [Terminal('NAME', False), Terminal('COLON', True), Terminal('_WS', True), Terminal('__ANON_0', False)], 'directive', RuleOptions(False, False, None)),
-  6: Rule(NonTerminal('line'), [Terminal('NAME', False), Terminal('_WS', True), Terminal('EQUAL', True), NonTerminal('_expr')], 'var_decl', RuleOptions(False, False, None)),
-  7: Rule(NonTerminal('line'), [Terminal('NAME', False), Terminal('EQUAL', True), Terminal('_WS', True), NonTerminal('_expr')], 'var_decl', RuleOptions(False, False, None)),
-  8: Rule(NonTerminal('line'), [NonTerminal('transition')], 'transition', RuleOptions(False, False, None)),
-  9: Rule(NonTerminal('line'), [Terminal('NAME', False), Terminal('EQUAL', True), NonTerminal('_expr')], 'var_decl', RuleOptions(False, False, None)),
-  10: Rule(NonTerminal('line'), [Terminal('NAME', False), Terminal('_WS', True), Terminal('EQUAL', True), Terminal('_WS', True), NonTerminal('_expr')], 'var_decl', RuleOptions(False, False, None)),
-  11: Rule(NonTerminal('line'), [NonTerminal('rulestring_tr')], 'rulestring_transition', RuleOptions(False, False, None)),
+  6: Rule(NonTerminal('line'), [Terminal('NAME', False), Terminal('COLON', True), Terminal('__ANON_0', False)], 'directive', RuleOptions(False, False, None)),
+  7: Rule(NonTerminal('line'), [Terminal('NAME', False), Terminal('EQUAL', True), NonTerminal('_expr')], 'var_decl', RuleOptions(False, False, None)),
+  8: Rule(NonTerminal('line'), [NonTerminal('transition'), NonTerminal('_aux')], 'transition', RuleOptions(False, False, None)),
+  9: Rule(NonTerminal('line'), [NonTerminal('rulestring_tr')], 'rulestring_transition', RuleOptions(False, False, None)),
+  10: Rule(NonTerminal('line'), [NonTerminal('transition')], 'transition', RuleOptions(False, False, None)),
+  11: Rule(NonTerminal('line'), [Terminal('BANG', True), NonTerminal('_expr_no_int')], 'print_var', RuleOptions(False, False, None)),
   12: Rule(NonTerminal('rulestring_tr'), [NonTerminal('_expr'), NonTerminal('_sep'), Terminal('_HENSEL_OPEN', True), NonTerminal('hensel_rulestring'), Terminal('_WS', True), Terminal('NAME', False), Terminal('_HENSEL_SEP', True), NonTerminal('_expr'), Terminal('_HENSEL_SEP', True), NonTerminal('_expr'), Terminal('_HENSEL_CLOSE', True), NonTerminal('_sep'), Terminal('STATE', False)], 'special_rulestring_tr', RuleOptions(False, False, None)),
-  13: Rule(NonTerminal('rulestring_tr'), [NonTerminal('_expr'), NonTerminal('_sep'), Terminal('_HENSEL_OPEN', True), NonTerminal('hensel_rulestring'), Terminal('_HENSEL_SEP', True), NonTerminal('_expr'), Terminal('_HENSEL_SEP', True), NonTerminal('_expr'), Terminal('_HENSEL_CLOSE', True), NonTerminal('_sep'), NonTerminal('reference')], 'rulestring_tr', RuleOptions(False, False, None)),
-  14: Rule(NonTerminal('rulestring_tr'), [NonTerminal('_expr'), NonTerminal('_sep'), Terminal('_HENSEL_OPEN', True), NonTerminal('hensel_rulestring'), Terminal('_WS', True), Terminal('NAME', False), Terminal('_HENSEL_SEP', True), NonTerminal('_expr'), Terminal('_HENSEL_SEP', True), NonTerminal('_expr'), Terminal('_HENSEL_CLOSE', True), NonTerminal('_sep'), NonTerminal('reference')], 'special_rulestring_tr', RuleOptions(False, False, None)),
-  15: Rule(NonTerminal('rulestring_tr'), [NonTerminal('_expr'), NonTerminal('_sep'), Terminal('_HENSEL_OPEN', True), NonTerminal('hensel_rulestring'), Terminal('_HENSEL_SEP', True), NonTerminal('_expr'), Terminal('_HENSEL_SEP', True), NonTerminal('_expr'), Terminal('_HENSEL_CLOSE', True), NonTerminal('_sep'), Terminal('STATE', False)], 'rulestring_tr', RuleOptions(False, False, None)),
+  13: Rule(NonTerminal('rulestring_tr'), [NonTerminal('_expr'), NonTerminal('_sep'), Terminal('_HENSEL_OPEN', True), NonTerminal('hensel_rulestring'), Terminal('_WS', True), Terminal('NAME', False), Terminal('_HENSEL_SEP', True), NonTerminal('_expr'), Terminal('_HENSEL_SEP', True), NonTerminal('_expr'), Terminal('_HENSEL_CLOSE', True), NonTerminal('_sep'), NonTerminal('rs_ref')], 'special_rulestring_tr', RuleOptions(False, False, None)),
+  14: Rule(NonTerminal('rulestring_tr'), [NonTerminal('_expr'), NonTerminal('_sep'), Terminal('_HENSEL_OPEN', True), NonTerminal('hensel_rulestring'), Terminal('_HENSEL_SEP', True), NonTerminal('_expr'), Terminal('_HENSEL_SEP', True), NonTerminal('_expr'), Terminal('_HENSEL_CLOSE', True), NonTerminal('_sep'), Terminal('STATE', False)], 'rulestring_tr', RuleOptions(False, False, None)),
+  15: Rule(NonTerminal('rulestring_tr'), [NonTerminal('_expr'), NonTerminal('_sep'), Terminal('_HENSEL_OPEN', True), NonTerminal('hensel_rulestring'), Terminal('_HENSEL_SEP', True), NonTerminal('_expr'), Terminal('_HENSEL_SEP', True), NonTerminal('_expr'), Terminal('_HENSEL_CLOSE', True), NonTerminal('_sep'), NonTerminal('rs_ref')], 'rulestring_tr', RuleOptions(False, False, None)),
   16: Rule(NonTerminal('transition'), [NonTerminal('_expr'), NonTerminal('__anon_plus_1'), NonTerminal('_sep'), NonTerminal('_tr_expr')], 'main', RuleOptions(False, False, None)),
   17: Rule(NonTerminal('tr_state'), [NonTerminal('_tr_expr')], None, RuleOptions(False, False, None)),
-  18: Rule(NonTerminal('tr_state'), [NonTerminal('crange'), Terminal('_WS', True), NonTerminal('_tr_expr')], None, RuleOptions(False, False, None)),
-  19: Rule(NonTerminal('tr_state'), [NonTerminal('prefix'), Terminal('_WS', True), NonTerminal('_tr_expr')], None, RuleOptions(False, False, None)),
-  20: Rule(NonTerminal('tr_state'), [NonTerminal('inline_binding')], 'permute_shorthand', RuleOptions(False, False, None)),
-  21: Rule(NonTerminal('tr_state'), [NonTerminal('inline_binding'), Terminal('_PERMUTE', True), Terminal('__ANON_1', False)], 'permute_shorthand', RuleOptions(False, False, None)),
-  22: Rule(NonTerminal('tr_state'), [NonTerminal('crange'), Terminal('_WS', True), NonTerminal('inline_binding')], None, RuleOptions(False, False, None)),
-  23: Rule(NonTerminal('tr_state'), [NonTerminal('_tr_expr'), Terminal('_PERMUTE', True), Terminal('__ANON_1', False)], 'permute_shorthand', RuleOptions(False, False, None)),
+  18: Rule(NonTerminal('tr_state'), [NonTerminal('prefix'), Terminal('_WS', True), NonTerminal('_tr_expr')], None, RuleOptions(False, False, None)),
+  19: Rule(NonTerminal('tr_state'), [NonTerminal('inline_binding')], 'permute_shorthand', RuleOptions(False, False, None)),
+  20: Rule(NonTerminal('tr_state'), [NonTerminal('crange'), Terminal('_WS', True), NonTerminal('inline_binding')], None, RuleOptions(False, False, None)),
+  21: Rule(NonTerminal('tr_state'), [NonTerminal('_tr_expr'), Terminal('_PERMUTE', True), Terminal('__ANON_1', False)], 'permute_shorthand', RuleOptions(False, False, None)),
+  22: Rule(NonTerminal('tr_state'), [NonTerminal('crange'), Terminal('_WS', True), NonTerminal('_tr_expr')], None, RuleOptions(False, False, None)),
+  23: Rule(NonTerminal('tr_state'), [NonTerminal('inline_binding'), Terminal('_PERMUTE', True), Terminal('__ANON_1', False)], 'permute_shorthand', RuleOptions(False, False, None)),
   24: Rule(NonTerminal('inline_binding'), [Terminal('LSQB', True), NonTerminal('_tr_expr_no_int'), Terminal('RSQB', True)], None, RuleOptions(False, False, None)),
-  25: Rule(NonTerminal('prefix'), [Terminal('COMPASS_DIR', False)], 'cdir', RuleOptions(False, False, None)),
-  26: Rule(NonTerminal('prefix'), [NonTerminal('crange')], None, RuleOptions(False, False, None)),
+  25: Rule(NonTerminal('prefix'), [NonTerminal('crange')], None, RuleOptions(False, False, None)),
+  26: Rule(NonTerminal('prefix'), [Terminal('COMPASS_DIR', False)], 'cdir', RuleOptions(False, False, None)),
   27: Rule(NonTerminal('crange'), [Terminal('COMPASS_DIR', False), Terminal('__ANON_2', True), Terminal('COMPASS_DIR', False)], None, RuleOptions(False, False, None)),
-  28: Rule(NonTerminal('_sep'), [Terminal('SEMICOLON', True)], None, RuleOptions(False, False, None)),
-  29: Rule(NonTerminal('_sep'), [Terminal('SEMICOLON', True), Terminal('_WS', True)], None, RuleOptions(False, False, None)),
-  30: Rule(NonTerminal('_sep'), [Terminal('COMMA', True), Terminal('_WS', True)], None, RuleOptions(False, False, None)),
+  28: Rule(NonTerminal('_sep'), [Terminal('SEMICOLON', True), Terminal('_WS', True)], None, RuleOptions(False, False, None)),
+  29: Rule(NonTerminal('_sep'), [Terminal('COMMA', True), Terminal('_WS', True)], None, RuleOptions(False, False, None)),
+  30: Rule(NonTerminal('_sep'), [Terminal('SEMICOLON', True)], None, RuleOptions(False, False, None)),
   31: Rule(NonTerminal('_sep'), [Terminal('COMMA', True)], None, RuleOptions(False, False, None)),
-  32: Rule(NonTerminal('_aux'), [NonTerminal('hoist_aux'), NonTerminal('normal_aux')], None, RuleOptions(False, False, None)),
-  33: Rule(NonTerminal('_aux'), [NonTerminal('hoist_aux')], None, RuleOptions(False, False, None)),
+  32: Rule(NonTerminal('_aux'), [NonTerminal('hoist_aux')], None, RuleOptions(False, False, None)),
+  33: Rule(NonTerminal('_aux'), [NonTerminal('normal_aux'), NonTerminal('hoist_aux')], None, RuleOptions(False, False, None)),
   34: Rule(NonTerminal('_aux'), [NonTerminal('normal_aux')], None, RuleOptions(False, False, None)),
-  35: Rule(NonTerminal('_aux'), [NonTerminal('normal_aux'), NonTerminal('hoist_aux')], None, RuleOptions(False, False, None)),
+  35: Rule(NonTerminal('_aux'), [NonTerminal('hoist_aux'), NonTerminal('normal_aux')], None, RuleOptions(False, False, None)),
   36: Rule(NonTerminal('normal_aux'), [Terminal('_NORMAL_ARROW', True), NonTerminal('_auxlist')], None, RuleOptions(False, False, None)),
   37: Rule(NonTerminal('hoist_aux'), [Terminal('_HOIST_ARROW', True), NonTerminal('_auxlist')], None, RuleOptions(False, False, None)),
-  38: Rule(NonTerminal('_auxlist'), [NonTerminal('auxiliary'), NonTerminal('__anon_star_2')], None, RuleOptions(False, False, None)),
-  39: Rule(NonTerminal('_auxlist'), [NonTerminal('auxiliary')], None, RuleOptions(False, False, None)),
-  40: Rule(NonTerminal('_auxlist'), [NonTerminal('symmetried_aux'), NonTerminal('__anon_star_2')], None, RuleOptions(False, False, None)),
-  41: Rule(NonTerminal('_auxlist'), [NonTerminal('symmetried_aux')], None, RuleOptions(False, False, None)),
+  38: Rule(NonTerminal('_auxlist'), [NonTerminal('symmetried_aux'), NonTerminal('__anon_star_2')], None, RuleOptions(False, False, None)),
+  39: Rule(NonTerminal('_auxlist'), [NonTerminal('symmetried_aux')], None, RuleOptions(False, False, None)),
+  40: Rule(NonTerminal('_auxlist'), [NonTerminal('auxiliary'), NonTerminal('__anon_star_2')], None, RuleOptions(False, False, None)),
+  41: Rule(NonTerminal('_auxlist'), [NonTerminal('auxiliary')], None, RuleOptions(False, False, None)),
   42: Rule(NonTerminal('symmetried_aux'), [Terminal('SYMMETRY_NAME', False), Terminal('BANG', True), NonTerminal('_aux_group')], 'stationary_symmetried_aux', RuleOptions(False, False, None)),
   43: Rule(NonTerminal('symmetried_aux'), [Terminal('SYMMETRY_NAME', False), NonTerminal('_aux_group')], None, RuleOptions(False, False, None)),
-  44: Rule(NonTerminal('_aux_group'), [Terminal('LPAR', True), Terminal('_WS', True), NonTerminal('auxiliary'), Terminal('_WS', True), Terminal('RPAR', True)], None, RuleOptions(False, False, None)),
-  45: Rule(NonTerminal('_aux_group'), [Terminal('LPAR', True), Terminal('_WS', True), NonTerminal('auxiliary'), NonTerminal('__anon_star_3'), Terminal('RPAR', True)], None, RuleOptions(False, False, None)),
+  44: Rule(NonTerminal('_aux_group'), [Terminal('LPAR', True), NonTerminal('auxiliary'), NonTerminal('__anon_star_3'), Terminal('_WS', True), Terminal('RPAR', True)], None, RuleOptions(False, False, None)),
+  45: Rule(NonTerminal('_aux_group'), [Terminal('LPAR', True), NonTerminal('auxiliary'), Terminal('RPAR', True)], None, RuleOptions(False, False, None)),
   46: Rule(NonTerminal('_aux_group'), [Terminal('LPAR', True), NonTerminal('auxiliary'), Terminal('_WS', True), Terminal('RPAR', True)], None, RuleOptions(False, False, None)),
-  47: Rule(NonTerminal('_aux_group'), [Terminal('LPAR', True), NonTerminal('auxiliary'), NonTerminal('__anon_star_3'), Terminal('RPAR', True)], None, RuleOptions(False, False, None)),
+  47: Rule(NonTerminal('_aux_group'), [Terminal('LPAR', True), Terminal('_WS', True), NonTerminal('auxiliary'), Terminal('RPAR', True)], None, RuleOptions(False, False, None)),
   48: Rule(NonTerminal('_aux_group'), [Terminal('LPAR', True), Terminal('_WS', True), NonTerminal('auxiliary'), NonTerminal('__anon_star_3'), Terminal('_WS', True), Terminal('RPAR', True)], None, RuleOptions(False, False, None)),
-  49: Rule(NonTerminal('_aux_group'), [Terminal('LPAR', True), NonTerminal('auxiliary'), Terminal('RPAR', True)], None, RuleOptions(False, False, None)),
-  50: Rule(NonTerminal('_aux_group'), [Terminal('LPAR', True), NonTerminal('auxiliary'), NonTerminal('__anon_star_3'), Terminal('_WS', True), Terminal('RPAR', True)], None, RuleOptions(False, False, None)),
-  51: Rule(NonTerminal('_aux_group'), [Terminal('LPAR', True), Terminal('_WS', True), NonTerminal('auxiliary'), Terminal('RPAR', True)], None, RuleOptions(False, False, None)),
-  52: Rule(NonTerminal('auxiliary'), [NonTerminal('cdir_delay'), Terminal('LSQB', True), NonTerminal('_aux_expr_no_int'), Terminal('RSQB', True)], 'aux_map_self', RuleOptions(False, False, None)),
-  53: Rule(NonTerminal('auxiliary'), [NonTerminal('cdir_delay'), Terminal('LSQB', True), NonTerminal('_digit_bind'), Terminal('COLON', True), NonTerminal('_aux_expr_no_int'), Terminal('RSQB', True)], 'aux_map_other', RuleOptions(False, False, None)),
-  54: Rule(NonTerminal('auxiliary'), [NonTerminal('cdir_delay'), Terminal('LSQB', True), Terminal('COMPASS_DIR', False), Terminal('RSQB', True)], 'aux_bind_self', RuleOptions(False, False, None)),
-  55: Rule(NonTerminal('auxiliary'), [NonTerminal('cdir_delay'), Terminal('LSQB', True), NonTerminal('_digit_bind'), Terminal('COLON', True), Terminal('_WS', True), NonTerminal('_aux_expr_no_int'), Terminal('RSQB', True)], 'aux_map_other', RuleOptions(False, False, None)),
-  56: Rule(NonTerminal('auxiliary'), [NonTerminal('cdir_delay'), Terminal('COLON', True), Terminal('STATE', False)], 'aux_bare', RuleOptions(False, False, None)),
-  57: Rule(NonTerminal('auxiliary'), [NonTerminal('cdir_delay'), Terminal('LSQB', True), Terminal('COMPASS_DIR', False), Terminal('COLON', True), NonTerminal('_aux_expr_no_int'), Terminal('RSQB', True)], 'aux_map_other', RuleOptions(False, False, None)),
+  49: Rule(NonTerminal('_aux_group'), [Terminal('LPAR', True), NonTerminal('auxiliary'), NonTerminal('__anon_star_3'), Terminal('RPAR', True)], None, RuleOptions(False, False, None)),
+  50: Rule(NonTerminal('_aux_group'), [Terminal('LPAR', True), Terminal('_WS', True), NonTerminal('auxiliary'), NonTerminal('__anon_star_3'), Terminal('RPAR', True)], None, RuleOptions(False, False, None)),
+  51: Rule(NonTerminal('_aux_group'), [Terminal('LPAR', True), Terminal('_WS', True), NonTerminal('auxiliary'), Terminal('_WS', True), Terminal('RPAR', True)], None, RuleOptions(False, False, None)),
+  52: Rule(NonTerminal('auxiliary'), [NonTerminal('cdir_delay'), Terminal('LSQB', True), NonTerminal('_digit_bind'), Terminal('COLON', True), Terminal('_WS', True), NonTerminal('_aux_expr_no_int'), Terminal('RSQB', True)], 'aux_map_other', RuleOptions(False, False, None)),
+  53: Rule(NonTerminal('auxiliary'), [NonTerminal('cdir_delay'), Terminal('LSQB', True), Terminal('COMPASS_DIR', False), Terminal('COLON', True), NonTerminal('_aux_expr_no_int'), Terminal('RSQB', True)], 'aux_map_other', RuleOptions(False, False, None)),
+  54: Rule(NonTerminal('auxiliary'), [NonTerminal('cdir_delay'), Terminal('LSQB', True), NonTerminal('_aux_expr_no_int'), Terminal('RSQB', True)], 'aux_map_self', RuleOptions(False, False, None)),
+  55: Rule(NonTerminal('auxiliary'), [NonTerminal('cdir_delay'), Terminal('LSQB', True), NonTerminal('_digit_bind'), Terminal('COLON', True), NonTerminal('_aux_expr_no_int'), Terminal('RSQB', True)], 'aux_map_other', RuleOptions(False, False, None)),
+  56: Rule(NonTerminal('auxiliary'), [NonTerminal('cdir_delay'), Terminal('LSQB', True), Terminal('COMPASS_DIR', False), Terminal('RSQB', True)], 'aux_bind_self', RuleOptions(False, False, None)),
+  57: Rule(NonTerminal('auxiliary'), [NonTerminal('cdir_delay'), Terminal('LSQB', True), Terminal('COMPASS_DIR', False), Terminal('COLON', True), Terminal('_WS', True), NonTerminal('_aux_expr_no_int'), Terminal('RSQB', True)], 'aux_map_other', RuleOptions(False, False, None)),
   58: Rule(NonTerminal('auxiliary'), [NonTerminal('cdir_delay'), Terminal('LSQB', True), NonTerminal('_digit_bind'), Terminal('RSQB', True)], 'aux_bind_self', RuleOptions(False, False, None)),
-  59: Rule(NonTerminal('auxiliary'), [NonTerminal('cdir_delay'), Terminal('LSQB', True), Terminal('COMPASS_DIR', False), Terminal('COLON', True), Terminal('_WS', True), NonTerminal('_aux_expr_no_int'), Terminal('RSQB', True)], 'aux_map_other', RuleOptions(False, False, None)),
+  59: Rule(NonTerminal('auxiliary'), [NonTerminal('cdir_delay'), Terminal('COLON', True), Terminal('STATE', False)], 'aux_bare', RuleOptions(False, False, None)),
   60: Rule(NonTerminal('cdir_delay'), [Terminal('COMPASS_DIR', False), Terminal('PLUS', True), Terminal('INT', False)], None, RuleOptions(False, False, None)),
   61: Rule(NonTerminal('cdir_delay'), [Terminal('COMPASS_DIR', False)], None, RuleOptions(False, False, None)),
-  62: Rule(NonTerminal('var'), [Terminal('_VAR_OPEN', True), NonTerminal('_expr'), Terminal('_VAR_CLOSE', True)], 'noref_var', RuleOptions(False, False, None)),
-  63: Rule(NonTerminal('var'), [Terminal('_VAR_OPEN', True), NonTerminal('_expr'), NonTerminal('__anon_star_4'), Terminal('_VAR_CLOSE', True)], 'noref_var', RuleOptions(False, False, None)),
-  64: Rule(NonTerminal('var'), [Terminal('_VAR_OPEN', True), NonTerminal('range'), Terminal('_VAR_CLOSE', True)], 'noref_var', RuleOptions(False, False, None)),
-  65: Rule(NonTerminal('tr_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_tr_expr'), NonTerminal('__anon_star_5'), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
-  66: Rule(NonTerminal('tr_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_tr_expr'), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
-  67: Rule(NonTerminal('tr_var'), [Terminal('_VAR_OPEN', True), NonTerminal('range'), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
+  62: Rule(NonTerminal('var'), [Terminal('_VAR_OPEN', True), NonTerminal('_expr'), NonTerminal('__anon_star_4'), Terminal('_VAR_CLOSE', True)], 'noref_var', RuleOptions(False, False, None)),
+  63: Rule(NonTerminal('var'), [Terminal('_VAR_OPEN', True), NonTerminal('range'), Terminal('_VAR_CLOSE', True)], 'noref_var', RuleOptions(False, False, None)),
+  64: Rule(NonTerminal('var'), [Terminal('_VAR_OPEN', True), NonTerminal('_expr'), Terminal('_VAR_CLOSE', True)], 'noref_var', RuleOptions(False, False, None)),
+  65: Rule(NonTerminal('tr_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_tr_expr'), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
+  66: Rule(NonTerminal('tr_var'), [Terminal('_VAR_OPEN', True), NonTerminal('range'), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
+  67: Rule(NonTerminal('tr_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_tr_expr'), NonTerminal('__anon_star_5'), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
   68: Rule(NonTerminal('ref_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_ref_expr'), Terminal('COMMA', True), Terminal('_WS', True), Terminal('EXTEND_LAST', False), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
-  69: Rule(NonTerminal('ref_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_ref_expr'), NonTerminal('__anon_star_6'), Terminal('COMMA', True), Terminal('_WS', True), Terminal('EXTEND_LAST', False), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
-  70: Rule(NonTerminal('ref_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_ref_expr'), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
-  71: Rule(NonTerminal('ref_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_ref_expr'), NonTerminal('__anon_star_6'), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
-  72: Rule(NonTerminal('ref_var'), [Terminal('_VAR_OPEN', True), NonTerminal('range'), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
-  73: Rule(NonTerminal('ref_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_ref_expr'), Terminal('COMMA', True), Terminal('EXTEND_LAST', False), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
-  74: Rule(NonTerminal('ref_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_ref_expr'), NonTerminal('__anon_star_6'), Terminal('COMMA', True), Terminal('EXTEND_LAST', False), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
-  75: Rule(NonTerminal('aux_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_aux_expr'), Terminal('COMMA', True), Terminal('EXTEND_LAST', False), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
-  76: Rule(NonTerminal('aux_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_aux_expr'), Terminal('COMMA', True), Terminal('_WS', True), Terminal('EXTEND_LAST', False), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
-  77: Rule(NonTerminal('aux_var'), [Terminal('_VAR_OPEN', True), NonTerminal('range'), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
-  78: Rule(NonTerminal('aux_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_aux_expr'), NonTerminal('__anon_star_7'), Terminal('COMMA', True), Terminal('_WS', True), Terminal('EXTEND_LAST', False), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
-  79: Rule(NonTerminal('aux_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_aux_expr'), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
-  80: Rule(NonTerminal('aux_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_aux_expr'), NonTerminal('__anon_star_7'), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
-  81: Rule(NonTerminal('aux_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_aux_expr'), NonTerminal('__anon_star_7'), Terminal('COMMA', True), Terminal('EXTEND_LAST', False), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
-  82: Rule(NonTerminal('_expr'), [Terminal('STATE', False)], None, RuleOptions(False, False, None)),
-  83: Rule(NonTerminal('_expr'), [NonTerminal('_expr_no_int')], None, RuleOptions(False, False, None)),
-  84: Rule(NonTerminal('_expr_norec_int'), [Terminal('STATE', False)], None, RuleOptions(False, False, None)),
-  85: Rule(NonTerminal('_expr_norec_int'), [NonTerminal('_expr_no_rec')], None, RuleOptions(False, False, None)),
-  86: Rule(NonTerminal('_expr_no_int'), [NonTerminal('range')], None, RuleOptions(False, False, None)),
-  87: Rule(NonTerminal('_expr_no_int'), [Terminal('NAME', False)], None, RuleOptions(False, False, None)),
-  88: Rule(NonTerminal('_expr_no_int'), [NonTerminal('var')], None, RuleOptions(False, False, None)),
-  89: Rule(NonTerminal('_expr_no_int'), [NonTerminal('operation')], None, RuleOptions(False, False, None)),
-  90: Rule(NonTerminal('_expr_no_rec'), [NonTerminal('range')], None, RuleOptions(False, False, None)),
-  91: Rule(NonTerminal('_expr_no_rec'), [Terminal('NAME', False)], None, RuleOptions(False, False, None)),
-  92: Rule(NonTerminal('_expr_no_rec'), [NonTerminal('var')], None, RuleOptions(False, False, None)),
-  93: Rule(NonTerminal('operation'), [Terminal('_NEGATE_ALL', True), NonTerminal('_expr')], 'noref_all_except', RuleOptions(False, False, None)),
-  94: Rule(NonTerminal('operation'), [Terminal('STATE', False), Terminal('_MULT', True), Terminal('INT', False)], 'noref_repeat_int', RuleOptions(False, False, None)),
-  95: Rule(NonTerminal('operation'), [NonTerminal('_expr_no_int'), NonTerminal('_subt'), NonTerminal('_expr_norec_int')], 'noref_subt', RuleOptions(False, False, None)),
-  96: Rule(NonTerminal('operation'), [NonTerminal('_expr_no_int'), Terminal('_MULT', True), Terminal('INT', False)], 'noref_repeat_var', RuleOptions(False, False, None)),
-  97: Rule(NonTerminal('operation'), [NonTerminal('_expr_no_int'), Terminal('_LROT', True), Terminal('INT', False)], 'noref_rot_left', RuleOptions(False, False, None)),
-  98: Rule(NonTerminal('operation'), [NonTerminal('_expr_no_int'), Terminal('_RROT', True), Terminal('INT', False)], 'noref_rot_right', RuleOptions(False, False, None)),
-  99: Rule(NonTerminal('operation'), [Terminal('_NEGATE_LIVE', True), NonTerminal('_expr')], 'noref_live_except', RuleOptions(False, False, None)),
-  100: Rule(NonTerminal('operation'), [Terminal('STATE', False), Terminal('_MULT', True), NonTerminal('_expr_no_rec')], 'noref_int_to_var_length', RuleOptions(False, False, None)),
-  101: Rule(NonTerminal('_tr_expr'), [Terminal('STATE', False)], None, RuleOptions(False, False, None)),
-  102: Rule(NonTerminal('_tr_expr'), [NonTerminal('reference')], None, RuleOptions(False, False, None)),
-  103: Rule(NonTerminal('_tr_expr'), [NonTerminal('_tr_expr_no_int')], None, RuleOptions(False, False, None)),
-  104: Rule(NonTerminal('_tr_expr_norec_int'), [Terminal('STATE', False)], None, RuleOptions(False, False, None)),
-  105: Rule(NonTerminal('_tr_expr_norec_int'), [NonTerminal('reference')], None, RuleOptions(False, False, None)),
-  106: Rule(NonTerminal('_tr_expr_norec_int'), [NonTerminal('_tr_expr_no_rec')], None, RuleOptions(False, False, None)),
-  107: Rule(NonTerminal('_tr_expr_no_int'), [NonTerminal('range')], None, RuleOptions(False, False, None)),
-  108: Rule(NonTerminal('_tr_expr_no_int'), [NonTerminal('tr_var')], None, RuleOptions(False, False, None)),
-  109: Rule(NonTerminal('_tr_expr_no_int'), [Terminal('NAME', False)], None, RuleOptions(False, False, None)),
-  110: Rule(NonTerminal('_tr_expr_no_int'), [NonTerminal('tr_operation')], None, RuleOptions(False, False, None)),
-  111: Rule(NonTerminal('_tr_expr_no_rec'), [NonTerminal('range')], None, RuleOptions(False, False, None)),
-  112: Rule(NonTerminal('_tr_expr_no_rec'), [NonTerminal('tr_var')], None, RuleOptions(False, False, None)),
-  113: Rule(NonTerminal('_tr_expr_no_rec'), [Terminal('NAME', False)], None, RuleOptions(False, False, None)),
-  114: Rule(NonTerminal('tr_operation'), [NonTerminal('_tr_expr_no_int'), NonTerminal('_subt'), NonTerminal('_tr_expr_norec_int')], 'subt', RuleOptions(False, False, None)),
-  115: Rule(NonTerminal('tr_operation'), [NonTerminal('reference'), Terminal('_MULT', True), Terminal('INT', False)], 'repeat_int', RuleOptions(False, False, None)),
-  116: Rule(NonTerminal('tr_operation'), [Terminal('STATE', False), Terminal('_MULT', True), Terminal('INT', False)], 'repeat_int', RuleOptions(False, False, None)),
-  117: Rule(NonTerminal('tr_operation'), [Terminal('_NEGATE_LIVE', True), NonTerminal('_tr_expr')], 'live_except', RuleOptions(False, False, None)),
-  118: Rule(NonTerminal('tr_operation'), [NonTerminal('_tr_expr_no_int'), Terminal('_MULT', True), Terminal('INT', False)], 'repeat_var', RuleOptions(False, False, None)),
-  119: Rule(NonTerminal('tr_operation'), [NonTerminal('_tr_expr_no_int'), Terminal('_LROT', True), Terminal('INT', False)], 'rot_left', RuleOptions(False, False, None)),
-  120: Rule(NonTerminal('tr_operation'), [NonTerminal('reference'), Terminal('_MULT', True), NonTerminal('_tr_expr_no_rec')], 'int_to_var_length', RuleOptions(False, False, None)),
-  121: Rule(NonTerminal('tr_operation'), [Terminal('_NEGATE_ALL', True), NonTerminal('_tr_expr')], 'all_except', RuleOptions(False, False, None)),
-  122: Rule(NonTerminal('tr_operation'), [NonTerminal('_tr_expr_no_int'), Terminal('_RROT', True), Terminal('INT', False)], 'rot_right', RuleOptions(False, False, None)),
-  123: Rule(NonTerminal('tr_operation'), [Terminal('STATE', False), Terminal('_MULT', True), NonTerminal('_tr_expr_no_rec')], 'int_to_var_length', RuleOptions(False, False, None)),
-  124: Rule(NonTerminal('_ref_expr'), [NonTerminal('_ref_expr_no_int')], None, RuleOptions(False, False, None)),
-  125: Rule(NonTerminal('_ref_expr'), [NonTerminal('reference')], None, RuleOptions(False, False, None)),
-  126: Rule(NonTerminal('_ref_expr'), [Terminal('STATE', False)], None, RuleOptions(False, False, None)),
-  127: Rule(NonTerminal('_ref_expr_norec_int'), [Terminal('STATE', False)], None, RuleOptions(False, False, None)),
-  128: Rule(NonTerminal('_ref_expr_norec_int'), [NonTerminal('reference')], None, RuleOptions(False, False, None)),
-  129: Rule(NonTerminal('_ref_expr_norec_int'), [NonTerminal('_ref_expr_no_rec')], None, RuleOptions(False, False, None)),
-  130: Rule(NonTerminal('_ref_expr_no_int'), [NonTerminal('range')], None, RuleOptions(False, False, None)),
-  131: Rule(NonTerminal('_ref_expr_no_int'), [NonTerminal('ref_var')], None, RuleOptions(False, False, None)),
-  132: Rule(NonTerminal('_ref_expr_no_int'), [Terminal('NAME', False)], None, RuleOptions(False, False, None)),
-  133: Rule(NonTerminal('_ref_expr_no_int'), [NonTerminal('ref_operation')], None, RuleOptions(False, False, None)),
-  134: Rule(NonTerminal('_ref_expr_no_rec'), [NonTerminal('range')], None, RuleOptions(False, False, None)),
-  135: Rule(NonTerminal('_ref_expr_no_rec'), [NonTerminal('ref_var')], None, RuleOptions(False, False, None)),
-  136: Rule(NonTerminal('_ref_expr_no_rec'), [Terminal('NAME', False)], None, RuleOptions(False, False, None)),
-  137: Rule(NonTerminal('ref_operation'), [NonTerminal('reference'), Terminal('_MULT', True), NonTerminal('_ref_expr_no_rec')], 'int_to_var_length', RuleOptions(False, False, None)),
-  138: Rule(NonTerminal('ref_operation'), [NonTerminal('reference'), Terminal('_MULT', True), Terminal('INT', False)], 'repeat_int', RuleOptions(False, False, None)),
-  139: Rule(NonTerminal('ref_operation'), [Terminal('_NEGATE_ALL', True), NonTerminal('_ref_expr')], 'all_except', RuleOptions(False, False, None)),
-  140: Rule(NonTerminal('ref_operation'), [Terminal('_NEGATE_LIVE', True), NonTerminal('_ref_expr')], 'live_except', RuleOptions(False, False, None)),
-  141: Rule(NonTerminal('ref_operation'), [Terminal('STATE', False), Terminal('_MULT', True), Terminal('INT', False)], 'repeat_int', RuleOptions(False, False, None)),
-  142: Rule(NonTerminal('ref_operation'), [NonTerminal('_ref_expr_no_int'), Terminal('_MULT', True), Terminal('INT', False)], 'repeat_var', RuleOptions(False, False, None)),
-  143: Rule(NonTerminal('ref_operation'), [Terminal('STATE', False), Terminal('_MULT', True), NonTerminal('_ref_expr_no_rec')], 'int_to_var_length', RuleOptions(False, False, None)),
-  144: Rule(NonTerminal('ref_operation'), [NonTerminal('_ref_expr_no_int'), Terminal('_RROT', True), Terminal('INT', False)], 'rot_right', RuleOptions(False, False, None)),
-  145: Rule(NonTerminal('ref_operation'), [NonTerminal('_ref_expr_no_int'), NonTerminal('_subt'), NonTerminal('_ref_expr_norec_int')], 'subt', RuleOptions(False, False, None)),
-  146: Rule(NonTerminal('ref_operation'), [NonTerminal('_ref_expr_no_int'), Terminal('_LROT', True), Terminal('INT', False)], 'rot_left', RuleOptions(False, False, None)),
-  147: Rule(NonTerminal('_aux_expr'), [Terminal('STATE', False)], None, RuleOptions(False, False, None)),
-  148: Rule(NonTerminal('_aux_expr'), [NonTerminal('aux_reference')], None, RuleOptions(False, False, None)),
-  149: Rule(NonTerminal('_aux_expr'), [NonTerminal('_aux_expr_no_int')], None, RuleOptions(False, False, None)),
-  150: Rule(NonTerminal('_aux_expr_norec_int'), [Terminal('STATE', False)], None, RuleOptions(False, False, None)),
-  151: Rule(NonTerminal('_aux_expr_norec_int'), [NonTerminal('_aux_expr_no_rec')], None, RuleOptions(False, False, None)),
-  152: Rule(NonTerminal('_aux_expr_norec_int'), [NonTerminal('aux_reference')], None, RuleOptions(False, False, None)),
-  153: Rule(NonTerminal('_aux_expr_no_int'), [NonTerminal('range')], None, RuleOptions(False, False, None)),
-  154: Rule(NonTerminal('_aux_expr_no_int'), [NonTerminal('leave_alone_mult')], None, RuleOptions(False, False, None)),
-  155: Rule(NonTerminal('_aux_expr_no_int'), [NonTerminal('aux_operation')], None, RuleOptions(False, False, None)),
-  156: Rule(NonTerminal('_aux_expr_no_int'), [Terminal('LEAVE_ALONE', False)], None, RuleOptions(False, False, None)),
-  157: Rule(NonTerminal('_aux_expr_no_int'), [NonTerminal('aux_var')], None, RuleOptions(False, False, None)),
-  158: Rule(NonTerminal('_aux_expr_no_int'), [Terminal('NAME', False)], None, RuleOptions(False, False, None)),
-  159: Rule(NonTerminal('_aux_expr_no_rec'), [NonTerminal('range')], None, RuleOptions(False, False, None)),
-  160: Rule(NonTerminal('_aux_expr_no_rec'), [NonTerminal('leave_alone_mult')], None, RuleOptions(False, False, None)),
-  161: Rule(NonTerminal('_aux_expr_no_rec'), [Terminal('LEAVE_ALONE', False)], None, RuleOptions(False, False, None)),
-  162: Rule(NonTerminal('_aux_expr_no_rec'), [NonTerminal('aux_var')], None, RuleOptions(False, False, None)),
-  163: Rule(NonTerminal('_aux_expr_no_rec'), [Terminal('NAME', False)], None, RuleOptions(False, False, None)),
-  164: Rule(NonTerminal('aux_operation'), [NonTerminal('_aux_expr_no_int'), Terminal('_LROT', True), Terminal('INT', False)], 'rot_left', RuleOptions(False, False, None)),
-  165: Rule(NonTerminal('aux_operation'), [NonTerminal('aux_reference'), Terminal('_MULT', True), NonTerminal('_aux_expr_no_rec')], 'int_to_var_length', RuleOptions(False, False, None)),
-  166: Rule(NonTerminal('aux_operation'), [NonTerminal('_aux_expr_no_int'), Terminal('_MULT', True), Terminal('INT', False)], 'repeat_var', RuleOptions(False, False, None)),
-  167: Rule(NonTerminal('aux_operation'), [Terminal('STATE', False), Terminal('_MULT', True), Terminal('INT', False)], 'repeat_int', RuleOptions(False, False, None)),
-  168: Rule(NonTerminal('aux_operation'), [Terminal('_NEGATE_ALL', True), NonTerminal('_aux_expr')], 'all_except', RuleOptions(False, False, None)),
-  169: Rule(NonTerminal('aux_operation'), [NonTerminal('aux_reference'), Terminal('_MULT', True), Terminal('INT', False)], 'repeat_int', RuleOptions(False, False, None)),
-  170: Rule(NonTerminal('aux_operation'), [Terminal('STATE', False), Terminal('_MULT', True), NonTerminal('_aux_expr_no_rec')], 'int_to_var_length', RuleOptions(False, False, None)),
-  171: Rule(NonTerminal('aux_operation'), [NonTerminal('_aux_expr_no_int'), NonTerminal('_subt'), NonTerminal('_aux_expr_norec_int')], 'subt', RuleOptions(False, False, None)),
-  172: Rule(NonTerminal('aux_operation'), [NonTerminal('_aux_expr_no_int'), Terminal('_RROT', True), Terminal('INT', False)], 'rot_right', RuleOptions(False, False, None)),
-  173: Rule(NonTerminal('aux_operation'), [Terminal('_NEGATE_LIVE', True), NonTerminal('_aux_expr')], 'live_except', RuleOptions(False, False, None)),
-  174: Rule(NonTerminal('aux_reference'), [Terminal('LSQB', True), NonTerminal('_digit_bind'), Terminal('COLON', True), Terminal('_WS', True), NonTerminal('_aux_expr_no_int'), Terminal('RSQB', True)], 'mapping', RuleOptions(False, False, None)),
-  175: Rule(NonTerminal('aux_reference'), [Terminal('LSQB', True), NonTerminal('_digit_bind'), Terminal('RSQB', True)], 'binding', RuleOptions(False, False, None)),
-  176: Rule(NonTerminal('aux_reference'), [Terminal('LSQB', True), Terminal('COMPASS_DIR', False), Terminal('COLON', True), NonTerminal('_aux_expr_no_int'), Terminal('RSQB', True)], 'mapping', RuleOptions(False, False, None)),
-  177: Rule(NonTerminal('aux_reference'), [Terminal('LSQB', True), Terminal('COMPASS_DIR', False), Terminal('COLON', True), Terminal('_WS', True), NonTerminal('_aux_expr_no_int'), Terminal('RSQB', True)], 'mapping', RuleOptions(False, False, None)),
-  178: Rule(NonTerminal('aux_reference'), [Terminal('LSQB', True), Terminal('COMPASS_DIR', False), Terminal('RSQB', True)], 'binding', RuleOptions(False, False, None)),
-  179: Rule(NonTerminal('aux_reference'), [Terminal('LSQB', True), NonTerminal('_digit_bind'), Terminal('COLON', True), NonTerminal('_aux_expr_no_int'), Terminal('RSQB', True)], 'mapping', RuleOptions(False, False, None)),
-  180: Rule(NonTerminal('reference'), [Terminal('LSQB', True), Terminal('COMPASS_DIR', False), Terminal('COLON', True), Terminal('_WS', True), NonTerminal('_ref_expr_no_int'), Terminal('RSQB', True)], 'mapping', RuleOptions(False, False, None)),
-  181: Rule(NonTerminal('reference'), [Terminal('LSQB', True), Terminal('COMPASS_DIR', False), Terminal('COLON', True), NonTerminal('_ref_expr_no_int'), Terminal('RSQB', True)], 'mapping', RuleOptions(False, False, None)),
-  182: Rule(NonTerminal('reference'), [Terminal('LSQB', True), NonTerminal('_digit_bind'), Terminal('RSQB', True)], 'binding', RuleOptions(False, False, None)),
-  183: Rule(NonTerminal('reference'), [Terminal('LSQB', True), NonTerminal('_digit_bind'), Terminal('COLON', True), Terminal('_WS', True), NonTerminal('_ref_expr_no_int'), Terminal('RSQB', True)], 'mapping', RuleOptions(False, False, None)),
-  184: Rule(NonTerminal('reference'), [Terminal('LSQB', True), NonTerminal('_digit_bind'), Terminal('COLON', True), NonTerminal('_ref_expr_no_int'), Terminal('RSQB', True)], 'mapping', RuleOptions(False, False, None)),
-  185: Rule(NonTerminal('reference'), [Terminal('LSQB', True), Terminal('COMPASS_DIR', False), Terminal('RSQB', True)], 'binding', RuleOptions(False, False, None)),
-  186: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('__ANON_2', True), Terminal('STATE', False)], None, RuleOptions(False, False, None)),
-  187: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('PLUS', True), Terminal('_WS', True), Terminal('INT', False), Terminal('_WS', True), Terminal('__ANON_2', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
-  188: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('_WS', True), Terminal('PLUS', True), Terminal('_WS', True), Terminal('INT', False), Terminal('_WS', True), Terminal('__ANON_2', True), Terminal('_WS', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
-  189: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('__ANON_2', True), Terminal('_WS', True), Terminal('STATE', False)], None, RuleOptions(False, False, None)),
-  190: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('_WS', True), Terminal('__ANON_2', True), Terminal('STATE', False)], None, RuleOptions(False, False, None)),
-  191: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('PLUS', True), Terminal('INT', False), Terminal('_WS', True), Terminal('__ANON_2', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
-  192: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('PLUS', True), Terminal('_WS', True), Terminal('INT', False), Terminal('_WS', True), Terminal('__ANON_2', True), Terminal('_WS', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
-  193: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('PLUS', True), Terminal('INT', False), Terminal('__ANON_2', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
-  194: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('_WS', True), Terminal('PLUS', True), Terminal('_WS', True), Terminal('INT', False), Terminal('__ANON_2', True), Terminal('_WS', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
-  195: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('_WS', True), Terminal('PLUS', True), Terminal('INT', False), Terminal('_WS', True), Terminal('__ANON_2', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
-  196: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('_WS', True), Terminal('__ANON_2', True), Terminal('_WS', True), Terminal('STATE', False)], None, RuleOptions(False, False, None)),
-  197: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('_WS', True), Terminal('PLUS', True), Terminal('INT', False), Terminal('_WS', True), Terminal('__ANON_2', True), Terminal('_WS', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
-  198: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('PLUS', True), Terminal('_WS', True), Terminal('INT', False), Terminal('__ANON_2', True), Terminal('_WS', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
-  199: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('_WS', True), Terminal('PLUS', True), Terminal('_WS', True), Terminal('INT', False), Terminal('__ANON_2', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
-  200: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('_WS', True), Terminal('PLUS', True), Terminal('INT', False), Terminal('__ANON_2', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
-  201: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('PLUS', True), Terminal('_WS', True), Terminal('INT', False), Terminal('__ANON_2', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
-  202: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('PLUS', True), Terminal('INT', False), Terminal('_WS', True), Terminal('__ANON_2', True), Terminal('_WS', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
-  203: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('_WS', True), Terminal('PLUS', True), Terminal('_WS', True), Terminal('INT', False), Terminal('_WS', True), Terminal('__ANON_2', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
-  204: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('_WS', True), Terminal('PLUS', True), Terminal('INT', False), Terminal('__ANON_2', True), Terminal('_WS', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
-  205: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('PLUS', True), Terminal('INT', False), Terminal('__ANON_2', True), Terminal('_WS', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
-  206: Rule(NonTerminal('leave_alone_mult'), [Terminal('LEAVE_ALONE', False), Terminal('_MULT', True), Terminal('INT', False)], None, RuleOptions(False, False, None)),
-  207: Rule(NonTerminal('_subt'), [Terminal('_SUBT', True)], None, RuleOptions(False, False, None)),
-  208: Rule(NonTerminal('_subt'), [Terminal('_NEGATE_LIVE', True)], None, RuleOptions(False, False, None)),
-  209: Rule(NonTerminal('_subt'), [Terminal('_NEGATE_LIVE', True), Terminal('_WS', True)], None, RuleOptions(False, False, None)),
-  210: Rule(NonTerminal('_digit_bind'), [Terminal('__ANON_3', True)], None, RuleOptions(True, False, None)),
-  211: Rule(NonTerminal('_digit_bind'), [Terminal('__ANON_5', True)], None, RuleOptions(True, False, None)),
-  212: Rule(NonTerminal('_digit_bind'), [Terminal('__ANON_10', True)], None, RuleOptions(True, False, None)),
-  213: Rule(NonTerminal('_digit_bind'), [Terminal('__ANON_7', True)], None, RuleOptions(True, False, None)),
-  214: Rule(NonTerminal('_digit_bind'), [Terminal('__ANON_11', True)], None, RuleOptions(True, False, None)),
-  215: Rule(NonTerminal('_digit_bind'), [Terminal('__ANON_4', True)], None, RuleOptions(True, False, None)),
-  216: Rule(NonTerminal('_digit_bind'), [Terminal('__ANON_8', True)], None, RuleOptions(True, False, None)),
-  217: Rule(NonTerminal('_digit_bind'), [Terminal('__ANON_12', True)], None, RuleOptions(True, False, None)),
-  218: Rule(NonTerminal('_digit_bind'), [Terminal('__ANON_9', True)], None, RuleOptions(True, False, None)),
-  219: Rule(NonTerminal('_digit_bind'), [Terminal('__ANON_6', True)], None, RuleOptions(True, False, None)),
-  220: Rule(NonTerminal('hensel_rulestring'), [Terminal('__ANON_13', False)], None, RuleOptions(False, False, None)),
-  221: Rule(NonTerminal('end_bs'), [Terminal('__ANON_14', False)], None, RuleOptions(False, False, None)),
-  222: Rule(NonTerminal('comment'), [Terminal('__ANON_15', False)], None, RuleOptions(False, False, None)),
-  223: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('__anon_plus_0'), Terminal('_WS', True), NonTerminal('line'), NonTerminal('end_bs')], None, None),
-  224: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('__anon_plus_0'), Terminal('_WS', True), NonTerminal('line')], None, None),
-  225: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('line')], None, None),
-  226: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('__anon_plus_0'), NonTerminal('line'), NonTerminal('end_bs'), Terminal('_NL', True)], None, None),
-  227: Rule(NonTerminal('__anon_plus_0'), [Terminal('_WS', True), NonTerminal('line'), NonTerminal('end_bs')], None, None),
-  228: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('__anon_plus_0'), NonTerminal('line')], None, None),
-  229: Rule(NonTerminal('__anon_plus_0'), [Terminal('_WS', True), NonTerminal('comment'), Terminal('_NL', True)], None, None),
-  230: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('__anon_plus_0'), NonTerminal('line'), NonTerminal('end_bs')], None, None),
-  231: Rule(NonTerminal('__anon_plus_0'), [Terminal('_WS', True), NonTerminal('comment')], None, None),
-  232: Rule(NonTerminal('__anon_plus_0'), [Terminal('_WS', True), NonTerminal('line')], None, None),
-  233: Rule(NonTerminal('__anon_plus_0'), [Terminal('_WS', True), NonTerminal('line'), NonTerminal('end_bs'), Terminal('_NL', True)], None, None),
-  234: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('comment'), Terminal('_NL', True)], None, None),
-  235: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('__anon_plus_0'), Terminal('_WS', True), NonTerminal('line'), NonTerminal('end_bs'), Terminal('_NL', True)], None, None),
-  236: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('__anon_plus_0'), Terminal('_WS', True), NonTerminal('line'), Terminal('_NL', True)], None, None),
-  237: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('line'), NonTerminal('end_bs'), Terminal('_NL', True)], None, None),
-  238: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('line'), NonTerminal('end_bs')], None, None),
-  239: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('__anon_plus_0'), Terminal('_WS', True), NonTerminal('comment'), Terminal('_NL', True)], None, None),
-  240: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('__anon_plus_0'), NonTerminal('line'), Terminal('_NL', True)], None, None),
-  241: Rule(NonTerminal('__anon_plus_0'), [Terminal('_WS', True), NonTerminal('line'), Terminal('_NL', True)], None, None),
-  242: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('line'), Terminal('_NL', True)], None, None),
-  243: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('comment')], None, None),
-  244: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('__anon_plus_0'), NonTerminal('comment'), Terminal('_NL', True)], None, None),
-  245: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('__anon_plus_0'), Terminal('_WS', True), NonTerminal('comment')], None, None),
-  246: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('__anon_plus_0'), NonTerminal('comment')], None, None),
-  247: Rule(NonTerminal('__anon_plus_1'), [NonTerminal('_sep'), NonTerminal('tr_state')], None, None),
-  248: Rule(NonTerminal('__anon_plus_1'), [NonTerminal('__anon_plus_1'), NonTerminal('_sep'), NonTerminal('tr_state')], None, None),
-  249: Rule(NonTerminal('__anon_star_2'), [NonTerminal('__anon_star_2'), Terminal('_WS', True), NonTerminal('symmetried_aux')], None, None),
-  250: Rule(NonTerminal('__anon_star_2'), [Terminal('_WS', True), NonTerminal('auxiliary')], None, None),
-  251: Rule(NonTerminal('__anon_star_2'), [Terminal('_WS', True), NonTerminal('symmetried_aux')], None, None),
-  252: Rule(NonTerminal('__anon_star_2'), [NonTerminal('__anon_star_2'), Terminal('_WS', True), NonTerminal('auxiliary')], None, None),
-  253: Rule(NonTerminal('__anon_star_3'), [NonTerminal('__anon_star_3'), Terminal('_WS', True), NonTerminal('auxiliary')], None, None),
-  254: Rule(NonTerminal('__anon_star_3'), [Terminal('_WS', True), NonTerminal('auxiliary')], None, None),
-  255: Rule(NonTerminal('__anon_star_4'), [Terminal('COMMA', True), NonTerminal('_expr')], None, None),
-  256: Rule(NonTerminal('__anon_star_4'), [Terminal('COMMA', True), Terminal('_WS', True), NonTerminal('_expr')], None, None),
-  257: Rule(NonTerminal('__anon_star_4'), [NonTerminal('__anon_star_4'), Terminal('COMMA', True), NonTerminal('_expr')], None, None),
-  258: Rule(NonTerminal('__anon_star_4'), [NonTerminal('__anon_star_4'), Terminal('COMMA', True), Terminal('_WS', True), NonTerminal('_expr')], None, None),
-  259: Rule(NonTerminal('__anon_star_5'), [Terminal('COMMA', True), Terminal('_WS', True), NonTerminal('_tr_expr')], None, None),
-  260: Rule(NonTerminal('__anon_star_5'), [NonTerminal('__anon_star_5'), Terminal('COMMA', True), Terminal('_WS', True), NonTerminal('_tr_expr')], None, None),
-  261: Rule(NonTerminal('__anon_star_5'), [NonTerminal('__anon_star_5'), Terminal('COMMA', True), NonTerminal('_tr_expr')], None, None),
-  262: Rule(NonTerminal('__anon_star_5'), [Terminal('COMMA', True), NonTerminal('_tr_expr')], None, None),
-  263: Rule(NonTerminal('__anon_star_6'), [NonTerminal('__anon_star_6'), Terminal('COMMA', True), NonTerminal('_ref_expr')], None, None),
-  264: Rule(NonTerminal('__anon_star_6'), [NonTerminal('__anon_star_6'), Terminal('COMMA', True), Terminal('_WS', True), NonTerminal('_ref_expr')], None, None),
-  265: Rule(NonTerminal('__anon_star_6'), [Terminal('COMMA', True), NonTerminal('_ref_expr')], None, None),
-  266: Rule(NonTerminal('__anon_star_6'), [Terminal('COMMA', True), Terminal('_WS', True), NonTerminal('_ref_expr')], None, None),
-  267: Rule(NonTerminal('__anon_star_7'), [NonTerminal('__anon_star_7'), Terminal('COMMA', True), Terminal('_WS', True), NonTerminal('_aux_expr')], None, None),
-  268: Rule(NonTerminal('__anon_star_7'), [Terminal('COMMA', True), NonTerminal('_aux_expr')], None, None),
-  269: Rule(NonTerminal('__anon_star_7'), [Terminal('COMMA', True), Terminal('_WS', True), NonTerminal('_aux_expr')], None, None),
-  270: Rule(NonTerminal('__anon_star_7'), [NonTerminal('__anon_star_7'), Terminal('COMMA', True), NonTerminal('_aux_expr')], None, None),
+  69: Rule(NonTerminal('ref_var'), [Terminal('_VAR_OPEN', True), NonTerminal('range'), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
+  70: Rule(NonTerminal('ref_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_ref_expr'), NonTerminal('__anon_star_6'), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
+  71: Rule(NonTerminal('ref_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_ref_expr'), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
+  72: Rule(NonTerminal('ref_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_ref_expr'), NonTerminal('__anon_star_6'), Terminal('COMMA', True), Terminal('EXTEND_LAST', False), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
+  73: Rule(NonTerminal('ref_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_ref_expr'), NonTerminal('__anon_star_6'), Terminal('COMMA', True), Terminal('_WS', True), Terminal('EXTEND_LAST', False), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
+  74: Rule(NonTerminal('ref_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_ref_expr'), Terminal('COMMA', True), Terminal('EXTEND_LAST', False), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
+  75: Rule(NonTerminal('rs_var'), [Terminal('_VAR_OPEN', True), NonTerminal('range'), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
+  76: Rule(NonTerminal('rs_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_rs_expr'), Terminal('COMMA', True), Terminal('_WS', True), Terminal('EXTEND_LAST', False), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
+  77: Rule(NonTerminal('rs_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_rs_expr'), NonTerminal('__anon_star_7'), Terminal('COMMA', True), Terminal('EXTEND_LAST', False), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
+  78: Rule(NonTerminal('rs_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_rs_expr'), NonTerminal('__anon_star_7'), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
+  79: Rule(NonTerminal('rs_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_rs_expr'), Terminal('COMMA', True), Terminal('EXTEND_LAST', False), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
+  80: Rule(NonTerminal('rs_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_rs_expr'), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
+  81: Rule(NonTerminal('rs_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_rs_expr'), NonTerminal('__anon_star_7'), Terminal('COMMA', True), Terminal('_WS', True), Terminal('EXTEND_LAST', False), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
+  82: Rule(NonTerminal('aux_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_aux_expr'), NonTerminal('__anon_star_8'), Terminal('COMMA', True), Terminal('_WS', True), Terminal('EXTEND_LAST', False), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
+  83: Rule(NonTerminal('aux_var'), [Terminal('_VAR_OPEN', True), NonTerminal('range'), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
+  84: Rule(NonTerminal('aux_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_aux_expr'), Terminal('COMMA', True), Terminal('EXTEND_LAST', False), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
+  85: Rule(NonTerminal('aux_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_aux_expr'), NonTerminal('__anon_star_8'), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
+  86: Rule(NonTerminal('aux_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_aux_expr'), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
+  87: Rule(NonTerminal('aux_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_aux_expr'), NonTerminal('__anon_star_8'), Terminal('COMMA', True), Terminal('EXTEND_LAST', False), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
+  88: Rule(NonTerminal('aux_var'), [Terminal('_VAR_OPEN', True), NonTerminal('_aux_expr'), Terminal('COMMA', True), Terminal('_WS', True), Terminal('EXTEND_LAST', False), Terminal('_VAR_CLOSE', True)], 'var', RuleOptions(False, False, None)),
+  89: Rule(NonTerminal('_expr'), [NonTerminal('_expr_no_int')], None, RuleOptions(False, False, None)),
+  90: Rule(NonTerminal('_expr'), [Terminal('STATE', False)], None, RuleOptions(False, False, None)),
+  91: Rule(NonTerminal('_expr_norec_int'), [Terminal('STATE', False)], None, RuleOptions(False, False, None)),
+  92: Rule(NonTerminal('_expr_norec_int'), [NonTerminal('_expr_no_rec')], None, RuleOptions(False, False, None)),
+  93: Rule(NonTerminal('_expr_no_int'), [Terminal('NAME', False)], None, RuleOptions(False, False, None)),
+  94: Rule(NonTerminal('_expr_no_int'), [NonTerminal('range')], None, RuleOptions(False, False, None)),
+  95: Rule(NonTerminal('_expr_no_int'), [NonTerminal('operation')], None, RuleOptions(False, False, None)),
+  96: Rule(NonTerminal('_expr_no_int'), [NonTerminal('var')], None, RuleOptions(False, False, None)),
+  97: Rule(NonTerminal('_expr_no_rec'), [Terminal('NAME', False)], None, RuleOptions(False, False, None)),
+  98: Rule(NonTerminal('_expr_no_rec'), [NonTerminal('range')], None, RuleOptions(False, False, None)),
+  99: Rule(NonTerminal('_expr_no_rec'), [NonTerminal('var')], None, RuleOptions(False, False, None)),
+  100: Rule(NonTerminal('operation'), [NonTerminal('_expr_no_int'), Terminal('_RROT', True), Terminal('INT', False)], 'noref_rot_right', RuleOptions(False, False, None)),
+  101: Rule(NonTerminal('operation'), [Terminal('STATE', False), Terminal('_MULT', True), NonTerminal('_expr_no_rec')], 'noref_int_to_var_length', RuleOptions(False, False, None)),
+  102: Rule(NonTerminal('operation'), [Terminal('STATE', False), Terminal('_MULT', True), Terminal('INT', False)], 'noref_repeat_int', RuleOptions(False, False, None)),
+  103: Rule(NonTerminal('operation'), [Terminal('_NEGATE_ALL', True), NonTerminal('_expr')], 'noref_all_except', RuleOptions(False, False, None)),
+  104: Rule(NonTerminal('operation'), [NonTerminal('_expr_no_int'), Terminal('_MULT', True), Terminal('INT', False)], 'noref_repeat_var', RuleOptions(False, False, None)),
+  105: Rule(NonTerminal('operation'), [NonTerminal('_expr_no_int'), Terminal('_LROT', True), Terminal('INT', False)], 'noref_rot_left', RuleOptions(False, False, None)),
+  106: Rule(NonTerminal('operation'), [Terminal('_NEGATE_LIVE', True), NonTerminal('_expr')], 'noref_live_except', RuleOptions(False, False, None)),
+  107: Rule(NonTerminal('operation'), [NonTerminal('_expr_no_int'), NonTerminal('_subt'), NonTerminal('_expr_norec_int')], 'noref_subt', RuleOptions(False, False, None)),
+  108: Rule(NonTerminal('_tr_expr'), [Terminal('STATE', False)], None, RuleOptions(False, False, None)),
+  109: Rule(NonTerminal('_tr_expr'), [NonTerminal('reference')], None, RuleOptions(False, False, None)),
+  110: Rule(NonTerminal('_tr_expr'), [NonTerminal('_tr_expr_no_int')], None, RuleOptions(False, False, None)),
+  111: Rule(NonTerminal('_tr_expr_norec_int'), [NonTerminal('_tr_expr_no_rec')], None, RuleOptions(False, False, None)),
+  112: Rule(NonTerminal('_tr_expr_norec_int'), [Terminal('STATE', False)], None, RuleOptions(False, False, None)),
+  113: Rule(NonTerminal('_tr_expr_norec_int'), [NonTerminal('reference')], None, RuleOptions(False, False, None)),
+  114: Rule(NonTerminal('_tr_expr_no_int'), [NonTerminal('tr_var')], None, RuleOptions(False, False, None)),
+  115: Rule(NonTerminal('_tr_expr_no_int'), [Terminal('NAME', False)], None, RuleOptions(False, False, None)),
+  116: Rule(NonTerminal('_tr_expr_no_int'), [NonTerminal('tr_operation')], None, RuleOptions(False, False, None)),
+  117: Rule(NonTerminal('_tr_expr_no_int'), [NonTerminal('range')], None, RuleOptions(False, False, None)),
+  118: Rule(NonTerminal('_tr_expr_no_rec'), [NonTerminal('tr_var')], None, RuleOptions(False, False, None)),
+  119: Rule(NonTerminal('_tr_expr_no_rec'), [Terminal('NAME', False)], None, RuleOptions(False, False, None)),
+  120: Rule(NonTerminal('_tr_expr_no_rec'), [NonTerminal('range')], None, RuleOptions(False, False, None)),
+  121: Rule(NonTerminal('tr_operation'), [NonTerminal('_tr_expr_no_int'), NonTerminal('_subt'), NonTerminal('_tr_expr_norec_int')], 'subt', RuleOptions(False, False, None)),
+  122: Rule(NonTerminal('tr_operation'), [NonTerminal('reference'), Terminal('_MULT', True), NonTerminal('_tr_expr_no_rec')], 'int_to_var_length', RuleOptions(False, False, None)),
+  123: Rule(NonTerminal('tr_operation'), [Terminal('STATE', False), Terminal('_MULT', True), Terminal('INT', False)], 'repeat_int', RuleOptions(False, False, None)),
+  124: Rule(NonTerminal('tr_operation'), [NonTerminal('_tr_expr_no_int'), Terminal('_RROT', True), Terminal('INT', False)], 'rot_right', RuleOptions(False, False, None)),
+  125: Rule(NonTerminal('tr_operation'), [Terminal('_NEGATE_LIVE', True), NonTerminal('_tr_expr')], 'live_except', RuleOptions(False, False, None)),
+  126: Rule(NonTerminal('tr_operation'), [NonTerminal('reference'), Terminal('_MULT', True), Terminal('INT', False)], 'repeat_int', RuleOptions(False, False, None)),
+  127: Rule(NonTerminal('tr_operation'), [NonTerminal('_tr_expr_no_int'), Terminal('_MULT', True), Terminal('INT', False)], 'repeat_var', RuleOptions(False, False, None)),
+  128: Rule(NonTerminal('tr_operation'), [NonTerminal('_tr_expr_no_int'), Terminal('_LROT', True), Terminal('INT', False)], 'rot_left', RuleOptions(False, False, None)),
+  129: Rule(NonTerminal('tr_operation'), [Terminal('_NEGATE_ALL', True), NonTerminal('_tr_expr')], 'all_except', RuleOptions(False, False, None)),
+  130: Rule(NonTerminal('tr_operation'), [Terminal('STATE', False), Terminal('_MULT', True), NonTerminal('_tr_expr_no_rec')], 'int_to_var_length', RuleOptions(False, False, None)),
+  131: Rule(NonTerminal('_ref_expr'), [NonTerminal('_ref_expr_no_int')], None, RuleOptions(False, False, None)),
+  132: Rule(NonTerminal('_ref_expr'), [Terminal('STATE', False)], None, RuleOptions(False, False, None)),
+  133: Rule(NonTerminal('_ref_expr'), [NonTerminal('reference')], None, RuleOptions(False, False, None)),
+  134: Rule(NonTerminal('_ref_expr_norec_int'), [Terminal('STATE', False)], None, RuleOptions(False, False, None)),
+  135: Rule(NonTerminal('_ref_expr_norec_int'), [NonTerminal('_ref_expr_no_rec')], None, RuleOptions(False, False, None)),
+  136: Rule(NonTerminal('_ref_expr_norec_int'), [NonTerminal('reference')], None, RuleOptions(False, False, None)),
+  137: Rule(NonTerminal('_ref_expr_no_int'), [Terminal('NAME', False)], None, RuleOptions(False, False, None)),
+  138: Rule(NonTerminal('_ref_expr_no_int'), [NonTerminal('range')], None, RuleOptions(False, False, None)),
+  139: Rule(NonTerminal('_ref_expr_no_int'), [NonTerminal('ref_operation')], None, RuleOptions(False, False, None)),
+  140: Rule(NonTerminal('_ref_expr_no_int'), [NonTerminal('ref_var')], None, RuleOptions(False, False, None)),
+  141: Rule(NonTerminal('_ref_expr_no_rec'), [Terminal('NAME', False)], None, RuleOptions(False, False, None)),
+  142: Rule(NonTerminal('_ref_expr_no_rec'), [NonTerminal('range')], None, RuleOptions(False, False, None)),
+  143: Rule(NonTerminal('_ref_expr_no_rec'), [NonTerminal('ref_var')], None, RuleOptions(False, False, None)),
+  144: Rule(NonTerminal('ref_operation'), [Terminal('_NEGATE_ALL', True), NonTerminal('_ref_expr')], 'all_except', RuleOptions(False, False, None)),
+  145: Rule(NonTerminal('ref_operation'), [Terminal('_NEGATE_LIVE', True), NonTerminal('_ref_expr')], 'live_except', RuleOptions(False, False, None)),
+  146: Rule(NonTerminal('ref_operation'), [NonTerminal('_ref_expr_no_int'), Terminal('_MULT', True), Terminal('INT', False)], 'repeat_var', RuleOptions(False, False, None)),
+  147: Rule(NonTerminal('ref_operation'), [Terminal('STATE', False), Terminal('_MULT', True), Terminal('INT', False)], 'repeat_int', RuleOptions(False, False, None)),
+  148: Rule(NonTerminal('ref_operation'), [NonTerminal('reference'), Terminal('_MULT', True), NonTerminal('_ref_expr_no_rec')], 'int_to_var_length', RuleOptions(False, False, None)),
+  149: Rule(NonTerminal('ref_operation'), [NonTerminal('_ref_expr_no_int'), NonTerminal('_subt'), NonTerminal('_ref_expr_norec_int')], 'subt', RuleOptions(False, False, None)),
+  150: Rule(NonTerminal('ref_operation'), [NonTerminal('_ref_expr_no_int'), Terminal('_LROT', True), Terminal('INT', False)], 'rot_left', RuleOptions(False, False, None)),
+  151: Rule(NonTerminal('ref_operation'), [NonTerminal('reference'), Terminal('_MULT', True), Terminal('INT', False)], 'repeat_int', RuleOptions(False, False, None)),
+  152: Rule(NonTerminal('ref_operation'), [Terminal('STATE', False), Terminal('_MULT', True), NonTerminal('_ref_expr_no_rec')], 'int_to_var_length', RuleOptions(False, False, None)),
+  153: Rule(NonTerminal('ref_operation'), [NonTerminal('_ref_expr_no_int'), Terminal('_RROT', True), Terminal('INT', False)], 'rot_right', RuleOptions(False, False, None)),
+  154: Rule(NonTerminal('_rs_expr'), [Terminal('STATE', False)], None, RuleOptions(False, False, None)),
+  155: Rule(NonTerminal('_rs_expr'), [NonTerminal('_rs_expr_no_int')], None, RuleOptions(False, False, None)),
+  156: Rule(NonTerminal('_rs_expr'), [NonTerminal('rs_ref')], None, RuleOptions(False, False, None)),
+  157: Rule(NonTerminal('_rs_expr_norec_int'), [NonTerminal('rs_ref')], None, RuleOptions(False, False, None)),
+  158: Rule(NonTerminal('_rs_expr_norec_int'), [NonTerminal('_rs_expr_no_rec')], None, RuleOptions(False, False, None)),
+  159: Rule(NonTerminal('_rs_expr_norec_int'), [Terminal('STATE', False)], None, RuleOptions(False, False, None)),
+  160: Rule(NonTerminal('_rs_expr_no_int'), [NonTerminal('rs_operation')], None, RuleOptions(False, False, None)),
+  161: Rule(NonTerminal('_rs_expr_no_int'), [Terminal('NAME', False)], None, RuleOptions(False, False, None)),
+  162: Rule(NonTerminal('_rs_expr_no_int'), [NonTerminal('range')], None, RuleOptions(False, False, None)),
+  163: Rule(NonTerminal('_rs_expr_no_int'), [NonTerminal('rs_var')], None, RuleOptions(False, False, None)),
+  164: Rule(NonTerminal('_rs_expr_no_rec'), [Terminal('NAME', False)], None, RuleOptions(False, False, None)),
+  165: Rule(NonTerminal('_rs_expr_no_rec'), [NonTerminal('range')], None, RuleOptions(False, False, None)),
+  166: Rule(NonTerminal('_rs_expr_no_rec'), [NonTerminal('rs_var')], None, RuleOptions(False, False, None)),
+  167: Rule(NonTerminal('rs_operation'), [Terminal('STATE', False), Terminal('_MULT', True), Terminal('INT', False)], 'repeat_int', RuleOptions(False, False, None)),
+  168: Rule(NonTerminal('rs_operation'), [Terminal('STATE', False), Terminal('_MULT', True), NonTerminal('_rs_expr_no_rec')], 'int_to_var_length', RuleOptions(False, False, None)),
+  169: Rule(NonTerminal('rs_operation'), [Terminal('_NEGATE_ALL', True), NonTerminal('_rs_expr')], 'all_except', RuleOptions(False, False, None)),
+  170: Rule(NonTerminal('rs_operation'), [NonTerminal('rs_ref'), Terminal('_MULT', True), NonTerminal('_rs_expr_no_rec')], 'int_to_var_length', RuleOptions(False, False, None)),
+  171: Rule(NonTerminal('rs_operation'), [Terminal('_NEGATE_LIVE', True), NonTerminal('_rs_expr')], 'live_except', RuleOptions(False, False, None)),
+  172: Rule(NonTerminal('rs_operation'), [NonTerminal('_rs_expr_no_int'), Terminal('_LROT', True), Terminal('INT', False)], 'rot_left', RuleOptions(False, False, None)),
+  173: Rule(NonTerminal('rs_operation'), [NonTerminal('_rs_expr_no_int'), Terminal('_MULT', True), Terminal('INT', False)], 'repeat_var', RuleOptions(False, False, None)),
+  174: Rule(NonTerminal('rs_operation'), [NonTerminal('_rs_expr_no_int'), Terminal('_RROT', True), Terminal('INT', False)], 'rot_right', RuleOptions(False, False, None)),
+  175: Rule(NonTerminal('rs_operation'), [NonTerminal('rs_ref'), Terminal('_MULT', True), Terminal('INT', False)], 'repeat_int', RuleOptions(False, False, None)),
+  176: Rule(NonTerminal('rs_operation'), [NonTerminal('_rs_expr_no_int'), NonTerminal('_subt'), NonTerminal('_rs_expr_norec_int')], 'subt', RuleOptions(False, False, None)),
+  177: Rule(NonTerminal('_aux_expr'), [Terminal('STATE', False)], None, RuleOptions(False, False, None)),
+  178: Rule(NonTerminal('_aux_expr'), [NonTerminal('_aux_expr_no_int')], None, RuleOptions(False, False, None)),
+  179: Rule(NonTerminal('_aux_expr'), [NonTerminal('aux_reference')], None, RuleOptions(False, False, None)),
+  180: Rule(NonTerminal('_aux_expr_norec_int'), [NonTerminal('_aux_expr_no_rec')], None, RuleOptions(False, False, None)),
+  181: Rule(NonTerminal('_aux_expr_norec_int'), [Terminal('STATE', False)], None, RuleOptions(False, False, None)),
+  182: Rule(NonTerminal('_aux_expr_norec_int'), [NonTerminal('aux_reference')], None, RuleOptions(False, False, None)),
+  183: Rule(NonTerminal('_aux_expr_no_int'), [NonTerminal('range')], None, RuleOptions(False, False, None)),
+  184: Rule(NonTerminal('_aux_expr_no_int'), [Terminal('LEAVE_ALONE', False)], None, RuleOptions(False, False, None)),
+  185: Rule(NonTerminal('_aux_expr_no_int'), [NonTerminal('aux_operation')], None, RuleOptions(False, False, None)),
+  186: Rule(NonTerminal('_aux_expr_no_int'), [Terminal('NAME', False)], None, RuleOptions(False, False, None)),
+  187: Rule(NonTerminal('_aux_expr_no_int'), [NonTerminal('aux_var')], None, RuleOptions(False, False, None)),
+  188: Rule(NonTerminal('_aux_expr_no_int'), [NonTerminal('leave_alone_mult')], None, RuleOptions(False, False, None)),
+  189: Rule(NonTerminal('_aux_expr_no_rec'), [NonTerminal('range')], None, RuleOptions(False, False, None)),
+  190: Rule(NonTerminal('_aux_expr_no_rec'), [Terminal('LEAVE_ALONE', False)], None, RuleOptions(False, False, None)),
+  191: Rule(NonTerminal('_aux_expr_no_rec'), [Terminal('NAME', False)], None, RuleOptions(False, False, None)),
+  192: Rule(NonTerminal('_aux_expr_no_rec'), [NonTerminal('aux_var')], None, RuleOptions(False, False, None)),
+  193: Rule(NonTerminal('_aux_expr_no_rec'), [NonTerminal('leave_alone_mult')], None, RuleOptions(False, False, None)),
+  194: Rule(NonTerminal('aux_operation'), [Terminal('STATE', False), Terminal('_MULT', True), Terminal('INT', False)], 'repeat_int', RuleOptions(False, False, None)),
+  195: Rule(NonTerminal('aux_operation'), [NonTerminal('_aux_expr_no_int'), Terminal('_MULT', True), Terminal('INT', False)], 'repeat_var', RuleOptions(False, False, None)),
+  196: Rule(NonTerminal('aux_operation'), [NonTerminal('_aux_expr_no_int'), Terminal('_LROT', True), Terminal('INT', False)], 'rot_left', RuleOptions(False, False, None)),
+  197: Rule(NonTerminal('aux_operation'), [NonTerminal('aux_reference'), Terminal('_MULT', True), Terminal('INT', False)], 'repeat_int', RuleOptions(False, False, None)),
+  198: Rule(NonTerminal('aux_operation'), [NonTerminal('_aux_expr_no_int'), NonTerminal('_subt'), NonTerminal('_aux_expr_norec_int')], 'subt', RuleOptions(False, False, None)),
+  199: Rule(NonTerminal('aux_operation'), [NonTerminal('aux_reference'), Terminal('_MULT', True), NonTerminal('_aux_expr_no_rec')], 'int_to_var_length', RuleOptions(False, False, None)),
+  200: Rule(NonTerminal('aux_operation'), [Terminal('_NEGATE_ALL', True), NonTerminal('_aux_expr')], 'all_except', RuleOptions(False, False, None)),
+  201: Rule(NonTerminal('aux_operation'), [NonTerminal('_aux_expr_no_int'), Terminal('_RROT', True), Terminal('INT', False)], 'rot_right', RuleOptions(False, False, None)),
+  202: Rule(NonTerminal('aux_operation'), [Terminal('STATE', False), Terminal('_MULT', True), NonTerminal('_aux_expr_no_rec')], 'int_to_var_length', RuleOptions(False, False, None)),
+  203: Rule(NonTerminal('aux_operation'), [Terminal('_NEGATE_LIVE', True), NonTerminal('_aux_expr')], 'live_except', RuleOptions(False, False, None)),
+  204: Rule(NonTerminal('aux_reference'), [Terminal('LSQB', True), Terminal('COMPASS_DIR', False), Terminal('COLON', True), Terminal('_WS', True), NonTerminal('_aux_expr_no_int'), Terminal('RSQB', True)], 'mapping', RuleOptions(False, False, None)),
+  205: Rule(NonTerminal('aux_reference'), [Terminal('LSQB', True), NonTerminal('_digit_bind'), Terminal('COLON', True), Terminal('_WS', True), NonTerminal('_aux_expr_no_int'), Terminal('RSQB', True)], 'mapping', RuleOptions(False, False, None)),
+  206: Rule(NonTerminal('aux_reference'), [Terminal('LSQB', True), Terminal('COMPASS_DIR', False), Terminal('COLON', True), NonTerminal('_aux_expr_no_int'), Terminal('RSQB', True)], 'mapping', RuleOptions(False, False, None)),
+  207: Rule(NonTerminal('aux_reference'), [Terminal('LSQB', True), NonTerminal('_digit_bind'), Terminal('RSQB', True)], 'binding', RuleOptions(False, False, None)),
+  208: Rule(NonTerminal('aux_reference'), [Terminal('LSQB', True), NonTerminal('_digit_bind'), Terminal('COLON', True), NonTerminal('_aux_expr_no_int'), Terminal('RSQB', True)], 'mapping', RuleOptions(False, False, None)),
+  209: Rule(NonTerminal('aux_reference'), [Terminal('LSQB', True), Terminal('COMPASS_DIR', False), Terminal('RSQB', True)], 'binding', RuleOptions(False, False, None)),
+  210: Rule(NonTerminal('reference'), [Terminal('LSQB', True), NonTerminal('_digit_bind'), Terminal('COLON', True), Terminal('_WS', True), NonTerminal('_ref_expr_no_int'), Terminal('RSQB', True)], 'mapping', RuleOptions(False, False, None)),
+  211: Rule(NonTerminal('reference'), [Terminal('LSQB', True), NonTerminal('_digit_bind'), Terminal('COLON', True), NonTerminal('_ref_expr_no_int'), Terminal('RSQB', True)], 'mapping', RuleOptions(False, False, None)),
+  212: Rule(NonTerminal('reference'), [Terminal('LSQB', True), Terminal('COMPASS_DIR', False), Terminal('COLON', True), Terminal('_WS', True), NonTerminal('_ref_expr_no_int'), Terminal('RSQB', True)], 'mapping', RuleOptions(False, False, None)),
+  213: Rule(NonTerminal('reference'), [Terminal('LSQB', True), NonTerminal('_digit_bind'), Terminal('RSQB', True)], 'binding', RuleOptions(False, False, None)),
+  214: Rule(NonTerminal('reference'), [Terminal('LSQB', True), Terminal('COMPASS_DIR', False), Terminal('RSQB', True)], 'binding', RuleOptions(False, False, None)),
+  215: Rule(NonTerminal('reference'), [Terminal('LSQB', True), Terminal('COMPASS_DIR', False), Terminal('COLON', True), NonTerminal('_ref_expr_no_int'), Terminal('RSQB', True)], 'mapping', RuleOptions(False, False, None)),
+  216: Rule(NonTerminal('rs_ref'), [Terminal('LSQB', True), Terminal('__ANON_3', False), Terminal('COLON', True), NonTerminal('_rs_expr_no_int'), Terminal('RSQB', True)], 'rs_mapping', RuleOptions(False, False, None)),
+  217: Rule(NonTerminal('rs_ref'), [Terminal('LSQB', True), Terminal('__ANON_3', False), Terminal('COLON', True), Terminal('_WS', True), NonTerminal('_rs_expr_no_int'), Terminal('RSQB', True)], 'rs_mapping', RuleOptions(False, False, None)),
+  218: Rule(NonTerminal('rs_ref'), [Terminal('LSQB', True), Terminal('__ANON_3', False), Terminal('RSQB', True)], 'rs_binding', RuleOptions(False, False, None)),
+  219: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('PLUS', True), Terminal('INT', False), Terminal('_WS', True), Terminal('__ANON_2', True), Terminal('_WS', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
+  220: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('__ANON_2', True), Terminal('STATE', False)], None, RuleOptions(False, False, None)),
+  221: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('PLUS', True), Terminal('_WS', True), Terminal('INT', False), Terminal('_WS', True), Terminal('__ANON_2', True), Terminal('_WS', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
+  222: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('PLUS', True), Terminal('_WS', True), Terminal('INT', False), Terminal('__ANON_2', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
+  223: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('PLUS', True), Terminal('INT', False), Terminal('__ANON_2', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
+  224: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('_WS', True), Terminal('PLUS', True), Terminal('INT', False), Terminal('_WS', True), Terminal('__ANON_2', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
+  225: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('__ANON_2', True), Terminal('_WS', True), Terminal('STATE', False)], None, RuleOptions(False, False, None)),
+  226: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('_WS', True), Terminal('__ANON_2', True), Terminal('STATE', False)], None, RuleOptions(False, False, None)),
+  227: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('PLUS', True), Terminal('INT', False), Terminal('_WS', True), Terminal('__ANON_2', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
+  228: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('_WS', True), Terminal('PLUS', True), Terminal('INT', False), Terminal('__ANON_2', True), Terminal('_WS', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
+  229: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('PLUS', True), Terminal('_WS', True), Terminal('INT', False), Terminal('__ANON_2', True), Terminal('_WS', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
+  230: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('_WS', True), Terminal('PLUS', True), Terminal('_WS', True), Terminal('INT', False), Terminal('__ANON_2', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
+  231: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('_WS', True), Terminal('PLUS', True), Terminal('_WS', True), Terminal('INT', False), Terminal('__ANON_2', True), Terminal('_WS', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
+  232: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('_WS', True), Terminal('PLUS', True), Terminal('_WS', True), Terminal('INT', False), Terminal('_WS', True), Terminal('__ANON_2', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
+  233: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('PLUS', True), Terminal('_WS', True), Terminal('INT', False), Terminal('_WS', True), Terminal('__ANON_2', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
+  234: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('PLUS', True), Terminal('INT', False), Terminal('__ANON_2', True), Terminal('_WS', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
+  235: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('_WS', True), Terminal('__ANON_2', True), Terminal('_WS', True), Terminal('STATE', False)], None, RuleOptions(False, False, None)),
+  236: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('_WS', True), Terminal('PLUS', True), Terminal('INT', False), Terminal('__ANON_2', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
+  237: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('_WS', True), Terminal('PLUS', True), Terminal('INT', False), Terminal('_WS', True), Terminal('__ANON_2', True), Terminal('_WS', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
+  238: Rule(NonTerminal('range'), [Terminal('STATE', False), Terminal('_WS', True), Terminal('PLUS', True), Terminal('_WS', True), Terminal('INT', False), Terminal('_WS', True), Terminal('__ANON_2', True), Terminal('_WS', True), Terminal('STATE', False)], 'range_step', RuleOptions(False, False, None)),
+  239: Rule(NonTerminal('leave_alone_mult'), [Terminal('LEAVE_ALONE', False), Terminal('_MULT', True), Terminal('INT', False)], None, RuleOptions(False, False, None)),
+  240: Rule(NonTerminal('_subt'), [Terminal('_SUBT', True)], None, RuleOptions(False, False, None)),
+  241: Rule(NonTerminal('_subt'), [Terminal('_NEGATE_LIVE', True)], None, RuleOptions(False, False, None)),
+  242: Rule(NonTerminal('_subt'), [Terminal('_NEGATE_LIVE', True), Terminal('_WS', True)], None, RuleOptions(False, False, None)),
+  243: Rule(NonTerminal('_digit_bind'), [Terminal('__ANON_7', True)], None, RuleOptions(True, False, None)),
+  244: Rule(NonTerminal('_digit_bind'), [Terminal('__ANON_5', True)], None, RuleOptions(True, False, None)),
+  245: Rule(NonTerminal('_digit_bind'), [Terminal('__ANON_12', True)], None, RuleOptions(True, False, None)),
+  246: Rule(NonTerminal('_digit_bind'), [Terminal('__ANON_4', True)], None, RuleOptions(True, False, None)),
+  247: Rule(NonTerminal('_digit_bind'), [Terminal('__ANON_8', True)], None, RuleOptions(True, False, None)),
+  248: Rule(NonTerminal('_digit_bind'), [Terminal('__ANON_9', True)], None, RuleOptions(True, False, None)),
+  249: Rule(NonTerminal('_digit_bind'), [Terminal('__ANON_6', True)], None, RuleOptions(True, False, None)),
+  250: Rule(NonTerminal('_digit_bind'), [Terminal('__ANON_11', True)], None, RuleOptions(True, False, None)),
+  251: Rule(NonTerminal('_digit_bind'), [Terminal('__ANON_10', True)], None, RuleOptions(True, False, None)),
+  252: Rule(NonTerminal('_digit_bind'), [Terminal('__ANON_13', True)], None, RuleOptions(True, False, None)),
+  253: Rule(NonTerminal('hensel_rulestring'), [Terminal('__ANON_14', False)], None, RuleOptions(False, False, None)),
+  254: Rule(NonTerminal('end_bs'), [Terminal('__ANON_15', False)], None, RuleOptions(False, False, None)),
+  255: Rule(NonTerminal('comment'), [Terminal('__ANON_16', False)], None, RuleOptions(False, False, None)),
+  256: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('__anon_plus_0'), Terminal('_WS', True), NonTerminal('line'), NonTerminal('end_bs')], None, None),
+  257: Rule(NonTerminal('__anon_plus_0'), [Terminal('_WS', True), NonTerminal('line'), NonTerminal('end_bs')], None, None),
+  258: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('__anon_plus_0'), NonTerminal('line'), Terminal('_NL', True)], None, None),
+  259: Rule(NonTerminal('__anon_plus_0'), [Terminal('_WS', True), NonTerminal('line'), Terminal('_NL', True)], None, None),
+  260: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('__anon_plus_0'), NonTerminal('line'), NonTerminal('end_bs')], None, None),
+  261: Rule(NonTerminal('__anon_plus_0'), [Terminal('_WS', True), NonTerminal('comment'), Terminal('_NL', True)], None, None),
+  262: Rule(NonTerminal('__anon_plus_0'), [Terminal('_WS', True), NonTerminal('line'), NonTerminal('end_bs'), Terminal('_NL', True)], None, None),
+  263: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('__anon_plus_0'), Terminal('_WS', True), NonTerminal('line'), NonTerminal('end_bs'), Terminal('_NL', True)], None, None),
+  264: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('comment')], None, None),
+  265: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('line'), NonTerminal('end_bs'), Terminal('_NL', True)], None, None),
+  266: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('line')], None, None),
+  267: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('__anon_plus_0'), Terminal('_WS', True), NonTerminal('line')], None, None),
+  268: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('__anon_plus_0'), Terminal('_WS', True), NonTerminal('comment'), Terminal('_NL', True)], None, None),
+  269: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('__anon_plus_0'), NonTerminal('comment'), Terminal('_NL', True)], None, None),
+  270: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('__anon_plus_0'), NonTerminal('line')], None, None),
+  271: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('line'), NonTerminal('end_bs')], None, None),
+  272: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('__anon_plus_0'), Terminal('_WS', True), NonTerminal('line'), Terminal('_NL', True)], None, None),
+  273: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('__anon_plus_0'), NonTerminal('line'), NonTerminal('end_bs'), Terminal('_NL', True)], None, None),
+  274: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('comment'), Terminal('_NL', True)], None, None),
+  275: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('line'), Terminal('_NL', True)], None, None),
+  276: Rule(NonTerminal('__anon_plus_0'), [Terminal('_WS', True), NonTerminal('comment')], None, None),
+  277: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('__anon_plus_0'), NonTerminal('comment')], None, None),
+  278: Rule(NonTerminal('__anon_plus_0'), [Terminal('_WS', True), NonTerminal('line')], None, None),
+  279: Rule(NonTerminal('__anon_plus_0'), [NonTerminal('__anon_plus_0'), Terminal('_WS', True), NonTerminal('comment')], None, None),
+  280: Rule(NonTerminal('__anon_plus_1'), [NonTerminal('__anon_plus_1'), NonTerminal('_sep'), NonTerminal('tr_state')], None, None),
+  281: Rule(NonTerminal('__anon_plus_1'), [NonTerminal('_sep'), NonTerminal('tr_state')], None, None),
+  282: Rule(NonTerminal('__anon_star_2'), [NonTerminal('__anon_star_2'), Terminal('_WS', True), NonTerminal('symmetried_aux')], None, None),
+  283: Rule(NonTerminal('__anon_star_2'), [Terminal('_WS', True), NonTerminal('auxiliary')], None, None),
+  284: Rule(NonTerminal('__anon_star_2'), [NonTerminal('__anon_star_2'), Terminal('_WS', True), NonTerminal('auxiliary')], None, None),
+  285: Rule(NonTerminal('__anon_star_2'), [Terminal('_WS', True), NonTerminal('symmetried_aux')], None, None),
+  286: Rule(NonTerminal('__anon_star_3'), [Terminal('_WS', True), NonTerminal('auxiliary')], None, None),
+  287: Rule(NonTerminal('__anon_star_3'), [NonTerminal('__anon_star_3'), Terminal('_WS', True), NonTerminal('auxiliary')], None, None),
+  288: Rule(NonTerminal('__anon_star_4'), [NonTerminal('__anon_star_4'), Terminal('COMMA', True), Terminal('_WS', True), NonTerminal('_expr')], None, None),
+  289: Rule(NonTerminal('__anon_star_4'), [Terminal('COMMA', True), NonTerminal('_expr')], None, None),
+  290: Rule(NonTerminal('__anon_star_4'), [Terminal('COMMA', True), Terminal('_WS', True), NonTerminal('_expr')], None, None),
+  291: Rule(NonTerminal('__anon_star_4'), [NonTerminal('__anon_star_4'), Terminal('COMMA', True), NonTerminal('_expr')], None, None),
+  292: Rule(NonTerminal('__anon_star_5'), [NonTerminal('__anon_star_5'), Terminal('COMMA', True), Terminal('_WS', True), NonTerminal('_tr_expr')], None, None),
+  293: Rule(NonTerminal('__anon_star_5'), [NonTerminal('__anon_star_5'), Terminal('COMMA', True), NonTerminal('_tr_expr')], None, None),
+  294: Rule(NonTerminal('__anon_star_5'), [Terminal('COMMA', True), Terminal('_WS', True), NonTerminal('_tr_expr')], None, None),
+  295: Rule(NonTerminal('__anon_star_5'), [Terminal('COMMA', True), NonTerminal('_tr_expr')], None, None),
+  296: Rule(NonTerminal('__anon_star_6'), [NonTerminal('__anon_star_6'), Terminal('COMMA', True), NonTerminal('_ref_expr')], None, None),
+  297: Rule(NonTerminal('__anon_star_6'), [NonTerminal('__anon_star_6'), Terminal('COMMA', True), Terminal('_WS', True), NonTerminal('_ref_expr')], None, None),
+  298: Rule(NonTerminal('__anon_star_6'), [Terminal('COMMA', True), Terminal('_WS', True), NonTerminal('_ref_expr')], None, None),
+  299: Rule(NonTerminal('__anon_star_6'), [Terminal('COMMA', True), NonTerminal('_ref_expr')], None, None),
+  300: Rule(NonTerminal('__anon_star_7'), [Terminal('COMMA', True), Terminal('_WS', True), NonTerminal('_rs_expr')], None, None),
+  301: Rule(NonTerminal('__anon_star_7'), [NonTerminal('__anon_star_7'), Terminal('COMMA', True), Terminal('_WS', True), NonTerminal('_rs_expr')], None, None),
+  302: Rule(NonTerminal('__anon_star_7'), [Terminal('COMMA', True), NonTerminal('_rs_expr')], None, None),
+  303: Rule(NonTerminal('__anon_star_7'), [NonTerminal('__anon_star_7'), Terminal('COMMA', True), NonTerminal('_rs_expr')], None, None),
+  304: Rule(NonTerminal('__anon_star_8'), [Terminal('COMMA', True), Terminal('_WS', True), NonTerminal('_aux_expr')], None, None),
+  305: Rule(NonTerminal('__anon_star_8'), [NonTerminal('__anon_star_8'), Terminal('COMMA', True), NonTerminal('_aux_expr')], None, None),
+  306: Rule(NonTerminal('__anon_star_8'), [Terminal('COMMA', True), NonTerminal('_aux_expr')], None, None),
+  307: Rule(NonTerminal('__anon_star_8'), [NonTerminal('__anon_star_8'), Terminal('COMMA', True), Terminal('_WS', True), NonTerminal('_aux_expr')], None, None),
 }
 parse_tree_builder = ParseTreeBuilder(RULES.values(), Tree)
 class ParseTable: pass
 parse_table = ParseTable()
 STATES = {
   0: {0: (0, 1), 1: (0, 2), 2: (0, 3), 3: (0, 4), 4: (0, 5), 5: (0, 6), 6: (0, 7), 7: (0, 8), 8: (0, 9), 9: (0, 10), 10: (0, 11), 11: (0, 12), 12: (0, 13), 13: (0, 14), 14: (0, 15), 15: (0, 16), 16: (0, 17), 17: (0, 18), 18: (0, 19)},
-  1: {19: (0, 20), 20: (0, 21), 21: (0, 22), 22: (0, 23)},
-  2: {23: (1, 82), 24: (1, 82), 21: (1, 82), 25: (1, 82), 17: (1, 82), 26: (1, 82), 27: (1, 82), 28: (1, 82), 4: (1, 82), 1: (1, 82), 13: (1, 82), 29: (1, 82), 10: (1, 82), 11: (1, 82), 15: (1, 82), 30: (0, 27), 31: (1, 82), 32: (1, 82), 22: (1, 82), 6: (0, 24), 33: (0, 25), 34: (0, 26)},
-  3: {10: (1, 225), 11: (1, 225), 15: (1, 225), 17: (1, 225), 6: (1, 225), 28: (1, 225), 4: (1, 225), 1: (1, 225), 13: (1, 225), 23: (0, 28), 35: (0, 29), 24: (0, 30)},
-  4: {28: (1, 0), 0: (0, 1), 2: (0, 31), 1: (0, 2), 4: (0, 5), 6: (0, 32), 5: (0, 6), 8: (0, 33), 7: (0, 8), 9: (0, 10), 10: (0, 11), 11: (0, 12), 12: (0, 13), 13: (0, 14), 14: (0, 15), 15: (0, 16), 16: (0, 17), 17: (0, 18)},
-  5: {12: (0, 34), 13: (0, 14), 1: (0, 2), 4: (0, 5), 14: (0, 15), 0: (0, 35), 9: (0, 10), 16: (0, 17), 17: (0, 18), 10: (0, 36)},
-  6: {23: (1, 11), 10: (1, 11), 24: (1, 11), 11: (1, 11), 15: (1, 11), 17: (1, 11), 6: (1, 11), 28: (1, 11), 4: (1, 11), 1: (1, 11), 13: (1, 11), 36: (0, 37), 37: (0, 38), 38: (0, 39), 39: (0, 40), 40: (0, 41)},
-  7: {12: (0, 13), 13: (0, 14), 0: (0, 1), 2: (0, 42), 1: (0, 2), 4: (0, 5), 10: (0, 11), 14: (0, 15), 8: (0, 43), 15: (0, 16), 9: (0, 10), 5: (0, 6), 7: (0, 8), 16: (0, 17), 17: (0, 18), 11: (0, 12)},
-  8: {23: (1, 8), 10: (1, 8), 24: (1, 8), 11: (1, 8), 15: (1, 8), 17: (1, 8), 6: (1, 8), 28: (1, 8), 4: (1, 8), 1: (1, 8), 13: (1, 8), 36: (0, 37), 37: (0, 38), 40: (0, 44), 38: (0, 39), 39: (0, 40)},
-  9: {10: (1, 243), 11: (1, 243), 15: (1, 243), 17: (1, 243), 6: (1, 243), 28: (1, 243), 4: (1, 243), 1: (1, 243), 13: (1, 243), 24: (0, 45)},
-  10: {23: (1, 83), 24: (1, 83), 21: (1, 83), 25: (0, 51), 17: (0, 46), 26: (1, 83), 27: (1, 83), 28: (1, 83), 4: (1, 83), 1: (1, 83), 13: (1, 83), 29: (0, 49), 10: (1, 83), 11: (1, 83), 15: (1, 83), 30: (0, 47), 31: (1, 83), 32: (0, 48), 22: (1, 83), 6: (1, 83), 41: (0, 50)},
-  11: {23: (1, 87), 24: (1, 87), 21: (1, 87), 26: (1, 87), 1: (1, 87), 13: (1, 87), 31: (1, 87), 22: (1, 87), 25: (1, 87), 17: (1, 87), 27: (1, 87), 28: (1, 87), 4: (1, 87), 29: (1, 87), 10: (1, 87), 11: (1, 87), 15: (1, 87), 30: (1, 87), 32: (1, 87), 6: (0, 54), 42: (0, 52), 43: (0, 53)},
-  12: {12: (0, 13), 13: (0, 14), 1: (0, 55), 4: (0, 5), 9: (0, 56), 14: (0, 15), 16: (0, 17), 17: (0, 18), 10: (0, 36)},
-  13: {23: (1, 86), 24: (1, 86), 21: (1, 86), 26: (1, 86), 1: (1, 86), 13: (1, 86), 31: (1, 86), 22: (1, 86), 25: (1, 86), 17: (1, 86), 27: (1, 86), 28: (1, 86), 4: (1, 86), 29: (1, 86), 10: (1, 86), 11: (1, 86), 15: (1, 86), 30: (1, 86), 32: (1, 86), 6: (1, 86)},
-  14: {12: (0, 13), 13: (0, 14), 1: (0, 2), 4: (0, 5), 0: (0, 57), 14: (0, 15), 9: (0, 10), 16: (0, 17), 17: (0, 18), 10: (0, 36)},
-  15: {23: (1, 88), 24: (1, 88), 21: (1, 88), 26: (1, 88), 1: (1, 88), 13: (1, 88), 31: (1, 88), 22: (1, 88), 25: (1, 88), 17: (1, 88), 27: (1, 88), 28: (1, 88), 4: (1, 88), 29: (1, 88), 10: (1, 88), 11: (1, 88), 15: (1, 88), 30: (1, 88), 32: (1, 88), 6: (1, 88)},
-  16: {24: (1, 222), 10: (1, 222), 11: (1, 222), 15: (1, 222), 17: (1, 222), 6: (1, 222), 28: (1, 222), 4: (1, 222), 1: (1, 222), 13: (1, 222)},
-  17: {23: (1, 89), 24: (1, 89), 21: (1, 89), 26: (1, 89), 1: (1, 89), 13: (1, 89), 31: (1, 89), 22: (1, 89), 25: (1, 89), 17: (1, 89), 27: (1, 89), 28: (1, 89), 4: (1, 89), 29: (1, 89), 10: (1, 89), 11: (1, 89), 15: (1, 89), 30: (1, 89), 32: (1, 89), 6: (1, 89)},
-  18: {12: (0, 13), 13: (0, 14), 1: (0, 2), 4: (0, 5), 14: (0, 15), 9: (0, 10), 16: (0, 17), 17: (0, 18), 10: (0, 36), 0: (0, 58)},
-  19: {28: (0, 59)},
-  20: {13: (0, 60), 1: (0, 61), 44: (0, 62), 45: (0, 63), 46: (0, 64), 47: (0, 65), 17: (0, 66), 4: (0, 67), 48: (0, 68), 49: (0, 69), 50: (0, 70), 51: (0, 71), 52: (0, 72), 53: (0, 73), 54: (0, 74), 55: (0, 75), 12: (0, 76), 10: (0, 77)},
-  21: {22: (0, 23), 21: (0, 22), 19: (0, 78)},
-  22: {10: (1, 28), 53: (1, 28), 50: (1, 28), 17: (1, 28), 4: (1, 28), 1: (1, 28), 13: (1, 28), 48: (1, 28), 6: (0, 79)},
-  23: {10: (1, 31), 53: (1, 31), 50: (1, 31), 17: (1, 31), 4: (1, 31), 1: (1, 31), 13: (1, 31), 48: (1, 31), 6: (0, 80)},
-  24: {33: (0, 81), 34: (0, 82)},
-  25: {6: (0, 83), 56: (0, 84)},
-  26: {1: (0, 85), 6: (0, 86)},
-  27: {1: (0, 87), 4: (0, 5), 14: (0, 88), 57: (0, 89), 56: (0, 90), 10: (0, 91), 12: (0, 92)},
-  28: {24: (1, 221), 10: (1, 221), 11: (1, 221), 15: (1, 221), 17: (1, 221), 6: (1, 221), 28: (1, 221), 4: (1, 221), 1: (1, 221), 13: (1, 221)},
-  29: {10: (1, 238), 11: (1, 238), 15: (1, 238), 17: (1, 238), 6: (1, 238), 28: (1, 238), 4: (1, 238), 1: (1, 238), 13: (1, 238), 24: (0, 93)},
-  30: {10: (1, 242), 11: (1, 242), 15: (1, 242), 17: (1, 242), 6: (1, 242), 28: (1, 242), 4: (1, 242), 1: (1, 242), 13: (1, 242)},
-  31: {10: (1, 228), 11: (1, 228), 15: (1, 228), 17: (1, 228), 6: (1, 228), 28: (1, 228), 4: (1, 228), 1: (1, 228), 13: (1, 228), 23: (0, 28), 35: (0, 94), 24: (0, 95)},
-  32: {12: (0, 13), 13: (0, 14), 0: (0, 1), 1: (0, 2), 4: (0, 5), 10: (0, 11), 8: (0, 96), 14: (0, 15), 15: (0, 16), 9: (0, 10), 2: (0, 97), 5: (0, 6), 7: (0, 8), 16: (0, 17), 17: (0, 18), 11: (0, 12)},
-  33: {10: (1, 246), 11: (1, 246), 15: (1, 246), 17: (1, 246), 6: (1, 246), 28: (1, 246), 4: (1, 246), 1: (1, 246), 13: (1, 246), 24: (0, 98)},
-  34: {23: (1, 86), 24: (1, 86), 21: (1, 86), 26: (1, 86), 1: (1, 86), 13: (1, 86), 31: (0, 99), 22: (1, 86), 25: (1, 86), 17: (1, 86), 27: (1, 86), 28: (1, 86), 4: (1, 86), 29: (1, 86), 10: (1, 86), 11: (1, 86), 15: (1, 86), 30: (1, 86), 32: (1, 86), 6: (1, 86)},
-  35: {22: (0, 100), 58: (0, 101), 31: (0, 102)},
-  36: {23: (1, 87), 24: (1, 87), 21: (1, 87), 26: (1, 87), 1: (1, 87), 13: (1, 87), 31: (1, 87), 22: (1, 87), 25: (1, 87), 17: (1, 87), 27: (1, 87), 28: (1, 87), 4: (1, 87), 29: (1, 87), 10: (1, 87), 11: (1, 87), 15: (1, 87), 30: (1, 87), 32: (1, 87), 6: (1, 87)},
-  37: {23: (1, 33), 24: (1, 33), 17: (1, 33), 28: (1, 33), 4: (1, 33), 1: (1, 33), 13: (1, 33), 10: (1, 33), 11: (1, 33), 15: (1, 33), 6: (1, 33), 37: (0, 103), 39: (0, 40)},
-  38: {23: (1, 34), 24: (1, 34), 17: (1, 34), 28: (1, 34), 4: (1, 34), 1: (1, 34), 13: (1, 34), 10: (1, 34), 11: (1, 34), 15: (1, 34), 6: (1, 34), 38: (0, 39), 36: (0, 104)},
-  39: {59: (0, 105), 60: (0, 106), 61: (0, 107), 62: (0, 108), 63: (0, 109), 48: (0, 110)},
-  40: {63: (0, 111), 59: (0, 105), 60: (0, 106), 61: (0, 107), 62: (0, 108), 48: (0, 110)},
-  41: {23: (1, 4), 10: (1, 4), 24: (1, 4), 11: (1, 4), 15: (1, 4), 17: (1, 4), 6: (1, 4), 28: (1, 4), 4: (1, 4), 1: (1, 4), 13: (1, 4)},
-  42: {10: (1, 232), 11: (1, 232), 15: (1, 232), 17: (1, 232), 6: (1, 232), 28: (1, 232), 4: (1, 232), 1: (1, 232), 13: (1, 232), 24: (0, 112), 23: (0, 28), 35: (0, 113)},
-  43: {10: (1, 231), 11: (1, 231), 15: (1, 231), 17: (1, 231), 6: (1, 231), 28: (1, 231), 4: (1, 231), 1: (1, 231), 13: (1, 231), 24: (0, 114)},
-  44: {23: (1, 1), 10: (1, 1), 24: (1, 1), 11: (1, 1), 15: (1, 1), 17: (1, 1), 6: (1, 1), 28: (1, 1), 4: (1, 1), 1: (1, 1), 13: (1, 1)},
-  45: {10: (1, 234), 11: (1, 234), 15: (1, 234), 17: (1, 234), 6: (1, 234), 28: (1, 234), 4: (1, 234), 1: (1, 234), 13: (1, 234)},
-  46: {10: (1, 208), 50: (1, 208), 64: (1, 208), 4: (1, 208), 1: (1, 208), 6: (0, 115)},
-  47: {56: (0, 116)},
-  48: {56: (0, 117)},
-  49: {56: (0, 118)},
-  50: {1: (0, 119), 4: (0, 5), 14: (0, 88), 10: (0, 91), 57: (0, 120), 12: (0, 92), 65: (0, 121)},
-  51: {10: (1, 207), 50: (1, 207), 64: (1, 207), 4: (1, 207), 1: (1, 207)},
-  52: {6: (0, 122), 66: (0, 123)},
-  53: {12: (0, 13), 13: (0, 14), 1: (0, 2), 4: (0, 5), 6: (0, 124), 14: (0, 15), 9: (0, 10), 16: (0, 17), 17: (0, 18), 0: (0, 125), 10: (0, 36)},
-  54: {43: (0, 126)},
-  55: {6: (0, 24), 33: (0, 25), 34: (0, 26), 30: (0, 27)},
-  56: {23: (1, 3), 10: (1, 3), 24: (1, 3), 11: (1, 3), 15: (1, 3), 17: (0, 46), 6: (1, 3), 28: (1, 3), 4: (1, 3), 1: (1, 3), 13: (1, 3), 30: (0, 47), 32: (0, 48), 29: (0, 49), 41: (0, 50), 25: (0, 51)},
-  57: {23: (1, 93), 24: (1, 93), 21: (1, 93), 25: (1, 93), 17: (1, 93), 26: (1, 93), 27: (1, 93), 28: (1, 93), 4: (1, 93), 1: (1, 93), 13: (1, 93), 29: (1, 93), 10: (1, 93), 11: (1, 93), 15: (1, 93), 30: (1, 93), 31: (1, 93), 32: (1, 93), 22: (1, 93), 6: (1, 93)},
-  58: {23: (1, 99), 24: (1, 99), 21: (1, 99), 25: (1, 99), 17: (1, 99), 26: (1, 99), 27: (1, 99), 28: (1, 99), 4: (1, 99), 1: (1, 99), 13: (1, 99), 29: (1, 99), 10: (1, 99), 11: (1, 99), 15: (1, 99), 30: (1, 99), 31: (1, 99), 32: (1, 99), 22: (1, 99), 6: (1, 99)},
-  59: {},
-  60: {13: (0, 60), 1: (0, 61), 17: (0, 66), 4: (0, 67), 44: (0, 127), 49: (0, 69), 50: (0, 128), 52: (0, 72), 54: (0, 74), 55: (0, 75), 12: (0, 76), 10: (0, 77)},
-  61: {23: (1, 101), 24: (1, 101), 21: (1, 101), 1: (1, 101), 13: (1, 101), 67: (1, 101), 31: (1, 101), 68: (1, 101), 22: (1, 101), 38: (1, 101), 25: (1, 101), 17: (1, 101), 39: (1, 101), 28: (1, 101), 4: (1, 101), 29: (1, 101), 10: (1, 101), 11: (1, 101), 15: (1, 101), 30: (0, 129), 32: (1, 101), 6: (0, 24), 33: (0, 25), 34: (0, 26)},
-  62: {22: (1, 17), 21: (1, 17), 67: (0, 130)},
-  63: {6: (0, 131)},
-  64: {22: (1, 247), 21: (1, 247)},
-  65: {22: (1, 20), 21: (1, 20), 67: (0, 132)},
-  66: {13: (0, 60), 1: (0, 61), 17: (0, 66), 4: (0, 67), 49: (0, 69), 50: (0, 128), 52: (0, 72), 54: (0, 74), 55: (0, 75), 12: (0, 76), 10: (0, 77), 44: (0, 133)},
-  67: {13: (0, 60), 1: (0, 61), 17: (0, 66), 4: (0, 67), 49: (0, 69), 50: (0, 128), 52: (0, 72), 44: (0, 134), 12: (0, 135), 54: (0, 74), 55: (0, 75), 10: (0, 77)},
-  68: {6: (1, 25), 34: (0, 136)},
-  69: {23: (1, 103), 24: (1, 103), 21: (1, 103), 1: (1, 103), 13: (1, 103), 67: (1, 103), 31: (1, 103), 68: (1, 103), 22: (1, 103), 38: (1, 103), 25: (0, 51), 17: (0, 46), 39: (1, 103), 28: (1, 103), 4: (1, 103), 29: (0, 138), 10: (1, 103), 11: (1, 103), 15: (1, 103), 30: (0, 137), 32: (0, 139), 6: (1, 103), 41: (0, 140)},
-  70: {13: (0, 60), 1: (0, 141), 69: (0, 142), 54: (0, 143), 70: (0, 144), 17: (0, 66), 4: (0, 67), 71: (0, 145), 49: (0, 146), 52: (0, 72), 50: (0, 128), 72: (0, 147), 48: (0, 148), 73: (0, 149), 74: (0, 150), 75: (0, 151), 55: (0, 75), 76: (0, 152), 12: (0, 76), 77: (0, 153), 10: (0, 77), 78: (0, 154), 79: (0, 155)},
-  71: {6: (0, 156)},
-  72: {23: (1, 110), 24: (1, 110), 21: (1, 110), 1: (1, 110), 13: (1, 110), 67: (1, 110), 31: (1, 110), 68: (1, 110), 22: (1, 110), 38: (1, 110), 25: (1, 110), 17: (1, 110), 39: (1, 110), 28: (1, 110), 29: (1, 110), 4: (1, 110), 10: (1, 110), 11: (1, 110), 15: (1, 110), 30: (1, 110), 32: (1, 110), 6: (1, 110)},
-  73: {80: (0, 157), 81: (0, 158)},
-  74: {23: (1, 102), 24: (1, 102), 21: (1, 102), 1: (1, 102), 13: (1, 102), 67: (1, 102), 31: (1, 102), 68: (1, 102), 22: (1, 102), 38: (1, 102), 25: (1, 102), 17: (1, 102), 39: (1, 102), 28: (1, 102), 4: (1, 102), 29: (1, 102), 10: (1, 102), 11: (1, 102), 15: (1, 102), 30: (0, 159), 32: (1, 102), 6: (1, 102)},
-  75: {23: (1, 108), 24: (1, 108), 21: (1, 108), 1: (1, 108), 13: (1, 108), 67: (1, 108), 31: (1, 108), 68: (1, 108), 22: (1, 108), 38: (1, 108), 25: (1, 108), 17: (1, 108), 39: (1, 108), 28: (1, 108), 29: (1, 108), 4: (1, 108), 10: (1, 108), 11: (1, 108), 15: (1, 108), 30: (1, 108), 32: (1, 108), 6: (1, 108)},
-  76: {23: (1, 107), 24: (1, 107), 21: (1, 107), 1: (1, 107), 13: (1, 107), 67: (1, 107), 31: (1, 107), 68: (1, 107), 22: (1, 107), 38: (1, 107), 25: (1, 107), 17: (1, 107), 39: (1, 107), 28: (1, 107), 29: (1, 107), 4: (1, 107), 10: (1, 107), 11: (1, 107), 15: (1, 107), 30: (1, 107), 32: (1, 107), 6: (1, 107)},
-  77: {23: (1, 109), 24: (1, 109), 21: (1, 109), 1: (1, 109), 13: (1, 109), 67: (1, 109), 31: (1, 109), 68: (1, 109), 22: (1, 109), 38: (1, 109), 25: (1, 109), 17: (1, 109), 39: (1, 109), 28: (1, 109), 29: (1, 109), 4: (1, 109), 10: (1, 109), 11: (1, 109), 15: (1, 109), 30: (1, 109), 32: (1, 109), 6: (1, 109)},
-  78: {13: (0, 60), 1: (0, 61), 44: (0, 160), 54: (0, 74), 17: (0, 66), 45: (0, 63), 47: (0, 65), 4: (0, 67), 48: (0, 68), 49: (0, 69), 50: (0, 70), 52: (0, 72), 51: (0, 71), 46: (0, 161), 55: (0, 75), 12: (0, 76), 10: (0, 77)},
-  79: {10: (1, 29), 53: (1, 29), 50: (1, 29), 17: (1, 29), 4: (1, 29), 1: (1, 29), 13: (1, 29), 48: (1, 29)},
-  80: {10: (1, 30), 53: (1, 30), 50: (1, 30), 17: (1, 30), 4: (1, 30), 1: (1, 30), 13: (1, 30), 48: (1, 30)},
-  81: {56: (0, 162), 6: (0, 163)},
-  82: {6: (0, 164), 1: (0, 165)},
-  83: {56: (0, 166)},
-  84: {34: (0, 167), 6: (0, 168)},
-  85: {23: (1, 186), 24: (1, 186), 21: (1, 186), 26: (1, 186), 1: (1, 186), 13: (1, 186), 67: (1, 186), 31: (1, 186), 68: (1, 186), 22: (1, 186), 38: (1, 186), 25: (1, 186), 17: (1, 186), 39: (1, 186), 27: (1, 186), 28: (1, 186), 4: (1, 186), 29: (1, 186), 10: (1, 186), 11: (1, 186), 15: (1, 186), 30: (1, 186), 32: (1, 186), 6: (1, 186)},
-  86: {1: (0, 169)},
-  87: {6: (0, 24), 33: (0, 25), 34: (0, 26)},
-  88: {23: (1, 92), 24: (1, 92), 21: (1, 92), 25: (1, 92), 17: (1, 92), 26: (1, 92), 27: (1, 92), 28: (1, 92), 4: (1, 92), 1: (1, 92), 13: (1, 92), 29: (1, 92), 10: (1, 92), 11: (1, 92), 15: (1, 92), 30: (1, 92), 31: (1, 92), 32: (1, 92), 22: (1, 92), 6: (1, 92)},
-  89: {23: (1, 100), 24: (1, 100), 21: (1, 100), 25: (1, 100), 17: (1, 100), 26: (1, 100), 27: (1, 100), 28: (1, 100), 4: (1, 100), 1: (1, 100), 13: (1, 100), 29: (1, 100), 10: (1, 100), 11: (1, 100), 15: (1, 100), 30: (1, 100), 31: (1, 100), 32: (1, 100), 22: (1, 100), 6: (1, 100)},
-  90: {23: (1, 94), 24: (1, 94), 21: (1, 94), 25: (1, 94), 17: (1, 94), 26: (1, 94), 27: (1, 94), 28: (1, 94), 4: (1, 94), 1: (1, 94), 13: (1, 94), 29: (1, 94), 10: (1, 94), 11: (1, 94), 15: (1, 94), 30: (1, 94), 31: (1, 94), 32: (1, 94), 22: (1, 94), 6: (1, 94)},
-  91: {23: (1, 91), 24: (1, 91), 21: (1, 91), 25: (1, 91), 17: (1, 91), 26: (1, 91), 27: (1, 91), 28: (1, 91), 4: (1, 91), 1: (1, 91), 13: (1, 91), 29: (1, 91), 10: (1, 91), 11: (1, 91), 15: (1, 91), 30: (1, 91), 31: (1, 91), 32: (1, 91), 22: (1, 91), 6: (1, 91)},
-  92: {23: (1, 90), 24: (1, 90), 21: (1, 90), 25: (1, 90), 17: (1, 90), 26: (1, 90), 27: (1, 90), 28: (1, 90), 4: (1, 90), 1: (1, 90), 13: (1, 90), 29: (1, 90), 10: (1, 90), 11: (1, 90), 15: (1, 90), 30: (1, 90), 31: (1, 90), 32: (1, 90), 22: (1, 90), 6: (1, 90)},
-  93: {10: (1, 237), 11: (1, 237), 15: (1, 237), 17: (1, 237), 6: (1, 237), 28: (1, 237), 4: (1, 237), 1: (1, 237), 13: (1, 237)},
-  94: {10: (1, 230), 11: (1, 230), 15: (1, 230), 17: (1, 230), 6: (1, 230), 28: (1, 230), 4: (1, 230), 1: (1, 230), 13: (1, 230), 24: (0, 170)},
-  95: {10: (1, 240), 11: (1, 240), 15: (1, 240), 17: (1, 240), 6: (1, 240), 28: (1, 240), 4: (1, 240), 1: (1, 240), 13: (1, 240)},
-  96: {10: (1, 245), 11: (1, 245), 15: (1, 245), 17: (1, 245), 6: (1, 245), 28: (1, 245), 4: (1, 245), 1: (1, 245), 13: (1, 245), 24: (0, 171)},
-  97: {10: (1, 224), 11: (1, 224), 15: (1, 224), 17: (1, 224), 6: (1, 224), 28: (1, 224), 4: (1, 224), 1: (1, 224), 13: (1, 224), 35: (0, 172), 23: (0, 28), 24: (0, 173)},
-  98: {10: (1, 244), 11: (1, 244), 15: (1, 244), 17: (1, 244), 6: (1, 244), 28: (1, 244), 4: (1, 244), 1: (1, 244), 13: (1, 244)},
-  99: {23: (1, 64), 24: (1, 64), 21: (1, 64), 25: (1, 64), 17: (1, 64), 26: (1, 64), 27: (1, 64), 28: (1, 64), 4: (1, 64), 1: (1, 64), 13: (1, 64), 29: (1, 64), 10: (1, 64), 11: (1, 64), 15: (1, 64), 30: (1, 64), 31: (1, 64), 32: (1, 64), 22: (1, 64), 6: (1, 64)},
-  100: {6: (0, 174), 12: (0, 13), 13: (0, 14), 1: (0, 2), 4: (0, 5), 0: (0, 175), 14: (0, 15), 9: (0, 10), 16: (0, 17), 17: (0, 18), 10: (0, 36)},
-  101: {22: (0, 176), 31: (0, 177)},
-  102: {23: (1, 62), 24: (1, 62), 21: (1, 62), 25: (1, 62), 17: (1, 62), 26: (1, 62), 27: (1, 62), 28: (1, 62), 4: (1, 62), 1: (1, 62), 13: (1, 62), 29: (1, 62), 10: (1, 62), 11: (1, 62), 15: (1, 62), 30: (1, 62), 31: (1, 62), 32: (1, 62), 22: (1, 62), 6: (1, 62)},
-  103: {23: (1, 32), 24: (1, 32), 17: (1, 32), 28: (1, 32), 4: (1, 32), 1: (1, 32), 13: (1, 32), 10: (1, 32), 11: (1, 32), 15: (1, 32), 6: (1, 32)},
-  104: {23: (1, 35), 24: (1, 35), 17: (1, 35), 28: (1, 35), 4: (1, 35), 1: (1, 35), 13: (1, 35), 10: (1, 35), 11: (1, 35), 15: (1, 35), 6: (1, 35)},
-  105: {82: (0, 178), 83: (0, 179), 11: (0, 180)},
-  106: {23: (1, 41), 38: (1, 41), 24: (1, 41), 17: (1, 41), 39: (1, 41), 28: (1, 41), 4: (1, 41), 1: (1, 41), 13: (1, 41), 10: (1, 41), 11: (1, 41), 15: (1, 41), 6: (0, 182), 84: (0, 181)},
-  107: {50: (0, 183), 42: (0, 184)},
-  108: {23: (1, 39), 38: (1, 39), 24: (1, 39), 17: (1, 39), 39: (1, 39), 28: (1, 39), 4: (1, 39), 1: (1, 39), 13: (1, 39), 10: (1, 39), 11: (1, 39), 15: (1, 39), 6: (0, 182), 84: (0, 185)},
-  109: {23: (1, 37), 24: (1, 37), 17: (1, 37), 39: (1, 37), 28: (1, 37), 4: (1, 37), 1: (1, 37), 13: (1, 37), 10: (1, 37), 11: (1, 37), 15: (1, 37), 6: (1, 37)},
-  110: {42: (1, 61), 50: (1, 61), 33: (0, 186)},
-  111: {23: (1, 36), 38: (1, 36), 24: (1, 36), 17: (1, 36), 28: (1, 36), 4: (1, 36), 1: (1, 36), 13: (1, 36), 10: (1, 36), 11: (1, 36), 15: (1, 36), 6: (1, 36)},
-  112: {10: (1, 241), 11: (1, 241), 15: (1, 241), 17: (1, 241), 6: (1, 241), 28: (1, 241), 4: (1, 241), 1: (1, 241), 13: (1, 241)},
-  113: {10: (1, 227), 11: (1, 227), 15: (1, 227), 17: (1, 227), 6: (1, 227), 28: (1, 227), 4: (1, 227), 1: (1, 227), 13: (1, 227), 24: (0, 187)},
-  114: {10: (1, 229), 11: (1, 229), 15: (1, 229), 17: (1, 229), 6: (1, 229), 28: (1, 229), 4: (1, 229), 1: (1, 229), 13: (1, 229)},
-  115: {10: (1, 209), 50: (1, 209), 64: (1, 209), 4: (1, 209), 1: (1, 209)},
-  116: {23: (1, 96), 24: (1, 96), 21: (1, 96), 25: (1, 96), 17: (1, 96), 26: (1, 96), 27: (1, 96), 28: (1, 96), 4: (1, 96), 1: (1, 96), 13: (1, 96), 29: (1, 96), 10: (1, 96), 11: (1, 96), 15: (1, 96), 30: (1, 96), 31: (1, 96), 32: (1, 96), 22: (1, 96), 6: (1, 96)},
-  117: {23: (1, 98), 24: (1, 98), 21: (1, 98), 25: (1, 98), 17: (1, 98), 26: (1, 98), 27: (1, 98), 28: (1, 98), 4: (1, 98), 1: (1, 98), 13: (1, 98), 29: (1, 98), 10: (1, 98), 11: (1, 98), 15: (1, 98), 30: (1, 98), 31: (1, 98), 32: (1, 98), 22: (1, 98), 6: (1, 98)},
-  118: {23: (1, 97), 24: (1, 97), 21: (1, 97), 25: (1, 97), 17: (1, 97), 26: (1, 97), 27: (1, 97), 28: (1, 97), 4: (1, 97), 1: (1, 97), 13: (1, 97), 29: (1, 97), 10: (1, 97), 11: (1, 97), 15: (1, 97), 30: (1, 97), 31: (1, 97), 32: (1, 97), 22: (1, 97), 6: (1, 97)},
-  119: {23: (1, 84), 24: (1, 84), 21: (1, 84), 25: (1, 84), 17: (1, 84), 26: (1, 84), 27: (1, 84), 28: (1, 84), 4: (1, 84), 1: (1, 84), 13: (1, 84), 29: (1, 84), 10: (1, 84), 11: (1, 84), 15: (1, 84), 30: (1, 84), 31: (1, 84), 32: (1, 84), 22: (1, 84), 6: (0, 24), 33: (0, 25), 34: (0, 26)},
-  120: {23: (1, 85), 24: (1, 85), 21: (1, 85), 25: (1, 85), 17: (1, 85), 26: (1, 85), 27: (1, 85), 28: (1, 85), 4: (1, 85), 1: (1, 85), 13: (1, 85), 29: (1, 85), 10: (1, 85), 11: (1, 85), 15: (1, 85), 30: (1, 85), 31: (1, 85), 32: (1, 85), 22: (1, 85), 6: (1, 85)},
-  121: {23: (1, 95), 24: (1, 95), 21: (1, 95), 25: (1, 95), 17: (1, 95), 26: (1, 95), 27: (1, 95), 28: (1, 95), 4: (1, 95), 1: (1, 95), 13: (1, 95), 29: (1, 95), 10: (1, 95), 11: (1, 95), 15: (1, 95), 30: (1, 95), 31: (1, 95), 32: (1, 95), 22: (1, 95), 6: (1, 95)},
-  122: {66: (0, 188)},
-  123: {23: (1, 2), 10: (1, 2), 24: (1, 2), 11: (1, 2), 15: (1, 2), 17: (1, 2), 6: (1, 2), 28: (1, 2), 4: (1, 2), 1: (1, 2), 13: (1, 2)},
-  124: {12: (0, 13), 13: (0, 14), 1: (0, 2), 4: (0, 5), 14: (0, 15), 9: (0, 10), 16: (0, 17), 17: (0, 18), 10: (0, 36), 0: (0, 189)},
-  125: {23: (1, 9), 10: (1, 9), 24: (1, 9), 11: (1, 9), 15: (1, 9), 17: (1, 9), 6: (1, 9), 28: (1, 9), 4: (1, 9), 1: (1, 9), 13: (1, 9)},
-  126: {12: (0, 13), 13: (0, 14), 1: (0, 2), 4: (0, 5), 14: (0, 15), 9: (0, 10), 0: (0, 190), 16: (0, 17), 17: (0, 18), 10: (0, 36), 6: (0, 191)},
-  127: {23: (1, 121), 24: (1, 121), 21: (1, 121), 1: (1, 121), 13: (1, 121), 67: (1, 121), 31: (1, 121), 68: (1, 121), 22: (1, 121), 38: (1, 121), 25: (1, 121), 17: (1, 121), 39: (1, 121), 28: (1, 121), 29: (1, 121), 4: (1, 121), 10: (1, 121), 11: (1, 121), 15: (1, 121), 30: (1, 121), 32: (1, 121), 6: (1, 121)},
-  128: {69: (0, 142), 70: (0, 144), 76: (0, 152), 71: (0, 145), 48: (0, 148), 72: (0, 147), 77: (0, 153), 73: (0, 149), 78: (0, 154), 79: (0, 155), 74: (0, 150), 75: (0, 151)},
-  129: {1: (0, 87), 56: (0, 192), 4: (0, 67), 85: (0, 193), 10: (0, 194), 12: (0, 195), 55: (0, 196)},
-  130: {86: (0, 197)},
-  131: {13: (0, 60), 1: (0, 61), 17: (0, 66), 4: (0, 67), 47: (0, 198), 49: (0, 69), 50: (0, 70), 52: (0, 72), 54: (0, 74), 55: (0, 75), 44: (0, 199), 12: (0, 76), 10: (0, 77)},
-  132: {86: (0, 200)},
-  133: {23: (1, 117), 24: (1, 117), 21: (1, 117), 1: (1, 117), 13: (1, 117), 67: (1, 117), 31: (1, 117), 68: (1, 117), 22: (1, 117), 38: (1, 117), 25: (1, 117), 17: (1, 117), 39: (1, 117), 28: (1, 117), 29: (1, 117), 4: (1, 117), 10: (1, 117), 11: (1, 117), 15: (1, 117), 30: (1, 117), 32: (1, 117), 6: (1, 117)},
-  134: {87: (0, 201), 22: (0, 202), 31: (0, 203)},
-  135: {23: (1, 107), 24: (1, 107), 21: (1, 107), 1: (1, 107), 13: (1, 107), 67: (1, 107), 31: (0, 204), 68: (1, 107), 22: (1, 107), 38: (1, 107), 25: (1, 107), 17: (1, 107), 39: (1, 107), 28: (1, 107), 29: (1, 107), 4: (1, 107), 10: (1, 107), 11: (1, 107), 15: (1, 107), 30: (1, 107), 32: (1, 107), 6: (1, 107)},
-  136: {48: (0, 205)},
-  137: {56: (0, 206)},
-  138: {56: (0, 207)},
-  139: {56: (0, 208)},
-  140: {1: (0, 209), 4: (0, 67), 54: (0, 210), 50: (0, 128), 10: (0, 194), 55: (0, 196), 85: (0, 211), 88: (0, 212), 12: (0, 195)},
-  141: {6: (0, 24), 33: (0, 25), 34: (0, 26), 30: (0, 129)},
-  142: {68: (1, 212), 42: (1, 212)},
-  143: {30: (0, 159)},
-  144: {68: (0, 213), 42: (0, 214)},
-  145: {68: (1, 210), 42: (1, 210)},
-  146: {17: (0, 46), 30: (0, 137), 29: (0, 138), 25: (0, 51), 32: (0, 139), 68: (0, 215), 41: (0, 140)},
-  147: {68: (1, 219), 42: (1, 219)},
-  148: {42: (0, 216), 68: (0, 217)},
-  149: {68: (1, 216), 42: (1, 216)},
-  150: {68: (1, 213), 42: (1, 213)},
-  151: {68: (1, 217), 42: (1, 217)},
-  152: {68: (1, 215), 42: (1, 215)},
-  153: {68: (1, 214), 42: (1, 214)},
-  154: {68: (1, 218), 42: (1, 218)},
-  155: {68: (1, 211), 42: (1, 211)},
-  156: {13: (0, 60), 1: (0, 61), 17: (0, 66), 4: (0, 67), 49: (0, 69), 50: (0, 128), 52: (0, 72), 54: (0, 74), 55: (0, 75), 12: (0, 76), 44: (0, 218), 10: (0, 77)},
-  157: {6: (0, 219), 26: (0, 220)},
-  158: {26: (1, 220), 6: (1, 220)},
-  159: {1: (0, 87), 4: (0, 67), 10: (0, 194), 12: (0, 195), 85: (0, 221), 55: (0, 196), 56: (0, 222)},
-  160: {23: (1, 16), 38: (1, 16), 24: (1, 16), 17: (1, 16), 39: (1, 16), 28: (1, 16), 4: (1, 16), 1: (1, 16), 13: (1, 16), 10: (1, 16), 11: (1, 16), 15: (1, 16), 6: (1, 16), 22: (1, 17), 21: (1, 17), 67: (0, 130)},
-  161: {22: (1, 248), 21: (1, 248)},
-  162: {6: (0, 223), 34: (0, 224)},
-  163: {56: (0, 225)},
-  164: {1: (0, 226)},
-  165: {23: (1, 190), 24: (1, 190), 21: (1, 190), 26: (1, 190), 1: (1, 190), 13: (1, 190), 67: (1, 190), 31: (1, 190), 68: (1, 190), 22: (1, 190), 38: (1, 190), 25: (1, 190), 17: (1, 190), 39: (1, 190), 27: (1, 190), 28: (1, 190), 4: (1, 190), 29: (1, 190), 10: (1, 190), 11: (1, 190), 15: (1, 190), 30: (1, 190), 32: (1, 190), 6: (1, 190)},
-  166: {34: (0, 227), 6: (0, 228)},
-  167: {6: (0, 229), 1: (0, 230)},
-  168: {34: (0, 231)},
-  169: {23: (1, 189), 24: (1, 189), 21: (1, 189), 26: (1, 189), 1: (1, 189), 13: (1, 189), 67: (1, 189), 31: (1, 189), 68: (1, 189), 22: (1, 189), 38: (1, 189), 25: (1, 189), 17: (1, 189), 39: (1, 189), 27: (1, 189), 28: (1, 189), 4: (1, 189), 29: (1, 189), 10: (1, 189), 11: (1, 189), 15: (1, 189), 30: (1, 189), 32: (1, 189), 6: (1, 189)},
-  170: {10: (1, 226), 11: (1, 226), 15: (1, 226), 17: (1, 226), 6: (1, 226), 28: (1, 226), 4: (1, 226), 1: (1, 226), 13: (1, 226)},
-  171: {10: (1, 239), 11: (1, 239), 15: (1, 239), 17: (1, 239), 6: (1, 239), 28: (1, 239), 4: (1, 239), 1: (1, 239), 13: (1, 239)},
-  172: {10: (1, 223), 11: (1, 223), 15: (1, 223), 17: (1, 223), 6: (1, 223), 28: (1, 223), 4: (1, 223), 1: (1, 223), 13: (1, 223), 24: (0, 232)},
-  173: {10: (1, 236), 11: (1, 236), 15: (1, 236), 17: (1, 236), 6: (1, 236), 28: (1, 236), 4: (1, 236), 1: (1, 236), 13: (1, 236)},
-  174: {12: (0, 13), 13: (0, 14), 1: (0, 2), 4: (0, 5), 0: (0, 233), 14: (0, 15), 9: (0, 10), 16: (0, 17), 17: (0, 18), 10: (0, 36)},
-  175: {31: (1, 255), 22: (1, 255)},
-  176: {12: (0, 13), 13: (0, 14), 1: (0, 2), 4: (0, 5), 14: (0, 15), 9: (0, 10), 0: (0, 234), 16: (0, 17), 17: (0, 18), 10: (0, 36), 6: (0, 235)},
-  177: {23: (1, 63), 24: (1, 63), 21: (1, 63), 25: (1, 63), 17: (1, 63), 26: (1, 63), 27: (1, 63), 28: (1, 63), 4: (1, 63), 1: (1, 63), 13: (1, 63), 29: (1, 63), 10: (1, 63), 11: (1, 63), 15: (1, 63), 30: (1, 63), 31: (1, 63), 32: (1, 63), 22: (1, 63), 6: (1, 63)},
-  178: {6: (0, 236), 61: (0, 107), 62: (0, 237), 48: (0, 110)},
-  179: {23: (1, 43), 38: (1, 43), 24: (1, 43), 17: (1, 43), 39: (1, 43), 28: (1, 43), 4: (1, 43), 1: (1, 43), 13: (1, 43), 10: (1, 43), 11: (1, 43), 15: (1, 43), 6: (1, 43)},
-  180: {82: (0, 178), 83: (0, 238)},
-  181: {23: (1, 40), 38: (1, 40), 24: (1, 40), 17: (1, 40), 39: (1, 40), 28: (1, 40), 4: (1, 40), 1: (1, 40), 13: (1, 40), 10: (1, 40), 11: (1, 40), 15: (1, 40), 6: (0, 239)},
-  182: {61: (0, 107), 62: (0, 240), 59: (0, 105), 48: (0, 110), 60: (0, 241)},
-  183: {4: (0, 242), 1: (0, 243), 89: (0, 244), 69: (0, 142), 13: (0, 245), 73: (0, 149), 10: (0, 246), 70: (0, 247), 48: (0, 248), 90: (0, 249), 75: (0, 151), 50: (0, 250), 91: (0, 251), 92: (0, 252), 78: (0, 154), 79: (0, 155), 93: (0, 253), 64: (0, 254), 71: (0, 145), 72: (0, 147), 74: (0, 150), 76: (0, 152), 12: (0, 255), 17: (0, 256), 77: (0, 153)},
-  184: {1: (0, 257)},
-  185: {23: (1, 38), 38: (1, 38), 24: (1, 38), 17: (1, 38), 39: (1, 38), 28: (1, 38), 4: (1, 38), 1: (1, 38), 13: (1, 38), 10: (1, 38), 11: (1, 38), 15: (1, 38), 6: (0, 239)},
-  186: {56: (0, 258)},
-  187: {10: (1, 233), 11: (1, 233), 15: (1, 233), 17: (1, 233), 6: (1, 233), 28: (1, 233), 4: (1, 233), 1: (1, 233), 13: (1, 233)},
-  188: {23: (1, 5), 10: (1, 5), 24: (1, 5), 11: (1, 5), 15: (1, 5), 17: (1, 5), 6: (1, 5), 28: (1, 5), 4: (1, 5), 1: (1, 5), 13: (1, 5)},
-  189: {23: (1, 7), 10: (1, 7), 24: (1, 7), 11: (1, 7), 15: (1, 7), 17: (1, 7), 6: (1, 7), 28: (1, 7), 4: (1, 7), 1: (1, 7), 13: (1, 7)},
-  190: {23: (1, 6), 10: (1, 6), 24: (1, 6), 11: (1, 6), 15: (1, 6), 17: (1, 6), 6: (1, 6), 28: (1, 6), 4: (1, 6), 1: (1, 6), 13: (1, 6)},
-  191: {12: (0, 13), 13: (0, 14), 1: (0, 2), 4: (0, 5), 0: (0, 259), 14: (0, 15), 9: (0, 10), 16: (0, 17), 17: (0, 18), 10: (0, 36)},
-  192: {23: (1, 116), 24: (1, 116), 21: (1, 116), 1: (1, 116), 13: (1, 116), 67: (1, 116), 31: (1, 116), 68: (1, 116), 22: (1, 116), 38: (1, 116), 25: (1, 116), 17: (1, 116), 39: (1, 116), 28: (1, 116), 29: (1, 116), 4: (1, 116), 10: (1, 116), 11: (1, 116), 15: (1, 116), 30: (1, 116), 32: (1, 116), 6: (1, 116)},
-  193: {23: (1, 123), 24: (1, 123), 21: (1, 123), 1: (1, 123), 13: (1, 123), 67: (1, 123), 31: (1, 123), 68: (1, 123), 22: (1, 123), 38: (1, 123), 25: (1, 123), 17: (1, 123), 39: (1, 123), 28: (1, 123), 29: (1, 123), 4: (1, 123), 10: (1, 123), 11: (1, 123), 15: (1, 123), 30: (1, 123), 32: (1, 123), 6: (1, 123)},
-  194: {23: (1, 113), 24: (1, 113), 21: (1, 113), 1: (1, 113), 13: (1, 113), 67: (1, 113), 31: (1, 113), 68: (1, 113), 22: (1, 113), 38: (1, 113), 25: (1, 113), 17: (1, 113), 39: (1, 113), 28: (1, 113), 29: (1, 113), 4: (1, 113), 10: (1, 113), 11: (1, 113), 15: (1, 113), 30: (1, 113), 32: (1, 113), 6: (1, 113)},
-  195: {23: (1, 111), 24: (1, 111), 21: (1, 111), 1: (1, 111), 13: (1, 111), 67: (1, 111), 31: (1, 111), 68: (1, 111), 22: (1, 111), 38: (1, 111), 25: (1, 111), 17: (1, 111), 39: (1, 111), 28: (1, 111), 29: (1, 111), 4: (1, 111), 10: (1, 111), 11: (1, 111), 15: (1, 111), 30: (1, 111), 32: (1, 111), 6: (1, 111)},
-  196: {23: (1, 112), 24: (1, 112), 21: (1, 112), 1: (1, 112), 13: (1, 112), 67: (1, 112), 31: (1, 112), 68: (1, 112), 22: (1, 112), 38: (1, 112), 25: (1, 112), 17: (1, 112), 39: (1, 112), 28: (1, 112), 29: (1, 112), 4: (1, 112), 10: (1, 112), 11: (1, 112), 15: (1, 112), 30: (1, 112), 32: (1, 112), 6: (1, 112)},
-  197: {22: (1, 23), 21: (1, 23)},
-  198: {22: (1, 22), 21: (1, 22)},
-  199: {22: (1, 18), 21: (1, 18)},
-  200: {22: (1, 21), 21: (1, 21)},
-  201: {22: (0, 260), 31: (0, 261)},
-  202: {13: (0, 60), 1: (0, 61), 44: (0, 262), 17: (0, 66), 4: (0, 67), 49: (0, 69), 50: (0, 128), 52: (0, 72), 6: (0, 263), 54: (0, 74), 55: (0, 75), 12: (0, 76), 10: (0, 77)},
-  203: {23: (1, 66), 24: (1, 66), 21: (1, 66), 1: (1, 66), 13: (1, 66), 67: (1, 66), 31: (1, 66), 68: (1, 66), 22: (1, 66), 38: (1, 66), 25: (1, 66), 17: (1, 66), 39: (1, 66), 28: (1, 66), 29: (1, 66), 4: (1, 66), 10: (1, 66), 11: (1, 66), 15: (1, 66), 30: (1, 66), 32: (1, 66), 6: (1, 66)},
-  204: {23: (1, 67), 24: (1, 67), 21: (1, 67), 1: (1, 67), 13: (1, 67), 67: (1, 67), 31: (1, 67), 68: (1, 67), 22: (1, 67), 38: (1, 67), 25: (1, 67), 17: (1, 67), 39: (1, 67), 28: (1, 67), 29: (1, 67), 4: (1, 67), 10: (1, 67), 11: (1, 67), 15: (1, 67), 30: (1, 67), 32: (1, 67), 6: (1, 67)},
-  205: {6: (1, 27)},
-  206: {23: (1, 118), 24: (1, 118), 21: (1, 118), 1: (1, 118), 13: (1, 118), 67: (1, 118), 31: (1, 118), 68: (1, 118), 22: (1, 118), 38: (1, 118), 25: (1, 118), 17: (1, 118), 39: (1, 118), 28: (1, 118), 29: (1, 118), 4: (1, 118), 10: (1, 118), 11: (1, 118), 15: (1, 118), 30: (1, 118), 32: (1, 118), 6: (1, 118)},
-  207: {23: (1, 119), 24: (1, 119), 21: (1, 119), 1: (1, 119), 13: (1, 119), 67: (1, 119), 31: (1, 119), 68: (1, 119), 22: (1, 119), 38: (1, 119), 25: (1, 119), 17: (1, 119), 39: (1, 119), 28: (1, 119), 29: (1, 119), 4: (1, 119), 10: (1, 119), 11: (1, 119), 15: (1, 119), 30: (1, 119), 32: (1, 119), 6: (1, 119)},
-  208: {23: (1, 122), 24: (1, 122), 21: (1, 122), 1: (1, 122), 13: (1, 122), 67: (1, 122), 31: (1, 122), 68: (1, 122), 22: (1, 122), 38: (1, 122), 25: (1, 122), 17: (1, 122), 39: (1, 122), 28: (1, 122), 29: (1, 122), 4: (1, 122), 10: (1, 122), 11: (1, 122), 15: (1, 122), 30: (1, 122), 32: (1, 122), 6: (1, 122)},
-  209: {23: (1, 104), 24: (1, 104), 21: (1, 104), 1: (1, 104), 13: (1, 104), 67: (1, 104), 31: (1, 104), 68: (1, 104), 22: (1, 104), 38: (1, 104), 25: (1, 104), 17: (1, 104), 39: (1, 104), 28: (1, 104), 29: (1, 104), 4: (1, 104), 10: (1, 104), 11: (1, 104), 15: (1, 104), 30: (1, 104), 32: (1, 104), 6: (0, 24), 33: (0, 25), 34: (0, 26)},
-  210: {23: (1, 105), 24: (1, 105), 21: (1, 105), 1: (1, 105), 13: (1, 105), 67: (1, 105), 31: (1, 105), 68: (1, 105), 22: (1, 105), 38: (1, 105), 25: (1, 105), 17: (1, 105), 39: (1, 105), 28: (1, 105), 29: (1, 105), 4: (1, 105), 10: (1, 105), 11: (1, 105), 15: (1, 105), 30: (1, 105), 32: (1, 105), 6: (1, 105)},
-  211: {23: (1, 106), 24: (1, 106), 21: (1, 106), 1: (1, 106), 13: (1, 106), 67: (1, 106), 31: (1, 106), 68: (1, 106), 22: (1, 106), 38: (1, 106), 25: (1, 106), 17: (1, 106), 39: (1, 106), 28: (1, 106), 29: (1, 106), 4: (1, 106), 10: (1, 106), 11: (1, 106), 15: (1, 106), 30: (1, 106), 32: (1, 106), 6: (1, 106)},
-  212: {23: (1, 114), 24: (1, 114), 21: (1, 114), 1: (1, 114), 13: (1, 114), 67: (1, 114), 31: (1, 114), 68: (1, 114), 22: (1, 114), 38: (1, 114), 25: (1, 114), 17: (1, 114), 39: (1, 114), 28: (1, 114), 29: (1, 114), 4: (1, 114), 10: (1, 114), 11: (1, 114), 15: (1, 114), 30: (1, 114), 32: (1, 114), 6: (1, 114)},
-  213: {23: (1, 182), 24: (1, 182), 21: (1, 182), 1: (1, 182), 13: (1, 182), 67: (1, 182), 31: (1, 182), 68: (1, 182), 22: (1, 182), 38: (1, 182), 25: (1, 182), 17: (1, 182), 39: (1, 182), 28: (1, 182), 4: (1, 182), 29: (1, 182), 10: (1, 182), 11: (1, 182), 15: (1, 182), 30: (1, 182), 32: (1, 182), 6: (1, 182)},
-  214: {13: (0, 264), 1: (0, 265), 94: (0, 266), 95: (0, 267), 54: (0, 268), 4: (0, 269), 6: (0, 270), 17: (0, 271), 96: (0, 272), 50: (0, 128), 10: (0, 273), 12: (0, 274)},
-  215: {22: (1, 24), 21: (1, 24), 67: (1, 24)},
-  216: {94: (0, 275), 13: (0, 264), 1: (0, 265), 95: (0, 267), 54: (0, 268), 4: (0, 269), 17: (0, 271), 96: (0, 272), 50: (0, 128), 10: (0, 273), 6: (0, 276), 12: (0, 274)},
-  217: {23: (1, 185), 24: (1, 185), 21: (1, 185), 1: (1, 185), 13: (1, 185), 67: (1, 185), 31: (1, 185), 68: (1, 185), 22: (1, 185), 38: (1, 185), 25: (1, 185), 17: (1, 185), 39: (1, 185), 28: (1, 185), 4: (1, 185), 29: (1, 185), 10: (1, 185), 11: (1, 185), 15: (1, 185), 30: (1, 185), 32: (1, 185), 6: (1, 185)},
-  218: {22: (1, 19), 21: (1, 19)},
-  219: {10: (0, 277)},
-  220: {12: (0, 13), 13: (0, 14), 0: (0, 278), 1: (0, 2), 4: (0, 5), 14: (0, 15), 9: (0, 10), 16: (0, 17), 17: (0, 18), 10: (0, 36)},
-  221: {23: (1, 120), 24: (1, 120), 21: (1, 120), 1: (1, 120), 13: (1, 120), 67: (1, 120), 31: (1, 120), 68: (1, 120), 22: (1, 120), 38: (1, 120), 25: (1, 120), 17: (1, 120), 39: (1, 120), 28: (1, 120), 29: (1, 120), 4: (1, 120), 10: (1, 120), 11: (1, 120), 15: (1, 120), 30: (1, 120), 32: (1, 120), 6: (1, 120)},
-  222: {23: (1, 115), 24: (1, 115), 21: (1, 115), 1: (1, 115), 13: (1, 115), 67: (1, 115), 31: (1, 115), 68: (1, 115), 22: (1, 115), 38: (1, 115), 25: (1, 115), 17: (1, 115), 39: (1, 115), 28: (1, 115), 29: (1, 115), 4: (1, 115), 10: (1, 115), 11: (1, 115), 15: (1, 115), 30: (1, 115), 32: (1, 115), 6: (1, 115)},
-  223: {34: (0, 279)},
-  224: {6: (0, 280), 1: (0, 281)},
-  225: {6: (0, 282), 34: (0, 283)},
-  226: {23: (1, 196), 24: (1, 196), 21: (1, 196), 26: (1, 196), 1: (1, 196), 13: (1, 196), 67: (1, 196), 31: (1, 196), 68: (1, 196), 22: (1, 196), 38: (1, 196), 25: (1, 196), 17: (1, 196), 39: (1, 196), 27: (1, 196), 28: (1, 196), 4: (1, 196), 29: (1, 196), 10: (1, 196), 11: (1, 196), 15: (1, 196), 30: (1, 196), 32: (1, 196), 6: (1, 196)},
-  227: {6: (0, 284), 1: (0, 285)},
-  228: {34: (0, 286)},
-  229: {1: (0, 287)},
-  230: {23: (1, 193), 24: (1, 193), 21: (1, 193), 26: (1, 193), 1: (1, 193), 13: (1, 193), 67: (1, 193), 31: (1, 193), 68: (1, 193), 22: (1, 193), 38: (1, 193), 25: (1, 193), 17: (1, 193), 39: (1, 193), 27: (1, 193), 28: (1, 193), 4: (1, 193), 29: (1, 193), 10: (1, 193), 11: (1, 193), 15: (1, 193), 30: (1, 193), 32: (1, 193), 6: (1, 193)},
-  231: {6: (0, 288), 1: (0, 289)},
-  232: {10: (1, 235), 11: (1, 235), 15: (1, 235), 17: (1, 235), 6: (1, 235), 28: (1, 235), 4: (1, 235), 1: (1, 235), 13: (1, 235)},
-  233: {31: (1, 256), 22: (1, 256)},
-  234: {31: (1, 257), 22: (1, 257)},
-  235: {12: (0, 13), 13: (0, 14), 1: (0, 2), 4: (0, 5), 0: (0, 290), 14: (0, 15), 9: (0, 10), 16: (0, 17), 17: (0, 18), 10: (0, 36)},
-  236: {62: (0, 291), 61: (0, 107), 48: (0, 110)},
-  237: {6: (0, 292), 97: (0, 293), 98: (0, 294)},
-  238: {23: (1, 42), 38: (1, 42), 24: (1, 42), 17: (1, 42), 39: (1, 42), 28: (1, 42), 4: (1, 42), 1: (1, 42), 13: (1, 42), 10: (1, 42), 11: (1, 42), 15: (1, 42), 6: (1, 42)},
-  239: {60: (0, 295), 61: (0, 107), 48: (0, 110), 62: (0, 296), 59: (0, 105)},
-  240: {23: (1, 250), 38: (1, 250), 24: (1, 250), 17: (1, 250), 39: (1, 250), 28: (1, 250), 4: (1, 250), 1: (1, 250), 13: (1, 250), 10: (1, 250), 11: (1, 250), 15: (1, 250), 6: (1, 250)},
-  241: {23: (1, 251), 38: (1, 251), 24: (1, 251), 17: (1, 251), 39: (1, 251), 28: (1, 251), 4: (1, 251), 1: (1, 251), 13: (1, 251), 10: (1, 251), 11: (1, 251), 15: (1, 251), 6: (1, 251)},
-  242: {93: (0, 253), 64: (0, 254), 4: (0, 242), 1: (0, 297), 99: (0, 298), 89: (0, 299), 50: (0, 250), 13: (0, 245), 90: (0, 300), 10: (0, 246), 12: (0, 301), 91: (0, 251), 17: (0, 256), 92: (0, 252)},
-  243: {6: (0, 24), 33: (0, 25), 34: (0, 26), 30: (0, 302)},
-  244: {30: (0, 303)},
-  245: {93: (0, 253), 64: (0, 254), 4: (0, 242), 1: (0, 297), 89: (0, 299), 50: (0, 250), 13: (0, 245), 90: (0, 300), 99: (0, 304), 10: (0, 246), 12: (0, 255), 91: (0, 251), 17: (0, 256), 92: (0, 252)},
-  246: {30: (1, 158), 32: (1, 158), 31: (1, 158), 25: (1, 158), 68: (1, 158), 17: (1, 158), 22: (1, 158), 29: (1, 158)},
-  247: {68: (0, 305), 42: (0, 306)},
-  248: {42: (0, 307), 68: (0, 308)},
-  249: {17: (0, 46), 41: (0, 309), 68: (0, 310), 32: (0, 311), 29: (0, 312), 25: (0, 51), 30: (0, 313)},
-  250: {48: (0, 314), 70: (0, 315), 69: (0, 142), 76: (0, 152), 71: (0, 145), 72: (0, 147), 77: (0, 153), 73: (0, 149), 78: (0, 154), 79: (0, 155), 74: (0, 150), 75: (0, 151)},
-  251: {30: (1, 155), 32: (1, 155), 31: (1, 155), 25: (1, 155), 68: (1, 155), 17: (1, 155), 22: (1, 155), 29: (1, 155)},
-  252: {30: (1, 154), 32: (1, 154), 31: (1, 154), 25: (1, 154), 68: (1, 154), 17: (1, 154), 22: (1, 154), 29: (1, 154)},
-  253: {30: (1, 157), 32: (1, 157), 31: (1, 157), 25: (1, 157), 68: (1, 157), 17: (1, 157), 22: (1, 157), 29: (1, 157)},
-  254: {30: (0, 316), 32: (1, 156), 31: (1, 156), 25: (1, 156), 68: (1, 156), 17: (1, 156), 22: (1, 156), 29: (1, 156)},
-  255: {30: (1, 153), 32: (1, 153), 31: (1, 153), 25: (1, 153), 68: (1, 153), 17: (1, 153), 22: (1, 153), 29: (1, 153)},
-  256: {93: (0, 253), 64: (0, 254), 4: (0, 242), 1: (0, 297), 89: (0, 299), 50: (0, 250), 13: (0, 245), 90: (0, 300), 10: (0, 246), 99: (0, 317), 12: (0, 255), 91: (0, 251), 17: (0, 256), 92: (0, 252)},
-  257: {23: (1, 56), 38: (1, 56), 24: (1, 56), 17: (1, 56), 39: (1, 56), 28: (1, 56), 4: (1, 56), 1: (1, 56), 13: (1, 56), 10: (1, 56), 11: (1, 56), 15: (1, 56), 97: (1, 56), 6: (1, 56)},
-  258: {42: (1, 60), 50: (1, 60)},
-  259: {23: (1, 10), 10: (1, 10), 24: (1, 10), 11: (1, 10), 15: (1, 10), 17: (1, 10), 6: (1, 10), 28: (1, 10), 4: (1, 10), 1: (1, 10), 13: (1, 10)},
-  260: {6: (0, 318), 13: (0, 60), 1: (0, 61), 17: (0, 66), 4: (0, 67), 49: (0, 69), 50: (0, 128), 52: (0, 72), 54: (0, 74), 44: (0, 319), 55: (0, 75), 12: (0, 76), 10: (0, 77)},
-  261: {23: (1, 65), 24: (1, 65), 21: (1, 65), 1: (1, 65), 13: (1, 65), 67: (1, 65), 31: (1, 65), 68: (1, 65), 22: (1, 65), 38: (1, 65), 25: (1, 65), 17: (1, 65), 39: (1, 65), 28: (1, 65), 29: (1, 65), 4: (1, 65), 10: (1, 65), 11: (1, 65), 15: (1, 65), 30: (1, 65), 32: (1, 65), 6: (1, 65)},
-  262: {31: (1, 262), 22: (1, 262)},
-  263: {13: (0, 60), 1: (0, 61), 17: (0, 66), 4: (0, 67), 49: (0, 69), 50: (0, 128), 52: (0, 72), 54: (0, 74), 55: (0, 75), 44: (0, 320), 12: (0, 76), 10: (0, 77)},
-  264: {13: (0, 264), 1: (0, 321), 95: (0, 267), 54: (0, 322), 4: (0, 269), 17: (0, 271), 50: (0, 128), 96: (0, 272), 94: (0, 323), 10: (0, 273), 100: (0, 324), 12: (0, 274)},
-  265: {30: (0, 325), 6: (0, 24), 33: (0, 25), 34: (0, 26)},
-  266: {17: (0, 46), 41: (0, 326), 25: (0, 51), 32: (0, 327), 68: (0, 328), 30: (0, 329), 29: (0, 330)},
-  267: {30: (1, 133), 31: (1, 133), 32: (1, 133), 25: (1, 133), 68: (1, 133), 17: (1, 133), 22: (1, 133), 29: (1, 133)},
-  268: {30: (0, 331)},
-  269: {13: (0, 264), 100: (0, 332), 1: (0, 321), 95: (0, 267), 54: (0, 322), 4: (0, 269), 94: (0, 323), 17: (0, 271), 50: (0, 128), 96: (0, 272), 12: (0, 333), 10: (0, 273)},
-  270: {94: (0, 334), 13: (0, 264), 1: (0, 265), 95: (0, 267), 54: (0, 268), 4: (0, 269), 17: (0, 271), 96: (0, 272), 50: (0, 128), 10: (0, 273), 12: (0, 274)},
-  271: {13: (0, 264), 1: (0, 321), 95: (0, 267), 54: (0, 322), 4: (0, 269), 17: (0, 271), 50: (0, 128), 96: (0, 272), 94: (0, 323), 100: (0, 335), 10: (0, 273), 12: (0, 274)},
-  272: {30: (1, 131), 31: (1, 131), 32: (1, 131), 25: (1, 131), 68: (1, 131), 17: (1, 131), 22: (1, 131), 29: (1, 131)},
-  273: {30: (1, 132), 31: (1, 132), 32: (1, 132), 25: (1, 132), 68: (1, 132), 17: (1, 132), 22: (1, 132), 29: (1, 132)},
-  274: {30: (1, 130), 31: (1, 130), 32: (1, 130), 25: (1, 130), 68: (1, 130), 17: (1, 130), 22: (1, 130), 29: (1, 130)},
-  275: {17: (0, 46), 68: (0, 336), 41: (0, 326), 25: (0, 51), 32: (0, 327), 30: (0, 329), 29: (0, 330)},
-  276: {13: (0, 264), 1: (0, 265), 95: (0, 267), 54: (0, 268), 4: (0, 269), 94: (0, 337), 17: (0, 271), 96: (0, 272), 50: (0, 128), 10: (0, 273), 12: (0, 274)},
-  277: {26: (0, 338)},
-  278: {26: (0, 339)},
-  279: {6: (0, 340), 1: (0, 341)},
-  280: {1: (0, 342)},
-  281: {23: (1, 200), 24: (1, 200), 21: (1, 200), 26: (1, 200), 1: (1, 200), 13: (1, 200), 67: (1, 200), 31: (1, 200), 68: (1, 200), 22: (1, 200), 38: (1, 200), 25: (1, 200), 17: (1, 200), 39: (1, 200), 27: (1, 200), 28: (1, 200), 4: (1, 200), 29: (1, 200), 10: (1, 200), 11: (1, 200), 15: (1, 200), 30: (1, 200), 32: (1, 200), 6: (1, 200)},
-  282: {34: (0, 343)},
-  283: {1: (0, 344), 6: (0, 345)},
-  284: {1: (0, 346)},
-  285: {23: (1, 201), 24: (1, 201), 21: (1, 201), 26: (1, 201), 1: (1, 201), 13: (1, 201), 67: (1, 201), 31: (1, 201), 68: (1, 201), 22: (1, 201), 38: (1, 201), 25: (1, 201), 17: (1, 201), 39: (1, 201), 27: (1, 201), 28: (1, 201), 4: (1, 201), 29: (1, 201), 10: (1, 201), 11: (1, 201), 15: (1, 201), 30: (1, 201), 32: (1, 201), 6: (1, 201)},
-  286: {1: (0, 347), 6: (0, 348)},
-  287: {23: (1, 205), 24: (1, 205), 21: (1, 205), 26: (1, 205), 1: (1, 205), 13: (1, 205), 67: (1, 205), 31: (1, 205), 68: (1, 205), 22: (1, 205), 38: (1, 205), 25: (1, 205), 17: (1, 205), 39: (1, 205), 27: (1, 205), 28: (1, 205), 4: (1, 205), 29: (1, 205), 10: (1, 205), 11: (1, 205), 15: (1, 205), 30: (1, 205), 32: (1, 205), 6: (1, 205)},
-  288: {1: (0, 349)},
-  289: {23: (1, 191), 24: (1, 191), 21: (1, 191), 26: (1, 191), 1: (1, 191), 13: (1, 191), 67: (1, 191), 31: (1, 191), 68: (1, 191), 22: (1, 191), 38: (1, 191), 25: (1, 191), 17: (1, 191), 39: (1, 191), 27: (1, 191), 28: (1, 191), 4: (1, 191), 29: (1, 191), 10: (1, 191), 11: (1, 191), 15: (1, 191), 30: (1, 191), 32: (1, 191), 6: (1, 191)},
-  290: {31: (1, 258), 22: (1, 258)},
-  291: {98: (0, 350), 6: (0, 351), 97: (0, 352)},
-  292: {61: (0, 107), 62: (0, 353), 97: (0, 354), 48: (0, 110)},
-  293: {23: (1, 49), 38: (1, 49), 24: (1, 49), 17: (1, 49), 39: (1, 49), 28: (1, 49), 4: (1, 49), 1: (1, 49), 13: (1, 49), 10: (1, 49), 11: (1, 49), 15: (1, 49), 6: (1, 49)},
-  294: {6: (0, 355), 97: (0, 356)},
-  295: {23: (1, 249), 38: (1, 249), 24: (1, 249), 17: (1, 249), 39: (1, 249), 28: (1, 249), 4: (1, 249), 1: (1, 249), 13: (1, 249), 10: (1, 249), 11: (1, 249), 15: (1, 249), 6: (1, 249)},
-  296: {23: (1, 252), 38: (1, 252), 24: (1, 252), 17: (1, 252), 39: (1, 252), 28: (1, 252), 4: (1, 252), 1: (1, 252), 13: (1, 252), 10: (1, 252), 11: (1, 252), 15: (1, 252), 6: (1, 252)},
-  297: {30: (0, 302), 31: (1, 147), 32: (1, 147), 25: (1, 147), 68: (1, 147), 17: (1, 147), 22: (1, 147), 29: (1, 147), 6: (0, 24), 33: (0, 25), 34: (0, 26)},
-  298: {22: (0, 357), 101: (0, 358), 31: (0, 359)},
-  299: {30: (0, 303), 31: (1, 148), 32: (1, 148), 25: (1, 148), 68: (1, 148), 17: (1, 148), 22: (1, 148), 29: (1, 148)},
-  300: {30: (0, 313), 31: (1, 149), 32: (0, 311), 25: (0, 51), 68: (1, 149), 17: (0, 46), 22: (1, 149), 29: (0, 312), 41: (0, 309)},
-  301: {30: (1, 153), 32: (1, 153), 31: (0, 360), 25: (1, 153), 68: (1, 153), 17: (1, 153), 22: (1, 153), 29: (1, 153)},
-  302: {64: (0, 361), 4: (0, 242), 1: (0, 87), 92: (0, 362), 93: (0, 363), 12: (0, 364), 102: (0, 365), 10: (0, 366), 56: (0, 367)},
-  303: {64: (0, 361), 56: (0, 368), 4: (0, 242), 1: (0, 87), 92: (0, 362), 93: (0, 363), 12: (0, 364), 10: (0, 366), 102: (0, 369)},
-  304: {30: (1, 168), 31: (1, 168), 32: (1, 168), 25: (1, 168), 68: (1, 168), 17: (1, 168), 22: (1, 168), 29: (1, 168)},
-  305: {23: (1, 58), 38: (1, 58), 24: (1, 58), 17: (1, 58), 39: (1, 58), 28: (1, 58), 4: (1, 58), 1: (1, 58), 13: (1, 58), 10: (1, 58), 11: (1, 58), 15: (1, 58), 97: (1, 58), 6: (1, 58)},
-  306: {93: (0, 253), 64: (0, 254), 4: (0, 242), 1: (0, 243), 6: (0, 370), 89: (0, 244), 50: (0, 250), 13: (0, 245), 90: (0, 371), 10: (0, 246), 91: (0, 251), 17: (0, 256), 92: (0, 252), 12: (0, 255)},
-  307: {93: (0, 253), 64: (0, 254), 4: (0, 242), 1: (0, 243), 6: (0, 372), 89: (0, 244), 50: (0, 250), 90: (0, 373), 13: (0, 245), 10: (0, 246), 91: (0, 251), 17: (0, 256), 92: (0, 252), 12: (0, 255)},
-  308: {23: (1, 54), 38: (1, 54), 24: (1, 54), 17: (1, 54), 39: (1, 54), 28: (1, 54), 4: (1, 54), 1: (1, 54), 13: (1, 54), 10: (1, 54), 11: (1, 54), 15: (1, 54), 97: (1, 54), 6: (1, 54)},
-  309: {64: (0, 361), 4: (0, 242), 1: (0, 374), 50: (0, 250), 92: (0, 362), 93: (0, 363), 89: (0, 375), 102: (0, 376), 12: (0, 364), 10: (0, 366), 103: (0, 377)},
-  310: {23: (1, 52), 38: (1, 52), 24: (1, 52), 17: (1, 52), 39: (1, 52), 28: (1, 52), 4: (1, 52), 1: (1, 52), 13: (1, 52), 10: (1, 52), 11: (1, 52), 15: (1, 52), 97: (1, 52), 6: (1, 52)},
-  311: {56: (0, 378)},
-  312: {56: (0, 379)},
-  313: {56: (0, 380)},
-  314: {42: (0, 381), 68: (0, 382)},
-  315: {42: (0, 383), 68: (0, 384)},
-  316: {56: (0, 385)},
-  317: {30: (1, 173), 31: (1, 173), 32: (1, 173), 25: (1, 173), 68: (1, 173), 17: (1, 173), 22: (1, 173), 29: (1, 173)},
-  318: {13: (0, 60), 1: (0, 61), 17: (0, 66), 4: (0, 67), 49: (0, 69), 50: (0, 128), 52: (0, 72), 54: (0, 74), 55: (0, 75), 44: (0, 386), 12: (0, 76), 10: (0, 77)},
-  319: {31: (1, 261), 22: (1, 261)},
-  320: {31: (1, 259), 22: (1, 259)},
-  321: {30: (0, 325), 31: (1, 126), 32: (1, 126), 25: (1, 126), 68: (1, 126), 17: (1, 126), 22: (1, 126), 29: (1, 126), 6: (0, 24), 33: (0, 25), 34: (0, 26)},
-  322: {30: (0, 331), 31: (1, 125), 32: (1, 125), 25: (1, 125), 68: (1, 125), 17: (1, 125), 22: (1, 125), 29: (1, 125)},
-  323: {30: (0, 329), 31: (1, 124), 32: (0, 327), 25: (0, 51), 68: (1, 124), 17: (0, 46), 22: (1, 124), 29: (0, 330), 41: (0, 326)},
-  324: {30: (1, 139), 31: (1, 139), 32: (1, 139), 25: (1, 139), 68: (1, 139), 17: (1, 139), 22: (1, 139), 29: (1, 139)},
-  325: {1: (0, 87), 4: (0, 269), 10: (0, 387), 12: (0, 388), 104: (0, 389), 56: (0, 390), 96: (0, 391)},
-  326: {1: (0, 392), 104: (0, 393), 105: (0, 394), 4: (0, 269), 50: (0, 128), 10: (0, 387), 12: (0, 388), 54: (0, 395), 96: (0, 391)},
-  327: {56: (0, 396)},
-  328: {23: (1, 184), 24: (1, 184), 21: (1, 184), 1: (1, 184), 13: (1, 184), 67: (1, 184), 31: (1, 184), 68: (1, 184), 22: (1, 184), 38: (1, 184), 25: (1, 184), 17: (1, 184), 39: (1, 184), 28: (1, 184), 4: (1, 184), 29: (1, 184), 10: (1, 184), 11: (1, 184), 15: (1, 184), 30: (1, 184), 32: (1, 184), 6: (1, 184)},
-  329: {56: (0, 397)},
-  330: {56: (0, 398)},
-  331: {104: (0, 399), 1: (0, 87), 4: (0, 269), 10: (0, 387), 12: (0, 388), 56: (0, 400), 96: (0, 391)},
-  332: {22: (0, 401), 106: (0, 402), 31: (0, 403)},
-  333: {30: (1, 130), 31: (0, 404), 32: (1, 130), 25: (1, 130), 68: (1, 130), 17: (1, 130), 22: (1, 130), 29: (1, 130)},
-  334: {17: (0, 46), 68: (0, 405), 41: (0, 326), 25: (0, 51), 32: (0, 327), 30: (0, 329), 29: (0, 330)},
-  335: {30: (1, 140), 31: (1, 140), 32: (1, 140), 25: (1, 140), 68: (1, 140), 17: (1, 140), 22: (1, 140), 29: (1, 140)},
-  336: {23: (1, 181), 24: (1, 181), 21: (1, 181), 1: (1, 181), 13: (1, 181), 67: (1, 181), 31: (1, 181), 68: (1, 181), 22: (1, 181), 38: (1, 181), 25: (1, 181), 17: (1, 181), 39: (1, 181), 28: (1, 181), 4: (1, 181), 29: (1, 181), 10: (1, 181), 11: (1, 181), 15: (1, 181), 30: (1, 181), 32: (1, 181), 6: (1, 181)},
-  337: {68: (0, 406), 17: (0, 46), 41: (0, 326), 25: (0, 51), 32: (0, 327), 30: (0, 329), 29: (0, 330)},
-  338: {12: (0, 13), 13: (0, 14), 1: (0, 2), 4: (0, 5), 0: (0, 407), 14: (0, 15), 9: (0, 10), 16: (0, 17), 17: (0, 18), 10: (0, 36)},
-  339: {12: (0, 13), 13: (0, 14), 1: (0, 2), 4: (0, 5), 14: (0, 15), 9: (0, 10), 0: (0, 408), 16: (0, 17), 17: (0, 18), 10: (0, 36)},
-  340: {1: (0, 409)},
-  341: {23: (1, 195), 24: (1, 195), 21: (1, 195), 26: (1, 195), 1: (1, 195), 13: (1, 195), 67: (1, 195), 31: (1, 195), 68: (1, 195), 22: (1, 195), 38: (1, 195), 25: (1, 195), 17: (1, 195), 39: (1, 195), 27: (1, 195), 28: (1, 195), 4: (1, 195), 29: (1, 195), 10: (1, 195), 11: (1, 195), 15: (1, 195), 30: (1, 195), 32: (1, 195), 6: (1, 195)},
-  342: {23: (1, 204), 24: (1, 204), 21: (1, 204), 26: (1, 204), 1: (1, 204), 13: (1, 204), 67: (1, 204), 31: (1, 204), 68: (1, 204), 22: (1, 204), 38: (1, 204), 25: (1, 204), 17: (1, 204), 39: (1, 204), 27: (1, 204), 28: (1, 204), 4: (1, 204), 29: (1, 204), 10: (1, 204), 11: (1, 204), 15: (1, 204), 30: (1, 204), 32: (1, 204), 6: (1, 204)},
-  343: {6: (0, 410), 1: (0, 411)},
-  344: {23: (1, 199), 24: (1, 199), 21: (1, 199), 26: (1, 199), 1: (1, 199), 13: (1, 199), 67: (1, 199), 31: (1, 199), 68: (1, 199), 22: (1, 199), 38: (1, 199), 25: (1, 199), 17: (1, 199), 39: (1, 199), 27: (1, 199), 28: (1, 199), 4: (1, 199), 29: (1, 199), 10: (1, 199), 11: (1, 199), 15: (1, 199), 30: (1, 199), 32: (1, 199), 6: (1, 199)},
-  345: {1: (0, 412)},
-  346: {23: (1, 198), 24: (1, 198), 21: (1, 198), 26: (1, 198), 1: (1, 198), 13: (1, 198), 67: (1, 198), 31: (1, 198), 68: (1, 198), 22: (1, 198), 38: (1, 198), 25: (1, 198), 17: (1, 198), 39: (1, 198), 27: (1, 198), 28: (1, 198), 4: (1, 198), 29: (1, 198), 10: (1, 198), 11: (1, 198), 15: (1, 198), 30: (1, 198), 32: (1, 198), 6: (1, 198)},
-  347: {23: (1, 187), 24: (1, 187), 21: (1, 187), 26: (1, 187), 1: (1, 187), 13: (1, 187), 67: (1, 187), 31: (1, 187), 68: (1, 187), 22: (1, 187), 38: (1, 187), 25: (1, 187), 17: (1, 187), 39: (1, 187), 27: (1, 187), 28: (1, 187), 4: (1, 187), 29: (1, 187), 10: (1, 187), 11: (1, 187), 15: (1, 187), 30: (1, 187), 32: (1, 187), 6: (1, 187)},
-  348: {1: (0, 413)},
-  349: {23: (1, 202), 24: (1, 202), 21: (1, 202), 26: (1, 202), 1: (1, 202), 13: (1, 202), 67: (1, 202), 31: (1, 202), 68: (1, 202), 22: (1, 202), 38: (1, 202), 25: (1, 202), 17: (1, 202), 39: (1, 202), 27: (1, 202), 28: (1, 202), 4: (1, 202), 29: (1, 202), 10: (1, 202), 11: (1, 202), 15: (1, 202), 30: (1, 202), 32: (1, 202), 6: (1, 202)},
-  350: {6: (0, 414), 97: (0, 415)},
-  351: {61: (0, 107), 62: (0, 353), 48: (0, 110), 97: (0, 416)},
-  352: {23: (1, 51), 38: (1, 51), 24: (1, 51), 17: (1, 51), 39: (1, 51), 28: (1, 51), 4: (1, 51), 1: (1, 51), 13: (1, 51), 10: (1, 51), 11: (1, 51), 15: (1, 51), 6: (1, 51)},
-  353: {97: (1, 254), 6: (1, 254)},
-  354: {23: (1, 46), 38: (1, 46), 24: (1, 46), 17: (1, 46), 39: (1, 46), 28: (1, 46), 4: (1, 46), 1: (1, 46), 13: (1, 46), 10: (1, 46), 11: (1, 46), 15: (1, 46), 6: (1, 46)},
-  355: {97: (0, 417), 61: (0, 107), 48: (0, 110), 62: (0, 418)},
-  356: {23: (1, 47), 38: (1, 47), 24: (1, 47), 17: (1, 47), 39: (1, 47), 28: (1, 47), 4: (1, 47), 1: (1, 47), 13: (1, 47), 10: (1, 47), 11: (1, 47), 15: (1, 47), 6: (1, 47)},
-  357: {93: (0, 253), 64: (0, 254), 4: (0, 242), 99: (0, 419), 1: (0, 297), 89: (0, 299), 50: (0, 250), 13: (0, 245), 90: (0, 300), 10: (0, 246), 107: (0, 420), 6: (0, 421), 12: (0, 255), 91: (0, 251), 17: (0, 256), 92: (0, 252)},
-  358: {31: (0, 422), 22: (0, 423)},
-  359: {30: (1, 79), 31: (1, 79), 32: (1, 79), 25: (1, 79), 68: (1, 79), 17: (1, 79), 22: (1, 79), 29: (1, 79)},
-  360: {30: (1, 77), 31: (1, 77), 32: (1, 77), 25: (1, 77), 68: (1, 77), 17: (1, 77), 22: (1, 77), 29: (1, 77)},
-  361: {30: (0, 316), 31: (1, 161), 32: (1, 161), 25: (1, 161), 68: (1, 161), 17: (1, 161), 22: (1, 161), 29: (1, 161)},
-  362: {30: (1, 160), 31: (1, 160), 32: (1, 160), 25: (1, 160), 68: (1, 160), 17: (1, 160), 22: (1, 160), 29: (1, 160)},
-  363: {30: (1, 162), 31: (1, 162), 32: (1, 162), 25: (1, 162), 68: (1, 162), 17: (1, 162), 22: (1, 162), 29: (1, 162)},
-  364: {30: (1, 159), 31: (1, 159), 32: (1, 159), 25: (1, 159), 68: (1, 159), 17: (1, 159), 22: (1, 159), 29: (1, 159)},
-  365: {30: (1, 170), 31: (1, 170), 32: (1, 170), 25: (1, 170), 68: (1, 170), 17: (1, 170), 22: (1, 170), 29: (1, 170)},
-  366: {30: (1, 163), 31: (1, 163), 32: (1, 163), 25: (1, 163), 68: (1, 163), 17: (1, 163), 22: (1, 163), 29: (1, 163)},
-  367: {30: (1, 167), 31: (1, 167), 32: (1, 167), 25: (1, 167), 68: (1, 167), 17: (1, 167), 22: (1, 167), 29: (1, 167)},
-  368: {30: (1, 169), 31: (1, 169), 32: (1, 169), 25: (1, 169), 68: (1, 169), 17: (1, 169), 22: (1, 169), 29: (1, 169)},
-  369: {30: (1, 165), 31: (1, 165), 32: (1, 165), 25: (1, 165), 68: (1, 165), 17: (1, 165), 22: (1, 165), 29: (1, 165)},
-  370: {93: (0, 253), 64: (0, 254), 4: (0, 242), 1: (0, 243), 89: (0, 244), 50: (0, 250), 13: (0, 245), 90: (0, 424), 10: (0, 246), 91: (0, 251), 17: (0, 256), 92: (0, 252), 12: (0, 255)},
-  371: {17: (0, 46), 41: (0, 309), 32: (0, 311), 29: (0, 312), 25: (0, 51), 68: (0, 425), 30: (0, 313)},
-  372: {93: (0, 253), 64: (0, 254), 4: (0, 242), 1: (0, 243), 89: (0, 244), 50: (0, 250), 13: (0, 245), 90: (0, 426), 10: (0, 246), 91: (0, 251), 17: (0, 256), 92: (0, 252), 12: (0, 255)},
-  373: {17: (0, 46), 41: (0, 309), 32: (0, 311), 68: (0, 427), 29: (0, 312), 25: (0, 51), 30: (0, 313)},
-  374: {30: (1, 150), 31: (1, 150), 32: (1, 150), 25: (1, 150), 68: (1, 150), 17: (1, 150), 22: (1, 150), 29: (1, 150), 6: (0, 24), 33: (0, 25), 34: (0, 26)},
-  375: {30: (1, 152), 31: (1, 152), 32: (1, 152), 25: (1, 152), 68: (1, 152), 17: (1, 152), 22: (1, 152), 29: (1, 152)},
-  376: {30: (1, 151), 31: (1, 151), 32: (1, 151), 25: (1, 151), 68: (1, 151), 17: (1, 151), 22: (1, 151), 29: (1, 151)},
-  377: {30: (1, 171), 31: (1, 171), 32: (1, 171), 25: (1, 171), 68: (1, 171), 17: (1, 171), 22: (1, 171), 29: (1, 171)},
-  378: {30: (1, 172), 31: (1, 172), 32: (1, 172), 25: (1, 172), 68: (1, 172), 17: (1, 172), 22: (1, 172), 29: (1, 172)},
-  379: {30: (1, 164), 31: (1, 164), 32: (1, 164), 25: (1, 164), 68: (1, 164), 17: (1, 164), 22: (1, 164), 29: (1, 164)},
-  380: {30: (1, 166), 31: (1, 166), 32: (1, 166), 25: (1, 166), 68: (1, 166), 17: (1, 166), 22: (1, 166), 29: (1, 166)},
-  381: {93: (0, 253), 64: (0, 254), 4: (0, 242), 1: (0, 243), 90: (0, 428), 89: (0, 244), 50: (0, 250), 13: (0, 245), 6: (0, 429), 10: (0, 246), 91: (0, 251), 17: (0, 256), 92: (0, 252), 12: (0, 255)},
-  382: {30: (1, 178), 31: (1, 178), 32: (1, 178), 25: (1, 178), 68: (1, 178), 17: (1, 178), 22: (1, 178), 29: (1, 178)},
-  383: {93: (0, 253), 64: (0, 254), 4: (0, 242), 1: (0, 243), 6: (0, 430), 89: (0, 244), 50: (0, 250), 13: (0, 245), 90: (0, 431), 10: (0, 246), 91: (0, 251), 17: (0, 256), 92: (0, 252), 12: (0, 255)},
-  384: {30: (1, 175), 31: (1, 175), 32: (1, 175), 25: (1, 175), 68: (1, 175), 17: (1, 175), 22: (1, 175), 29: (1, 175)},
-  385: {30: (1, 206), 31: (1, 206), 32: (1, 206), 25: (1, 206), 68: (1, 206), 17: (1, 206), 22: (1, 206), 29: (1, 206)},
-  386: {31: (1, 260), 22: (1, 260)},
-  387: {30: (1, 136), 31: (1, 136), 32: (1, 136), 25: (1, 136), 68: (1, 136), 17: (1, 136), 22: (1, 136), 29: (1, 136)},
-  388: {30: (1, 134), 31: (1, 134), 32: (1, 134), 25: (1, 134), 68: (1, 134), 17: (1, 134), 22: (1, 134), 29: (1, 134)},
-  389: {30: (1, 143), 31: (1, 143), 32: (1, 143), 25: (1, 143), 68: (1, 143), 17: (1, 143), 22: (1, 143), 29: (1, 143)},
-  390: {30: (1, 141), 31: (1, 141), 32: (1, 141), 25: (1, 141), 68: (1, 141), 17: (1, 141), 22: (1, 141), 29: (1, 141)},
-  391: {30: (1, 135), 31: (1, 135), 32: (1, 135), 25: (1, 135), 68: (1, 135), 17: (1, 135), 22: (1, 135), 29: (1, 135)},
-  392: {30: (1, 127), 31: (1, 127), 32: (1, 127), 25: (1, 127), 68: (1, 127), 17: (1, 127), 22: (1, 127), 29: (1, 127), 6: (0, 24), 33: (0, 25), 34: (0, 26)},
-  393: {30: (1, 129), 31: (1, 129), 32: (1, 129), 25: (1, 129), 68: (1, 129), 17: (1, 129), 22: (1, 129), 29: (1, 129)},
-  394: {30: (1, 145), 31: (1, 145), 32: (1, 145), 25: (1, 145), 68: (1, 145), 17: (1, 145), 22: (1, 145), 29: (1, 145)},
-  395: {30: (1, 128), 31: (1, 128), 32: (1, 128), 25: (1, 128), 68: (1, 128), 17: (1, 128), 22: (1, 128), 29: (1, 128)},
-  396: {30: (1, 144), 31: (1, 144), 32: (1, 144), 25: (1, 144), 68: (1, 144), 17: (1, 144), 22: (1, 144), 29: (1, 144)},
-  397: {30: (1, 142), 31: (1, 142), 32: (1, 142), 25: (1, 142), 68: (1, 142), 17: (1, 142), 22: (1, 142), 29: (1, 142)},
-  398: {30: (1, 146), 31: (1, 146), 32: (1, 146), 25: (1, 146), 68: (1, 146), 17: (1, 146), 22: (1, 146), 29: (1, 146)},
-  399: {30: (1, 137), 31: (1, 137), 32: (1, 137), 25: (1, 137), 68: (1, 137), 17: (1, 137), 22: (1, 137), 29: (1, 137)},
-  400: {30: (1, 138), 31: (1, 138), 32: (1, 138), 25: (1, 138), 68: (1, 138), 17: (1, 138), 22: (1, 138), 29: (1, 138)},
-  401: {13: (0, 264), 1: (0, 321), 95: (0, 267), 54: (0, 322), 4: (0, 269), 17: (0, 271), 50: (0, 128), 96: (0, 272), 94: (0, 323), 6: (0, 432), 100: (0, 433), 107: (0, 434), 10: (0, 273), 12: (0, 274)},
-  402: {31: (0, 435), 22: (0, 436)},
-  403: {30: (1, 70), 31: (1, 70), 32: (1, 70), 25: (1, 70), 68: (1, 70), 17: (1, 70), 22: (1, 70), 29: (1, 70)},
-  404: {30: (1, 72), 31: (1, 72), 32: (1, 72), 25: (1, 72), 68: (1, 72), 17: (1, 72), 22: (1, 72), 29: (1, 72)},
-  405: {23: (1, 183), 24: (1, 183), 21: (1, 183), 1: (1, 183), 13: (1, 183), 67: (1, 183), 31: (1, 183), 68: (1, 183), 22: (1, 183), 38: (1, 183), 25: (1, 183), 17: (1, 183), 39: (1, 183), 28: (1, 183), 4: (1, 183), 29: (1, 183), 10: (1, 183), 11: (1, 183), 15: (1, 183), 30: (1, 183), 32: (1, 183), 6: (1, 183)},
-  406: {23: (1, 180), 24: (1, 180), 21: (1, 180), 1: (1, 180), 13: (1, 180), 67: (1, 180), 31: (1, 180), 68: (1, 180), 22: (1, 180), 38: (1, 180), 25: (1, 180), 17: (1, 180), 39: (1, 180), 28: (1, 180), 4: (1, 180), 29: (1, 180), 10: (1, 180), 11: (1, 180), 15: (1, 180), 30: (1, 180), 32: (1, 180), 6: (1, 180)},
-  407: {26: (0, 437)},
-  408: {27: (0, 438)},
-  409: {23: (1, 197), 24: (1, 197), 21: (1, 197), 26: (1, 197), 1: (1, 197), 13: (1, 197), 67: (1, 197), 31: (1, 197), 68: (1, 197), 22: (1, 197), 38: (1, 197), 25: (1, 197), 17: (1, 197), 39: (1, 197), 27: (1, 197), 28: (1, 197), 4: (1, 197), 29: (1, 197), 10: (1, 197), 11: (1, 197), 15: (1, 197), 30: (1, 197), 32: (1, 197), 6: (1, 197)},
-  410: {1: (0, 439)},
-  411: {23: (1, 203), 24: (1, 203), 21: (1, 203), 26: (1, 203), 1: (1, 203), 13: (1, 203), 67: (1, 203), 31: (1, 203), 68: (1, 203), 22: (1, 203), 38: (1, 203), 25: (1, 203), 17: (1, 203), 39: (1, 203), 27: (1, 203), 28: (1, 203), 4: (1, 203), 29: (1, 203), 10: (1, 203), 11: (1, 203), 15: (1, 203), 30: (1, 203), 32: (1, 203), 6: (1, 203)},
-  412: {23: (1, 194), 24: (1, 194), 21: (1, 194), 26: (1, 194), 1: (1, 194), 13: (1, 194), 67: (1, 194), 31: (1, 194), 68: (1, 194), 22: (1, 194), 38: (1, 194), 25: (1, 194), 17: (1, 194), 39: (1, 194), 27: (1, 194), 28: (1, 194), 4: (1, 194), 29: (1, 194), 10: (1, 194), 11: (1, 194), 15: (1, 194), 30: (1, 194), 32: (1, 194), 6: (1, 194)},
-  413: {23: (1, 192), 24: (1, 192), 21: (1, 192), 26: (1, 192), 1: (1, 192), 13: (1, 192), 67: (1, 192), 31: (1, 192), 68: (1, 192), 22: (1, 192), 38: (1, 192), 25: (1, 192), 17: (1, 192), 39: (1, 192), 27: (1, 192), 28: (1, 192), 4: (1, 192), 29: (1, 192), 10: (1, 192), 11: (1, 192), 15: (1, 192), 30: (1, 192), 32: (1, 192), 6: (1, 192)},
-  414: {97: (0, 440), 61: (0, 107), 48: (0, 110), 62: (0, 418)},
-  415: {23: (1, 45), 38: (1, 45), 24: (1, 45), 17: (1, 45), 39: (1, 45), 28: (1, 45), 4: (1, 45), 1: (1, 45), 13: (1, 45), 10: (1, 45), 11: (1, 45), 15: (1, 45), 6: (1, 45)},
-  416: {23: (1, 44), 38: (1, 44), 24: (1, 44), 17: (1, 44), 39: (1, 44), 28: (1, 44), 4: (1, 44), 1: (1, 44), 13: (1, 44), 10: (1, 44), 11: (1, 44), 15: (1, 44), 6: (1, 44)},
-  417: {23: (1, 50), 38: (1, 50), 24: (1, 50), 17: (1, 50), 39: (1, 50), 28: (1, 50), 4: (1, 50), 1: (1, 50), 13: (1, 50), 10: (1, 50), 11: (1, 50), 15: (1, 50), 6: (1, 50)},
-  418: {97: (1, 253), 6: (1, 253)},
-  419: {22: (1, 268), 31: (1, 268)},
-  420: {31: (0, 441)},
-  421: {93: (0, 253), 64: (0, 254), 4: (0, 242), 1: (0, 297), 89: (0, 299), 50: (0, 250), 99: (0, 442), 13: (0, 245), 90: (0, 300), 10: (0, 246), 12: (0, 255), 91: (0, 251), 17: (0, 256), 92: (0, 252), 107: (0, 443)},
-  422: {30: (1, 80), 31: (1, 80), 32: (1, 80), 25: (1, 80), 68: (1, 80), 17: (1, 80), 22: (1, 80), 29: (1, 80)},
-  423: {93: (0, 253), 64: (0, 254), 4: (0, 242), 1: (0, 297), 89: (0, 299), 50: (0, 250), 13: (0, 245), 90: (0, 300), 99: (0, 444), 6: (0, 445), 10: (0, 246), 107: (0, 446), 12: (0, 255), 91: (0, 251), 17: (0, 256), 92: (0, 252)},
-  424: {17: (0, 46), 68: (0, 447), 41: (0, 309), 32: (0, 311), 29: (0, 312), 25: (0, 51), 30: (0, 313)},
-  425: {23: (1, 53), 38: (1, 53), 24: (1, 53), 17: (1, 53), 39: (1, 53), 28: (1, 53), 4: (1, 53), 1: (1, 53), 13: (1, 53), 10: (1, 53), 11: (1, 53), 15: (1, 53), 97: (1, 53), 6: (1, 53)},
-  426: {17: (0, 46), 68: (0, 448), 41: (0, 309), 32: (0, 311), 29: (0, 312), 25: (0, 51), 30: (0, 313)},
-  427: {23: (1, 57), 38: (1, 57), 24: (1, 57), 17: (1, 57), 39: (1, 57), 28: (1, 57), 4: (1, 57), 1: (1, 57), 13: (1, 57), 10: (1, 57), 11: (1, 57), 15: (1, 57), 97: (1, 57), 6: (1, 57)},
-  428: {17: (0, 46), 41: (0, 309), 32: (0, 311), 29: (0, 312), 25: (0, 51), 68: (0, 449), 30: (0, 313)},
-  429: {93: (0, 253), 64: (0, 254), 4: (0, 242), 1: (0, 243), 89: (0, 244), 50: (0, 250), 13: (0, 245), 90: (0, 450), 10: (0, 246), 91: (0, 251), 17: (0, 256), 92: (0, 252), 12: (0, 255)},
-  430: {93: (0, 253), 64: (0, 254), 4: (0, 242), 1: (0, 243), 89: (0, 244), 50: (0, 250), 13: (0, 245), 90: (0, 451), 10: (0, 246), 91: (0, 251), 17: (0, 256), 92: (0, 252), 12: (0, 255)},
-  431: {17: (0, 46), 41: (0, 309), 32: (0, 311), 29: (0, 312), 25: (0, 51), 30: (0, 313), 68: (0, 452)},
-  432: {13: (0, 264), 1: (0, 321), 95: (0, 267), 54: (0, 322), 4: (0, 269), 17: (0, 271), 50: (0, 128), 96: (0, 272), 94: (0, 323), 100: (0, 453), 10: (0, 273), 12: (0, 274), 107: (0, 454)},
-  433: {22: (1, 265), 31: (1, 265)},
-  434: {31: (0, 455)},
-  435: {30: (1, 71), 31: (1, 71), 32: (1, 71), 25: (1, 71), 68: (1, 71), 17: (1, 71), 22: (1, 71), 29: (1, 71)},
-  436: {13: (0, 264), 107: (0, 456), 1: (0, 321), 95: (0, 267), 54: (0, 322), 4: (0, 269), 6: (0, 457), 17: (0, 271), 50: (0, 128), 96: (0, 272), 94: (0, 323), 100: (0, 458), 10: (0, 273), 12: (0, 274)},
-  437: {12: (0, 13), 13: (0, 14), 1: (0, 2), 4: (0, 5), 14: (0, 15), 9: (0, 10), 16: (0, 17), 17: (0, 18), 0: (0, 459), 10: (0, 36)},
-  438: {22: (0, 23), 21: (0, 22), 19: (0, 460)},
-  439: {23: (1, 188), 24: (1, 188), 21: (1, 188), 26: (1, 188), 1: (1, 188), 13: (1, 188), 67: (1, 188), 31: (1, 188), 68: (1, 188), 22: (1, 188), 38: (1, 188), 25: (1, 188), 17: (1, 188), 39: (1, 188), 27: (1, 188), 28: (1, 188), 4: (1, 188), 29: (1, 188), 10: (1, 188), 11: (1, 188), 15: (1, 188), 30: (1, 188), 32: (1, 188), 6: (1, 188)},
-  440: {23: (1, 48), 38: (1, 48), 24: (1, 48), 17: (1, 48), 39: (1, 48), 28: (1, 48), 4: (1, 48), 1: (1, 48), 13: (1, 48), 10: (1, 48), 11: (1, 48), 15: (1, 48), 6: (1, 48)},
-  441: {30: (1, 75), 31: (1, 75), 32: (1, 75), 25: (1, 75), 68: (1, 75), 17: (1, 75), 22: (1, 75), 29: (1, 75)},
-  442: {22: (1, 269), 31: (1, 269)},
-  443: {31: (0, 461)},
-  444: {22: (1, 270), 31: (1, 270)},
-  445: {93: (0, 253), 64: (0, 254), 4: (0, 242), 1: (0, 297), 89: (0, 299), 50: (0, 250), 107: (0, 462), 13: (0, 245), 90: (0, 300), 10: (0, 246), 99: (0, 463), 12: (0, 255), 91: (0, 251), 17: (0, 256), 92: (0, 252)},
-  446: {31: (0, 464)},
-  447: {23: (1, 55), 38: (1, 55), 24: (1, 55), 17: (1, 55), 39: (1, 55), 28: (1, 55), 4: (1, 55), 1: (1, 55), 13: (1, 55), 10: (1, 55), 11: (1, 55), 15: (1, 55), 97: (1, 55), 6: (1, 55)},
-  448: {23: (1, 59), 38: (1, 59), 24: (1, 59), 17: (1, 59), 39: (1, 59), 28: (1, 59), 4: (1, 59), 1: (1, 59), 13: (1, 59), 10: (1, 59), 11: (1, 59), 15: (1, 59), 97: (1, 59), 6: (1, 59)},
-  449: {30: (1, 176), 31: (1, 176), 32: (1, 176), 25: (1, 176), 68: (1, 176), 17: (1, 176), 22: (1, 176), 29: (1, 176)},
-  450: {17: (0, 46), 41: (0, 309), 32: (0, 311), 29: (0, 312), 25: (0, 51), 68: (0, 465), 30: (0, 313)},
-  451: {17: (0, 46), 41: (0, 309), 32: (0, 311), 29: (0, 312), 25: (0, 51), 68: (0, 466), 30: (0, 313)},
-  452: {30: (1, 179), 31: (1, 179), 32: (1, 179), 25: (1, 179), 68: (1, 179), 17: (1, 179), 22: (1, 179), 29: (1, 179)},
-  453: {22: (1, 266), 31: (1, 266)},
-  454: {31: (0, 467)},
-  455: {30: (1, 73), 31: (1, 73), 32: (1, 73), 25: (1, 73), 68: (1, 73), 17: (1, 73), 22: (1, 73), 29: (1, 73)},
-  456: {31: (0, 468)},
-  457: {13: (0, 264), 1: (0, 321), 95: (0, 267), 54: (0, 322), 100: (0, 469), 4: (0, 269), 17: (0, 271), 50: (0, 128), 96: (0, 272), 94: (0, 323), 10: (0, 273), 12: (0, 274), 107: (0, 470)},
-  458: {22: (1, 263), 31: (1, 263)},
-  459: {27: (0, 471)},
-  460: {50: (0, 128), 1: (0, 472), 54: (0, 473)},
-  461: {30: (1, 76), 31: (1, 76), 32: (1, 76), 25: (1, 76), 68: (1, 76), 17: (1, 76), 22: (1, 76), 29: (1, 76)},
-  462: {31: (0, 474)},
-  463: {22: (1, 267), 31: (1, 267)},
-  464: {30: (1, 81), 31: (1, 81), 32: (1, 81), 25: (1, 81), 68: (1, 81), 17: (1, 81), 22: (1, 81), 29: (1, 81)},
-  465: {30: (1, 177), 31: (1, 177), 32: (1, 177), 25: (1, 177), 68: (1, 177), 17: (1, 177), 22: (1, 177), 29: (1, 177)},
-  466: {30: (1, 174), 31: (1, 174), 32: (1, 174), 25: (1, 174), 68: (1, 174), 17: (1, 174), 22: (1, 174), 29: (1, 174)},
-  467: {30: (1, 68), 31: (1, 68), 32: (1, 68), 25: (1, 68), 68: (1, 68), 17: (1, 68), 22: (1, 68), 29: (1, 68)},
-  468: {30: (1, 74), 31: (1, 74), 32: (1, 74), 25: (1, 74), 68: (1, 74), 17: (1, 74), 22: (1, 74), 29: (1, 74)},
-  469: {22: (1, 264), 31: (1, 264)},
-  470: {31: (0, 475)},
-  471: {22: (0, 23), 21: (0, 22), 19: (0, 476)},
-  472: {23: (1, 15), 38: (1, 15), 24: (1, 15), 17: (1, 15), 39: (1, 15), 28: (1, 15), 4: (1, 15), 1: (1, 15), 13: (1, 15), 10: (1, 15), 11: (1, 15), 15: (1, 15), 6: (1, 15)},
-  473: {23: (1, 13), 38: (1, 13), 24: (1, 13), 17: (1, 13), 39: (1, 13), 28: (1, 13), 4: (1, 13), 1: (1, 13), 13: (1, 13), 10: (1, 13), 11: (1, 13), 15: (1, 13), 6: (1, 13)},
-  474: {30: (1, 78), 31: (1, 78), 32: (1, 78), 25: (1, 78), 68: (1, 78), 17: (1, 78), 22: (1, 78), 29: (1, 78)},
-  475: {30: (1, 69), 31: (1, 69), 32: (1, 69), 25: (1, 69), 68: (1, 69), 17: (1, 69), 22: (1, 69), 29: (1, 69)},
-  476: {50: (0, 128), 54: (0, 477), 1: (0, 478)},
-  477: {23: (1, 14), 38: (1, 14), 24: (1, 14), 17: (1, 14), 39: (1, 14), 28: (1, 14), 4: (1, 14), 1: (1, 14), 13: (1, 14), 10: (1, 14), 11: (1, 14), 15: (1, 14), 6: (1, 14)},
-  478: {23: (1, 12), 38: (1, 12), 24: (1, 12), 17: (1, 12), 39: (1, 12), 28: (1, 12), 4: (1, 12), 1: (1, 12), 13: (1, 12), 10: (1, 12), 11: (1, 12), 15: (1, 12), 6: (1, 12)},
+  1: {19: (0, 20)},
+  2: {2: (1, 266), 8: (1, 266), 14: (1, 266), 15: (1, 266), 11: (1, 266), 18: (1, 266), 12: (1, 266), 19: (1, 266), 16: (1, 266), 20: (0, 21), 21: (0, 22), 22: (0, 23)},
+  3: {23: (1, 90), 22: (1, 90), 8: (1, 90), 14: (1, 90), 15: (1, 90), 24: (1, 90), 25: (0, 25), 26: (1, 90), 11: (0, 24), 27: (1, 90), 21: (1, 90), 28: (1, 90), 29: (1, 90), 2: (1, 90), 30: (1, 90), 18: (1, 90), 31: (1, 90), 12: (1, 90), 19: (1, 90), 16: (1, 90), 32: (0, 26), 33: (0, 27)},
+  4: {2: (1, 264), 8: (1, 264), 14: (1, 264), 15: (1, 264), 11: (1, 264), 18: (1, 264), 12: (1, 264), 19: (1, 264), 16: (1, 264), 21: (0, 28)},
+  5: {22: (1, 95), 14: (1, 95), 24: (1, 95), 21: (1, 95), 29: (1, 95), 2: (1, 95), 18: (1, 95), 31: (1, 95), 12: (1, 95), 16: (1, 95), 23: (1, 95), 25: (1, 95), 8: (1, 95), 15: (1, 95), 26: (1, 95), 11: (1, 95), 27: (1, 95), 28: (1, 95), 30: (1, 95), 19: (1, 95)},
+  6: {19: (1, 0), 2: (0, 3), 11: (0, 29), 4: (0, 5), 6: (0, 7), 7: (0, 8), 1: (0, 30), 8: (0, 9), 3: (0, 31), 9: (0, 10), 10: (0, 11), 12: (0, 13), 13: (0, 14), 14: (0, 15), 15: (0, 16), 16: (0, 17), 17: (0, 18), 18: (0, 19)},
+  7: {34: (0, 32), 30: (0, 33), 35: (0, 34), 29: (0, 35)},
+  8: {2: (1, 10), 22: (1, 10), 8: (1, 10), 14: (1, 10), 15: (1, 10), 11: (1, 10), 21: (1, 10), 18: (1, 10), 12: (1, 10), 19: (1, 10), 16: (1, 10), 36: (0, 36), 37: (0, 37), 38: (0, 38), 39: (0, 39), 40: (0, 40)},
+  9: {2: (0, 3), 4: (0, 5), 13: (0, 14), 8: (0, 9), 9: (0, 10), 6: (0, 41), 17: (0, 42), 16: (0, 17), 14: (0, 43), 18: (0, 19)},
+  10: {22: (1, 96), 14: (1, 96), 24: (1, 96), 21: (1, 96), 29: (1, 96), 2: (1, 96), 18: (1, 96), 31: (1, 96), 12: (1, 96), 16: (1, 96), 23: (1, 96), 25: (1, 96), 8: (1, 96), 15: (1, 96), 26: (1, 96), 11: (1, 96), 27: (1, 96), 28: (1, 96), 30: (1, 96), 19: (1, 96)},
+  11: {2: (1, 9), 22: (1, 9), 8: (1, 9), 14: (1, 9), 15: (1, 9), 11: (1, 9), 21: (1, 9), 18: (1, 9), 12: (1, 9), 19: (1, 9), 16: (1, 9), 36: (0, 44), 37: (0, 37), 38: (0, 38), 39: (0, 39), 40: (0, 40)},
+  12: {2: (0, 3), 14: (0, 15), 4: (0, 5), 1: (0, 45), 6: (0, 7), 7: (0, 8), 13: (0, 14), 15: (0, 16), 8: (0, 9), 9: (0, 10), 3: (0, 46), 16: (0, 17), 17: (0, 18), 10: (0, 11), 12: (0, 13), 18: (0, 19)},
+  13: {2: (0, 47), 13: (0, 48), 4: (0, 5), 8: (0, 9), 9: (0, 10), 16: (0, 17), 17: (0, 18), 14: (0, 43), 18: (0, 19)},
+  14: {23: (0, 53), 22: (1, 89), 8: (1, 89), 14: (1, 89), 15: (1, 89), 24: (1, 89), 25: (0, 50), 26: (1, 89), 11: (1, 89), 27: (0, 52), 21: (1, 89), 28: (1, 89), 29: (1, 89), 2: (1, 89), 30: (1, 89), 18: (1, 89), 31: (0, 54), 12: (1, 89), 19: (1, 89), 16: (0, 49), 41: (0, 51)},
+  15: {22: (1, 93), 14: (1, 93), 24: (1, 93), 21: (1, 93), 29: (1, 93), 2: (1, 93), 18: (1, 93), 31: (1, 93), 12: (1, 93), 16: (1, 93), 23: (1, 93), 25: (1, 93), 8: (1, 93), 15: (1, 93), 26: (1, 93), 11: (0, 56), 27: (1, 93), 28: (1, 93), 30: (1, 93), 19: (1, 93), 42: (0, 55), 43: (0, 57)},
+  16: {2: (1, 255), 8: (1, 255), 14: (1, 255), 15: (1, 255), 11: (1, 255), 21: (1, 255), 18: (1, 255), 12: (1, 255), 19: (1, 255), 16: (1, 255)},
+  17: {2: (0, 3), 4: (0, 5), 13: (0, 14), 8: (0, 9), 9: (0, 10), 16: (0, 17), 17: (0, 18), 14: (0, 43), 6: (0, 58), 18: (0, 19)},
+  18: {22: (1, 94), 14: (1, 94), 24: (1, 94), 21: (1, 94), 29: (1, 94), 2: (1, 94), 18: (1, 94), 31: (1, 94), 12: (1, 94), 16: (1, 94), 23: (1, 94), 25: (1, 94), 8: (1, 94), 15: (1, 94), 26: (1, 94), 11: (1, 94), 27: (1, 94), 28: (1, 94), 30: (1, 94), 19: (1, 94)},
+  19: {2: (0, 3), 4: (0, 5), 13: (0, 14), 8: (0, 9), 9: (0, 10), 16: (0, 17), 17: (0, 18), 6: (0, 59), 14: (0, 43), 18: (0, 19)},
+  20: {},
+  21: {2: (1, 271), 8: (1, 271), 14: (1, 271), 15: (1, 271), 11: (1, 271), 18: (1, 271), 12: (1, 271), 19: (1, 271), 16: (1, 271), 21: (0, 60)},
+  22: {2: (1, 275), 8: (1, 275), 14: (1, 275), 15: (1, 275), 11: (1, 275), 18: (1, 275), 12: (1, 275), 19: (1, 275), 16: (1, 275)},
+  23: {2: (1, 254), 8: (1, 254), 14: (1, 254), 15: (1, 254), 11: (1, 254), 18: (1, 254), 21: (1, 254), 12: (1, 254), 19: (1, 254), 16: (1, 254)},
+  24: {32: (0, 61), 33: (0, 62)},
+  25: {2: (0, 63), 9: (0, 64), 17: (0, 65), 8: (0, 9), 44: (0, 66), 45: (0, 67), 14: (0, 68)},
+  26: {11: (0, 69), 45: (0, 70)},
+  27: {2: (0, 71), 11: (0, 72)},
+  28: {2: (1, 274), 8: (1, 274), 14: (1, 274), 15: (1, 274), 11: (1, 274), 18: (1, 274), 12: (1, 274), 19: (1, 274), 16: (1, 274)},
+  29: {2: (0, 3), 14: (0, 15), 4: (0, 5), 6: (0, 7), 7: (0, 8), 13: (0, 14), 15: (0, 16), 8: (0, 9), 3: (0, 73), 9: (0, 10), 1: (0, 74), 16: (0, 17), 17: (0, 18), 10: (0, 11), 12: (0, 13), 18: (0, 19)},
+  30: {2: (1, 270), 8: (1, 270), 14: (1, 270), 15: (1, 270), 11: (1, 270), 18: (1, 270), 12: (1, 270), 19: (1, 270), 16: (1, 270), 21: (0, 75), 20: (0, 76), 22: (0, 23)},
+  31: {2: (1, 277), 8: (1, 277), 14: (1, 277), 15: (1, 277), 11: (1, 277), 18: (1, 277), 12: (1, 277), 19: (1, 277), 16: (1, 277), 21: (0, 77)},
+  32: {35: (0, 78), 30: (0, 33), 29: (0, 35)},
+  33: {2: (1, 30), 46: (1, 30), 8: (1, 30), 14: (1, 30), 47: (1, 30), 18: (1, 30), 16: (1, 30), 48: (1, 30), 11: (0, 79)},
+  34: {49: (0, 80), 2: (0, 81), 17: (0, 82), 48: (0, 83), 16: (0, 84), 47: (0, 85), 8: (0, 86), 50: (0, 87), 51: (0, 88), 52: (0, 89), 46: (0, 90), 53: (0, 91), 14: (0, 92), 54: (0, 93), 55: (0, 94), 56: (0, 95), 57: (0, 96), 18: (0, 97)},
+  35: {2: (1, 31), 46: (1, 31), 8: (1, 31), 14: (1, 31), 47: (1, 31), 18: (1, 31), 16: (1, 31), 48: (1, 31), 11: (0, 98)},
+  36: {2: (1, 8), 22: (1, 8), 8: (1, 8), 14: (1, 8), 15: (1, 8), 11: (1, 8), 21: (1, 8), 18: (1, 8), 12: (1, 8), 19: (1, 8), 16: (1, 8)},
+  37: {22: (1, 32), 8: (1, 32), 14: (1, 32), 15: (1, 32), 11: (1, 32), 21: (1, 32), 2: (1, 32), 18: (1, 32), 12: (1, 32), 19: (1, 32), 16: (1, 32), 40: (0, 40), 39: (0, 99)},
+  38: {58: (0, 100), 47: (0, 101), 59: (0, 102), 60: (0, 103), 61: (0, 104), 62: (0, 105)},
+  39: {22: (1, 34), 8: (1, 34), 14: (1, 34), 15: (1, 34), 11: (1, 34), 21: (1, 34), 2: (1, 34), 18: (1, 34), 12: (1, 34), 19: (1, 34), 16: (1, 34), 37: (0, 106), 38: (0, 38)},
+  40: {58: (0, 100), 47: (0, 101), 59: (0, 102), 60: (0, 103), 61: (0, 104), 62: (0, 107)},
+  41: {63: (0, 108), 29: (0, 109), 26: (0, 110)},
+  42: {22: (1, 94), 14: (1, 94), 24: (1, 94), 21: (1, 94), 29: (1, 94), 2: (1, 94), 18: (1, 94), 31: (1, 94), 12: (1, 94), 16: (1, 94), 23: (1, 94), 25: (1, 94), 8: (1, 94), 15: (1, 94), 26: (0, 111), 11: (1, 94), 27: (1, 94), 28: (1, 94), 30: (1, 94), 19: (1, 94)},
+  43: {22: (1, 93), 14: (1, 93), 24: (1, 93), 21: (1, 93), 29: (1, 93), 2: (1, 93), 18: (1, 93), 31: (1, 93), 12: (1, 93), 16: (1, 93), 23: (1, 93), 25: (1, 93), 8: (1, 93), 15: (1, 93), 26: (1, 93), 11: (1, 93), 27: (1, 93), 28: (1, 93), 30: (1, 93), 19: (1, 93)},
+  44: {2: (1, 4), 22: (1, 4), 8: (1, 4), 14: (1, 4), 15: (1, 4), 11: (1, 4), 21: (1, 4), 18: (1, 4), 12: (1, 4), 19: (1, 4), 16: (1, 4)},
+  45: {2: (1, 278), 8: (1, 278), 14: (1, 278), 15: (1, 278), 11: (1, 278), 18: (1, 278), 12: (1, 278), 19: (1, 278), 16: (1, 278), 20: (0, 112), 21: (0, 113), 22: (0, 23)},
+  46: {2: (1, 276), 8: (1, 276), 14: (1, 276), 15: (1, 276), 11: (1, 276), 18: (1, 276), 12: (1, 276), 19: (1, 276), 16: (1, 276), 21: (0, 114)},
+  47: {11: (0, 24), 25: (0, 25), 32: (0, 26), 33: (0, 27)},
+  48: {2: (1, 11), 22: (1, 11), 8: (1, 11), 14: (1, 11), 15: (1, 11), 11: (1, 11), 21: (1, 11), 18: (1, 11), 12: (1, 11), 19: (1, 11), 16: (0, 49), 25: (0, 50), 41: (0, 51), 27: (0, 52), 23: (0, 53), 31: (0, 54)},
+  49: {2: (1, 241), 8: (1, 241), 14: (1, 241), 64: (1, 241), 48: (1, 241), 11: (0, 115)},
+  50: {45: (0, 116)},
+  51: {2: (0, 117), 9: (0, 64), 17: (0, 65), 8: (0, 9), 44: (0, 118), 65: (0, 119), 14: (0, 68)},
+  52: {45: (0, 120)},
+  53: {2: (1, 240), 8: (1, 240), 14: (1, 240), 64: (1, 240), 48: (1, 240)},
+  54: {45: (0, 121)},
+  55: {2: (0, 3), 6: (0, 122), 4: (0, 5), 13: (0, 14), 8: (0, 9), 9: (0, 10), 16: (0, 17), 17: (0, 18), 14: (0, 43), 18: (0, 19), 11: (0, 123)},
+  56: {42: (0, 124)},
+  57: {66: (0, 125), 11: (0, 126)},
+  58: {23: (1, 106), 22: (1, 106), 14: (1, 106), 25: (1, 106), 8: (1, 106), 24: (1, 106), 15: (1, 106), 26: (1, 106), 11: (1, 106), 27: (1, 106), 21: (1, 106), 29: (1, 106), 28: (1, 106), 2: (1, 106), 30: (1, 106), 18: (1, 106), 31: (1, 106), 12: (1, 106), 19: (1, 106), 16: (1, 106)},
+  59: {23: (1, 103), 22: (1, 103), 14: (1, 103), 25: (1, 103), 8: (1, 103), 24: (1, 103), 15: (1, 103), 26: (1, 103), 11: (1, 103), 27: (1, 103), 21: (1, 103), 29: (1, 103), 28: (1, 103), 2: (1, 103), 30: (1, 103), 18: (1, 103), 31: (1, 103), 12: (1, 103), 19: (1, 103), 16: (1, 103)},
+  60: {2: (1, 265), 8: (1, 265), 14: (1, 265), 15: (1, 265), 11: (1, 265), 18: (1, 265), 12: (1, 265), 19: (1, 265), 16: (1, 265)},
+  61: {11: (0, 127), 45: (0, 128)},
+  62: {11: (0, 129), 2: (0, 130)},
+  63: {11: (0, 24), 32: (0, 26), 33: (0, 27)},
+  64: {23: (1, 99), 22: (1, 99), 14: (1, 99), 25: (1, 99), 8: (1, 99), 24: (1, 99), 15: (1, 99), 26: (1, 99), 11: (1, 99), 27: (1, 99), 21: (1, 99), 28: (1, 99), 29: (1, 99), 2: (1, 99), 30: (1, 99), 18: (1, 99), 31: (1, 99), 12: (1, 99), 19: (1, 99), 16: (1, 99)},
+  65: {23: (1, 98), 22: (1, 98), 14: (1, 98), 25: (1, 98), 8: (1, 98), 24: (1, 98), 15: (1, 98), 26: (1, 98), 11: (1, 98), 27: (1, 98), 21: (1, 98), 28: (1, 98), 29: (1, 98), 2: (1, 98), 30: (1, 98), 18: (1, 98), 31: (1, 98), 12: (1, 98), 19: (1, 98), 16: (1, 98)},
+  66: {23: (1, 101), 22: (1, 101), 14: (1, 101), 25: (1, 101), 8: (1, 101), 24: (1, 101), 15: (1, 101), 26: (1, 101), 11: (1, 101), 27: (1, 101), 21: (1, 101), 29: (1, 101), 28: (1, 101), 2: (1, 101), 30: (1, 101), 18: (1, 101), 31: (1, 101), 12: (1, 101), 19: (1, 101), 16: (1, 101)},
+  67: {23: (1, 102), 22: (1, 102), 14: (1, 102), 25: (1, 102), 8: (1, 102), 24: (1, 102), 15: (1, 102), 26: (1, 102), 11: (1, 102), 27: (1, 102), 21: (1, 102), 29: (1, 102), 28: (1, 102), 2: (1, 102), 30: (1, 102), 18: (1, 102), 31: (1, 102), 12: (1, 102), 19: (1, 102), 16: (1, 102)},
+  68: {23: (1, 97), 22: (1, 97), 14: (1, 97), 25: (1, 97), 8: (1, 97), 24: (1, 97), 15: (1, 97), 26: (1, 97), 11: (1, 97), 27: (1, 97), 21: (1, 97), 28: (1, 97), 29: (1, 97), 2: (1, 97), 30: (1, 97), 18: (1, 97), 31: (1, 97), 12: (1, 97), 19: (1, 97), 16: (1, 97)},
+  69: {45: (0, 131)},
+  70: {11: (0, 132), 33: (0, 133)},
+  71: {38: (1, 220), 22: (1, 220), 14: (1, 220), 24: (1, 220), 21: (1, 220), 40: (1, 220), 29: (1, 220), 2: (1, 220), 18: (1, 220), 31: (1, 220), 12: (1, 220), 16: (1, 220), 23: (1, 220), 25: (1, 220), 8: (1, 220), 15: (1, 220), 26: (1, 220), 11: (1, 220), 27: (1, 220), 67: (1, 220), 28: (1, 220), 30: (1, 220), 68: (1, 220), 19: (1, 220)},
+  72: {2: (0, 134)},
+  73: {2: (1, 279), 8: (1, 279), 14: (1, 279), 15: (1, 279), 11: (1, 279), 18: (1, 279), 12: (1, 279), 19: (1, 279), 16: (1, 279), 21: (0, 135)},
+  74: {2: (1, 267), 8: (1, 267), 14: (1, 267), 15: (1, 267), 11: (1, 267), 18: (1, 267), 12: (1, 267), 19: (1, 267), 16: (1, 267), 21: (0, 136), 20: (0, 137), 22: (0, 23)},
+  75: {2: (1, 258), 8: (1, 258), 14: (1, 258), 15: (1, 258), 11: (1, 258), 18: (1, 258), 12: (1, 258), 19: (1, 258), 16: (1, 258)},
+  76: {2: (1, 260), 8: (1, 260), 14: (1, 260), 15: (1, 260), 11: (1, 260), 18: (1, 260), 12: (1, 260), 19: (1, 260), 16: (1, 260), 21: (0, 138)},
+  77: {2: (1, 269), 8: (1, 269), 14: (1, 269), 15: (1, 269), 11: (1, 269), 18: (1, 269), 12: (1, 269), 19: (1, 269), 16: (1, 269)},
+  78: {49: (0, 80), 2: (0, 81), 17: (0, 82), 48: (0, 83), 16: (0, 84), 47: (0, 85), 8: (0, 86), 50: (0, 139), 51: (0, 88), 52: (0, 89), 53: (0, 91), 14: (0, 92), 56: (0, 140), 55: (0, 94), 54: (0, 93), 57: (0, 96), 18: (0, 97)},
+  79: {2: (1, 28), 46: (1, 28), 8: (1, 28), 14: (1, 28), 47: (1, 28), 18: (1, 28), 16: (1, 28), 48: (1, 28)},
+  80: {38: (1, 109), 22: (1, 109), 14: (1, 109), 21: (1, 109), 40: (1, 109), 29: (1, 109), 2: (1, 109), 18: (1, 109), 31: (1, 109), 12: (1, 109), 16: (1, 109), 23: (1, 109), 8: (1, 109), 15: (1, 109), 25: (0, 141), 26: (1, 109), 11: (1, 109), 27: (1, 109), 67: (1, 109), 30: (1, 109), 68: (1, 109), 19: (1, 109)},
+  81: {38: (1, 108), 22: (1, 108), 14: (1, 108), 21: (1, 108), 40: (1, 108), 29: (1, 108), 2: (1, 108), 18: (1, 108), 31: (1, 108), 12: (1, 108), 16: (1, 108), 23: (1, 108), 8: (1, 108), 15: (1, 108), 25: (0, 142), 26: (1, 108), 11: (0, 24), 27: (1, 108), 67: (1, 108), 30: (1, 108), 68: (1, 108), 19: (1, 108), 32: (0, 26), 33: (0, 27)},
+  82: {38: (1, 117), 22: (1, 117), 14: (1, 117), 21: (1, 117), 40: (1, 117), 29: (1, 117), 2: (1, 117), 18: (1, 117), 31: (1, 117), 12: (1, 117), 16: (1, 117), 23: (1, 117), 25: (1, 117), 8: (1, 117), 15: (1, 117), 26: (1, 117), 11: (1, 117), 27: (1, 117), 67: (1, 117), 30: (1, 117), 68: (1, 117), 19: (1, 117)},
+  83: {49: (0, 143), 2: (0, 144), 47: (0, 145), 17: (0, 82), 16: (0, 84), 48: (0, 146), 8: (0, 86), 69: (0, 147), 70: (0, 148), 52: (0, 149), 71: (0, 150), 72: (0, 151), 73: (0, 152), 74: (0, 153), 14: (0, 92), 75: (0, 154), 76: (0, 155), 54: (0, 93), 77: (0, 156), 78: (0, 157), 79: (0, 158), 57: (0, 96), 18: (0, 97)},
+  84: {49: (0, 80), 2: (0, 81), 17: (0, 82), 48: (0, 146), 16: (0, 84), 8: (0, 86), 52: (0, 89), 50: (0, 159), 14: (0, 92), 54: (0, 93), 57: (0, 96), 18: (0, 97)},
+  85: {11: (1, 26), 33: (0, 160)},
+  86: {49: (0, 80), 2: (0, 81), 17: (0, 161), 50: (0, 162), 48: (0, 146), 16: (0, 84), 8: (0, 86), 52: (0, 89), 14: (0, 92), 54: (0, 93), 57: (0, 96), 18: (0, 97)},
+  87: {30: (1, 17), 29: (1, 17), 68: (0, 163)},
+  88: {30: (1, 19), 29: (1, 19), 68: (0, 164)},
+  89: {38: (1, 110), 22: (1, 110), 14: (1, 110), 21: (1, 110), 40: (1, 110), 29: (1, 110), 2: (1, 110), 18: (1, 110), 31: (0, 168), 12: (1, 110), 16: (0, 49), 23: (0, 53), 8: (1, 110), 15: (1, 110), 25: (0, 165), 26: (1, 110), 11: (1, 110), 27: (0, 167), 67: (1, 110), 30: (1, 110), 68: (1, 110), 19: (1, 110), 41: (0, 166)},
+  90: {80: (0, 169), 81: (0, 170)},
+  91: {11: (0, 171)},
+  92: {38: (1, 115), 22: (1, 115), 14: (1, 115), 21: (1, 115), 40: (1, 115), 29: (1, 115), 2: (1, 115), 18: (1, 115), 31: (1, 115), 12: (1, 115), 16: (1, 115), 23: (1, 115), 25: (1, 115), 8: (1, 115), 15: (1, 115), 26: (1, 115), 11: (1, 115), 27: (1, 115), 67: (1, 115), 30: (1, 115), 68: (1, 115), 19: (1, 115)},
+  93: {38: (1, 114), 22: (1, 114), 14: (1, 114), 21: (1, 114), 40: (1, 114), 29: (1, 114), 2: (1, 114), 18: (1, 114), 31: (1, 114), 12: (1, 114), 16: (1, 114), 23: (1, 114), 25: (1, 114), 8: (1, 114), 15: (1, 114), 26: (1, 114), 11: (1, 114), 27: (1, 114), 67: (1, 114), 30: (1, 114), 68: (1, 114), 19: (1, 114)},
+  94: {11: (0, 172)},
+  95: {30: (1, 281), 29: (1, 281)},
+  96: {38: (1, 116), 22: (1, 116), 14: (1, 116), 21: (1, 116), 40: (1, 116), 29: (1, 116), 2: (1, 116), 18: (1, 116), 31: (1, 116), 12: (1, 116), 16: (1, 116), 23: (1, 116), 25: (1, 116), 8: (1, 116), 15: (1, 116), 26: (1, 116), 11: (1, 116), 27: (1, 116), 67: (1, 116), 30: (1, 116), 68: (1, 116), 19: (1, 116)},
+  97: {49: (0, 80), 2: (0, 81), 17: (0, 82), 48: (0, 146), 16: (0, 84), 8: (0, 86), 52: (0, 89), 14: (0, 92), 50: (0, 173), 54: (0, 93), 57: (0, 96), 18: (0, 97)},
+  98: {2: (1, 29), 46: (1, 29), 8: (1, 29), 14: (1, 29), 47: (1, 29), 18: (1, 29), 16: (1, 29), 48: (1, 29)},
+  99: {22: (1, 35), 8: (1, 35), 14: (1, 35), 15: (1, 35), 11: (1, 35), 21: (1, 35), 2: (1, 35), 18: (1, 35), 12: (1, 35), 19: (1, 35), 16: (1, 35)},
+  100: {48: (0, 174), 43: (0, 175)},
+  101: {43: (1, 61), 48: (1, 61), 32: (0, 176)},
+  102: {82: (0, 177), 12: (0, 178), 83: (0, 179)},
+  103: {38: (1, 41), 22: (1, 41), 8: (1, 41), 14: (1, 41), 15: (1, 41), 11: (0, 181), 21: (1, 41), 40: (1, 41), 2: (1, 41), 18: (1, 41), 12: (1, 41), 19: (1, 41), 16: (1, 41), 84: (0, 180)},
+  104: {38: (1, 39), 22: (1, 39), 8: (1, 39), 14: (1, 39), 15: (1, 39), 11: (0, 181), 21: (1, 39), 40: (1, 39), 2: (1, 39), 18: (1, 39), 12: (1, 39), 19: (1, 39), 16: (1, 39), 84: (0, 182)},
+  105: {22: (1, 37), 8: (1, 37), 14: (1, 37), 15: (1, 37), 11: (1, 37), 21: (1, 37), 40: (1, 37), 2: (1, 37), 18: (1, 37), 12: (1, 37), 19: (1, 37), 16: (1, 37)},
+  106: {22: (1, 33), 8: (1, 33), 14: (1, 33), 15: (1, 33), 11: (1, 33), 21: (1, 33), 2: (1, 33), 18: (1, 33), 12: (1, 33), 19: (1, 33), 16: (1, 33)},
+  107: {38: (1, 36), 22: (1, 36), 8: (1, 36), 14: (1, 36), 15: (1, 36), 11: (1, 36), 21: (1, 36), 2: (1, 36), 18: (1, 36), 12: (1, 36), 19: (1, 36), 16: (1, 36)},
+  108: {29: (0, 183), 26: (0, 184)},
+  109: {2: (0, 3), 4: (0, 5), 6: (0, 185), 13: (0, 14), 8: (0, 9), 9: (0, 10), 16: (0, 17), 17: (0, 18), 14: (0, 43), 18: (0, 19), 11: (0, 186)},
+  110: {23: (1, 64), 22: (1, 64), 14: (1, 64), 25: (1, 64), 8: (1, 64), 24: (1, 64), 15: (1, 64), 26: (1, 64), 11: (1, 64), 27: (1, 64), 21: (1, 64), 29: (1, 64), 28: (1, 64), 2: (1, 64), 30: (1, 64), 18: (1, 64), 31: (1, 64), 12: (1, 64), 19: (1, 64), 16: (1, 64)},
+  111: {23: (1, 63), 22: (1, 63), 14: (1, 63), 25: (1, 63), 8: (1, 63), 24: (1, 63), 15: (1, 63), 26: (1, 63), 11: (1, 63), 27: (1, 63), 21: (1, 63), 29: (1, 63), 28: (1, 63), 2: (1, 63), 30: (1, 63), 18: (1, 63), 31: (1, 63), 12: (1, 63), 19: (1, 63), 16: (1, 63)},
+  112: {2: (1, 257), 8: (1, 257), 14: (1, 257), 15: (1, 257), 11: (1, 257), 18: (1, 257), 12: (1, 257), 19: (1, 257), 16: (1, 257), 21: (0, 187)},
+  113: {2: (1, 259), 8: (1, 259), 14: (1, 259), 15: (1, 259), 11: (1, 259), 18: (1, 259), 12: (1, 259), 19: (1, 259), 16: (1, 259)},
+  114: {2: (1, 261), 8: (1, 261), 14: (1, 261), 15: (1, 261), 11: (1, 261), 18: (1, 261), 12: (1, 261), 19: (1, 261), 16: (1, 261)},
+  115: {2: (1, 242), 8: (1, 242), 14: (1, 242), 64: (1, 242), 48: (1, 242)},
+  116: {23: (1, 104), 22: (1, 104), 14: (1, 104), 25: (1, 104), 8: (1, 104), 24: (1, 104), 15: (1, 104), 26: (1, 104), 11: (1, 104), 27: (1, 104), 21: (1, 104), 29: (1, 104), 28: (1, 104), 2: (1, 104), 30: (1, 104), 18: (1, 104), 31: (1, 104), 12: (1, 104), 19: (1, 104), 16: (1, 104)},
+  117: {23: (1, 91), 22: (1, 91), 14: (1, 91), 25: (1, 91), 8: (1, 91), 24: (1, 91), 15: (1, 91), 26: (1, 91), 11: (0, 24), 27: (1, 91), 21: (1, 91), 29: (1, 91), 28: (1, 91), 2: (1, 91), 30: (1, 91), 18: (1, 91), 31: (1, 91), 12: (1, 91), 19: (1, 91), 16: (1, 91), 32: (0, 26), 33: (0, 27)},
+  118: {23: (1, 92), 22: (1, 92), 14: (1, 92), 25: (1, 92), 8: (1, 92), 24: (1, 92), 15: (1, 92), 26: (1, 92), 11: (1, 92), 27: (1, 92), 21: (1, 92), 29: (1, 92), 28: (1, 92), 2: (1, 92), 30: (1, 92), 18: (1, 92), 31: (1, 92), 12: (1, 92), 19: (1, 92), 16: (1, 92)},
+  119: {23: (1, 107), 22: (1, 107), 14: (1, 107), 25: (1, 107), 8: (1, 107), 24: (1, 107), 15: (1, 107), 26: (1, 107), 11: (1, 107), 27: (1, 107), 21: (1, 107), 29: (1, 107), 28: (1, 107), 2: (1, 107), 30: (1, 107), 18: (1, 107), 31: (1, 107), 12: (1, 107), 19: (1, 107), 16: (1, 107)},
+  120: {23: (1, 100), 22: (1, 100), 14: (1, 100), 25: (1, 100), 8: (1, 100), 24: (1, 100), 15: (1, 100), 26: (1, 100), 11: (1, 100), 27: (1, 100), 21: (1, 100), 29: (1, 100), 28: (1, 100), 2: (1, 100), 30: (1, 100), 18: (1, 100), 31: (1, 100), 12: (1, 100), 19: (1, 100), 16: (1, 100)},
+  121: {23: (1, 105), 22: (1, 105), 14: (1, 105), 25: (1, 105), 8: (1, 105), 24: (1, 105), 15: (1, 105), 26: (1, 105), 11: (1, 105), 27: (1, 105), 21: (1, 105), 29: (1, 105), 28: (1, 105), 2: (1, 105), 30: (1, 105), 18: (1, 105), 31: (1, 105), 12: (1, 105), 19: (1, 105), 16: (1, 105)},
+  122: {2: (1, 7), 22: (1, 7), 8: (1, 7), 14: (1, 7), 15: (1, 7), 11: (1, 7), 21: (1, 7), 18: (1, 7), 12: (1, 7), 19: (1, 7), 16: (1, 7)},
+  123: {2: (0, 3), 4: (0, 5), 6: (0, 188), 13: (0, 14), 8: (0, 9), 9: (0, 10), 16: (0, 17), 17: (0, 18), 14: (0, 43), 18: (0, 19)},
+  124: {2: (0, 3), 4: (0, 5), 6: (0, 189), 13: (0, 14), 11: (0, 190), 8: (0, 9), 9: (0, 10), 16: (0, 17), 17: (0, 18), 14: (0, 43), 18: (0, 19)},
+  125: {2: (1, 6), 22: (1, 6), 8: (1, 6), 14: (1, 6), 15: (1, 6), 11: (1, 6), 21: (1, 6), 18: (1, 6), 12: (1, 6), 19: (1, 6), 16: (1, 6)},
+  126: {66: (0, 191)},
+  127: {45: (0, 192)},
+  128: {33: (0, 193), 11: (0, 194)},
+  129: {2: (0, 195)},
+  130: {38: (1, 226), 22: (1, 226), 14: (1, 226), 24: (1, 226), 21: (1, 226), 40: (1, 226), 29: (1, 226), 2: (1, 226), 18: (1, 226), 31: (1, 226), 12: (1, 226), 16: (1, 226), 23: (1, 226), 25: (1, 226), 8: (1, 226), 15: (1, 226), 26: (1, 226), 11: (1, 226), 27: (1, 226), 67: (1, 226), 28: (1, 226), 30: (1, 226), 68: (1, 226), 19: (1, 226)},
+  131: {11: (0, 196), 33: (0, 197)},
+  132: {33: (0, 198)},
+  133: {11: (0, 199), 2: (0, 200)},
+  134: {38: (1, 225), 22: (1, 225), 14: (1, 225), 24: (1, 225), 21: (1, 225), 40: (1, 225), 29: (1, 225), 2: (1, 225), 18: (1, 225), 31: (1, 225), 12: (1, 225), 16: (1, 225), 23: (1, 225), 25: (1, 225), 8: (1, 225), 15: (1, 225), 26: (1, 225), 11: (1, 225), 27: (1, 225), 67: (1, 225), 28: (1, 225), 30: (1, 225), 68: (1, 225), 19: (1, 225)},
+  135: {2: (1, 268), 8: (1, 268), 14: (1, 268), 15: (1, 268), 11: (1, 268), 18: (1, 268), 12: (1, 268), 19: (1, 268), 16: (1, 268)},
+  136: {2: (1, 272), 8: (1, 272), 14: (1, 272), 15: (1, 272), 11: (1, 272), 18: (1, 272), 12: (1, 272), 19: (1, 272), 16: (1, 272)},
+  137: {2: (1, 256), 8: (1, 256), 14: (1, 256), 15: (1, 256), 11: (1, 256), 18: (1, 256), 12: (1, 256), 19: (1, 256), 16: (1, 256), 21: (0, 201)},
+  138: {2: (1, 273), 8: (1, 273), 14: (1, 273), 15: (1, 273), 11: (1, 273), 18: (1, 273), 12: (1, 273), 19: (1, 273), 16: (1, 273)},
+  139: {38: (1, 16), 22: (1, 16), 8: (1, 16), 14: (1, 16), 15: (1, 16), 11: (1, 16), 21: (1, 16), 40: (1, 16), 2: (1, 16), 18: (1, 16), 12: (1, 16), 19: (1, 16), 16: (1, 16), 30: (1, 17), 29: (1, 17), 68: (0, 163)},
+  140: {30: (1, 280), 29: (1, 280)},
+  141: {2: (0, 63), 17: (0, 202), 54: (0, 203), 8: (0, 86), 14: (0, 204), 85: (0, 205), 45: (0, 206)},
+  142: {2: (0, 63), 17: (0, 202), 54: (0, 203), 14: (0, 204), 45: (0, 207), 8: (0, 86), 85: (0, 208)},
+  143: {25: (0, 141)},
+  144: {11: (0, 24), 32: (0, 26), 25: (0, 142), 33: (0, 27)},
+  145: {67: (0, 209), 43: (0, 210)},
+  146: {47: (0, 145), 75: (0, 154), 76: (0, 155), 77: (0, 156), 70: (0, 148), 69: (0, 147), 72: (0, 151), 73: (0, 152), 71: (0, 150), 78: (0, 157), 79: (0, 158), 74: (0, 153)},
+  147: {67: (1, 252), 43: (1, 252)},
+  148: {67: (1, 246), 43: (1, 246)},
+  149: {16: (0, 49), 25: (0, 165), 41: (0, 166), 67: (0, 211), 27: (0, 167), 31: (0, 168), 23: (0, 53)},
+  150: {67: (1, 243), 43: (1, 243)},
+  151: {67: (0, 212), 43: (0, 213)},
+  152: {67: (1, 250), 43: (1, 250)},
+  153: {67: (1, 244), 43: (1, 244)},
+  154: {67: (1, 247), 43: (1, 247)},
+  155: {67: (1, 248), 43: (1, 248)},
+  156: {67: (1, 249), 43: (1, 249)},
+  157: {67: (1, 245), 43: (1, 245)},
+  158: {67: (1, 251), 43: (1, 251)},
+  159: {38: (1, 125), 22: (1, 125), 14: (1, 125), 21: (1, 125), 40: (1, 125), 29: (1, 125), 2: (1, 125), 18: (1, 125), 31: (1, 125), 12: (1, 125), 16: (1, 125), 23: (1, 125), 25: (1, 125), 8: (1, 125), 15: (1, 125), 26: (1, 125), 11: (1, 125), 27: (1, 125), 67: (1, 125), 30: (1, 125), 68: (1, 125), 19: (1, 125)},
+  160: {47: (0, 214)},
+  161: {38: (1, 117), 22: (1, 117), 14: (1, 117), 21: (1, 117), 40: (1, 117), 29: (1, 117), 2: (1, 117), 18: (1, 117), 31: (1, 117), 12: (1, 117), 16: (1, 117), 23: (1, 117), 25: (1, 117), 8: (1, 117), 15: (1, 117), 26: (0, 215), 11: (1, 117), 27: (1, 117), 67: (1, 117), 30: (1, 117), 68: (1, 117), 19: (1, 117)},
+  162: {86: (0, 216), 29: (0, 217), 26: (0, 218)},
+  163: {87: (0, 219)},
+  164: {87: (0, 220)},
+  165: {45: (0, 221)},
+  166: {17: (0, 202), 2: (0, 222), 54: (0, 203), 48: (0, 146), 8: (0, 86), 85: (0, 223), 49: (0, 224), 14: (0, 204), 88: (0, 225)},
+  167: {45: (0, 226)},
+  168: {45: (0, 227)},
+  169: {28: (0, 228), 11: (0, 229)},
+  170: {28: (1, 253), 11: (1, 253)},
+  171: {49: (0, 80), 2: (0, 81), 17: (0, 82), 48: (0, 146), 16: (0, 84), 8: (0, 86), 52: (0, 89), 14: (0, 92), 54: (0, 93), 50: (0, 230), 57: (0, 96), 18: (0, 97)},
+  172: {49: (0, 80), 2: (0, 81), 17: (0, 82), 48: (0, 83), 50: (0, 231), 16: (0, 84), 8: (0, 86), 52: (0, 89), 14: (0, 92), 51: (0, 232), 54: (0, 93), 57: (0, 96), 18: (0, 97)},
+  173: {38: (1, 129), 22: (1, 129), 14: (1, 129), 21: (1, 129), 40: (1, 129), 29: (1, 129), 2: (1, 129), 18: (1, 129), 31: (1, 129), 12: (1, 129), 16: (1, 129), 23: (1, 129), 25: (1, 129), 8: (1, 129), 15: (1, 129), 26: (1, 129), 11: (1, 129), 27: (1, 129), 67: (1, 129), 30: (1, 129), 68: (1, 129), 19: (1, 129)},
+  174: {2: (0, 233), 8: (0, 234), 16: (0, 235), 89: (0, 236), 90: (0, 237), 64: (0, 238), 73: (0, 152), 74: (0, 153), 47: (0, 239), 48: (0, 240), 78: (0, 157), 79: (0, 158), 91: (0, 241), 70: (0, 148), 69: (0, 147), 72: (0, 242), 92: (0, 243), 71: (0, 150), 18: (0, 244), 93: (0, 245), 14: (0, 246), 17: (0, 247), 75: (0, 154), 76: (0, 155), 77: (0, 156)},
+  175: {2: (0, 248)},
+  176: {45: (0, 249)},
+  177: {11: (0, 250), 58: (0, 100), 47: (0, 101), 60: (0, 251)},
+  178: {82: (0, 177), 83: (0, 252)},
+  179: {38: (1, 43), 22: (1, 43), 8: (1, 43), 14: (1, 43), 15: (1, 43), 11: (1, 43), 21: (1, 43), 40: (1, 43), 2: (1, 43), 18: (1, 43), 12: (1, 43), 19: (1, 43), 16: (1, 43)},
+  180: {38: (1, 40), 22: (1, 40), 8: (1, 40), 14: (1, 40), 15: (1, 40), 11: (0, 253), 21: (1, 40), 40: (1, 40), 2: (1, 40), 18: (1, 40), 12: (1, 40), 19: (1, 40), 16: (1, 40)},
+  181: {58: (0, 100), 61: (0, 254), 60: (0, 255), 47: (0, 101), 59: (0, 102)},
+  182: {38: (1, 38), 22: (1, 38), 8: (1, 38), 14: (1, 38), 15: (1, 38), 11: (0, 253), 21: (1, 38), 40: (1, 38), 2: (1, 38), 18: (1, 38), 12: (1, 38), 19: (1, 38), 16: (1, 38)},
+  183: {2: (0, 3), 4: (0, 5), 11: (0, 256), 6: (0, 257), 13: (0, 14), 8: (0, 9), 9: (0, 10), 16: (0, 17), 17: (0, 18), 14: (0, 43), 18: (0, 19)},
+  184: {23: (1, 62), 22: (1, 62), 14: (1, 62), 25: (1, 62), 8: (1, 62), 24: (1, 62), 15: (1, 62), 26: (1, 62), 11: (1, 62), 27: (1, 62), 21: (1, 62), 29: (1, 62), 28: (1, 62), 2: (1, 62), 30: (1, 62), 18: (1, 62), 31: (1, 62), 12: (1, 62), 19: (1, 62), 16: (1, 62)},
+  185: {26: (1, 289), 29: (1, 289)},
+  186: {2: (0, 3), 4: (0, 5), 13: (0, 14), 8: (0, 9), 9: (0, 10), 16: (0, 17), 6: (0, 258), 17: (0, 18), 14: (0, 43), 18: (0, 19)},
+  187: {2: (1, 262), 8: (1, 262), 14: (1, 262), 15: (1, 262), 11: (1, 262), 18: (1, 262), 12: (1, 262), 19: (1, 262), 16: (1, 262)},
+  188: {2: (1, 2), 22: (1, 2), 8: (1, 2), 14: (1, 2), 15: (1, 2), 11: (1, 2), 21: (1, 2), 18: (1, 2), 12: (1, 2), 19: (1, 2), 16: (1, 2)},
+  189: {2: (1, 1), 22: (1, 1), 8: (1, 1), 14: (1, 1), 15: (1, 1), 11: (1, 1), 21: (1, 1), 18: (1, 1), 12: (1, 1), 19: (1, 1), 16: (1, 1)},
+  190: {2: (0, 3), 4: (0, 5), 6: (0, 259), 13: (0, 14), 8: (0, 9), 9: (0, 10), 16: (0, 17), 17: (0, 18), 14: (0, 43), 18: (0, 19)},
+  191: {2: (1, 5), 22: (1, 5), 8: (1, 5), 14: (1, 5), 15: (1, 5), 11: (1, 5), 21: (1, 5), 18: (1, 5), 12: (1, 5), 19: (1, 5), 16: (1, 5)},
+  192: {11: (0, 260), 33: (0, 261)},
+  193: {11: (0, 262), 2: (0, 263)},
+  194: {33: (0, 264)},
+  195: {38: (1, 235), 22: (1, 235), 14: (1, 235), 24: (1, 235), 21: (1, 235), 40: (1, 235), 29: (1, 235), 2: (1, 235), 18: (1, 235), 31: (1, 235), 12: (1, 235), 16: (1, 235), 23: (1, 235), 25: (1, 235), 8: (1, 235), 15: (1, 235), 26: (1, 235), 11: (1, 235), 27: (1, 235), 67: (1, 235), 28: (1, 235), 30: (1, 235), 68: (1, 235), 19: (1, 235)},
+  196: {33: (0, 265)},
+  197: {11: (0, 266), 2: (0, 267)},
+  198: {11: (0, 268), 2: (0, 269)},
+  199: {2: (0, 270)},
+  200: {38: (1, 223), 22: (1, 223), 14: (1, 223), 24: (1, 223), 21: (1, 223), 40: (1, 223), 29: (1, 223), 2: (1, 223), 18: (1, 223), 31: (1, 223), 12: (1, 223), 16: (1, 223), 23: (1, 223), 25: (1, 223), 8: (1, 223), 15: (1, 223), 26: (1, 223), 11: (1, 223), 27: (1, 223), 67: (1, 223), 28: (1, 223), 30: (1, 223), 68: (1, 223), 19: (1, 223)},
+  201: {2: (1, 263), 8: (1, 263), 14: (1, 263), 15: (1, 263), 11: (1, 263), 18: (1, 263), 12: (1, 263), 19: (1, 263), 16: (1, 263)},
+  202: {38: (1, 120), 22: (1, 120), 14: (1, 120), 21: (1, 120), 40: (1, 120), 29: (1, 120), 2: (1, 120), 18: (1, 120), 31: (1, 120), 12: (1, 120), 16: (1, 120), 23: (1, 120), 25: (1, 120), 8: (1, 120), 15: (1, 120), 26: (1, 120), 11: (1, 120), 27: (1, 120), 67: (1, 120), 30: (1, 120), 68: (1, 120), 19: (1, 120)},
+  203: {38: (1, 118), 22: (1, 118), 14: (1, 118), 21: (1, 118), 40: (1, 118), 29: (1, 118), 2: (1, 118), 18: (1, 118), 31: (1, 118), 12: (1, 118), 16: (1, 118), 23: (1, 118), 25: (1, 118), 8: (1, 118), 15: (1, 118), 26: (1, 118), 11: (1, 118), 27: (1, 118), 67: (1, 118), 30: (1, 118), 68: (1, 118), 19: (1, 118)},
+  204: {38: (1, 119), 22: (1, 119), 14: (1, 119), 21: (1, 119), 40: (1, 119), 29: (1, 119), 2: (1, 119), 18: (1, 119), 31: (1, 119), 12: (1, 119), 16: (1, 119), 23: (1, 119), 25: (1, 119), 8: (1, 119), 15: (1, 119), 26: (1, 119), 11: (1, 119), 27: (1, 119), 67: (1, 119), 30: (1, 119), 68: (1, 119), 19: (1, 119)},
+  205: {38: (1, 122), 22: (1, 122), 14: (1, 122), 21: (1, 122), 40: (1, 122), 29: (1, 122), 2: (1, 122), 18: (1, 122), 31: (1, 122), 12: (1, 122), 16: (1, 122), 23: (1, 122), 25: (1, 122), 8: (1, 122), 15: (1, 122), 26: (1, 122), 11: (1, 122), 27: (1, 122), 67: (1, 122), 30: (1, 122), 68: (1, 122), 19: (1, 122)},
+  206: {38: (1, 126), 22: (1, 126), 14: (1, 126), 21: (1, 126), 40: (1, 126), 29: (1, 126), 2: (1, 126), 18: (1, 126), 31: (1, 126), 12: (1, 126), 16: (1, 126), 23: (1, 126), 25: (1, 126), 8: (1, 126), 15: (1, 126), 26: (1, 126), 11: (1, 126), 27: (1, 126), 67: (1, 126), 30: (1, 126), 68: (1, 126), 19: (1, 126)},
+  207: {38: (1, 123), 22: (1, 123), 14: (1, 123), 21: (1, 123), 40: (1, 123), 29: (1, 123), 2: (1, 123), 18: (1, 123), 31: (1, 123), 12: (1, 123), 16: (1, 123), 23: (1, 123), 25: (1, 123), 8: (1, 123), 15: (1, 123), 26: (1, 123), 11: (1, 123), 27: (1, 123), 67: (1, 123), 30: (1, 123), 68: (1, 123), 19: (1, 123)},
+  208: {38: (1, 130), 22: (1, 130), 14: (1, 130), 21: (1, 130), 40: (1, 130), 29: (1, 130), 2: (1, 130), 18: (1, 130), 31: (1, 130), 12: (1, 130), 16: (1, 130), 23: (1, 130), 25: (1, 130), 8: (1, 130), 15: (1, 130), 26: (1, 130), 11: (1, 130), 27: (1, 130), 67: (1, 130), 30: (1, 130), 68: (1, 130), 19: (1, 130)},
+  209: {38: (1, 214), 22: (1, 214), 14: (1, 214), 21: (1, 214), 40: (1, 214), 29: (1, 214), 2: (1, 214), 18: (1, 214), 31: (1, 214), 12: (1, 214), 16: (1, 214), 23: (1, 214), 25: (1, 214), 8: (1, 214), 15: (1, 214), 26: (1, 214), 11: (1, 214), 27: (1, 214), 67: (1, 214), 30: (1, 214), 68: (1, 214), 19: (1, 214)},
+  210: {2: (0, 271), 94: (0, 272), 49: (0, 273), 18: (0, 274), 48: (0, 146), 95: (0, 275), 8: (0, 276), 17: (0, 277), 11: (0, 278), 14: (0, 279), 16: (0, 280), 96: (0, 281)},
+  211: {68: (1, 24), 30: (1, 24), 29: (1, 24)},
+  212: {38: (1, 213), 22: (1, 213), 14: (1, 213), 21: (1, 213), 40: (1, 213), 29: (1, 213), 2: (1, 213), 18: (1, 213), 31: (1, 213), 12: (1, 213), 16: (1, 213), 23: (1, 213), 25: (1, 213), 8: (1, 213), 15: (1, 213), 26: (1, 213), 11: (1, 213), 27: (1, 213), 67: (1, 213), 30: (1, 213), 68: (1, 213), 19: (1, 213)},
+  213: {2: (0, 271), 94: (0, 272), 49: (0, 273), 18: (0, 274), 48: (0, 146), 95: (0, 282), 8: (0, 276), 17: (0, 277), 14: (0, 279), 16: (0, 280), 96: (0, 281), 11: (0, 283)},
+  214: {11: (1, 27)},
+  215: {38: (1, 66), 22: (1, 66), 14: (1, 66), 21: (1, 66), 40: (1, 66), 29: (1, 66), 2: (1, 66), 18: (1, 66), 31: (1, 66), 12: (1, 66), 16: (1, 66), 23: (1, 66), 25: (1, 66), 8: (1, 66), 15: (1, 66), 26: (1, 66), 11: (1, 66), 27: (1, 66), 67: (1, 66), 30: (1, 66), 68: (1, 66), 19: (1, 66)},
+  216: {29: (0, 284), 26: (0, 285)},
+  217: {49: (0, 80), 2: (0, 81), 17: (0, 82), 48: (0, 146), 16: (0, 84), 8: (0, 86), 50: (0, 286), 52: (0, 89), 11: (0, 287), 14: (0, 92), 54: (0, 93), 57: (0, 96), 18: (0, 97)},
+  218: {38: (1, 65), 22: (1, 65), 14: (1, 65), 21: (1, 65), 40: (1, 65), 29: (1, 65), 2: (1, 65), 18: (1, 65), 31: (1, 65), 12: (1, 65), 16: (1, 65), 23: (1, 65), 25: (1, 65), 8: (1, 65), 15: (1, 65), 26: (1, 65), 11: (1, 65), 27: (1, 65), 67: (1, 65), 30: (1, 65), 68: (1, 65), 19: (1, 65)},
+  219: {30: (1, 21), 29: (1, 21)},
+  220: {30: (1, 23), 29: (1, 23)},
+  221: {38: (1, 127), 22: (1, 127), 14: (1, 127), 21: (1, 127), 40: (1, 127), 29: (1, 127), 2: (1, 127), 18: (1, 127), 31: (1, 127), 12: (1, 127), 16: (1, 127), 23: (1, 127), 25: (1, 127), 8: (1, 127), 15: (1, 127), 26: (1, 127), 11: (1, 127), 27: (1, 127), 67: (1, 127), 30: (1, 127), 68: (1, 127), 19: (1, 127)},
+  222: {38: (1, 112), 22: (1, 112), 14: (1, 112), 21: (1, 112), 40: (1, 112), 29: (1, 112), 2: (1, 112), 18: (1, 112), 31: (1, 112), 12: (1, 112), 16: (1, 112), 23: (1, 112), 25: (1, 112), 8: (1, 112), 15: (1, 112), 26: (1, 112), 11: (0, 24), 27: (1, 112), 67: (1, 112), 30: (1, 112), 68: (1, 112), 19: (1, 112), 32: (0, 26), 33: (0, 27)},
+  223: {38: (1, 111), 22: (1, 111), 14: (1, 111), 21: (1, 111), 40: (1, 111), 29: (1, 111), 2: (1, 111), 18: (1, 111), 31: (1, 111), 12: (1, 111), 16: (1, 111), 23: (1, 111), 25: (1, 111), 8: (1, 111), 15: (1, 111), 26: (1, 111), 11: (1, 111), 27: (1, 111), 67: (1, 111), 30: (1, 111), 68: (1, 111), 19: (1, 111)},
+  224: {38: (1, 113), 22: (1, 113), 14: (1, 113), 21: (1, 113), 40: (1, 113), 29: (1, 113), 2: (1, 113), 18: (1, 113), 31: (1, 113), 12: (1, 113), 16: (1, 113), 23: (1, 113), 25: (1, 113), 8: (1, 113), 15: (1, 113), 26: (1, 113), 11: (1, 113), 27: (1, 113), 67: (1, 113), 30: (1, 113), 68: (1, 113), 19: (1, 113)},
+  225: {38: (1, 121), 22: (1, 121), 14: (1, 121), 21: (1, 121), 40: (1, 121), 29: (1, 121), 2: (1, 121), 18: (1, 121), 31: (1, 121), 12: (1, 121), 16: (1, 121), 23: (1, 121), 25: (1, 121), 8: (1, 121), 15: (1, 121), 26: (1, 121), 11: (1, 121), 27: (1, 121), 67: (1, 121), 30: (1, 121), 68: (1, 121), 19: (1, 121)},
+  226: {38: (1, 124), 22: (1, 124), 14: (1, 124), 21: (1, 124), 40: (1, 124), 29: (1, 124), 2: (1, 124), 18: (1, 124), 31: (1, 124), 12: (1, 124), 16: (1, 124), 23: (1, 124), 25: (1, 124), 8: (1, 124), 15: (1, 124), 26: (1, 124), 11: (1, 124), 27: (1, 124), 67: (1, 124), 30: (1, 124), 68: (1, 124), 19: (1, 124)},
+  227: {38: (1, 128), 22: (1, 128), 14: (1, 128), 21: (1, 128), 40: (1, 128), 29: (1, 128), 2: (1, 128), 18: (1, 128), 31: (1, 128), 12: (1, 128), 16: (1, 128), 23: (1, 128), 25: (1, 128), 8: (1, 128), 15: (1, 128), 26: (1, 128), 11: (1, 128), 27: (1, 128), 67: (1, 128), 30: (1, 128), 68: (1, 128), 19: (1, 128)},
+  228: {2: (0, 3), 4: (0, 5), 13: (0, 14), 8: (0, 9), 9: (0, 10), 6: (0, 288), 16: (0, 17), 17: (0, 18), 14: (0, 43), 18: (0, 19)},
+  229: {14: (0, 289)},
+  230: {30: (1, 18), 29: (1, 18)},
+  231: {30: (1, 22), 29: (1, 22)},
+  232: {30: (1, 20), 29: (1, 20)},
+  233: {11: (0, 24), 32: (0, 26), 25: (0, 290), 33: (0, 27)},
+  234: {2: (0, 291), 48: (0, 240), 8: (0, 234), 16: (0, 235), 64: (0, 238), 90: (0, 292), 92: (0, 243), 93: (0, 293), 18: (0, 244), 17: (0, 294), 89: (0, 236), 97: (0, 295), 14: (0, 246), 91: (0, 241)},
+  235: {2: (0, 291), 48: (0, 240), 8: (0, 234), 16: (0, 235), 64: (0, 238), 90: (0, 292), 92: (0, 243), 93: (0, 293), 18: (0, 244), 97: (0, 296), 89: (0, 236), 14: (0, 246), 17: (0, 247), 91: (0, 241)},
+  236: {23: (1, 187), 25: (1, 187), 26: (1, 187), 27: (1, 187), 31: (1, 187), 67: (1, 187), 16: (1, 187), 29: (1, 187)},
+  237: {16: (0, 49), 31: (0, 297), 25: (0, 298), 27: (0, 299), 41: (0, 300), 23: (0, 53), 67: (0, 301)},
+  238: {23: (1, 184), 25: (0, 302), 26: (1, 184), 27: (1, 184), 31: (1, 184), 67: (1, 184), 16: (1, 184), 29: (1, 184)},
+  239: {43: (0, 303), 67: (0, 304)},
+  240: {72: (0, 305), 75: (0, 154), 76: (0, 155), 77: (0, 156), 70: (0, 148), 69: (0, 147), 71: (0, 150), 47: (0, 306), 78: (0, 157), 79: (0, 158), 73: (0, 152), 74: (0, 153)},
+  241: {23: (1, 188), 25: (1, 188), 26: (1, 188), 27: (1, 188), 31: (1, 188), 67: (1, 188), 16: (1, 188), 29: (1, 188)},
+  242: {67: (0, 307), 43: (0, 308)},
+  243: {23: (1, 185), 25: (1, 185), 26: (1, 185), 27: (1, 185), 31: (1, 185), 67: (1, 185), 16: (1, 185), 29: (1, 185)},
+  244: {2: (0, 291), 48: (0, 240), 8: (0, 234), 16: (0, 235), 64: (0, 238), 90: (0, 292), 92: (0, 243), 93: (0, 293), 18: (0, 244), 89: (0, 236), 97: (0, 309), 14: (0, 246), 17: (0, 247), 91: (0, 241)},
+  245: {25: (0, 310)},
+  246: {23: (1, 186), 25: (1, 186), 26: (1, 186), 27: (1, 186), 31: (1, 186), 67: (1, 186), 16: (1, 186), 29: (1, 186)},
+  247: {23: (1, 183), 25: (1, 183), 26: (1, 183), 27: (1, 183), 31: (1, 183), 67: (1, 183), 16: (1, 183), 29: (1, 183)},
+  248: {38: (1, 59), 98: (1, 59), 22: (1, 59), 8: (1, 59), 14: (1, 59), 15: (1, 59), 11: (1, 59), 21: (1, 59), 40: (1, 59), 2: (1, 59), 18: (1, 59), 12: (1, 59), 19: (1, 59), 16: (1, 59)},
+  249: {43: (1, 60), 48: (1, 60)},
+  250: {58: (0, 100), 47: (0, 101), 60: (0, 311)},
+  251: {11: (0, 312), 99: (0, 313), 98: (0, 314)},
+  252: {38: (1, 42), 22: (1, 42), 8: (1, 42), 14: (1, 42), 15: (1, 42), 11: (1, 42), 21: (1, 42), 40: (1, 42), 2: (1, 42), 18: (1, 42), 12: (1, 42), 19: (1, 42), 16: (1, 42)},
+  253: {58: (0, 100), 47: (0, 101), 59: (0, 102), 61: (0, 315), 60: (0, 316)},
+  254: {38: (1, 285), 22: (1, 285), 8: (1, 285), 14: (1, 285), 15: (1, 285), 11: (1, 285), 21: (1, 285), 40: (1, 285), 2: (1, 285), 18: (1, 285), 12: (1, 285), 19: (1, 285), 16: (1, 285)},
+  255: {38: (1, 283), 22: (1, 283), 8: (1, 283), 14: (1, 283), 15: (1, 283), 11: (1, 283), 21: (1, 283), 40: (1, 283), 2: (1, 283), 18: (1, 283), 12: (1, 283), 19: (1, 283), 16: (1, 283)},
+  256: {2: (0, 3), 4: (0, 5), 13: (0, 14), 8: (0, 9), 9: (0, 10), 16: (0, 17), 17: (0, 18), 14: (0, 43), 6: (0, 317), 18: (0, 19)},
+  257: {26: (1, 291), 29: (1, 291)},
+  258: {26: (1, 290), 29: (1, 290)},
+  259: {2: (1, 3), 22: (1, 3), 8: (1, 3), 14: (1, 3), 15: (1, 3), 11: (1, 3), 21: (1, 3), 18: (1, 3), 12: (1, 3), 19: (1, 3), 16: (1, 3)},
+  260: {33: (0, 318)},
+  261: {11: (0, 319), 2: (0, 320)},
+  262: {2: (0, 321)},
+  263: {38: (1, 236), 22: (1, 236), 14: (1, 236), 24: (1, 236), 21: (1, 236), 40: (1, 236), 29: (1, 236), 2: (1, 236), 18: (1, 236), 31: (1, 236), 12: (1, 236), 16: (1, 236), 23: (1, 236), 25: (1, 236), 8: (1, 236), 15: (1, 236), 26: (1, 236), 11: (1, 236), 27: (1, 236), 67: (1, 236), 28: (1, 236), 30: (1, 236), 68: (1, 236), 19: (1, 236)},
+  264: {2: (0, 322), 11: (0, 323)},
+  265: {2: (0, 324), 11: (0, 325)},
+  266: {2: (0, 326)},
+  267: {38: (1, 222), 22: (1, 222), 14: (1, 222), 24: (1, 222), 21: (1, 222), 40: (1, 222), 29: (1, 222), 2: (1, 222), 18: (1, 222), 31: (1, 222), 12: (1, 222), 16: (1, 222), 23: (1, 222), 25: (1, 222), 8: (1, 222), 15: (1, 222), 26: (1, 222), 11: (1, 222), 27: (1, 222), 67: (1, 222), 28: (1, 222), 30: (1, 222), 68: (1, 222), 19: (1, 222)},
+  268: {2: (0, 327)},
+  269: {38: (1, 227), 22: (1, 227), 14: (1, 227), 24: (1, 227), 21: (1, 227), 40: (1, 227), 29: (1, 227), 2: (1, 227), 18: (1, 227), 31: (1, 227), 12: (1, 227), 16: (1, 227), 23: (1, 227), 25: (1, 227), 8: (1, 227), 15: (1, 227), 26: (1, 227), 11: (1, 227), 27: (1, 227), 67: (1, 227), 28: (1, 227), 30: (1, 227), 68: (1, 227), 19: (1, 227)},
+  270: {38: (1, 234), 22: (1, 234), 14: (1, 234), 24: (1, 234), 21: (1, 234), 40: (1, 234), 29: (1, 234), 2: (1, 234), 18: (1, 234), 31: (1, 234), 12: (1, 234), 16: (1, 234), 23: (1, 234), 25: (1, 234), 8: (1, 234), 15: (1, 234), 26: (1, 234), 11: (1, 234), 27: (1, 234), 67: (1, 234), 28: (1, 234), 30: (1, 234), 68: (1, 234), 19: (1, 234)},
+  271: {11: (0, 24), 25: (0, 328), 32: (0, 26), 33: (0, 27)},
+  272: {23: (1, 140), 25: (1, 140), 26: (1, 140), 27: (1, 140), 31: (1, 140), 67: (1, 140), 16: (1, 140), 29: (1, 140)},
+  273: {25: (0, 329)},
+  274: {2: (0, 330), 49: (0, 331), 94: (0, 272), 18: (0, 274), 48: (0, 146), 95: (0, 332), 8: (0, 276), 17: (0, 277), 14: (0, 279), 16: (0, 280), 100: (0, 333), 96: (0, 281)},
+  275: {27: (0, 334), 16: (0, 49), 41: (0, 335), 25: (0, 336), 67: (0, 337), 23: (0, 53), 31: (0, 338)},
+  276: {2: (0, 330), 49: (0, 331), 94: (0, 272), 18: (0, 274), 100: (0, 339), 48: (0, 146), 17: (0, 340), 95: (0, 332), 8: (0, 276), 14: (0, 279), 16: (0, 280), 96: (0, 281)},
+  277: {23: (1, 138), 25: (1, 138), 26: (1, 138), 27: (1, 138), 31: (1, 138), 67: (1, 138), 16: (1, 138), 29: (1, 138)},
+  278: {2: (0, 271), 94: (0, 272), 49: (0, 273), 18: (0, 274), 48: (0, 146), 95: (0, 341), 8: (0, 276), 17: (0, 277), 14: (0, 279), 16: (0, 280), 96: (0, 281)},
+  279: {23: (1, 137), 25: (1, 137), 26: (1, 137), 27: (1, 137), 31: (1, 137), 67: (1, 137), 16: (1, 137), 29: (1, 137)},
+  280: {2: (0, 330), 49: (0, 331), 94: (0, 272), 18: (0, 274), 48: (0, 146), 95: (0, 332), 8: (0, 276), 17: (0, 277), 100: (0, 342), 14: (0, 279), 16: (0, 280), 96: (0, 281)},
+  281: {23: (1, 139), 25: (1, 139), 26: (1, 139), 27: (1, 139), 31: (1, 139), 67: (1, 139), 16: (1, 139), 29: (1, 139)},
+  282: {27: (0, 334), 16: (0, 49), 41: (0, 335), 25: (0, 336), 23: (0, 53), 67: (0, 343), 31: (0, 338)},
+  283: {2: (0, 271), 94: (0, 272), 49: (0, 273), 18: (0, 274), 48: (0, 146), 95: (0, 344), 8: (0, 276), 17: (0, 277), 14: (0, 279), 16: (0, 280), 96: (0, 281)},
+  284: {49: (0, 80), 2: (0, 81), 17: (0, 82), 48: (0, 146), 50: (0, 345), 16: (0, 84), 8: (0, 86), 52: (0, 89), 14: (0, 92), 54: (0, 93), 11: (0, 346), 57: (0, 96), 18: (0, 97)},
+  285: {38: (1, 67), 22: (1, 67), 14: (1, 67), 21: (1, 67), 40: (1, 67), 29: (1, 67), 2: (1, 67), 18: (1, 67), 31: (1, 67), 12: (1, 67), 16: (1, 67), 23: (1, 67), 25: (1, 67), 8: (1, 67), 15: (1, 67), 26: (1, 67), 11: (1, 67), 27: (1, 67), 67: (1, 67), 30: (1, 67), 68: (1, 67), 19: (1, 67)},
+  286: {26: (1, 295), 29: (1, 295)},
+  287: {49: (0, 80), 2: (0, 81), 17: (0, 82), 48: (0, 146), 16: (0, 84), 8: (0, 86), 52: (0, 89), 14: (0, 92), 50: (0, 347), 54: (0, 93), 57: (0, 96), 18: (0, 97)},
+  288: {28: (0, 348)},
+  289: {28: (0, 349)},
+  290: {2: (0, 63), 8: (0, 234), 64: (0, 350), 17: (0, 351), 91: (0, 352), 14: (0, 353), 45: (0, 354), 89: (0, 355), 101: (0, 356)},
+  291: {23: (1, 177), 25: (0, 290), 26: (1, 177), 27: (1, 177), 31: (1, 177), 67: (1, 177), 16: (1, 177), 29: (1, 177), 11: (0, 24), 32: (0, 26), 33: (0, 27)},
+  292: {23: (0, 53), 25: (0, 298), 26: (1, 178), 27: (0, 299), 31: (0, 297), 67: (1, 178), 16: (0, 49), 29: (1, 178), 41: (0, 300)},
+  293: {23: (1, 179), 25: (0, 310), 26: (1, 179), 27: (1, 179), 31: (1, 179), 67: (1, 179), 16: (1, 179), 29: (1, 179)},
+  294: {23: (1, 183), 25: (1, 183), 26: (0, 357), 27: (1, 183), 31: (1, 183), 67: (1, 183), 16: (1, 183), 29: (1, 183)},
+  295: {29: (0, 358), 102: (0, 359), 26: (0, 360)},
+  296: {23: (1, 203), 25: (1, 203), 26: (1, 203), 27: (1, 203), 31: (1, 203), 67: (1, 203), 16: (1, 203), 29: (1, 203)},
+  297: {45: (0, 361)},
+  298: {45: (0, 362)},
+  299: {45: (0, 363)},
+  300: {2: (0, 364), 48: (0, 240), 8: (0, 234), 64: (0, 350), 17: (0, 351), 103: (0, 365), 91: (0, 352), 14: (0, 353), 93: (0, 366), 89: (0, 355), 101: (0, 367)},
+  301: {38: (1, 54), 98: (1, 54), 22: (1, 54), 8: (1, 54), 14: (1, 54), 15: (1, 54), 11: (1, 54), 21: (1, 54), 40: (1, 54), 2: (1, 54), 18: (1, 54), 12: (1, 54), 19: (1, 54), 16: (1, 54)},
+  302: {45: (0, 368)},
+  303: {2: (0, 233), 48: (0, 240), 8: (0, 234), 16: (0, 235), 64: (0, 238), 92: (0, 243), 18: (0, 244), 89: (0, 236), 11: (0, 369), 90: (0, 370), 93: (0, 245), 14: (0, 246), 17: (0, 247), 91: (0, 241)},
+  304: {38: (1, 56), 98: (1, 56), 22: (1, 56), 8: (1, 56), 14: (1, 56), 15: (1, 56), 11: (1, 56), 21: (1, 56), 40: (1, 56), 2: (1, 56), 18: (1, 56), 12: (1, 56), 19: (1, 56), 16: (1, 56)},
+  305: {43: (0, 371), 67: (0, 372)},
+  306: {67: (0, 373), 43: (0, 374)},
+  307: {38: (1, 58), 98: (1, 58), 22: (1, 58), 8: (1, 58), 14: (1, 58), 15: (1, 58), 11: (1, 58), 21: (1, 58), 40: (1, 58), 2: (1, 58), 18: (1, 58), 12: (1, 58), 19: (1, 58), 16: (1, 58)},
+  308: {2: (0, 233), 48: (0, 240), 8: (0, 234), 16: (0, 235), 64: (0, 238), 92: (0, 243), 18: (0, 244), 89: (0, 236), 11: (0, 375), 90: (0, 376), 93: (0, 245), 14: (0, 246), 17: (0, 247), 91: (0, 241)},
+  309: {23: (1, 200), 25: (1, 200), 26: (1, 200), 27: (1, 200), 31: (1, 200), 67: (1, 200), 16: (1, 200), 29: (1, 200)},
+  310: {101: (0, 377), 2: (0, 63), 8: (0, 234), 64: (0, 350), 17: (0, 351), 91: (0, 352), 14: (0, 353), 45: (0, 378), 89: (0, 355)},
+  311: {99: (0, 379), 11: (0, 380), 98: (0, 381)},
+  312: {58: (0, 100), 47: (0, 101), 60: (0, 382), 98: (0, 383)},
+  313: {98: (0, 384), 11: (0, 385)},
+  314: {38: (1, 45), 22: (1, 45), 8: (1, 45), 14: (1, 45), 15: (1, 45), 11: (1, 45), 21: (1, 45), 40: (1, 45), 2: (1, 45), 18: (1, 45), 12: (1, 45), 19: (1, 45), 16: (1, 45)},
+  315: {38: (1, 282), 22: (1, 282), 8: (1, 282), 14: (1, 282), 15: (1, 282), 11: (1, 282), 21: (1, 282), 40: (1, 282), 2: (1, 282), 18: (1, 282), 12: (1, 282), 19: (1, 282), 16: (1, 282)},
+  316: {38: (1, 284), 22: (1, 284), 8: (1, 284), 14: (1, 284), 15: (1, 284), 11: (1, 284), 21: (1, 284), 40: (1, 284), 2: (1, 284), 18: (1, 284), 12: (1, 284), 19: (1, 284), 16: (1, 284)},
+  317: {26: (1, 288), 29: (1, 288)},
+  318: {11: (0, 386), 2: (0, 387)},
+  319: {2: (0, 388)},
+  320: {38: (1, 230), 22: (1, 230), 14: (1, 230), 24: (1, 230), 21: (1, 230), 40: (1, 230), 29: (1, 230), 2: (1, 230), 18: (1, 230), 31: (1, 230), 12: (1, 230), 16: (1, 230), 23: (1, 230), 25: (1, 230), 8: (1, 230), 15: (1, 230), 26: (1, 230), 11: (1, 230), 27: (1, 230), 67: (1, 230), 28: (1, 230), 30: (1, 230), 68: (1, 230), 19: (1, 230)},
+  321: {38: (1, 228), 22: (1, 228), 14: (1, 228), 24: (1, 228), 21: (1, 228), 40: (1, 228), 29: (1, 228), 2: (1, 228), 18: (1, 228), 31: (1, 228), 12: (1, 228), 16: (1, 228), 23: (1, 228), 25: (1, 228), 8: (1, 228), 15: (1, 228), 26: (1, 228), 11: (1, 228), 27: (1, 228), 67: (1, 228), 28: (1, 228), 30: (1, 228), 68: (1, 228), 19: (1, 228)},
+  322: {38: (1, 224), 22: (1, 224), 14: (1, 224), 24: (1, 224), 21: (1, 224), 40: (1, 224), 29: (1, 224), 2: (1, 224), 18: (1, 224), 31: (1, 224), 12: (1, 224), 16: (1, 224), 23: (1, 224), 25: (1, 224), 8: (1, 224), 15: (1, 224), 26: (1, 224), 11: (1, 224), 27: (1, 224), 67: (1, 224), 28: (1, 224), 30: (1, 224), 68: (1, 224), 19: (1, 224)},
+  323: {2: (0, 389)},
+  324: {38: (1, 233), 22: (1, 233), 14: (1, 233), 24: (1, 233), 21: (1, 233), 40: (1, 233), 29: (1, 233), 2: (1, 233), 18: (1, 233), 31: (1, 233), 12: (1, 233), 16: (1, 233), 23: (1, 233), 25: (1, 233), 8: (1, 233), 15: (1, 233), 26: (1, 233), 11: (1, 233), 27: (1, 233), 67: (1, 233), 28: (1, 233), 30: (1, 233), 68: (1, 233), 19: (1, 233)},
+  325: {2: (0, 390)},
+  326: {38: (1, 229), 22: (1, 229), 14: (1, 229), 24: (1, 229), 21: (1, 229), 40: (1, 229), 29: (1, 229), 2: (1, 229), 18: (1, 229), 31: (1, 229), 12: (1, 229), 16: (1, 229), 23: (1, 229), 25: (1, 229), 8: (1, 229), 15: (1, 229), 26: (1, 229), 11: (1, 229), 27: (1, 229), 67: (1, 229), 28: (1, 229), 30: (1, 229), 68: (1, 229), 19: (1, 229)},
+  327: {38: (1, 219), 22: (1, 219), 14: (1, 219), 24: (1, 219), 21: (1, 219), 40: (1, 219), 29: (1, 219), 2: (1, 219), 18: (1, 219), 31: (1, 219), 12: (1, 219), 16: (1, 219), 23: (1, 219), 25: (1, 219), 8: (1, 219), 15: (1, 219), 26: (1, 219), 11: (1, 219), 27: (1, 219), 67: (1, 219), 28: (1, 219), 30: (1, 219), 68: (1, 219), 19: (1, 219)},
+  328: {45: (0, 391), 2: (0, 63), 94: (0, 392), 8: (0, 276), 14: (0, 393), 17: (0, 394), 104: (0, 395)},
+  329: {2: (0, 63), 94: (0, 392), 8: (0, 276), 14: (0, 393), 104: (0, 396), 45: (0, 397), 17: (0, 394)},
+  330: {23: (1, 132), 25: (0, 328), 26: (1, 132), 27: (1, 132), 31: (1, 132), 67: (1, 132), 16: (1, 132), 29: (1, 132), 11: (0, 24), 32: (0, 26), 33: (0, 27)},
+  331: {23: (1, 133), 25: (0, 329), 26: (1, 133), 27: (1, 133), 31: (1, 133), 67: (1, 133), 16: (1, 133), 29: (1, 133)},
+  332: {23: (0, 53), 25: (0, 336), 26: (1, 131), 27: (0, 334), 31: (0, 338), 67: (1, 131), 16: (0, 49), 29: (1, 131), 41: (0, 335)},
+  333: {23: (1, 144), 25: (1, 144), 26: (1, 144), 27: (1, 144), 31: (1, 144), 67: (1, 144), 16: (1, 144), 29: (1, 144)},
+  334: {45: (0, 398)},
+  335: {2: (0, 399), 94: (0, 392), 48: (0, 146), 49: (0, 400), 8: (0, 276), 14: (0, 393), 104: (0, 401), 17: (0, 394), 105: (0, 402)},
+  336: {45: (0, 403)},
+  337: {38: (1, 215), 22: (1, 215), 14: (1, 215), 21: (1, 215), 40: (1, 215), 29: (1, 215), 2: (1, 215), 18: (1, 215), 31: (1, 215), 12: (1, 215), 16: (1, 215), 23: (1, 215), 25: (1, 215), 8: (1, 215), 15: (1, 215), 26: (1, 215), 11: (1, 215), 27: (1, 215), 67: (1, 215), 30: (1, 215), 68: (1, 215), 19: (1, 215)},
+  338: {45: (0, 404)},
+  339: {106: (0, 405), 29: (0, 406), 26: (0, 407)},
+  340: {23: (1, 138), 25: (1, 138), 26: (0, 408), 27: (1, 138), 31: (1, 138), 67: (1, 138), 16: (1, 138), 29: (1, 138)},
+  341: {27: (0, 334), 16: (0, 49), 41: (0, 335), 67: (0, 409), 25: (0, 336), 23: (0, 53), 31: (0, 338)},
+  342: {23: (1, 145), 25: (1, 145), 26: (1, 145), 27: (1, 145), 31: (1, 145), 67: (1, 145), 16: (1, 145), 29: (1, 145)},
+  343: {38: (1, 211), 22: (1, 211), 14: (1, 211), 21: (1, 211), 40: (1, 211), 29: (1, 211), 2: (1, 211), 18: (1, 211), 31: (1, 211), 12: (1, 211), 16: (1, 211), 23: (1, 211), 25: (1, 211), 8: (1, 211), 15: (1, 211), 26: (1, 211), 11: (1, 211), 27: (1, 211), 67: (1, 211), 30: (1, 211), 68: (1, 211), 19: (1, 211)},
+  344: {27: (0, 334), 16: (0, 49), 67: (0, 410), 41: (0, 335), 25: (0, 336), 23: (0, 53), 31: (0, 338)},
+  345: {26: (1, 293), 29: (1, 293)},
+  346: {49: (0, 80), 2: (0, 81), 17: (0, 82), 48: (0, 146), 16: (0, 84), 8: (0, 86), 52: (0, 89), 14: (0, 92), 54: (0, 93), 57: (0, 96), 18: (0, 97), 50: (0, 411)},
+  347: {26: (1, 294), 29: (1, 294)},
+  348: {2: (0, 3), 6: (0, 412), 4: (0, 5), 13: (0, 14), 8: (0, 9), 9: (0, 10), 16: (0, 17), 17: (0, 18), 14: (0, 43), 18: (0, 19)},
+  349: {2: (0, 3), 4: (0, 5), 13: (0, 14), 8: (0, 9), 6: (0, 413), 9: (0, 10), 16: (0, 17), 17: (0, 18), 14: (0, 43), 18: (0, 19)},
+  350: {23: (1, 190), 25: (0, 302), 26: (1, 190), 27: (1, 190), 31: (1, 190), 67: (1, 190), 16: (1, 190), 29: (1, 190)},
+  351: {23: (1, 189), 25: (1, 189), 26: (1, 189), 27: (1, 189), 31: (1, 189), 67: (1, 189), 16: (1, 189), 29: (1, 189)},
+  352: {23: (1, 193), 25: (1, 193), 26: (1, 193), 27: (1, 193), 31: (1, 193), 67: (1, 193), 16: (1, 193), 29: (1, 193)},
+  353: {23: (1, 191), 25: (1, 191), 26: (1, 191), 27: (1, 191), 31: (1, 191), 67: (1, 191), 16: (1, 191), 29: (1, 191)},
+  354: {23: (1, 194), 25: (1, 194), 26: (1, 194), 27: (1, 194), 31: (1, 194), 67: (1, 194), 16: (1, 194), 29: (1, 194)},
+  355: {23: (1, 192), 25: (1, 192), 26: (1, 192), 27: (1, 192), 31: (1, 192), 67: (1, 192), 16: (1, 192), 29: (1, 192)},
+  356: {23: (1, 202), 25: (1, 202), 26: (1, 202), 27: (1, 202), 31: (1, 202), 67: (1, 202), 16: (1, 202), 29: (1, 202)},
+  357: {23: (1, 83), 25: (1, 83), 26: (1, 83), 27: (1, 83), 31: (1, 83), 67: (1, 83), 16: (1, 83), 29: (1, 83)},
+  358: {2: (0, 291), 97: (0, 414), 48: (0, 240), 8: (0, 234), 16: (0, 235), 64: (0, 238), 90: (0, 292), 92: (0, 243), 93: (0, 293), 18: (0, 244), 89: (0, 236), 11: (0, 415), 14: (0, 246), 17: (0, 247), 91: (0, 241), 107: (0, 416)},
+  359: {29: (0, 417), 26: (0, 418)},
+  360: {23: (1, 86), 25: (1, 86), 26: (1, 86), 27: (1, 86), 31: (1, 86), 67: (1, 86), 16: (1, 86), 29: (1, 86)},
+  361: {23: (1, 196), 25: (1, 196), 26: (1, 196), 27: (1, 196), 31: (1, 196), 67: (1, 196), 16: (1, 196), 29: (1, 196)},
+  362: {23: (1, 195), 25: (1, 195), 26: (1, 195), 27: (1, 195), 31: (1, 195), 67: (1, 195), 16: (1, 195), 29: (1, 195)},
+  363: {23: (1, 201), 25: (1, 201), 26: (1, 201), 27: (1, 201), 31: (1, 201), 67: (1, 201), 16: (1, 201), 29: (1, 201)},
+  364: {23: (1, 181), 25: (1, 181), 26: (1, 181), 27: (1, 181), 31: (1, 181), 67: (1, 181), 16: (1, 181), 29: (1, 181), 11: (0, 24), 32: (0, 26), 33: (0, 27)},
+  365: {23: (1, 198), 25: (1, 198), 26: (1, 198), 27: (1, 198), 31: (1, 198), 67: (1, 198), 16: (1, 198), 29: (1, 198)},
+  366: {23: (1, 182), 25: (1, 182), 26: (1, 182), 27: (1, 182), 31: (1, 182), 67: (1, 182), 16: (1, 182), 29: (1, 182)},
+  367: {23: (1, 180), 25: (1, 180), 26: (1, 180), 27: (1, 180), 31: (1, 180), 67: (1, 180), 16: (1, 180), 29: (1, 180)},
+  368: {23: (1, 239), 25: (1, 239), 26: (1, 239), 27: (1, 239), 31: (1, 239), 67: (1, 239), 16: (1, 239), 29: (1, 239)},
+  369: {2: (0, 233), 48: (0, 240), 8: (0, 234), 16: (0, 235), 64: (0, 238), 90: (0, 419), 92: (0, 243), 18: (0, 244), 89: (0, 236), 93: (0, 245), 14: (0, 246), 17: (0, 247), 91: (0, 241)},
+  370: {16: (0, 49), 31: (0, 297), 25: (0, 298), 67: (0, 420), 27: (0, 299), 41: (0, 300), 23: (0, 53)},
+  371: {2: (0, 233), 48: (0, 240), 8: (0, 234), 16: (0, 235), 64: (0, 238), 92: (0, 243), 18: (0, 244), 89: (0, 236), 90: (0, 421), 93: (0, 245), 14: (0, 246), 17: (0, 247), 91: (0, 241), 11: (0, 422)},
+  372: {23: (1, 207), 25: (1, 207), 26: (1, 207), 27: (1, 207), 31: (1, 207), 67: (1, 207), 16: (1, 207), 29: (1, 207)},
+  373: {23: (1, 209), 25: (1, 209), 26: (1, 209), 27: (1, 209), 31: (1, 209), 67: (1, 209), 16: (1, 209), 29: (1, 209)},
+  374: {2: (0, 233), 48: (0, 240), 8: (0, 234), 16: (0, 235), 64: (0, 238), 92: (0, 243), 18: (0, 244), 90: (0, 423), 11: (0, 424), 89: (0, 236), 93: (0, 245), 14: (0, 246), 17: (0, 247), 91: (0, 241)},
+  375: {2: (0, 233), 48: (0, 240), 8: (0, 234), 16: (0, 235), 64: (0, 238), 90: (0, 425), 92: (0, 243), 18: (0, 244), 89: (0, 236), 93: (0, 245), 14: (0, 246), 17: (0, 247), 91: (0, 241)},
+  376: {16: (0, 49), 31: (0, 297), 25: (0, 298), 27: (0, 299), 41: (0, 300), 67: (0, 426), 23: (0, 53)},
+  377: {23: (1, 199), 25: (1, 199), 26: (1, 199), 27: (1, 199), 31: (1, 199), 67: (1, 199), 16: (1, 199), 29: (1, 199)},
+  378: {23: (1, 197), 25: (1, 197), 26: (1, 197), 27: (1, 197), 31: (1, 197), 67: (1, 197), 16: (1, 197), 29: (1, 197)},
+  379: {11: (0, 427), 98: (0, 428)},
+  380: {58: (0, 100), 98: (0, 429), 47: (0, 101), 60: (0, 382)},
+  381: {38: (1, 47), 22: (1, 47), 8: (1, 47), 14: (1, 47), 15: (1, 47), 11: (1, 47), 21: (1, 47), 40: (1, 47), 2: (1, 47), 18: (1, 47), 12: (1, 47), 19: (1, 47), 16: (1, 47)},
+  382: {98: (1, 286), 11: (1, 286)},
+  383: {38: (1, 46), 22: (1, 46), 8: (1, 46), 14: (1, 46), 15: (1, 46), 11: (1, 46), 21: (1, 46), 40: (1, 46), 2: (1, 46), 18: (1, 46), 12: (1, 46), 19: (1, 46), 16: (1, 46)},
+  384: {38: (1, 49), 22: (1, 49), 8: (1, 49), 14: (1, 49), 15: (1, 49), 11: (1, 49), 21: (1, 49), 40: (1, 49), 2: (1, 49), 18: (1, 49), 12: (1, 49), 19: (1, 49), 16: (1, 49)},
+  385: {58: (0, 100), 98: (0, 430), 47: (0, 101), 60: (0, 431)},
+  386: {2: (0, 432)},
+  387: {38: (1, 232), 22: (1, 232), 14: (1, 232), 24: (1, 232), 21: (1, 232), 40: (1, 232), 29: (1, 232), 2: (1, 232), 18: (1, 232), 31: (1, 232), 12: (1, 232), 16: (1, 232), 23: (1, 232), 25: (1, 232), 8: (1, 232), 15: (1, 232), 26: (1, 232), 11: (1, 232), 27: (1, 232), 67: (1, 232), 28: (1, 232), 30: (1, 232), 68: (1, 232), 19: (1, 232)},
+  388: {38: (1, 231), 22: (1, 231), 14: (1, 231), 24: (1, 231), 21: (1, 231), 40: (1, 231), 29: (1, 231), 2: (1, 231), 18: (1, 231), 31: (1, 231), 12: (1, 231), 16: (1, 231), 23: (1, 231), 25: (1, 231), 8: (1, 231), 15: (1, 231), 26: (1, 231), 11: (1, 231), 27: (1, 231), 67: (1, 231), 28: (1, 231), 30: (1, 231), 68: (1, 231), 19: (1, 231)},
+  389: {38: (1, 237), 22: (1, 237), 14: (1, 237), 24: (1, 237), 21: (1, 237), 40: (1, 237), 29: (1, 237), 2: (1, 237), 18: (1, 237), 31: (1, 237), 12: (1, 237), 16: (1, 237), 23: (1, 237), 25: (1, 237), 8: (1, 237), 15: (1, 237), 26: (1, 237), 11: (1, 237), 27: (1, 237), 67: (1, 237), 28: (1, 237), 30: (1, 237), 68: (1, 237), 19: (1, 237)},
+  390: {38: (1, 221), 22: (1, 221), 14: (1, 221), 24: (1, 221), 21: (1, 221), 40: (1, 221), 29: (1, 221), 2: (1, 221), 18: (1, 221), 31: (1, 221), 12: (1, 221), 16: (1, 221), 23: (1, 221), 25: (1, 221), 8: (1, 221), 15: (1, 221), 26: (1, 221), 11: (1, 221), 27: (1, 221), 67: (1, 221), 28: (1, 221), 30: (1, 221), 68: (1, 221), 19: (1, 221)},
+  391: {23: (1, 147), 25: (1, 147), 26: (1, 147), 27: (1, 147), 31: (1, 147), 67: (1, 147), 16: (1, 147), 29: (1, 147)},
+  392: {23: (1, 143), 25: (1, 143), 26: (1, 143), 27: (1, 143), 31: (1, 143), 67: (1, 143), 16: (1, 143), 29: (1, 143)},
+  393: {23: (1, 141), 25: (1, 141), 26: (1, 141), 27: (1, 141), 31: (1, 141), 67: (1, 141), 16: (1, 141), 29: (1, 141)},
+  394: {23: (1, 142), 25: (1, 142), 26: (1, 142), 27: (1, 142), 31: (1, 142), 67: (1, 142), 16: (1, 142), 29: (1, 142)},
+  395: {23: (1, 152), 25: (1, 152), 26: (1, 152), 27: (1, 152), 31: (1, 152), 67: (1, 152), 16: (1, 152), 29: (1, 152)},
+  396: {23: (1, 148), 25: (1, 148), 26: (1, 148), 27: (1, 148), 31: (1, 148), 67: (1, 148), 16: (1, 148), 29: (1, 148)},
+  397: {23: (1, 151), 25: (1, 151), 26: (1, 151), 27: (1, 151), 31: (1, 151), 67: (1, 151), 16: (1, 151), 29: (1, 151)},
+  398: {23: (1, 153), 25: (1, 153), 26: (1, 153), 27: (1, 153), 31: (1, 153), 67: (1, 153), 16: (1, 153), 29: (1, 153)},
+  399: {23: (1, 134), 25: (1, 134), 26: (1, 134), 27: (1, 134), 31: (1, 134), 67: (1, 134), 16: (1, 134), 29: (1, 134), 11: (0, 24), 32: (0, 26), 33: (0, 27)},
+  400: {23: (1, 136), 25: (1, 136), 26: (1, 136), 27: (1, 136), 31: (1, 136), 67: (1, 136), 16: (1, 136), 29: (1, 136)},
+  401: {23: (1, 135), 25: (1, 135), 26: (1, 135), 27: (1, 135), 31: (1, 135), 67: (1, 135), 16: (1, 135), 29: (1, 135)},
+  402: {23: (1, 149), 25: (1, 149), 26: (1, 149), 27: (1, 149), 31: (1, 149), 67: (1, 149), 16: (1, 149), 29: (1, 149)},
+  403: {23: (1, 146), 25: (1, 146), 26: (1, 146), 27: (1, 146), 31: (1, 146), 67: (1, 146), 16: (1, 146), 29: (1, 146)},
+  404: {23: (1, 150), 25: (1, 150), 26: (1, 150), 27: (1, 150), 31: (1, 150), 67: (1, 150), 16: (1, 150), 29: (1, 150)},
+  405: {29: (0, 433), 26: (0, 434)},
+  406: {2: (0, 330), 49: (0, 331), 94: (0, 272), 18: (0, 274), 48: (0, 146), 95: (0, 332), 8: (0, 276), 100: (0, 435), 17: (0, 277), 11: (0, 436), 14: (0, 279), 16: (0, 280), 96: (0, 281), 107: (0, 437)},
+  407: {23: (1, 71), 25: (1, 71), 26: (1, 71), 27: (1, 71), 31: (1, 71), 67: (1, 71), 16: (1, 71), 29: (1, 71)},
+  408: {23: (1, 69), 25: (1, 69), 26: (1, 69), 27: (1, 69), 31: (1, 69), 67: (1, 69), 16: (1, 69), 29: (1, 69)},
+  409: {38: (1, 212), 22: (1, 212), 14: (1, 212), 21: (1, 212), 40: (1, 212), 29: (1, 212), 2: (1, 212), 18: (1, 212), 31: (1, 212), 12: (1, 212), 16: (1, 212), 23: (1, 212), 25: (1, 212), 8: (1, 212), 15: (1, 212), 26: (1, 212), 11: (1, 212), 27: (1, 212), 67: (1, 212), 30: (1, 212), 68: (1, 212), 19: (1, 212)},
+  410: {38: (1, 210), 22: (1, 210), 14: (1, 210), 21: (1, 210), 40: (1, 210), 29: (1, 210), 2: (1, 210), 18: (1, 210), 31: (1, 210), 12: (1, 210), 16: (1, 210), 23: (1, 210), 25: (1, 210), 8: (1, 210), 15: (1, 210), 26: (1, 210), 11: (1, 210), 27: (1, 210), 67: (1, 210), 30: (1, 210), 68: (1, 210), 19: (1, 210)},
+  411: {26: (1, 292), 29: (1, 292)},
+  412: {24: (0, 438)},
+  413: {28: (0, 439)},
+  414: {26: (1, 306), 29: (1, 306)},
+  415: {2: (0, 291), 48: (0, 240), 8: (0, 234), 16: (0, 235), 64: (0, 238), 97: (0, 440), 90: (0, 292), 92: (0, 243), 93: (0, 293), 18: (0, 244), 89: (0, 236), 107: (0, 441), 14: (0, 246), 17: (0, 247), 91: (0, 241)},
+  416: {26: (0, 442)},
+  417: {2: (0, 291), 48: (0, 240), 8: (0, 234), 16: (0, 235), 64: (0, 238), 90: (0, 292), 11: (0, 443), 92: (0, 243), 93: (0, 293), 18: (0, 244), 107: (0, 444), 89: (0, 236), 97: (0, 445), 14: (0, 246), 17: (0, 247), 91: (0, 241)},
+  418: {23: (1, 85), 25: (1, 85), 26: (1, 85), 27: (1, 85), 31: (1, 85), 67: (1, 85), 16: (1, 85), 29: (1, 85)},
+  419: {16: (0, 49), 67: (0, 446), 31: (0, 297), 25: (0, 298), 27: (0, 299), 41: (0, 300), 23: (0, 53)},
+  420: {38: (1, 53), 98: (1, 53), 22: (1, 53), 8: (1, 53), 14: (1, 53), 15: (1, 53), 11: (1, 53), 21: (1, 53), 40: (1, 53), 2: (1, 53), 18: (1, 53), 12: (1, 53), 19: (1, 53), 16: (1, 53)},
+  421: {16: (0, 49), 31: (0, 297), 25: (0, 298), 27: (0, 299), 67: (0, 447), 41: (0, 300), 23: (0, 53)},
+  422: {2: (0, 233), 48: (0, 240), 8: (0, 234), 16: (0, 235), 64: (0, 238), 92: (0, 243), 18: (0, 244), 89: (0, 236), 90: (0, 448), 93: (0, 245), 14: (0, 246), 17: (0, 247), 91: (0, 241)},
+  423: {16: (0, 49), 31: (0, 297), 25: (0, 298), 27: (0, 299), 41: (0, 300), 23: (0, 53), 67: (0, 449)},
+  424: {2: (0, 233), 48: (0, 240), 8: (0, 234), 16: (0, 235), 64: (0, 238), 90: (0, 450), 92: (0, 243), 18: (0, 244), 89: (0, 236), 93: (0, 245), 14: (0, 246), 17: (0, 247), 91: (0, 241)},
+  425: {16: (0, 49), 67: (0, 451), 31: (0, 297), 25: (0, 298), 27: (0, 299), 41: (0, 300), 23: (0, 53)},
+  426: {38: (1, 55), 98: (1, 55), 22: (1, 55), 8: (1, 55), 14: (1, 55), 15: (1, 55), 11: (1, 55), 21: (1, 55), 40: (1, 55), 2: (1, 55), 18: (1, 55), 12: (1, 55), 19: (1, 55), 16: (1, 55)},
+  427: {58: (0, 100), 47: (0, 101), 60: (0, 431), 98: (0, 452)},
+  428: {38: (1, 50), 22: (1, 50), 8: (1, 50), 14: (1, 50), 15: (1, 50), 11: (1, 50), 21: (1, 50), 40: (1, 50), 2: (1, 50), 18: (1, 50), 12: (1, 50), 19: (1, 50), 16: (1, 50)},
+  429: {38: (1, 51), 22: (1, 51), 8: (1, 51), 14: (1, 51), 15: (1, 51), 11: (1, 51), 21: (1, 51), 40: (1, 51), 2: (1, 51), 18: (1, 51), 12: (1, 51), 19: (1, 51), 16: (1, 51)},
+  430: {38: (1, 44), 22: (1, 44), 8: (1, 44), 14: (1, 44), 15: (1, 44), 11: (1, 44), 21: (1, 44), 40: (1, 44), 2: (1, 44), 18: (1, 44), 12: (1, 44), 19: (1, 44), 16: (1, 44)},
+  431: {98: (1, 287), 11: (1, 287)},
+  432: {38: (1, 238), 22: (1, 238), 14: (1, 238), 24: (1, 238), 21: (1, 238), 40: (1, 238), 29: (1, 238), 2: (1, 238), 18: (1, 238), 31: (1, 238), 12: (1, 238), 16: (1, 238), 23: (1, 238), 25: (1, 238), 8: (1, 238), 15: (1, 238), 26: (1, 238), 11: (1, 238), 27: (1, 238), 67: (1, 238), 28: (1, 238), 30: (1, 238), 68: (1, 238), 19: (1, 238)},
+  433: {11: (0, 453), 2: (0, 330), 49: (0, 331), 94: (0, 272), 18: (0, 274), 48: (0, 146), 95: (0, 332), 8: (0, 276), 17: (0, 277), 107: (0, 454), 100: (0, 455), 14: (0, 279), 16: (0, 280), 96: (0, 281)},
+  434: {23: (1, 70), 25: (1, 70), 26: (1, 70), 27: (1, 70), 31: (1, 70), 67: (1, 70), 16: (1, 70), 29: (1, 70)},
+  435: {26: (1, 299), 29: (1, 299)},
+  436: {2: (0, 330), 49: (0, 331), 94: (0, 272), 18: (0, 274), 48: (0, 146), 95: (0, 332), 8: (0, 276), 17: (0, 277), 100: (0, 456), 14: (0, 279), 107: (0, 457), 16: (0, 280), 96: (0, 281)},
+  437: {26: (0, 458)},
+  438: {35: (0, 459), 30: (0, 33), 29: (0, 35)},
+  439: {2: (0, 3), 4: (0, 5), 6: (0, 460), 13: (0, 14), 8: (0, 9), 9: (0, 10), 16: (0, 17), 17: (0, 18), 14: (0, 43), 18: (0, 19)},
+  440: {26: (1, 304), 29: (1, 304)},
+  441: {26: (0, 461)},
+  442: {23: (1, 84), 25: (1, 84), 26: (1, 84), 27: (1, 84), 31: (1, 84), 67: (1, 84), 16: (1, 84), 29: (1, 84)},
+  443: {2: (0, 291), 48: (0, 240), 8: (0, 234), 16: (0, 235), 64: (0, 238), 90: (0, 292), 92: (0, 243), 93: (0, 293), 18: (0, 244), 89: (0, 236), 97: (0, 462), 14: (0, 246), 107: (0, 463), 17: (0, 247), 91: (0, 241)},
+  444: {26: (0, 464)},
+  445: {26: (1, 305), 29: (1, 305)},
+  446: {38: (1, 57), 98: (1, 57), 22: (1, 57), 8: (1, 57), 14: (1, 57), 15: (1, 57), 11: (1, 57), 21: (1, 57), 40: (1, 57), 2: (1, 57), 18: (1, 57), 12: (1, 57), 19: (1, 57), 16: (1, 57)},
+  447: {23: (1, 208), 25: (1, 208), 26: (1, 208), 27: (1, 208), 31: (1, 208), 67: (1, 208), 16: (1, 208), 29: (1, 208)},
+  448: {16: (0, 49), 31: (0, 297), 25: (0, 298), 27: (0, 299), 41: (0, 300), 67: (0, 465), 23: (0, 53)},
+  449: {23: (1, 206), 25: (1, 206), 26: (1, 206), 27: (1, 206), 31: (1, 206), 67: (1, 206), 16: (1, 206), 29: (1, 206)},
+  450: {16: (0, 49), 31: (0, 297), 25: (0, 298), 27: (0, 299), 41: (0, 300), 23: (0, 53), 67: (0, 466)},
+  451: {38: (1, 52), 98: (1, 52), 22: (1, 52), 8: (1, 52), 14: (1, 52), 15: (1, 52), 11: (1, 52), 21: (1, 52), 40: (1, 52), 2: (1, 52), 18: (1, 52), 12: (1, 52), 19: (1, 52), 16: (1, 52)},
+  452: {38: (1, 48), 22: (1, 48), 8: (1, 48), 14: (1, 48), 15: (1, 48), 11: (1, 48), 21: (1, 48), 40: (1, 48), 2: (1, 48), 18: (1, 48), 12: (1, 48), 19: (1, 48), 16: (1, 48)},
+  453: {2: (0, 330), 49: (0, 331), 94: (0, 272), 18: (0, 274), 48: (0, 146), 95: (0, 332), 8: (0, 276), 100: (0, 467), 17: (0, 277), 107: (0, 468), 14: (0, 279), 16: (0, 280), 96: (0, 281)},
+  454: {26: (0, 469)},
+  455: {26: (1, 296), 29: (1, 296)},
+  456: {26: (1, 298), 29: (1, 298)},
+  457: {26: (0, 470)},
+  458: {23: (1, 74), 25: (1, 74), 26: (1, 74), 27: (1, 74), 31: (1, 74), 67: (1, 74), 16: (1, 74), 29: (1, 74)},
+  459: {2: (0, 471), 48: (0, 472), 108: (0, 473)},
+  460: {24: (0, 474)},
+  461: {23: (1, 88), 25: (1, 88), 26: (1, 88), 27: (1, 88), 31: (1, 88), 67: (1, 88), 16: (1, 88), 29: (1, 88)},
+  462: {26: (1, 307), 29: (1, 307)},
+  463: {26: (0, 475)},
+  464: {23: (1, 87), 25: (1, 87), 26: (1, 87), 27: (1, 87), 31: (1, 87), 67: (1, 87), 16: (1, 87), 29: (1, 87)},
+  465: {23: (1, 205), 25: (1, 205), 26: (1, 205), 27: (1, 205), 31: (1, 205), 67: (1, 205), 16: (1, 205), 29: (1, 205)},
+  466: {23: (1, 204), 25: (1, 204), 26: (1, 204), 27: (1, 204), 31: (1, 204), 67: (1, 204), 16: (1, 204), 29: (1, 204)},
+  467: {26: (1, 297), 29: (1, 297)},
+  468: {26: (0, 476)},
+  469: {23: (1, 72), 25: (1, 72), 26: (1, 72), 27: (1, 72), 31: (1, 72), 67: (1, 72), 16: (1, 72), 29: (1, 72)},
+  470: {23: (1, 68), 25: (1, 68), 26: (1, 68), 27: (1, 68), 31: (1, 68), 67: (1, 68), 16: (1, 68), 29: (1, 68)},
+  471: {38: (1, 14), 22: (1, 14), 8: (1, 14), 14: (1, 14), 15: (1, 14), 11: (1, 14), 21: (1, 14), 40: (1, 14), 2: (1, 14), 18: (1, 14), 12: (1, 14), 19: (1, 14), 16: (1, 14)},
+  472: {109: (0, 477)},
+  473: {38: (1, 15), 22: (1, 15), 8: (1, 15), 14: (1, 15), 15: (1, 15), 11: (1, 15), 21: (1, 15), 40: (1, 15), 2: (1, 15), 18: (1, 15), 12: (1, 15), 19: (1, 15), 16: (1, 15)},
+  474: {30: (0, 33), 35: (0, 478), 29: (0, 35)},
+  475: {23: (1, 82), 25: (1, 82), 26: (1, 82), 27: (1, 82), 31: (1, 82), 67: (1, 82), 16: (1, 82), 29: (1, 82)},
+  476: {23: (1, 73), 25: (1, 73), 26: (1, 73), 27: (1, 73), 31: (1, 73), 67: (1, 73), 16: (1, 73), 29: (1, 73)},
+  477: {67: (0, 479), 43: (0, 480)},
+  478: {2: (0, 481), 48: (0, 472), 108: (0, 482)},
+  479: {23: (1, 218), 38: (1, 218), 25: (1, 218), 22: (1, 218), 8: (1, 218), 14: (1, 218), 15: (1, 218), 26: (1, 218), 11: (1, 218), 27: (1, 218), 21: (1, 218), 67: (1, 218), 40: (1, 218), 29: (1, 218), 2: (1, 218), 18: (1, 218), 31: (1, 218), 12: (1, 218), 19: (1, 218), 16: (1, 218)},
+  480: {2: (0, 483), 16: (0, 484), 110: (0, 485), 11: (0, 486), 8: (0, 487), 48: (0, 472), 111: (0, 488), 14: (0, 489), 112: (0, 490), 108: (0, 491), 17: (0, 492), 18: (0, 493)},
+  481: {38: (1, 12), 22: (1, 12), 8: (1, 12), 14: (1, 12), 15: (1, 12), 11: (1, 12), 21: (1, 12), 40: (1, 12), 2: (1, 12), 18: (1, 12), 12: (1, 12), 19: (1, 12), 16: (1, 12)},
+  482: {38: (1, 13), 22: (1, 13), 8: (1, 13), 14: (1, 13), 15: (1, 13), 11: (1, 13), 21: (1, 13), 40: (1, 13), 2: (1, 13), 18: (1, 13), 12: (1, 13), 19: (1, 13), 16: (1, 13)},
+  483: {11: (0, 24), 25: (0, 494), 32: (0, 26), 33: (0, 27)},
+  484: {2: (0, 495), 16: (0, 484), 48: (0, 472), 110: (0, 496), 8: (0, 487), 111: (0, 488), 14: (0, 489), 108: (0, 497), 112: (0, 490), 17: (0, 492), 113: (0, 498), 18: (0, 493)},
+  485: {16: (0, 49), 67: (0, 499), 41: (0, 500), 25: (0, 501), 27: (0, 502), 31: (0, 503), 23: (0, 53)},
+  486: {2: (0, 483), 16: (0, 484), 110: (0, 504), 8: (0, 487), 48: (0, 472), 111: (0, 488), 14: (0, 489), 112: (0, 490), 108: (0, 491), 17: (0, 492), 18: (0, 493)},
+  487: {2: (0, 495), 16: (0, 484), 48: (0, 472), 110: (0, 496), 8: (0, 487), 113: (0, 505), 17: (0, 506), 111: (0, 488), 14: (0, 489), 108: (0, 497), 112: (0, 490), 18: (0, 493)},
+  488: {23: (1, 160), 25: (1, 160), 26: (1, 160), 27: (1, 160), 31: (1, 160), 67: (1, 160), 16: (1, 160), 29: (1, 160)},
+  489: {23: (1, 161), 25: (1, 161), 26: (1, 161), 27: (1, 161), 31: (1, 161), 67: (1, 161), 16: (1, 161), 29: (1, 161)},
+  490: {23: (1, 163), 25: (1, 163), 26: (1, 163), 27: (1, 163), 31: (1, 163), 67: (1, 163), 16: (1, 163), 29: (1, 163)},
+  491: {25: (0, 507)},
+  492: {23: (1, 162), 25: (1, 162), 26: (1, 162), 27: (1, 162), 31: (1, 162), 67: (1, 162), 16: (1, 162), 29: (1, 162)},
+  493: {2: (0, 495), 16: (0, 484), 48: (0, 472), 110: (0, 496), 8: (0, 487), 111: (0, 488), 14: (0, 489), 108: (0, 497), 112: (0, 490), 113: (0, 508), 17: (0, 492), 18: (0, 493)},
+  494: {2: (0, 63), 112: (0, 509), 8: (0, 487), 14: (0, 510), 114: (0, 511), 45: (0, 512), 17: (0, 513)},
+  495: {23: (1, 154), 25: (0, 494), 26: (1, 154), 27: (1, 154), 31: (1, 154), 67: (1, 154), 16: (1, 154), 29: (1, 154), 11: (0, 24), 32: (0, 26), 33: (0, 27)},
+  496: {23: (0, 53), 25: (0, 501), 26: (1, 155), 27: (0, 502), 31: (0, 503), 67: (1, 155), 16: (0, 49), 29: (1, 155), 41: (0, 500)},
+  497: {23: (1, 156), 25: (0, 507), 26: (1, 156), 27: (1, 156), 31: (1, 156), 67: (1, 156), 16: (1, 156), 29: (1, 156)},
+  498: {23: (1, 171), 25: (1, 171), 26: (1, 171), 27: (1, 171), 31: (1, 171), 67: (1, 171), 16: (1, 171), 29: (1, 171)},
+  499: {23: (1, 216), 38: (1, 216), 25: (1, 216), 22: (1, 216), 8: (1, 216), 14: (1, 216), 15: (1, 216), 26: (1, 216), 11: (1, 216), 27: (1, 216), 21: (1, 216), 67: (1, 216), 40: (1, 216), 29: (1, 216), 2: (1, 216), 18: (1, 216), 31: (1, 216), 12: (1, 216), 19: (1, 216), 16: (1, 216)},
+  500: {2: (0, 514), 112: (0, 509), 48: (0, 472), 8: (0, 487), 14: (0, 510), 115: (0, 515), 17: (0, 513), 114: (0, 516), 108: (0, 517)},
+  501: {45: (0, 518)},
+  502: {45: (0, 519)},
+  503: {45: (0, 520)},
+  504: {16: (0, 49), 41: (0, 500), 25: (0, 501), 27: (0, 502), 31: (0, 503), 67: (0, 521), 23: (0, 53)},
+  505: {116: (0, 522), 29: (0, 523), 26: (0, 524)},
+  506: {23: (1, 162), 25: (1, 162), 26: (0, 525), 27: (1, 162), 31: (1, 162), 67: (1, 162), 16: (1, 162), 29: (1, 162)},
+  507: {2: (0, 63), 112: (0, 509), 8: (0, 487), 14: (0, 510), 45: (0, 526), 114: (0, 527), 17: (0, 513)},
+  508: {23: (1, 169), 25: (1, 169), 26: (1, 169), 27: (1, 169), 31: (1, 169), 67: (1, 169), 16: (1, 169), 29: (1, 169)},
+  509: {23: (1, 166), 25: (1, 166), 26: (1, 166), 27: (1, 166), 31: (1, 166), 67: (1, 166), 16: (1, 166), 29: (1, 166)},
+  510: {23: (1, 164), 25: (1, 164), 26: (1, 164), 27: (1, 164), 31: (1, 164), 67: (1, 164), 16: (1, 164), 29: (1, 164)},
+  511: {23: (1, 168), 25: (1, 168), 26: (1, 168), 27: (1, 168), 31: (1, 168), 67: (1, 168), 16: (1, 168), 29: (1, 168)},
+  512: {23: (1, 167), 25: (1, 167), 26: (1, 167), 27: (1, 167), 31: (1, 167), 67: (1, 167), 16: (1, 167), 29: (1, 167)},
+  513: {23: (1, 165), 25: (1, 165), 26: (1, 165), 27: (1, 165), 31: (1, 165), 67: (1, 165), 16: (1, 165), 29: (1, 165)},
+  514: {23: (1, 159), 25: (1, 159), 26: (1, 159), 27: (1, 159), 31: (1, 159), 67: (1, 159), 16: (1, 159), 29: (1, 159), 11: (0, 24), 32: (0, 26), 33: (0, 27)},
+  515: {23: (1, 176), 25: (1, 176), 26: (1, 176), 27: (1, 176), 31: (1, 176), 67: (1, 176), 16: (1, 176), 29: (1, 176)},
+  516: {23: (1, 158), 25: (1, 158), 26: (1, 158), 27: (1, 158), 31: (1, 158), 67: (1, 158), 16: (1, 158), 29: (1, 158)},
+  517: {23: (1, 157), 25: (1, 157), 26: (1, 157), 27: (1, 157), 31: (1, 157), 67: (1, 157), 16: (1, 157), 29: (1, 157)},
+  518: {23: (1, 173), 25: (1, 173), 26: (1, 173), 27: (1, 173), 31: (1, 173), 67: (1, 173), 16: (1, 173), 29: (1, 173)},
+  519: {23: (1, 174), 25: (1, 174), 26: (1, 174), 27: (1, 174), 31: (1, 174), 67: (1, 174), 16: (1, 174), 29: (1, 174)},
+  520: {23: (1, 172), 25: (1, 172), 26: (1, 172), 27: (1, 172), 31: (1, 172), 67: (1, 172), 16: (1, 172), 29: (1, 172)},
+  521: {23: (1, 217), 38: (1, 217), 25: (1, 217), 22: (1, 217), 8: (1, 217), 14: (1, 217), 15: (1, 217), 26: (1, 217), 11: (1, 217), 27: (1, 217), 21: (1, 217), 67: (1, 217), 40: (1, 217), 29: (1, 217), 2: (1, 217), 18: (1, 217), 31: (1, 217), 12: (1, 217), 19: (1, 217), 16: (1, 217)},
+  522: {29: (0, 528), 26: (0, 529)},
+  523: {2: (0, 495), 16: (0, 484), 48: (0, 472), 110: (0, 496), 8: (0, 487), 11: (0, 530), 111: (0, 488), 14: (0, 489), 108: (0, 497), 112: (0, 490), 113: (0, 531), 107: (0, 532), 17: (0, 492), 18: (0, 493)},
+  524: {23: (1, 80), 25: (1, 80), 26: (1, 80), 27: (1, 80), 31: (1, 80), 67: (1, 80), 16: (1, 80), 29: (1, 80)},
+  525: {23: (1, 75), 25: (1, 75), 26: (1, 75), 27: (1, 75), 31: (1, 75), 67: (1, 75), 16: (1, 75), 29: (1, 75)},
+  526: {23: (1, 175), 25: (1, 175), 26: (1, 175), 27: (1, 175), 31: (1, 175), 67: (1, 175), 16: (1, 175), 29: (1, 175)},
+  527: {23: (1, 170), 25: (1, 170), 26: (1, 170), 27: (1, 170), 31: (1, 170), 67: (1, 170), 16: (1, 170), 29: (1, 170)},
+  528: {2: (0, 495), 16: (0, 484), 48: (0, 472), 110: (0, 496), 8: (0, 487), 111: (0, 488), 113: (0, 533), 14: (0, 489), 107: (0, 534), 108: (0, 497), 112: (0, 490), 11: (0, 535), 17: (0, 492), 18: (0, 493)},
+  529: {23: (1, 78), 25: (1, 78), 26: (1, 78), 27: (1, 78), 31: (1, 78), 67: (1, 78), 16: (1, 78), 29: (1, 78)},
+  530: {2: (0, 495), 16: (0, 484), 48: (0, 472), 110: (0, 496), 8: (0, 487), 113: (0, 536), 111: (0, 488), 14: (0, 489), 108: (0, 497), 112: (0, 490), 107: (0, 537), 17: (0, 492), 18: (0, 493)},
+  531: {26: (1, 302), 29: (1, 302)},
+  532: {26: (0, 538)},
+  533: {26: (1, 303), 29: (1, 303)},
+  534: {26: (0, 539)},
+  535: {2: (0, 495), 16: (0, 484), 48: (0, 472), 110: (0, 496), 8: (0, 487), 107: (0, 540), 111: (0, 488), 14: (0, 489), 113: (0, 541), 108: (0, 497), 112: (0, 490), 17: (0, 492), 18: (0, 493)},
+  536: {26: (1, 300), 29: (1, 300)},
+  537: {26: (0, 542)},
+  538: {23: (1, 79), 25: (1, 79), 26: (1, 79), 27: (1, 79), 31: (1, 79), 67: (1, 79), 16: (1, 79), 29: (1, 79)},
+  539: {23: (1, 77), 25: (1, 77), 26: (1, 77), 27: (1, 77), 31: (1, 77), 67: (1, 77), 16: (1, 77), 29: (1, 77)},
+  540: {26: (0, 543)},
+  541: {26: (1, 301), 29: (1, 301)},
+  542: {23: (1, 76), 25: (1, 76), 26: (1, 76), 27: (1, 76), 31: (1, 76), 67: (1, 76), 16: (1, 76), 29: (1, 76)},
+  543: {23: (1, 81), 25: (1, 81), 26: (1, 81), 27: (1, 81), 31: (1, 81), 67: (1, 81), 16: (1, 81), 29: (1, 81)},
 }
 TOKEN_TYPES = (
-{0: '_expr',
- 1: 'STATE',
- 2: 'line',
- 3: '__anon_plus_0',
- 4: '_VAR_OPEN',
- 5: 'rulestring_tr',
- 6: '_WS',
+{0: 'table',
+ 1: 'line',
+ 2: 'STATE',
+ 3: 'comment',
+ 4: 'operation',
+ 5: '__anon_plus_0',
+ 6: '_expr',
  7: 'transition',
- 8: 'comment',
- 9: '_expr_no_int',
- 10: 'NAME',
- 11: 'BANG',
- 12: 'range',
- 13: '_NEGATE_ALL',
- 14: 'var',
- 15: '__ANON_15',
- 16: 'operation',
- 17: '_NEGATE_LIVE',
- 18: 'table',
- 19: '_sep',
- 20: '__anon_plus_1',
- 21: 'SEMICOLON',
- 22: 'COMMA',
- 23: '__ANON_14',
- 24: '_NL',
- 25: '_SUBT',
- 26: '_HENSEL_SEP',
- 27: '_HENSEL_CLOSE',
- 28: '$END',
- 29: '_LROT',
- 30: '_MULT',
- 31: '_VAR_CLOSE',
- 32: '_RROT',
- 33: 'PLUS',
- 34: '__ANON_2',
- 35: 'end_bs',
- 36: 'hoist_aux',
- 37: 'normal_aux',
+ 8: '_VAR_OPEN',
+ 9: 'var',
+ 10: 'rulestring_tr',
+ 11: '_WS',
+ 12: 'BANG',
+ 13: '_expr_no_int',
+ 14: 'NAME',
+ 15: '__ANON_16',
+ 16: '_NEGATE_LIVE',
+ 17: 'range',
+ 18: '_NEGATE_ALL',
+ 19: '$END',
+ 20: 'end_bs',
+ 21: '_NL',
+ 22: '__ANON_15',
+ 23: '_SUBT',
+ 24: '_HENSEL_CLOSE',
+ 25: '_MULT',
+ 26: '_VAR_CLOSE',
+ 27: '_RROT',
+ 28: '_HENSEL_SEP',
+ 29: 'COMMA',
+ 30: 'SEMICOLON',
+ 31: '_LROT',
+ 32: 'PLUS',
+ 33: '__ANON_2',
+ 34: '__anon_plus_1',
+ 35: '_sep',
+ 36: '_aux',
+ 37: 'hoist_aux',
  38: '_HOIST_ARROW',
- 39: '_NORMAL_ARROW',
- 40: '_aux',
+ 39: 'normal_aux',
+ 40: '_NORMAL_ARROW',
  41: '_subt',
- 42: 'COLON',
- 43: 'EQUAL',
- 44: '_tr_expr',
- 45: 'crange',
- 46: 'tr_state',
- 47: 'inline_binding',
- 48: 'COMPASS_DIR',
- 49: '_tr_expr_no_int',
- 50: 'LSQB',
- 51: 'prefix',
- 52: 'tr_operation',
- 53: '_HENSEL_OPEN',
- 54: 'reference',
- 55: 'tr_var',
- 56: 'INT',
- 57: '_expr_no_rec',
- 58: '__anon_star_4',
+ 42: 'EQUAL',
+ 43: 'COLON',
+ 44: '_expr_no_rec',
+ 45: 'INT',
+ 46: '_HENSEL_OPEN',
+ 47: 'COMPASS_DIR',
+ 48: 'LSQB',
+ 49: 'reference',
+ 50: '_tr_expr',
+ 51: 'inline_binding',
+ 52: '_tr_expr_no_int',
+ 53: 'prefix',
+ 54: 'tr_var',
+ 55: 'crange',
+ 56: 'tr_state',
+ 57: 'tr_operation',
+ 58: 'cdir_delay',
  59: 'SYMMETRY_NAME',
- 60: 'symmetried_aux',
- 61: 'cdir_delay',
- 62: 'auxiliary',
- 63: '_auxlist',
+ 60: 'auxiliary',
+ 61: 'symmetried_aux',
+ 62: '_auxlist',
+ 63: '__anon_star_4',
  64: 'LEAVE_ALONE',
  65: '_expr_norec_int',
  66: '__ANON_0',
- 67: '_PERMUTE',
- 68: 'RSQB',
- 69: '__ANON_10',
- 70: '_digit_bind',
- 71: '__ANON_3',
- 72: '__ANON_6',
- 73: '__ANON_8',
- 74: '__ANON_7',
- 75: '__ANON_12',
- 76: '__ANON_4',
- 77: '__ANON_11',
- 78: '__ANON_9',
- 79: '__ANON_5',
+ 67: 'RSQB',
+ 68: '_PERMUTE',
+ 69: '__ANON_13',
+ 70: '__ANON_4',
+ 71: '__ANON_7',
+ 72: '_digit_bind',
+ 73: '__ANON_11',
+ 74: '__ANON_5',
+ 75: '__ANON_8',
+ 76: '__ANON_9',
+ 77: '__ANON_6',
+ 78: '__ANON_12',
+ 79: '__ANON_10',
  80: 'hensel_rulestring',
- 81: '__ANON_13',
+ 81: '__ANON_14',
  82: 'LPAR',
  83: '_aux_group',
  84: '__anon_star_2',
  85: '_tr_expr_no_rec',
- 86: '__ANON_1',
- 87: '__anon_star_5',
+ 86: '__anon_star_5',
+ 87: '__ANON_1',
  88: '_tr_expr_norec_int',
- 89: 'aux_reference',
+ 89: 'aux_var',
  90: '_aux_expr_no_int',
- 91: 'aux_operation',
- 92: 'leave_alone_mult',
- 93: 'aux_var',
- 94: '_ref_expr_no_int',
- 95: 'ref_operation',
- 96: 'ref_var',
- 97: 'RPAR',
- 98: '__anon_star_3',
- 99: '_aux_expr',
+ 91: 'leave_alone_mult',
+ 92: 'aux_operation',
+ 93: 'aux_reference',
+ 94: 'ref_var',
+ 95: '_ref_expr_no_int',
+ 96: 'ref_operation',
+ 97: '_aux_expr',
+ 98: 'RPAR',
+ 99: '__anon_star_3',
  100: '_ref_expr',
- 101: '__anon_star_7',
- 102: '_aux_expr_no_rec',
+ 101: '_aux_expr_no_rec',
+ 102: '__anon_star_8',
  103: '_aux_expr_norec_int',
  104: '_ref_expr_no_rec',
  105: '_ref_expr_norec_int',
  106: '__anon_star_6',
- 107: 'EXTEND_LAST'}
+ 107: 'EXTEND_LAST',
+ 108: 'rs_ref',
+ 109: '__ANON_3',
+ 110: '_rs_expr_no_int',
+ 111: 'rs_operation',
+ 112: 'rs_var',
+ 113: '_rs_expr',
+ 114: '_rs_expr_no_rec',
+ 115: '_rs_expr_norec_int',
+ 116: '__anon_star_7'}
 )
 parse_table.states = {s: {TOKEN_TYPES[t]: (a, RULES[x] if a is Reduce else x) for t, (a, x) in acts.items()}
                       for s, acts in STATES.items()}
 parse_table.start_state = 0
-parse_table.end_state = 59
+parse_table.end_state = 20
 class Lark_StandAlone:
   def __init__(self, transformer=None, postlex=None, *, tbl):
      callback = parse_tree_builder.create_callback(transformer=transformer)

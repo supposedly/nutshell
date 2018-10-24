@@ -6,12 +6,13 @@ line: NAME ":" _WS? /.+/      -> directive
   | transition _aux?          -> transition
   | rulestring_tr _aux?       -> rulestring_transition
 
-rulestring_tr: _expr _sep _HENSEL_OPEN hensel_rulestring _HENSEL_SEP _expr _HENSEL_SEP _expr _HENSEL_CLOSE _sep (STATE | reference)  -> rulestring_tr
-  | _expr _sep _HENSEL_OPEN hensel_rulestring _WS NAME _HENSEL_SEP _expr _HENSEL_SEP _expr _HENSEL_CLOSE _sep (STATE | reference)    -> special_rulestring_tr
+rulestring_tr: _expr _sep _HENSEL_OPEN hensel_rulestring _HENSEL_SEP _expr _HENSEL_SEP _expr _HENSEL_CLOSE _sep (STATE | rs_ref)  -> rulestring_tr
+  | _expr _sep _HENSEL_OPEN hensel_rulestring _WS NAME _HENSEL_SEP _expr _HENSEL_SEP _expr _HENSEL_CLOSE _sep (STATE | rs_ref)    -> special_rulestring_tr
 
 _HENSEL_OPEN: _WS? "<" _WS?
 _HENSEL_CLOSE: _WS? ">" _WS?
 _HENSEL_SEP: _WS? "/" _WS?
+
 
 transition: _expr (_sep tr_state)+ _sep _tr_expr -> main  //Can't have (STATE | reference) here in LALR
 tr_state: [prefix _WS] _tr_expr
@@ -54,10 +55,11 @@ auxiliary: cdir_delay ":" STATE                                               ->
 cdir_delay: COMPASS_DIR ["+" INT]
 
 
-var: _VAR_OPEN (_expr ("," _WS? _expr)* | range) _VAR_CLOSE                                     -> noref_var
-tr_var: _VAR_OPEN (_tr_expr ("," _WS? _tr_expr)* | range) _VAR_CLOSE                            -> var
-ref_var: _VAR_OPEN (_ref_expr ("," _WS? _ref_expr)* ["," _WS? EXTEND_LAST] | range) _VAR_CLOSE  -> var
-aux_var: _VAR_OPEN (_aux_expr ("," _WS? _aux_expr)* ["," _WS? EXTEND_LAST] | range) _VAR_CLOSE  -> var
+var: _VAR_OPEN (_expr ("," _WS? _expr)* | range) _VAR_CLOSE                                           -> noref_var
+tr_var: _VAR_OPEN (_tr_expr ("," _WS? _tr_expr)* | range) _VAR_CLOSE                                  -> var
+ref_var: _VAR_OPEN (_ref_expr ("," _WS? _ref_expr)* ["," _WS? EXTEND_LAST] | range) _VAR_CLOSE        -> var
+rs_var: _VAR_OPEN (_rs_expr ("," _WS? _rs_expr)* ["," _WS? EXTEND_LAST] | range) _VAR_CLOSE  -> var
+aux_var: _VAR_OPEN (_aux_expr ("," _WS? _aux_expr)* ["," _WS? EXTEND_LAST] | range) _VAR_CLOSE        -> var
 
 
 _expr: _expr_no_int | STATE
@@ -117,6 +119,25 @@ ref_operation: (STATE | reference) _MULT INT    -> repeat_int
   | _NEGATE_ALL _ref_expr                       -> all_except
 
 
+// for inline rulestrings
+_rs_expr: _rs_expr_no_int | STATE | rs_ref
+_rs_expr_norec_int: _rs_expr_no_rec | STATE | rs_ref
+_rs_expr_no_int: NAME | range | rs_operation | rs_var
+_rs_expr_no_rec: NAME | range| rs_var
+
+rs_operation: (STATE | rs_ref) _MULT INT         -> repeat_int
+  | (STATE | rs_ref) _MULT _rs_expr_no_rec       -> int_to_var_length
+  | _rs_expr_no_int _MULT INT                    -> repeat_var
+  
+  | _rs_expr_no_int _subt _rs_expr_norec_int     -> subt
+  
+  | _rs_expr_no_int _RROT INT                    -> rot_right
+  | _rs_expr_no_int _LROT INT                    -> rot_left
+  
+  | _NEGATE_LIVE _rs_expr                        -> live_except
+  | _NEGATE_ALL _rs_expr                         -> all_except
+
+
 _aux_expr: _aux_expr_no_int | STATE | aux_reference
 _aux_expr_norec_int: _aux_expr_no_rec | STATE | aux_reference
 _aux_expr_no_int: NAME | LEAVE_ALONE | leave_alone_mult | range | aux_operation | aux_var
@@ -140,6 +161,10 @@ aux_reference: "[" (COMPASS_DIR | _digit_bind) "]"                     -> bindin
 
 reference: "[" (COMPASS_DIR | _digit_bind) "]"                     -> binding
   | "[" (COMPASS_DIR | _digit_bind) ":" _WS? _ref_expr_no_int "]"  -> mapping
+
+// inline-rulestring-exclusive reference: can only be one of 0/1/bg/2/fg (for input state, background, and foreground)
+rs_ref: "[" /0|1|2|FG|BG/ "]"                           -> rs_binding
+  | "[" /0|1|2|FG|BG/ ":" _WS? _rs_expr_no_int "]"  -> rs_mapping
 
 
 range: STATE _WS? ".." _WS? STATE
