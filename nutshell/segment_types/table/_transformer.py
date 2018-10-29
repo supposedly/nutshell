@@ -193,11 +193,14 @@ class Preprocess(Transformer):
     def permute_shorthand(self, children, meta):
         state, *permute = children
         if not hasattr(self._tbl.symmetries, 'special'):
+            if permute:
+                raise SyntaxErr(
+                  fix(meta),
+                  f"Cannot use tilde-based shorthand under {self.directives['symmetries']} symmetry.\n  "
+                  '(Try a range of compass directions instead)'
+                  )
+            # XXX: this is suspect (cryptic message and i'm not sure it's raised in the right situation)
             raise SyntaxErr(
-              fix(meta),
-              f"Cannot use tilde-based shorthand under {self.directives['symmetries']} symmetry.\n  "
-              '(Try a range of compass directions instead)'
-            ) if permute else SyntaxErr(
               fix(meta),
               f"Cannot use inline-binding shorthand with no implication of multiple states"
               )
@@ -207,6 +210,7 @@ class Preprocess(Transformer):
         if not self._tbl.default_sym_used and self.directives['symmetries'] == 'none':
             self._tbl.default_sym_used = True
             self._tbl.add_sym_type('none')
+        
         initial, resultant = children.pop(0), children.pop(-1)
         try:
             initial = self.kill_string(initial, meta.line)
@@ -503,6 +507,7 @@ class Preprocess(Transformer):
     def rulestring_tr(self, meta, initial, rulestring_nbhds, background, foreground, resultant):
         initial = self.kill_string(initial, meta)
         resultant = self.kill_string(resultant, meta)
+        
         fg = self.kill_string(foreground, meta)
         bg = self.kill_string(background, meta)
         if isinstance(foreground, StateList):

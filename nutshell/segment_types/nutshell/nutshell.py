@@ -30,7 +30,7 @@ class NutshellSegment(MutableSequence):
     def insert(self, index, item):  # for MutableMapping abc
         return self._src.insert(index, item)
     
-    def _extract_constants(self, ignore=frozenset({'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'})):
+    def _extract_constants(self, invalid=frozenset({'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW', 'FG', 'BG'})):
         """
         Extract constants from @NUTSHELL segment, defined as follows:
 
@@ -52,8 +52,8 @@ class NutshellSegment(MutableSequence):
                     continue
                 if name in self.constants:
                     raise ValueErr(lno, f'Duplicate constant {name!r}')
-                if name in ignore:
-                    self[lno] = f'{_0}{state}:{_1}{_2}  (BAD CONSTANT NAME {name!r})'
+                if name in invalid:
+                    raise ValueErr(lno, f'Invalid (reserved) constant name {name!r}')
                 else:
                     if state:
                         self.constants[name] = int(state)

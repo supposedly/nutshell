@@ -12,7 +12,7 @@ from nutshell.common.errors import *
 from .lark_assets import parser as lark_standalone
 from ._transformer import Preprocess, NUTSHELL_GRAMMAR
 from ._classes import VarName, StateList
-from . import _symutils as symutils, _neighborhoods as nbhds
+from . import _symutils as symutils, _neighborhoods as nbhoods
 
 # no need to catch \s*,\s* because directive values are translated with KILL_WS
 CUSTOM_NBHD = re.compile(r'(?:[NS][EW]?|[EW])(?:,(?:[NS][EW]?|[EW]))*')
@@ -128,7 +128,7 @@ class Table:
             if len(nbhd) != len(set(nbhd)):
                 raise ValueError('Duplicate compass directions in neighborhood')
             self._nbhd = bidict.bidict(enumerate(nbhd, 1)).inv
-            self.gollyize_nbhd = nbhds.get_gollyizer(self, nbhd)
+            self.gollyize_nbhd = nbhoods.get_gollyizer(self, nbhd)
         elif val in self.CARDINALS:
             self._nbhd = self.CARDINALS[val]
         else:
@@ -161,7 +161,7 @@ class Table:
     
     def update_special_vars(self, value=None):
         if value is not None:
-            self.n_states = value
+            self.n_states = 1 + value
         self.vars[self.specials['any']] = StateList(range(self.n_states), context=None)
         self.vars[self.specials['live']] = StateList(range(1, self.n_states), context=None)
     
