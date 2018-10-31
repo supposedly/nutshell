@@ -8,14 +8,9 @@ DEFAULT_HEADER = '''\
 
 cli = CLI("A transpiler from the 'Nutshell' rule-table format to Golly's")
 
-preview = cli.command(
-  'preview', "Preview a single Nutshell transition's result",
-  aliases=['p'], XOR='preview|transpile', OR='not nothing'
-  )
-
 transpile = cli.command(
   'transpile', 'Transpile from Nutshell to Golly ruletable format',
-  aliases=['t'], XOR='preview|transpile', OR='not nothing'
+  aliases=['t'], OR='not nothing'
   )
 
 transpile.main_grp = Group(XOR='find|normal')
@@ -99,30 +94,3 @@ def preserve_comments():
 def find(transition):
     """Locate first transition in `infile` that matches"""
     return tuple(s if s == '*' else int(s) for s in map(str.strip, transition.split(',')))
-
-
-@preview.arg(required=True)
-def transition(tr):
-    """nutshell-formatted transition to preview"""
-    return tr
-
-
-@preview.flag(short='n', default='Moore')
-def neighborhood(value):
-    """Neighborhood to consider transition part of"""
-    if value.replace(' ', '') not in ('Moore', 'vonNeumann', 'hexagonal'):
-        raise ValueError("Invalid preview-transition neighborhood (must be one of 'Moore', 'vonNeumann', 'hexagonal')")
-    return value
-
-
-@preview.flag(short='s', default='?')
-def states(num):
-    """Number of states to include in transition (default: guess)"""
-    if not num.isdigit() and num != '?':
-        raise ValueError('Preview n_states must be ? or an integer')
-    return str(num)
-
-
-@preview.flag(short='y', default='none')
-def symmetries(value):
-    return value.lower()

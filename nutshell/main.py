@@ -10,32 +10,17 @@ from nutshell.common.utils import printq
 from nutshell.cli import cli
 
 
-def transpile(fp, *, preview=False, find=None):
+def transpile(fp, *, find=None):
     """
-    Parses and compiles the given nutshell file into an equivalent .rule.
+    Performs the parsing process from start to finish
     """
     printq('\nParsing...')
     parsed = segmentor.parse(fp)
-    if preview:
-        tbl = parsed['@TABLE']
-        return '{}\n\n{}'.format('\n'.join(f'{k}: {v}' for k, v in tbl.vars.items()), '\n'.join(', '.join(map(str, tr)) for tr in tbl))
     if find:
         print(parsed['@TABLE'].match(find) + '\n')
         return
     printq('Complete!', 'Compiling...', sep='\n\n')
     return compiler.compile(parsed)
-
-
-def _preview(args):
-    mock = f'''
-      @TABLE
-      states: {args.states}
-      symmetries: {args.symmetries}
-      neighborhood: {args.neighborhood}
-      {args.transition}
-    '''
-    parsed = transpile(cleandoc(mock).splitlines(), preview=True)
-    yield ('Complete! Transpiled preview:\n', parsed, '')
 
 
 def _transpile(args):
@@ -67,8 +52,6 @@ def main():
         return
     if 'transpile' in inp:
         res = _transpile(inp.transpile)
-    elif 'preview' in inp:
-        res = _preview(inp.preview)
     elif 'icon' in inp:
         res = tools.dispatch(inp.icon)
     for val in res:

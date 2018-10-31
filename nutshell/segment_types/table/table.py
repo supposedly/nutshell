@@ -160,8 +160,12 @@ class Table:
             self._n_states = self.directives['states'] = value
     
     def update_special_vars(self, value=None):
-        if value is not None:
-            self.n_states = 1 + value
+        if value == '?':
+            self.directives['states'] = self.n_states
+        elif value is not None:
+            if not value.isdigit():
+                raise ValueError(value)
+            self.n_states = int(value)
         self.vars[self.specials['any']] = StateList(range(self.n_states), context=None)
         self.vars[self.specials['live']] = StateList(range(1, self.n_states), context=None)
     

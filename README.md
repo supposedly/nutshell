@@ -102,7 +102,7 @@ initialized to before `@TABLE` is parsed):
 - `symmetries: none`
 - `states: ?`
 
-Two things to note regarding the final item: first, that the `n_states` directive (though still usable by that name)
+Two things to note regarding the final item: first, that the `n_states` directive <!-- (though still usable by that name) -->
 has been changed to `states`, and second that it accepts a value of `?`, which tells Nutshell to infer the amount
 of cellstates in a rule by checking the maximum cellstate value referred to -- be it in a statelist, constant declaration,
 or a literal number in a transition napkin. This means that the writer needn't bother keeping track of how many cellstates

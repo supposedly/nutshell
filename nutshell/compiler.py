@@ -4,6 +4,13 @@ from nutshell.cli import cli
 
 
 def _handle_rule(rulefile, include_header, seg):
+    """
+    rulefile: stream to write to
+    include_header: whether to include the compiled-by header or not
+    seg: @RULE-segment data as a list of lines
+
+    Writes @RULE segment to output stream
+    """
     if seg is None:
         return
     name = seg.pop(0)
@@ -14,6 +21,13 @@ def _handle_rule(rulefile, include_header, seg):
 
 
 def _iter_transitions(tbl):
+    """
+    tbl: nutshell.segment_types.table.table.Table object
+    yield: lines to write to Golly table
+
+    Yields resultant transitions of tbl, inserting comments where
+    necessitated (e.g. if -s and/or -c has been passed)
+    """
     src, cmt = cli.result.transpile.comment_src, cli.result.transpile.preserve_comments
     seen = set()
     for tr in tbl:
@@ -31,6 +45,13 @@ def _iter_transitions(tbl):
 
 
 def _handle_table(rulefile, tbl):
+    """
+    rulefile: stream to write to
+    tbl: segment_types.table.table.Table object
+
+    Formats all info from `tbl` as necessary to comply with Golly's
+    ruletable format (e.g. var declarations and directives and all)
+    """
     rulefile.append('@TABLE')
     if tbl[0] is None:  # sentinel from segmentor.py indicating not to touch
         rulefile.extend(tbl[1:])
@@ -51,6 +72,10 @@ def _handle_table(rulefile, tbl):
 
 
 def compile(parsed):
+    """
+    parsed: dict of operated-upon segments from Nutshell file
+    return: completed Golly table therefrom
+    """
     rulefile = []
     with suppress(KeyError):
         _handle_rule(rulefile, '@NUTSHELL' in parsed, parsed.pop('@NUTSHELL', parsed.pop('@RULE', None)))
