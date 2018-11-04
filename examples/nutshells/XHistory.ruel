@@ -1,0 +1,37 @@
+@NUTSHELL XHistory
+Template for History rules. (LifeHistory by default in Nutshell's examples/ directory)
+
+1: ON cell
+: {History} Indicates whether cell was ever ON
+: {MarkedON} Marked ON cell; may change to OFF, but remains marked
+: {MarkedOFF} Marked OFF cell; may change to ON, but remains marked
+: {InitialON} Becomes a normal marked OFF cell on dying, but is initially marked differently from a normal marked ON cell
+: {Boundary} Grey boundary cell
+
+
+@COLORS
+0F0: 1
+000080: History
+D8FFD8: MarkedON
+F00: MarkedOFF
+FF0: InitialON
+606060: Boundary
+
+
+@TABLE
+symmetries: permute
+
+off = (MarkedOFF, History, 0)
+on = (1, MarkedON, InitialON)
+
+# Birth; REPLACE THE 3 BELOW
+off, <3 / on / (off, Boundary)>; [0: (MarkedON, 1, ...)]
+
+# Death on touching a boundary cell
+on, Boundary ~ 1, (0, Boundary); [0: (History, MarkedOFF, ...)]
+
+# Survival; REPLACE THE 23 BELOW
+on, <23 / on / off>; [0]
+
+# Death
+on, any; [0: (History, MarkedOFF, ...)]

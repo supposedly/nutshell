@@ -1,0 +1,80 @@
+@RULE XHistory
+********************************
+**** COMPILED FROM NUTSHELL ****
+********************************
+Template for History rules. (In Nutshell's examples/ directory, LifeHistory)
+
+1: ON cell
+2: Indicates whether cell was ever ON
+3: Marked ON cell; may change to OFF, but remains marked
+4: Marked OFF cell; may change to ON, but remains marked
+5: Becomes a normal marked OFF cell on dying, but is initially marked differently from a normal marked ON cell
+6: Grey boundary cell
+
+
+@TABLE
+neighborhood: Moore
+symmetries: permute
+n_states: 7
+
+var any.0 = {0,1,2,3,4,5,6}
+var any.1 = any.0
+var any.2 = any.0
+var any.3 = any.0
+var any.4 = any.0
+var any.5 = any.0
+var any.6 = any.0
+var any.7 = any.0
+var off.0 = {0,2,4}
+var off.1 = off.0
+var off.2 = off.0
+var off.3 = off.0
+var off.4 = off.0
+var off.5 = off.0
+var on.0 = {1,3,5}
+var on.1 = on.0
+var on.2 = on.0
+var on.3 = on.0
+var _a0.0 = {0,2,4,6}
+var _a0.1 = _a0.0
+var _a0.2 = _a0.0
+var _a0.3 = _a0.0
+var _a0.4 = _a0.0
+var _b0.0 = {0,2}
+var _c0.0 = {0,6}
+var _c0.1 = _c0.0
+var _c0.2 = _c0.0
+var _c0.3 = _c0.0
+var _c0.4 = _c0.0
+var _c0.5 = _c0.0
+var _c0.6 = _c0.0
+var _d0.0 = {3,5}
+
+
+#### line 28: off, <3 / on / (off, 6)>; [0: (3, 1, ...)] ####
+# Birth; REPLACE THE 3 BELOW
+4, on.0, on.1, on.2, _a0.0, _a0.1, _a0.2, _a0.3, _a0.4, 3
+_b0.0, on.0, on.1, on.2, _a0.0, _a0.1, _a0.2, _a0.3, _a0.4, 1
+
+#### line 31: on, 6 ~ 1, (0, 6); [0: (2, 4, ...)] ####
+# Death on touching a boundary cell
+1, 6, _c0.0, _c0.1, _c0.2, _c0.3, _c0.4, _c0.5, _c0.6, 2
+_d0.0, 6, _c0.0, _c0.1, _c0.2, _c0.3, _c0.4, _c0.5, _c0.6, 4
+
+#### line 34: on, <23 / on / off>; [0] ####
+# Survival; REPLACE THE 23 BELOW
+on.0, on.1, on.2, on.3, off.0, off.1, off.2, off.3, off.4, on.0
+on.0, on.1, on.2, off.0, off.1, off.2, off.3, off.4, off.5, on.0
+
+#### line 37: on, any; [0: (2, 4, ...)] ####
+# Death
+1, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 2
+_d0.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 4
+
+@COLORS
+1 0 255 0
+2 0 0 128
+3 216 255 216
+4 255 0 0
+5 255 255 0
+6 96 96 96

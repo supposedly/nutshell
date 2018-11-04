@@ -225,13 +225,14 @@ class Transition:
         ret = []
         variables = self.tbl.vars.inv
         seen = defaultdict(lambda: -1)
+        
         for i in self:
             while isinstance(i, VarValue):
                 i = i.value
             if not isinstance(i, StateList):
                 ret.append(str(i))
             elif isinstance(i, ResolvedBinding):
-                ret.append(ret[i.cdir != '0' and self.tbl.neighborhood[i.cdir]])
+                ret.append(i)  # Handled below because of forward references
             elif i.untether() in variables:
                 varname = variables[i.untether()]
                 seen[varname] += 1
@@ -242,6 +243,13 @@ class Transition:
                 seen[varname] = 0
                 variables.inv[varname] = i.untether()
                 ret.append(f'{varname}.0')
+        for i, v in enumerate(ret):
+            if isinstance(v, ResolvedBinding):
+                cdir = v.cdir != '0' and self.tbl.neighborhood[v.cdir]
+                if isinstance(ret[cdir], ResolvedBinding):
+                    raise SyntaxError(v.ctx, 'Attempted binding to another binding')
+                ret[i] = ret[cdir]
+        
         if self.tbl.gollyize_nbhd is not None:
             return FinalTransition(
               [ret[0], *self.tbl.gollyize_nbhd(self.tbl, ret[1:-1], 1 + seen.get('any', 0)), ret[-1]],
@@ -259,20 +267,25 @@ class Transition:
             if not isinstance(i, StateList):
                 ret.append(str(i))
             elif isinstance(i, ResolvedBinding):
-                cdir = i.cdir != '0' and self.tbl.neighborhood[i.cdir]
-                varname = variables[i.untether()]
-                if '.' not in ret[cdir]:
-                    seen[varname] = 1
-                    varname.update_rep(1)
-                    ret[cdir] = f'{varname}.0'
-                ret.append(ret[cdir])
+                ret.append(i)  # Handled later because of forward references
             elif i.untether() in variables:
                 ret.append(f'{variables[i.untether()]}')
             else:
                 varname = self.tbl.new_varname()
                 seen[varname] = 0
                 variables.inv[varname] = i.untether()
-                ret.append(f'{varname}')  # XXX: Faster overall to append varname as a string like this or to preserve variable tuple and assign name in second 'fix' step?
+                ret.append(f'{varname}')
+        for i, v in enumerate(ret):
+            if isinstance(v, ResolvedBinding):
+                cdir = v.cdir != '0' and self.tbl.neighborhood[v.cdir]
+                if isinstance(ret[cdir], ResolvedBinding):
+                    raise SyntaxErr(v.ctx, 'Attempted binding to another binding')
+                varname = variables[v.untether()]
+                if '.' not in ret[cdir]:
+                    seen[varname] += 1
+                    varname.update_rep(seen[varname])
+                    ret[cdir] = f'{varname}.{seen[varname]}'
+                ret[i] = ret[cdir]
         return ret
     
     def fix_final(self, tr):
@@ -366,6 +379,10 @@ class InlineBinding:
             return self.bind
         self.given = True
         return self.val
+    
+    def reset(self):
+        self.bind = None
+        self.given = False
 
 
 class Mapping(Reference):

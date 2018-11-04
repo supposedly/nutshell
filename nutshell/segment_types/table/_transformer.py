@@ -42,35 +42,33 @@ def _add_mod(modulus, index, add, start=1):
     return index % modulus + start
 
 
-# I don't know where to put this function
+# I don't know where to put these two functions
+def get_rs_cdir(reference, nb_count, letter, meta):
+    if letter is None:
+        if nb_count == '0':
+            if reference.idx == 'FG':
+                raise ValueErr(meta, 'Reference to FG, but given rulestring includes 0, which has no foreground states')
+            return 'N'
+        if nb_count == '8':
+            if reference.idx == 'BG':
+                raise ValueErr(meta, 'Reference to BG, but given rulestring includes 8, which has no background states')
+            return 'N'
+        return 'N' if reference.idx == 'FG' else nbhoods.CDIRS[int(nb_count)] if reference.idx == 'BG' else '0'
+    if reference.idx == 'BG':
+        return nbhoods.BG_LOCATIONS[nb_count][letter]
+    if reference.idx == 'FG':
+        return nbhoods.FG_LOCATIONS[nb_count][letter]
+    return '0'
+
+
 def resolve_rs_ref(term, nb_count, letter, meta):
     if not isinstance(term, (InlineRulestringBinding, InlineRulestringMapping)):
         return term
-    
-    if letter is None:
-        if nb_count == '0':
-            if term.idx == 'FG':
-                raise ValueErr(meta, 'Reference to FG, but given rulestring includes 0, which has no foreground states')
-            new_cdir = 'N'
-        elif nb_count == '8':
-            if term.idx == 'BG':
-                raise ValueErr(meta, 'Reference to BG, but given rulestring includes 8, which has no background states')
-            new_cdir = 'N'
-        else:
-            new_cdir = 'N' if term.idx == 'FG' else 'NW' if term.idx == 'BG' else '0'
-    elif term.idx == 'BG':
-        new_cdir = nbhoods.BG_LOCATIONS[nb_count][letter]
-    elif term.idx == 'FG':
-        new_cdir = nbhoods.FG_LOCATIONS[nb_count][letter]
-    else:
-        new_cdir = '0'
-    
+    new_cdir = get_rs_cdir(term, nb_count, letter, meta)
     if isinstance(term, InlineRulestringBinding):
         return Binding(new_cdir, context=term.ctx)
-    
     if isinstance(term, InlineRulestringMapping):
         return Mapping(new_cdir, term.map_to, context=term.ctx)
-    
     return term
 
 
@@ -148,6 +146,7 @@ class Preprocess(Transformer):
     @inline
     def transition(self, meta, main, aux_first=None, aux_second=None):
         if aux_first is not None and aux_first.meta == 'normal':
+            # then aux_second must be 'hoisted', so apply it first
             return list(chain(main.apply_aux(aux_second), main.expand(), main.apply_aux(aux_first)))
         return list(chain(main.apply_aux(aux_first), main.expand(), main.apply_aux(aux_second)))
     
@@ -470,25 +469,31 @@ class Preprocess(Transformer):
     
     @inline
     def binding(self, meta, cdir):
+        if cdir in ('FG', 'BG'):
+            return self.rs_binding((cdir,), meta)
         return Binding(self._tbl.check_cdir(cdir, meta, return_int=False, enforce_int=True), context=meta)
     
     @inline
     def mapping(self, meta, cdir, map_to):
+        if cdir in ('FG', 'BG'):
+            return self.rs_mapping((cdir, map_to), meta)
         return Mapping(self._tbl.check_cdir(cdir, meta, return_int=False, enforce_int=True), self.kill_string(map_to, meta), context=meta)
     
     @inline
     def rs_binding(self, meta, idx):
-        if idx == '0':
-            return Binding('0', context=meta)
-        idx = 'BG' if idx == '1' else 'FG' if idx == 2 else str(idx)
-        return InlineRulestringBinding(idx, context=meta)
+        # No longer part of the grammar, but
+        # should only be called when idx in {'FG', 'BG'}.
+        #if idx == '0':
+        #    return Binding('0', context=meta)
+        return InlineRulestringBinding(str(idx), context=meta)
     
     @inline
     def rs_mapping(self, meta, idx, map_to):
-        if idx == '0':
-            return Mapping('0', self.kill_string(map_to, meta), context=meta)
-        idx = 'BG' if idx == '1' else 'FG' if idx == 2 else str(idx)
-        return InlineRulestringMapping(idx, self.kill_string(map_to, meta), context=meta)
+        # No longer part of the grammar, but
+        # should only be called when idx in {'FG', 'BG'}.
+        #if idx == '0':
+        #    return Mapping('0', self.kill_string(map_to, meta), context=meta)
+        return InlineRulestringMapping(str(idx), self.kill_string(map_to, meta), context=meta)
     
     @inline
     def hensel_rulestring(self, meta, rulestring):
@@ -503,8 +508,29 @@ class Preprocess(Transformer):
               )
         return nbhds
     
+    def _get_getter(self, val, kind):
+        def get_val(*_):
+            return val
+        
+        if isinstance(val, InlineBinding):
+            val.idx = kind.upper()  # XXX: dynamic typing oh boy. (get_rs_ref() needs an idx attribute with this value, so...)
+            used = set()
+            def get_val(nb_count, letter, meta):
+                if (nb_count, letter) not in used:
+                    val.reset()
+                    used.add((nb_count, letter))
+                if val.bind is None:
+                    val.set(get_rs_cdir(val, nb_count, letter, meta))
+                return val.give()
+        
+        if isinstance(val, (InlineRulestringBinding, InlineRulestringMapping)):
+            def get_val(nb_count, letter, meta):
+                return resolve_rs_ref(val, nb_count, letter, meta)
+        
+        return get_val
+    
     @inline
-    def rulestring_tr(self, meta, initial, rulestring_nbhds, background, foreground, resultant):
+    def rulestring_tr(self, meta, initial, rulestring_nbhds, foreground, background, resultant):
         initial = self.kill_string(initial, meta)
         resultant = self.kill_string(resultant, meta)
         
@@ -527,12 +553,18 @@ class Preprocess(Transformer):
         if r4r_nbhds:
             self._tbl.add_sym_type('rotate4reflect')
         
+        get_fg, get_bg = self._get_getter(fg, 'fg'), self._get_getter(bg, 'bg')
         ret = [
           TransitionGroup(
             self._tbl,
-            initial,
+            resolve_rs_ref(initial, nb_count, letter, meta),
             # XXX: probably suboptimal performance b/c [dot attr access] -> [getitem] -> [getitem]
-            {num: fg if cdir in nbhoods.R4R_NBHDS[nb_count][letter] else bg for cdir, num in self._tbl.neighborhood.items()},
+            {
+              num: get_fg(nb_count, letter, meta)
+              if cdir in nbhoods.R4R_NBHDS[nb_count][letter]
+              else get_bg(nb_count, letter, meta)
+              for cdir, num in self._tbl.neighborhood.items()
+            },
             resolve_rs_ref(resultant, nb_count, letter, meta),
             context=meta, symmetries=ROTATE_4_REFLECT
             )
@@ -542,8 +574,13 @@ class Preprocess(Transformer):
         ret.extend(
           TransitionGroup(
             self._tbl,
-            initial,
-            {num: fg if num <= nb_count else bg for num in self._tbl.neighborhood.values()},
+            resolve_rs_ref(initial, nb_count, None, meta),
+            {
+              num: get_fg(nb_count, None, meta)
+              if num <= nb_count
+              else get_bg(nb_count, None, meta)
+              for num in self._tbl.neighborhood.values()
+            },
             resolve_rs_ref(resultant, nb_count, None, meta),
             context=meta, symmetries=PERMUTE
             )
@@ -554,11 +591,13 @@ class Preprocess(Transformer):
     @inline
     def rulestring_transition(self, meta, trs, aux_first=None, aux_second=None):
         ret = []
+        if aux_first is not None and aux_first.meta == 'normal':
+            # then, as above, aux_second is either hoisted or nonexistent
+            # but in the interest of not doing this conditional every iteration
+            # of the below loop, we'll just switch them around here
+            aux_second, aux_first = aux_first, aux_second
         for tr in trs:
-            if aux_first is not None and aux_first.meta == 'normal':
-                ret.extend(chain(tr.apply_aux(aux_second), tr.expand(), tr.apply_aux(aux_first)))
-            else:
-                ret.extend(chain(tr.apply_aux(aux_first), tr.expand(), tr.apply_aux(aux_second)))
+            ret.extend(chain(tr.apply_aux(aux_first), tr.expand(), tr.apply_aux(aux_second)))
         return ret
     
     def special_rulestring_tr(self, children, meta):

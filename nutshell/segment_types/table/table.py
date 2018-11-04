@@ -173,6 +173,8 @@ class Table:
         self.sym_types.add(symutils.get_sym_type(name))
     
     def check_cdir(self, cdir, meta, *, return_int=True, enforce_int=False):
+        if cdir in ('FG', 'BG'):
+            raise SyntaxErr(meta, f'Invalid reference {cdir!r} outside of inline-rulestring transition')
         if enforce_int and hasattr(self.symmetries, 'special') and not cdir.isdigit():
             raise SyntaxErr(
               meta,

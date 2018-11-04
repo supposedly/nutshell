@@ -2,10 +2,10 @@ from itertools import count, takewhile
 
 NBHD_SETS = (
   # for containment-checking
-  ({'E', 'W'}, 'oneDimensional'),
-  ({'N', 'E', 'S', 'W'}, 'vonNeumann'),
-  ({'N', 'E', 'SE', 'S', 'W', 'NW'}, 'hexagonal'),
-  ({'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'}, 'Moore'),
+  (frozenset({'E', 'W'}), 'oneDimensional'),
+  (frozenset({'N', 'E', 'S', 'W'}), 'vonNeumann'),
+  (frozenset({'N', 'E', 'SE', 'S', 'W', 'NW'}), 'hexagonal'),
+  (frozenset({'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'}), 'Moore'),
 )
 
 ORDERED_NBHDS = {

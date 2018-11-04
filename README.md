@@ -779,22 +779,22 @@ each of the final four lines.
 In addition to those normal Golly-style transitions, Nutshell allows the use of rulestring segments (either Hensel-style or totalistic)
 to specify a transition napkin.
 
-These transitions' syntax is `initial, <rulestring / background state(s) / foreground state(s)>; resultant`. Consider the
+These transitions' syntax is `initial, <rulestring / foreground state(s) / background states>; resultant`. Consider the
 [isotropic non-totalistic](http://conwaylife.com/wiki/Isotropic_non-totalistic_Life-like_cellular_automaton)
 rule _[tlife](http://conwaylife.com/forums/viewtopic.php?f=11&t=1831)_:
 ```rb
 # Nutshell
-0, <3 / 0 / 1>; 1
-1, <2-i34q / 0 / 1>; 1
+0, <3 / 1 / 0>; 1
+1, <2-i34q / 1 / 0>; 1
 
 symmetries: permute
 any, any; 0
 ```
 [Its output file](https://gist.github.com/eltrhn/078db47f6b05199b8fbe349ef5f91fed) is a touch too big to paste, but it:
-1. Interprets `0, <3 / 0 / 1>; 1` as _"a state-`0` cell surrounded by `3` state-`0` cells (and otherwise state-`1` cells)
+1. Interprets `0, <3 / 1 / 0>; 1` as _"a state-`0` cell surrounded by `3` state-`1` cells (and otherwise state-`0` cells)
    will turn into state `1`,"_ then expands this into the permute-symmetry transition `0, 1, 1, 1, 0, 0, 0, 0, 0, 1`.
-2. Interprets `1, <2-i34q / 0 / 1>; 1` as _"a state-`1` cell surrounded by a configuration matching `2-i`, `3`, or `4q`
-   of state-`0` cells (and state-`1` cells otherwise) will remain state `1`,"_ then expands this into the appropriate
+2. Interprets `1, <2-i34q / 1 / 0>; 1` as _"a state-`1` cell surrounded by a configuration matching `2-i`, `3`, or `4q`
+   of state-`1` cells (and state-`0` cells otherwise) will remain state `1`,"_ then expands this into the appropriate
    rotate4reflect-symmetry transitions.
 3. Proceeds as though the user had typed these expanded transitions out themself.
 
@@ -822,16 +822,17 @@ FF8000: Wire
 @TABLE
 symmetries: permute
 (Head, Tail), any; [0: (Tail, Wire)]
-Wire, <12 / (0, Tail, Wire) / Head>; Head
+Wire, <12 / Head / (0, Tail, Wire)>; Head
 ```
 ...which takes advantage of some things described below, viz. the [`@NUTSHELL`](#the-nutshell-segment) &
 [`@COLORS`](#the-colors-segment) segments.
 
-[References](#references) can be used here as well in the resultant cellstate, but they look a little bit
-different: rather than referring to a compass direction, they must refer to either `0` , `BG`, or `FG`&nbsp;--
-respectively, the input, background, or foreground state(s).  
+[References](#references) can be used here as well, but they look a little bit different: rather than referring
+to a compass direction, they must refer to either `0` , `BG`, or `FG`&nbsp;-- respectively, the input, background,
+or foreground state(s).  
 For instance, the resultant state of `0, <2-i34q / (0, 1) / (1, 2, 3)>; [FG: (3, 2, 1)]` is a mapping from the variable
-`(1, 2, 3)`; if it were instead `[BG]`, then it would be a binding to the variable `(0, 1)`.
+`(1, 2, 3)`; if it were instead `[BG]`, then it would be a binding to the variable `(0, 1)`. (References are valid
+within the `<>` section as well, as is the "inline binding" syntax.)
 
 ### Custom neighborhoods
 The `neighborhood` directive can be given a comma-delimited list of compass directions rather than a name, which makes

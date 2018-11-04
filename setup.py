@@ -16,12 +16,12 @@ packages = [
 setuptools.setup(
   name='nutshell',
   license='GPL',
-  version='0.2.0',
-  author='wright',
+  version='0.3.0',
+  author='Wright',
   packages=packages,
   include_package_data=True,
   url='https://github.com/eltrhn/nutshell',
-  description="Transpiler from an alternative CA-rule-spec language to Golly's",
+  description="Transpiler from a powerful alternative cellular-automaton-specification language to Golly's",
   install_requires=['bidict', 'ergo>=0.4.4'],  #, 'lark-parser'],
   python_requires='>=3.6',
   entry_points={
