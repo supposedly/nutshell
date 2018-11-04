@@ -1,8 +1,11 @@
 from ergo import CLI, Group
 
-DEFAULT_HEADER = '''\
+from nutshell import __version__
+
+DEFAULT_HEADER = f'''\
 ********************************
 **** COMPILED FROM NUTSHELL ****
+**** {'v'+__version__: ^22} ****
 ********************************\
 '''
 

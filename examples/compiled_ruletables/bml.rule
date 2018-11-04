@@ -1,6 +1,7 @@
 @RULE bml
 ********************************
 **** COMPILED FROM NUTSHELL ****
+****         v0.3.2         ****
 ********************************
 The Biham–Middleton–Levine traffic model.
 

@@ -43,20 +43,22 @@ def _add_mod(modulus, index, add, start=1):
 
 
 # I don't know where to put these two functions
-def get_rs_cdir(reference, nb_count, letter, meta):
+def get_rs_cdir(reference, nb_count, letter, meta, *, idx=None):
+    if idx is None:
+        idx = reference.idx
     if letter is None:
         if nb_count == '0':
-            if reference.idx == 'FG':
+            if idx == 'FG':
                 raise ValueErr(meta, 'Reference to FG, but given rulestring includes 0, which has no foreground states')
             return 'N'
         if nb_count == '8':
-            if reference.idx == 'BG':
+            if idx == 'BG':
                 raise ValueErr(meta, 'Reference to BG, but given rulestring includes 8, which has no background states')
             return 'N'
-        return 'N' if reference.idx == 'FG' else nbhoods.CDIRS[int(nb_count)] if reference.idx == 'BG' else '0'
-    if reference.idx == 'BG':
+        return 'N' if idx == 'FG' else nbhoods.CDIRS[int(nb_count)] if idx == 'BG' else '0'
+    if idx == 'BG':
         return nbhoods.BG_LOCATIONS[nb_count][letter]
-    if reference.idx == 'FG':
+    if idx == 'FG':
         return nbhoods.FG_LOCATIONS[nb_count][letter]
     return '0'
 
@@ -523,14 +525,13 @@ class Preprocess(Transformer):
             return val
         
         if isinstance(val, InlineBinding):
-            val.idx = kind.upper()  # XXX: dynamic typing oh boy. (get_rs_ref() needs an idx attribute with this value, so...)
             used = set()
             def get_val(nb_count, letter, meta):
                 if (nb_count, letter) not in used:
                     val.reset()
                     used.add((nb_count, letter))
                 if val.bind is None:
-                    val.set(get_rs_cdir(val, nb_count, letter, meta))
+                    val.set(get_rs_cdir(val, nb_count, letter, meta, idx=kind.upper()))
                 return val.give()
         
         if isinstance(val, (InlineRulestringBinding, InlineRulestringMapping)):
@@ -578,9 +579,9 @@ class Preprocess(Transformer):
           TransitionGroup(
             self._tbl,
             resolve_rs_ref(initial, nb_count, letter, meta),
-            # XXX: probably suboptimal performance b/c [dot attr access] -> [getitem] -> [getitem]
             {
               num: get_fg(nb_count, letter, meta)
+              # XXX: probably suboptimal performance b/c [dot attr access] -> [getitem] -> [getitem]
               if cdir in nbhoods.R4R_NBHDS[nb_count][letter]
               else get_bg(nb_count, letter, meta)
               for cdir, num in self._tbl.neighborhood.items()
