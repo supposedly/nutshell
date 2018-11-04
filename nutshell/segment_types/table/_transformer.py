@@ -62,6 +62,16 @@ def get_rs_cdir(reference, nb_count, letter, meta):
 
 
 def resolve_rs_ref(term, nb_count, letter, meta):
+    if isinstance(term, StateList):
+        if any(isinstance(i, (InlineRulestringBinding, InlineRulestringMapping)) for i in term):
+            return term.__class__((
+              resolve_rs_ref(i, nb_count, letter, meta)
+                if isinstance(i, (InlineRulestringBinding, InlineRulestringMapping))
+                else i
+                for i in term
+                ),
+              context=term.ctx
+              )
     if not isinstance(term, (InlineRulestringBinding, InlineRulestringMapping)):
         return term
     new_cdir = get_rs_cdir(term, nb_count, letter, meta)
@@ -524,8 +534,18 @@ class Preprocess(Transformer):
                 return val.give()
         
         if isinstance(val, (InlineRulestringBinding, InlineRulestringMapping)):
-            def get_val(nb_count, letter, meta):
-                return resolve_rs_ref(val, nb_count, letter, meta)
+            def get_val(*args):
+                return resolve_rs_ref(val, *args)
+        
+        if isinstance(val, StateList):
+            if any(isinstance(i, (InlineRulestringBinding, InlineRulestringMapping)) for i in val):
+                def get_val(*args):
+                    return val.__class__((
+                      resolve_rs_ref(i, *args)
+                      if isinstance(i, (InlineRulestringBinding, InlineRulestringMapping))
+                      else i
+                      for i in val
+                      ), context=val.ctx)
         
         return get_val
     

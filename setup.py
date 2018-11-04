@@ -16,7 +16,7 @@ packages = [
 setuptools.setup(
   name='nutshell',
   license='GPL',
-  version='0.3.0',
+  version='0.3.1',
   author='Wright',
   packages=packages,
   include_package_data=True,

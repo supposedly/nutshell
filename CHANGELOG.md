@@ -2,6 +2,13 @@
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 
+## [0.3.1] - 2018-11-03
+### Fixed
+- A single instance of `raise SyntaxError` where `raise SyntaxErr` was intended. (`SyntaxError` is an inbuilt
+  Python-language exception; `SyntaxErr` is Nutshell's)
+- An oversight that caused references contained within statelists not to be properly expanded within
+  inline-rulestring transitions.
+
 ## [0.3.0] - 2018-11-03
 Primarily focused on the functionality of inline-rulestring transitions.
 ### Added

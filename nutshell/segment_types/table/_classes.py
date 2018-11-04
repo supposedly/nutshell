@@ -247,7 +247,7 @@ class Transition:
             if isinstance(v, ResolvedBinding):
                 cdir = v.cdir != '0' and self.tbl.neighborhood[v.cdir]
                 if isinstance(ret[cdir], ResolvedBinding):
-                    raise SyntaxError(v.ctx, 'Attempted binding to another binding')
+                    raise SyntaxErr(v.ctx, 'Attempted binding to another binding')
                 ret[i] = ret[cdir]
         
         if self.tbl.gollyize_nbhd is not None:
@@ -433,13 +433,13 @@ class Mapping(Reference):
         raise ValueErr(self.ctx, f'Unknown map-from value: {val}')
 
 
-class InlineRulestringBinding:
+class InlineRulestringBinding(Expandable):
     def __init__(self, idx, *, context=None):
         self.idx = idx
         self.ctx = context
 
 
-class InlineRulestringMapping:
+class InlineRulestringMapping(Expandable):
     def __init__(self, idx, map_to, *, context=None):
         self.idx = idx
         self.map_to = map_to
