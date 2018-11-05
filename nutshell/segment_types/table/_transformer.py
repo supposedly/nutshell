@@ -1,3 +1,4 @@
+from collections import namedtuple
 from functools import wraps
 from inspect import signature
 from itertools import chain, repeat
@@ -15,6 +16,7 @@ from . import _symutils as symutils, _neighborhoods as nbhoods
 SPECIALS = {'...', '_', 'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'}
 ROTATE_4_REFLECT = symutils.get_sym_type('rotate4reflect')
 PERMUTE = symutils.get_sym_type('permute')
+Meta = namedtuple('Meta', ['lno', 'start', 'end'])
 
 try:
     with open(resource_filename('nutshell', 'segment_types/table/lark_assets/grammar.lark')) as f:
@@ -27,7 +29,7 @@ except FileNotFoundError:
 def fix(meta):
     if isinstance(meta, tuple):
         return meta
-    return (meta.line, meta.column, meta.end_column)
+    return Meta(meta.line, meta.column, meta.end_column)
 
 
 def inline(func):
@@ -180,6 +182,12 @@ class Preprocess(Transformer):
     
     @inline
     def directive(self, meta, name, val):
+        if name == 'macros':
+            self._tbl.add_macros(val.translate(KILL_WS))
+            raise Discard
+        if name in self._tbl.available_macros:
+            self._tbl.set_macro(meta, name, val)
+            raise Discard
         val = val.translate(KILL_WS)
         self.directives[str(name)] = val
         if name in ('n_states', 'states'):

@@ -1,7 +1,7 @@
 @RULE XHistory
 ********************************
 **** COMPILED FROM NUTSHELL ****
-****         v0.3.2         ****
+****         v0.4.0         ****
 ********************************
 Template for History rules. (LifeHistory by default in Nutshell's examples/ directory)
 

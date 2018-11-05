@@ -2,6 +2,13 @@
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 
+## [0.4.0] - 2018-11-04
+Macros!
+### Added
+- Support for Python-defined "macros", operating on spans of resultant transitions.
+### Changed
+- `Brew.ruel` in `examples/` now demonstrates macros.
+
 ## [0.3.2] - 2018-11-04
 ### Added
 - Version number now appears in the output file's "COMPILED FROM NUTSHELL" header.

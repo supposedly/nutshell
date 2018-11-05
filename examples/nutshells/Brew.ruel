@@ -1,13 +1,5 @@
 @NUTSHELL Brew
-
 From 83bismuth38.
-Nutshell actually shines here. Three lines of transitions!!
-(And generalizable to N states by just changing the second directive to `states: N`)
-
-...sadly, the concise representation is actually flawed: the 'real' brew intertwines
-the transitions resulting from lines 19 and 20, but because they occur one after the
-other here their resultant Golly transitions occur in separate chunks, not entwined.
-Because of this, they override each other differently and the final result is wrong.
 
 @TABLE
 symmetries: permute
@@ -16,8 +8,10 @@ states: 4
 # But if the last line were `(1, 2, 3), any; [0: (2, 3, 0)]`, then n_states
 # could be inferred just fine (from that the highest state referred to is 3)
 
+weave: 1
 any, [live] ~ 3, --[1]; [1]
 live, [0] ~ 2, --[0]; [0]
+weave: \
 
 # Parens not needed but they help visually
 # equivalent to (live-1, 0)

@@ -1,7 +1,7 @@
 @RULE bct
 ********************************
 **** COMPILED FROM NUTSHELL ****
-****         v0.3.2         ****
+****         v0.4.0         ****
 ********************************
 An implementation of bitwise cyclic tag.
 

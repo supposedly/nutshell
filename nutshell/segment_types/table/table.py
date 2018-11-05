@@ -8,6 +8,7 @@ import bidict
 
 from nutshell.common.classes import TableRange
 from nutshell.common.utils import printv, printq
+from nutshell.common import macros
 from nutshell.common.errors import *
 from .lark_assets import parser as lark_standalone
 from ._transformer import Preprocess, NUTSHELL_GRAMMAR
@@ -66,6 +67,8 @@ class Table:
         self.sym_types = set()
         self.transitions = []
         self._constants = {}
+        self.current_macros = []
+        self.available_macros = macros.__dict__.copy()
 
         self.specials = {'any': VarName('any'), 'live': VarName('live')}
         self.new_varname = VarName.new_generator()
@@ -108,6 +111,7 @@ class Table:
             self.directives['symmetries'] = MinSym.name[0] if hasattr(MinSym, 'name') else MinSym.__name__.lower()
             self.final = [new_tr for tr in self._data for new_tr in tr.in_symmetry(MinSym)]
         self.directives['n_states'] = self.directives.pop('states')
+        self.apply_macros()
     
     def __getitem__(self, item):
         return self._src[item]
@@ -171,6 +175,26 @@ class Table:
     
     def add_sym_type(self, name):
         self.sym_types.add(symutils.get_sym_type(name))
+    
+    def add_macros(self, path):
+        with open(path) as f:
+            exec(f.read(), self.available_macros)
+    
+    def set_macro(self, meta, name, args):
+        self.current_macros.append((meta.lno, self.available_macros[name], args.split()))
+    
+    def apply_macros(self):
+        if not self.final or not self.current_macros:
+            return
+        mcrs = {}
+        for lno, macro, args in self.current_macros:
+            if '\\' in args:
+                start, args = mcrs[macro].pop()
+                from_ = next(i for i, v in enumerate(self.final) if v.ctx.lno > start)
+                to = next(i for i, v in enumerate(self.final) if v.ctx.lno > lno)
+                self.final[from_:to] = macro([i for i in self.final if start < i.ctx.lno < lno], *args)
+                continue
+            mcrs.setdefault(macro, []).append((lno, args))
     
     def check_cdir(self, cdir, meta, *, return_int=True, enforce_int=False):
         if cdir in ('FG', 'BG'):
