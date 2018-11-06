@@ -871,10 +871,10 @@ In addition, although the API for it is somewhat clunky at present, you as the u
 via Python classes. See [documents/PYTHON-EXTENSIONS.md](documents/PYTHON-EXTENSIONS.md) for more detail.
 
 ### Macros
-Nutshell's occasional concision, usually by compression of many similar Golly transitions into just one or two, can also mean
-that the user does not get as fine-grained a level of control with respect to those transitions' ordering. Consider, for
-example, [Brew](http://www.conwaylife.com/forums/viewtopic.php?f=11&t=3558): it and its variants ostensibly have a three-line
-Nutshell representation, but it actually produces the following...
+Nutshell's occasional concision, usually by compression of many similar Golly transitions into just a few, can also mean
+that the user does not get as fine-grained a level of control over those transitions' ordering. Consider, for
+example, [Brew](http://www.conwaylife.com/forums/viewtopic.php?f=11&t=3558): it and its higher-statecount
+variants ostensibly have a three-line Nutshell representation, but this representation actually produces the following...
 
 ```
 any.0, 1, 1, 1, _a0.0, _a0.1, _a0.2, _a0.3, _a0.4, 1
@@ -899,8 +899,8 @@ any.0, 3, 3, 3, _c0.0, _c0.1, _c0.2, _c0.3, _c0.4, 3
 Notice: these are the exact same transitions, only intertwined, and this crucial difference prevents the Nutshell version
 from behaving as it should.
 
-Nutshell 0.4.0 introduced *macros*, Python functions invoked from Nutshell that can resultant transitions.
-The `weave` macro that comes with Nutshell, for example, is used in Brew.ruel as follows:
+Nutshell 0.4.0 introduced *macros*, Python functions invoked from Nutshell that can modify spans of resultant transitions.
+The `weave` macro that comes with Nutshell, for example, can be used in Brew.ruel as follows:
 
 ```rb
 @NUTSHELL Brew
@@ -925,16 +925,17 @@ F00: 1
 ```
 It will operate here on the two lines flanked by `weave:` directives, ending when the macro is invoked with a backslash
 (as if that is the end of a block; imagine curly braces from `weave: 1 {` to `weave: \ }`). Macros can also be passed additional
-arguments: here, `weave: 1` is effectively passing the value `1` to the function behind the macro. (Multiple arguments,
-if necessary, are separated by whitespace.)
+arguments: here, `weave: 1` passes the value `1` to the function behind the macro. (Multiple arguments, if necessary,
+are separated by whitespace.)
 
-At transpile-time, the `weave` macro is passed (a) a list of transitions that corresponds to the first codeblock above, and
-(b) the value `1` from the `weave: 1` invocation. It then returns a new list corresponding to the second codeblock above
-(with correctly-ordered transitions), and this is what is written to the final output file.
+At transpile-time, the `weave` macro is passed (a) a list of transitions that corresponds to the first codeblock above
+(having out-of-order transitions), and (b) the value `1` from the `weave: 1` invocation. It then returns a new list
+corresponding to the second codeblock above (with correctly-ordered transitions), and this is what is written to the
+final output file.
 
 Nested macros are applied innermost first, and all macros *must* have a `macro_name: \` end line or else they will not be run.
-`weave` doesn't show it, but macros can of course add and/or remove transitions as they please (rather than being limited to just
-reordering).
+`weave` doesn't show it, but macros of course aren't limited to just reordering transitions&nbsp;-- they can also add or
+remove them as needed.
 
 The current "standard library" of macros currently consists only of `weave`, whose behavior has already been described in
 part. Here is its full docstring:
