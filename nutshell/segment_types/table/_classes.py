@@ -324,9 +324,14 @@ class Transition:
 
 
 class FinalTransition(list):
-    def __init__(self, it, *, context):
+    def __init__(self, it, *, context=None, lno=None):
         super().__init__(it)
-        self.ctx = context
+        # at least one of (context, lno) should not be None
+        self.ctx = (lno, None, None) if context is None else context
+    
+    @property
+    def lno(self):
+        return self.ctx[0]
 
 
 class Expandable:

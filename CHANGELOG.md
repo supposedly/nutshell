@@ -2,6 +2,16 @@
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 
+## [0.4.1] - 2018-11-05
+### Added
+- Documentation of macros (and also of `special()` on symmetry types).
+- "Special parameters" for macro functions.
+### Changed
+- Docs for Python extensions no longer share the main README with strictly-Nutshell stuff; instead, they're in their own
+  [examples/PYTHON-EXTENSIONS.md](examples/PYTHON-EXTENSIONS.md) file.
+- Expose `FinalTransition` via `nutshell.macro` (rather than keeping it all the way down the import-path road) for macros.
+- FinalTransition.ctx is no longer expected to be a three-number tuple; it can just be `(lno, None, None)` if need be.
+
 ## [0.4.0] - 2018-11-04
 Macros!
 ### Added

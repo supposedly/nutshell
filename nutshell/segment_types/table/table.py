@@ -3,8 +3,10 @@ import re
 from collections import Iterable
 from functools import partial
 from itertools import chain, cycle, islice, zip_longest
+from inspect import signature, Parameter
 
 import bidict
+from ergo.misc import typecast
 
 from nutshell.common.classes import TableRange
 from nutshell.common.utils import printv, printq
@@ -68,6 +70,7 @@ class Table:
         self.transitions = []
         self._constants = {}
         self.current_macros = []
+        self._prepped_macros = {}
         self.available_macros = macros.__dict__.copy()
 
         self.specials = {'any': VarName('any'), 'live': VarName('live')}
@@ -111,7 +114,7 @@ class Table:
             self.directives['symmetries'] = MinSym.name[0] if hasattr(MinSym, 'name') else MinSym.__name__.lower()
             self.final = [new_tr for tr in self._data for new_tr in tr.in_symmetry(MinSym)]
         self.directives['n_states'] = self.directives.pop('states')
-        self.apply_macros()
+        self._apply_macros()
     
     def __getitem__(self, item):
         return self._src[item]
@@ -181,20 +184,32 @@ class Table:
             exec(f.read(), self.available_macros)
     
     def set_macro(self, meta, name, args):
-        self.current_macros.append((meta.lno, self.available_macros[name], args.split()))
+        self.current_macros.append((meta.lno, self._prep_macro(self.available_macros[name]), args.split()))
     
-    def apply_macros(self):
+    def _prep_macro(self, func):
+        if func not in self._prepped_macros:
+            kwargs = {i.name for i in signature(func).parameters.values() if i.kind is Parameter.KEYWORD_ONLY}
+            special_params = {
+              'directives': self.directives,
+              'n_states': self.n_states,
+              'variables': self.vars,
+              'table': self
+            }.items()
+            self._prepped_macros[func] = partial(typecast(func), **{k: v for k, v in special_params if k in kwargs})
+        return self._prepped_macros[func]
+
+    def _apply_macros(self):
         if not self.final or not self.current_macros:
             return
         mcrs = {}
         for lno, macro, args in self.current_macros:
-            if '\\' in args:
-                start, args = mcrs[macro].pop()
-                from_ = next(i for i, v in enumerate(self.final) if v.ctx.lno > start)
-                to = next(i for i, v in enumerate(self.final) if v.ctx.lno > lno)
-                self.final[from_:to] = macro([i for i in self.final if start < i.ctx.lno < lno], *args)
+            if '\\' not in args:
+                mcrs.setdefault(macro, []).append((lno, args))
                 continue
-            mcrs.setdefault(macro, []).append((lno, args))
+            start, args = mcrs[macro].pop()
+            from_ = next(i for i, v in enumerate(self.final) if v.ctx.lno > start)
+            to = next(i for i, v in enumerate(self.final) if v.ctx.lno > lno)
+            self.final[from_:to] = macro([i for i in self.final if start < i.ctx.lno < lno], *args)
     
     def check_cdir(self, cdir, meta, *, return_int=True, enforce_int=False):
         if cdir in ('FG', 'BG'):

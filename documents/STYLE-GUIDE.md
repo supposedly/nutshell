@@ -73,7 +73,8 @@ It's just here for reference, and perhaps eventually to establish consistency if
   - **Meh**: `1, any, NE..E 3, ..., 0`
 - For consistency's sake: constants, whether declared in the `@NUTSHELL` of a file or as single-cellstate "variable" assignments,
   should at the very least start with a capital letter (with the rest of the name in `PascalCase`) and furthermore should perhaps
-  also be in full `SCREAMING_SNAKE_CASE`.  
+  also be in full `SCREAMING_SNAKE_CASE`. If such a name conflicts with one of Nutshell's ten reserved words (eight compass
+  directions plus `FG` and `BG`), prefix it with an underscore -- e.g. `_E` to replace `E`.  
   Normal variables should start with a lowercase letter and be either in camelCase or lowercase.
   - **Sure**:
   ```py
