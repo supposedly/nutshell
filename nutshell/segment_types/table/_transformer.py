@@ -539,7 +539,7 @@ class Preprocess(Transformer):
                     val.reset()
                     used.add((nb_count, letter))
                 if val.bind is None:
-                    val.set(get_rs_cdir(val, nb_count, letter, meta, idx=kind.upper()))
+                    val.set(self._tbl.neighborhood[get_rs_cdir(val, nb_count, letter, meta, idx=kind.upper())])
                 return val.give()
         
         if isinstance(val, (InlineRulestringBinding, InlineRulestringMapping)):

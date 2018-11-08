@@ -1,7 +1,7 @@
 @RULE Brew
 ********************************
 **** COMPILED FROM NUTSHELL ****
-****         v0.4.1         ****
+****         v0.4.2         ****
 ********************************
 From 83bismuth38.
 Extensible to any number of states by changing the 4 in `states: 4`.
