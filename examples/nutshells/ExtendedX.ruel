@@ -1,0 +1,35 @@
+@NUTSHELL ExtendedX
+Template for "extended" rules, in the vein of extendedlife.
+
+1: ON cell
+: {BirthForcer} Forces state-0 neighbors to ON
+: {DeathForcer} LifeHistory "grey cell": Forces state-1 neighbors to OFF
+: {Toggler} Forces state-0 neighbors to ON and state-1 neighbors to OFF
+: {Blocker} Always OFF
+: {Reactor} Always ON
+
+@TABLE
+symmetries: permute
+
+on = (1, Reactor)
+off = --on
+birth = (BirthForcer, Toggler)
+death = (DeathForcer, Toggler)
+
+# Birth; CHANGE THE 3 BELOW
+0, <3 / on / off>; 1
+0, birth ~ 1, any; 1
+
+# Survival; CHANGE THE 23 BELOW
+1, death ~ 1, any; 0
+1, <23 / on / off>; 1
+1, any; 0
+
+@COLORS
+# golly
+1 247 247 247
+2 60 196 110
+3 181 77 105
+4 77 181 181
+5 92 91 107
+6 247 208 37

@@ -4,6 +4,7 @@
 ****         v0.4.1         ****
 ********************************
 From 83bismuth38.
+Extensible to any number of states by changing the 4 in `states: 4`.
 
 @TABLE
 neighborhood: Moore
@@ -38,22 +39,17 @@ var _c0.4 = _c0.0
 var _c0.5 = _c0.0
 
 
-#### line 12: any, [live] ~ 3, --[1]; [1] ####
-# `states: 4` necessary because we don't use any actual cellstates below besides `1`.
-# But if the last line were `(1, 2, 3), any; [0: (2, 3, 0)]`, then n_states
-# could be inferred just fine (from that the highest state referred to is 3)
+#### line 10: any, [live] ~ 3, --[1]; [1] ####
 any.0, 1, 1, 1, _a0.0, _a0.1, _a0.2, _a0.3, _a0.4, 1
 
-#### line 13: live, [0] ~ 2, --[0]; [0] ####
+#### line 11: live, [0] ~ 2, --[0]; [0] ####
 1, 1, 1, _a0.0, _a0.1, _a0.2, _a0.3, _a0.4, _a0.5, 1
 any.0, 2, 2, 2, _b0.0, _b0.1, _b0.2, _b0.3, _b0.4, 2
 2, 2, 2, _b0.0, _b0.1, _b0.2, _b0.3, _b0.4, _b0.5, 2
 any.0, 3, 3, 3, _c0.0, _c0.1, _c0.2, _c0.3, _c0.4, 3
 3, 3, 3, _c0.0, _c0.1, _c0.2, _c0.3, _c0.4, _c0.5, 3
 
-#### line 18: live, any; [0: (any-1) << 1] ####
-# Parens not needed but they help visually
-# equivalent to (live-1, 0)
+#### line 14: live, any; [0: (any-1) << 1] ####
 1, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 2
 2, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 3
 3, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0

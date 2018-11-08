@@ -26,3 +26,34 @@ def weave(transitions, chunk_size: int):
       # ...do this without needing to filter(lambda x: x is not None, ...)
       if j is not None
       ]
+
+
+def reorder(transitions, *ordering: int):
+    """
+    For when *really* fine control is needed.
+    Takes a series of numbers corresponding to the Nutshell
+    transitions covered by this macro, where 1 is the first
+    transition and 2 the second and so on, and reorders the
+    resultant Golly transitions according to their ordering
+
+    For instance, given a series of numbers `1 1 2 3 1 4 2`
+    and operating over the sequence of Nutshell transitions
+      [a, b, c, d, e]
+    corresponding to the following set of Golly transitions
+      [a0, a1, a2, a3, b0, b1, c0, c1, d0, d1, e0]
+    The macro will return:
+      [a0, a1, b0, c0, a2, d0, b1, a3, c1, d1, e0]
+    
+    Notice how, after the last specified transition, extras
+    are tacked on to the end- in as close to their original
+    order as possible.
+    """
+    lnos = consolidate(transitions)
+    transitions = [lnos[i][::-1] for i in sorted(lnos)]
+    new = []
+    for lno in ordering:
+        if transitions[lno-1]:
+            new.append(transitions[lno-1].pop())
+    for leftover in transitions:
+        new.extend(leftover[::-1])
+    return new

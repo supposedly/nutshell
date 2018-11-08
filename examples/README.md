@@ -19,6 +19,9 @@ Notable examples:
   the very first Nutshell file ever written, transpiled initially [by hand](https://gist.github.com/eltrhn/1db740cf85b614156904b3d63826a15e)
   (to prove whether the ideas worked on a general level) then later used as a sanity check for various iterations of the
   transpiler. Note the `@RUEL` and `@TABEL` segment headers in that Gist; Nutshell was named 'rueltabel' in its early stages.
-- [roed](nutshells/roed.ruel), a fun signal rule with some quirks but mostly based upon a one-off esolang created by another.
-  The third rule, after BML and the [NewTons](nutshells/newtons.ruel) demo, to be conceived from the start as a Nutshell rule
-  rather than being translated.
+- [XHistory](nutshells/XHistory.ruel), a demo of inline-rulestring transitions and also a template that can produce a History ruletable
+  for *any* rule expressible via Hensel rulestring.
+- [Brew](nutshells/Brew.ruel), notable for that it compresses+generalizes
+  [the original](http://www.conwaylife.com/forums/viewtopic.php?f=11&t=3558)&nbsp;-- might in this regard be the best example of
+  Nutshell's strengths. Extensible to any count of states by changing the value of the `staes:` directive, and demos the use of
+  macros as well (with `weave1`).

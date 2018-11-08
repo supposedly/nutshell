@@ -643,6 +643,7 @@ class ResolvedBinding(StateList):
 
 
 class VarValue:
+    __slots__ = 'parent', 'index', 'value'
     SPECIALS = {'_': None, '...': ...}
     
     def __init__(self, value, index, parent=None):

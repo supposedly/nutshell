@@ -1,20 +1,16 @@
 @NUTSHELL Brew
 From 83bismuth38.
+Extensible to any number of states by changing the 4 in `states: 4`.
 
 @TABLE
 symmetries: permute
 states: 4
-# `states: 4` necessary because we don't use any actual cellstates below besides `1`.
-# But if the last line were `(1, 2, 3), any; [0: (2, 3, 0)]`, then n_states
-# could be inferred just fine (from that the highest state referred to is 3)
 
 weave: 1
 any, [live] ~ 3, --[1]; [1]
 live, [0] ~ 2, --[0]; [0]
 weave: \
 
-# Parens not needed but they help visually
-# equivalent to (live-1, 0)
 live, any; [0: (any-1) << 1]
 
 @COLORS
