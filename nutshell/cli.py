@@ -15,12 +15,14 @@ transpile = cli.command(
   'transpile', 'Transpile from Nutshell to Golly ruletable format',
   aliases=['t'], OR='not nothing'
   )
-
 transpile.main_grp = Group(XOR='find|normal')
-
 # to be imported and then added to
 icon = cli.command('icon', 'Tools related to the @ICONS section', aliases=['i'], OR='not nothing')
 
+
+@cli.flag(short='V')
+def version():
+    raise SystemExit(__version__)
 
 @cli.clump(XOR='verbose|quiet')
 @cli.flag('verbosity', namespace={'count': 0}, default=0)

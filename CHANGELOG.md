@@ -2,6 +2,10 @@
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 
+## [0.4.3] - In progress
+### Added
+- `-V`/`--version` flag
+
 ## [0.4.2] - 2018-11-07
 ### Added
 - `reorder` macro

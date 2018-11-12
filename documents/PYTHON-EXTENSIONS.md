@@ -86,7 +86,7 @@ They are defined as follows:
     - `directives`: A dict of directive->value for the current rule
     - `table`: The whole Table object itself, from which all of the above are accessible (more roundaboutily, though)
 Additionally, macro functions are run through the same `typecast()` function used by [ergo](https://github.com/eltrhn/ergo)
-(mentioned under "Typecasting goodies" in the README), which means they can be type-hinted to convert an argument from one
+(mentioned under "Callbacks" in the README), which means they can be type-hinted to convert an argument from one
 datatype (typically `str`) to a more-useful one.
 
 The `transitions` argument will be passed a list of `FinalTransition` objects. `FinalTransition` is a `list` subclass (meaning

@@ -1,4 +1,3 @@
-"""Facilitates parsing of a nutshell rule into an abstract, compiler.py-readable format."""
 import re
 from collections import Iterable
 from functools import partial
