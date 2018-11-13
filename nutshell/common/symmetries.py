@@ -12,7 +12,41 @@ class ReflectVertical(Napkin):
     
     @property
     def expanded(self):
-        return tuple(self), self.rotate_by(self._rotation_amounts[len(self)])[::-1]
+        return sorted((tuple(self), self.rotate_by(self._rotation_amounts[len(self)])[::-1]))
+
+
+class XReflectDiagonal(OrthNapkin):
+    neighborhoods = vonNeumann, Moore
+    fallback = NoSymmetry
+
+    @property
+    def expanded(self):
+        rots = list(self.rotate(4))[1::2]
+        return sorted([tuple(self), *((i[0], *i[:0:-1]) for i in rots)])
+
+
+class _NWSWReflectDiagonal(OrthNapkin):
+    neighborhoods = vonNeumann, Moore
+    fallback = NoSymmetry
+
+    @property
+    def expanded(self):
+        rot = self.rotate_by(len(self) // 4)
+        return sorted([tuple(self), (rot[0], *rot[:0:-1])])
+
+
+class _SENEReflectDiagonal(OrthNapkin):
+    neighborhoods = vonNeumann, Moore
+    fallback = NoSymmetry
+
+    @property
+    def expanded(self):
+        rot = self.rotate_by(-len(self) // 4)
+        return sorted([tuple(self), (rot[0], *rot[:0:-1])])
+
+
+globals()['\\ReflectDiagonal'] = _NWSWReflectDiagonal
+globals()['/ReflectDiagonal'] = _SENEReflectDiagonal
 
 
 class Rotate2(OrthNapkin):

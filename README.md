@@ -866,6 +866,9 @@ that comes with the following:
   `0, 1, 2; 0` results in the Moore transition `0, 1, 2, 1, 2, 1, 2, 1, 2; 0` because the 1 and 2 are distributed into alternating slots).
 - `symmetries: nutshell.Rotate2`: Identical to Golly's hexagonal `rotate2`, but allows Moore and vonNeumann as well.
 - `symmetries: nutshell.ReflectVertical`: Vertical reflection.
+- `symmetries: nutshell.\ReflectDiagonal`: Reflection about the NW-SW diagonal axis.
+- `symmetries: nutshell./ReflectDiagonal`: Reflection about the SE-NE diagonal axis.
+- `symmetries: nutshell.XReflectDiagonal`: Reflection about both diagonal axes.
 
 In addition, although the API for it is somewhat clunky at present, you as the user are allowed to define your own custom symmetries
 via Python classes. See [documents/PYTHON-EXTENSIONS.md](documents/PYTHON-EXTENSIONS.md) for more detail.

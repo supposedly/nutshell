@@ -72,7 +72,7 @@ class OrthNapkin(Napkin):
     """Moore & vonNeumann"""
     @staticmethod
     def reflection_of(seq):
-        return sorted((seq, (seq[0], *reversed(seq[1:]))))
+        return sorted((seq, (seq[0], *seq[:0:-1])))
     
     def rotated4(self):
         return sorted(self.rotate(4))
@@ -84,10 +84,6 @@ class OrthNapkin(Napkin):
 class HexNapkin(Napkin):
     @staticmethod
     def reflection_of(seq):
-        """
-        Any devs chose to anchor reflection on upper-right cell instead of upper
-        cell -- so we can't just reverse seq[1:] :(
-        """
         return sorted((seq, tuple(seq[i] for i in (4, 2, 3, 1, 0, 5))))
     
     def rotated2(self):

@@ -2,9 +2,10 @@
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 
-## [0.4.3] - In progress
+## [0.4.3] - 2018-11-12
 ### Added
 - `-V`/`--version` flag
+- `\`, `/`, and `X` diagonally-reflectional symmetries
 
 ## [0.4.2] - 2018-11-07
 ### Added
