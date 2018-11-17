@@ -176,12 +176,16 @@ class Preprocess(Transformer):
     
     @inline
     def end_bs(self, meta, text):
-        if '#' in text:
+        if text.lstrip().startswith('#'):
             self._tbl.comments[meta[0]] = text
         raise Discard
     
     @inline
     def directive(self, meta, name, val):
+        # directives are more like comments than they are source
+        self._tbl.comments[meta[0]] = f'# {name}: {val}'
+        if '#' in val:  # since comments not handled otherwise
+            val = val[:val.index('#')].rstrip()
         if name == 'macros':
             self._tbl.add_macros(val.translate(KILL_WS))
             raise Discard
@@ -554,7 +558,8 @@ class Preprocess(Transformer):
                       if isinstance(i, (InlineRulestringBinding, InlineRulestringMapping))
                       else i
                       for i in val
-                      ), context=val.ctx)
+                      ),
+                    context=val.ctx)
         
         return get_val
     

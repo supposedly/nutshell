@@ -2,6 +2,10 @@
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 
+## [0.4.4] - In progress
+### Changed
+- Directives are now included in `-c` (`--preserve-comments`)
+
 ## [0.4.3] - 2018-11-12
 ### Added
 - `-V`/`--version` flag
