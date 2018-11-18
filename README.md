@@ -968,6 +968,10 @@ The current "standard library" of macros currently consists of two:
     are tacked on to the end- in as close to their original
     order as possible.
 
+    If an input ends with a bracketed sequence of numbers,
+    that sequence is repeated ad infinitum. That is to say
+    that `1 [2 3 4]` is interpreted as  `1 2 3 4 2 3 4...`.
+
 See [documents/PYTHON-EXTENSIONS.md](documents/PYTHON-EXTENSIONS.md) for details regarding implementation of custom macros.
 
 

@@ -1,4 +1,4 @@
-from itertools import chain, zip_longest as zipln
+from itertools import chain, cycle, takewhile, zip_longest as zipln
 
 from nutshell.macro import consolidate
 
@@ -28,7 +28,7 @@ def weave(transitions, chunk_size: int):
       ]
 
 
-def reorder(transitions, *ordering: int):
+def reorder(transitions, *inputs):
     """
     For when *really* fine control is needed.
     Takes a series of numbers corresponding to the Nutshell
@@ -47,11 +47,16 @@ def reorder(transitions, *ordering: int):
     Notice how, after the last specified transition, extras
     are tacked on to the end- in as close to their original
     order as possible.
+
+    If an input ends with a bracketed sequence of numbers,
+    that sequence is repeated ad infinitum. That is to say
+    that `1 [2 3 4]` is interpreted as  `1 2 3 4 2 3 4...`
     """
     lnos = consolidate(transitions)
     transitions = [lnos[i][::-1] for i in sorted(lnos)]
+    ordering = [int(i) for i in takewhile(str.isdigit, inputs)]
     new = []
-    for lno in ordering:
+    for lno in chain(ordering, cycle(int(i.strip('[]')) for i in inputs[len(ordering):])):
         if transitions[lno-1]:
             new.append(transitions[lno-1].pop())
     for leftover in transitions:

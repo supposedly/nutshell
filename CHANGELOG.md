@@ -2,7 +2,12 @@
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 
-## [0.4.4] - In progress
+## [0.4.5] - In progress
+### Changed
+- Formatting of comments/source when using `-c` and/or `-s`.
+- The `reorder` macro now supports repetition of a sequence of line numbers.
+
+## [0.4.4] - 2018-11-17
 ### Changed
 - Directives are now included in `-c` (`--preserve-comments`)
 - Directives can now handle line's-end comments; as a result, directives and macros can no longer
