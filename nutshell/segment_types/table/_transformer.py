@@ -183,6 +183,7 @@ class Preprocess(Transformer):
     
     @inline
     def directive(self, meta, name, val):
+        cmt_val = val
         if '#' in val:  # since comments not handled otherwise
             val = val[:val.index('#')].rstrip()
         if name == 'macros':
@@ -205,7 +206,7 @@ class Preprocess(Transformer):
             self._nbhd_assigned = True
         else:
             # directives are more like comments than they are source
-            self._tbl.comments[meta[0]] = f'#{name}: {val}'
+            self._tbl.comments[meta[0]] = f'#### {name}: {cmt_val}'
         if name == 'symmetries':
             self._tbl.add_sym_type(val)
         raise Discard
@@ -545,7 +546,7 @@ class Preprocess(Transformer):
                     val.reset()
                     used.add((nb_count, letter))
                 if val.bind is None:
-                    val.set(self._tbl.neighborhood[get_rs_cdir(val, nb_count, letter, meta, idx=kind.upper())])
+                    val.set(self._tbl.neighborhood[get_rs_cdir(val, nb_count, letter, meta, idx=kind)])
                 return val.give()
         
         if isinstance(val, (InlineRulestringBinding, InlineRulestringMapping)):
@@ -553,15 +554,21 @@ class Preprocess(Transformer):
                 return resolve_rs_ref(val, *args)
         
         if isinstance(val, StateList):
-            if any(isinstance(i, (InlineRulestringBinding, InlineRulestringMapping)) for i in val):
-                def get_val(*args):
-                    return val.__class__((
-                      resolve_rs_ref(i, *args)
-                      if isinstance(i, (InlineRulestringBinding, InlineRulestringMapping))
-                      else i
-                      for i in val
-                      ),
-                    context=val.ctx)
+            getters = [self._get_getter(i, kind) for i in val]
+            def get_val(*args):
+                return val.__class__(
+                  (getter(*args) for getter in getters),
+                  context=val.ctx
+                  )
+        
+        if isinstance(val, Operation):
+            get_a, get_b = self._get_getter(val.a, kind), self._get_getter(val.b, kind)
+            def get_val(*args):
+                return val.__class__(
+                  a=get_a(*args),
+                  b=get_b(*args),
+                  context=val.ctx
+                  )
         
         return get_val
     
@@ -589,11 +596,12 @@ class Preprocess(Transformer):
         if r4r_nbhds:
             self._tbl.add_sym_type('rotate4reflect')
         
-        get_fg, get_bg = self._get_getter(fg, 'fg'), self._get_getter(bg, 'bg')
+        get_fg, get_bg = self._get_getter(fg, 'FG'), self._get_getter(bg, 'BG')
+        get_initial, get_resultant = self._get_getter(initial, None), self._get_getter(resultant, None)
         ret = [
           TransitionGroup(
             self._tbl,
-            resolve_rs_ref(initial, nb_count, letter, meta),
+            get_initial(nb_count, letter, meta),
             {
               num: get_fg(nb_count, letter, meta)
               # XXX: probably suboptimal performance b/c [dot attr access] -> [getitem] -> [getitem]
@@ -601,7 +609,7 @@ class Preprocess(Transformer):
               else get_bg(nb_count, letter, meta)
               for cdir, num in self._tbl.neighborhood.items()
             },
-            resolve_rs_ref(resultant, nb_count, letter, meta),
+            get_resultant(nb_count, letter, meta),
             context=meta, symmetries=ROTATE_4_REFLECT
             )
           for nb_count, letters in r4r_nbhds.items()
@@ -610,14 +618,14 @@ class Preprocess(Transformer):
         ret.extend(
           TransitionGroup(
             self._tbl,
-            resolve_rs_ref(initial, nb_count, None, meta),
+            get_initial(nb_count, None, meta),
             {
               num: get_fg(nb_count, None, meta)
               if num <= nb_count
               else get_bg(nb_count, None, meta)
               for num in self._tbl.neighborhood.values()
             },
-            resolve_rs_ref(resultant, nb_count, None, meta),
+            get_resultant(nb_count, None, meta),
             context=meta, symmetries=PERMUTE
             )
           for nb_count in map(int, permute_nbhds)

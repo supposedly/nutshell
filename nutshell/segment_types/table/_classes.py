@@ -439,16 +439,22 @@ class Mapping(Reference):
 
 
 class InlineRulestringBinding(Expandable):
-    def __init__(self, idx, *, context=None):
+    def __init__(self, idx, **kw):
+        super().__init__(**kw)
         self.idx = idx
-        self.ctx = context
+    
+    def __repr__(self):
+        return f"IRSBinding[{self.idx}]"
 
 
 class InlineRulestringMapping(Expandable):
-    def __init__(self, idx, map_to, *, context=None):
+    def __init__(self, idx, map_to, **kw):
+        super().__init__(**kw)
         self.idx = idx
         self.map_to = map_to
-        self.ctx = context
+    
+    def __repr__(self):
+        return f"IRSMapping[{self.idx}: {self.map_to}]"
 
 
 class Operation(Expandable):
