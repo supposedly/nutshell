@@ -1,7 +1,7 @@
 @RULE RockPaperScissors
 ********************************
 **** COMPILED FROM NUTSHELL ****
-****         v0.4.2         ****
+****         v0.4.4         ****
 ********************************
 
 From "RockScissorsPaperLife" by Dave Greene.
@@ -44,6 +44,7 @@ var _c0.0 = {0,3}
 
 
 #### line 16: {0, 1}, 1 ~ 3, 3 ~ 3, deadC; 3 ####
+#symmetries: permute
 # Dead cells for State 1
 # Dead cells for State 2
 # Dead cells for State 3

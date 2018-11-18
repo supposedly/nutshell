@@ -1,7 +1,7 @@
 @RULE DeficientSeeds
 ********************************
 **** COMPILED FROM NUTSHELL ****
-****         v0.4.2         ****
+****         v0.4.4         ****
 ********************************
 1 c
 2 e
@@ -39,6 +39,7 @@ var _f0.1 = _f0.0
 
 
 #### line 12: 0, N 0, NE -1, E..W 0, NW -1; 1 ####
+#symmetries: rotate4reflect
 0, 0, _a0.0, 0, 0, 0, 0, 0, _a0.1, 1
 
 #### line 13: 0, N -2, NE..SW 0, W -2, NW 0; 2 ####

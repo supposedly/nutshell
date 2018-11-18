@@ -151,6 +151,7 @@ class Preprocess(Transformer):
         # Nothing left to return here... right? Because permute_shorthand trees
         # will already have been transformed (by self.permute_shorthand) and
         # returned by the first conditional in this method
+        raise Exception('unexpected branch')
     
     #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
     
@@ -182,8 +183,6 @@ class Preprocess(Transformer):
     
     @inline
     def directive(self, meta, name, val):
-        # directives are more like comments than they are source
-        self._tbl.comments[meta[0]] = f'# {name}: {val}'
         if '#' in val:  # since comments not handled otherwise
             val = val[:val.index('#')].rstrip()
         if name == 'macros':
@@ -196,7 +195,7 @@ class Preprocess(Transformer):
         self.directives[str(name)] = val
         if name in ('n_states', 'states'):
             self._tbl.update_special_vars(val)
-        if name == 'neighborhood':
+        elif name == 'neighborhood':
             if self._nbhd_assigned:
                 raise ValueErr(meta, '`neighborhood` directive cannot be reassigned')
             try:
@@ -204,6 +203,9 @@ class Preprocess(Transformer):
             except ValueError as e:
                 raise ValueErr(meta, e.args[0])
             self._nbhd_assigned = True
+        else:
+            # directives are more like comments than they are source
+            self._tbl.comments[meta[0]] = f'#{name}: {val}'
         if name == 'symmetries':
             self._tbl.add_sym_type(val)
         raise Discard
@@ -227,7 +229,7 @@ class Preprocess(Transformer):
               fix(meta),
               f"Cannot use inline-binding shorthand with no implication of multiple states"
               )
-        return MetaTuple(meta, (self.kill_string(state, meta), permute[0] if permute else None))
+        return MetaTuple(meta, (self.kill_string(state, meta), str(permute[0]) if permute else None))
     
     def main(self, children, meta):
         if not self._tbl.default_sym_used and self.directives['symmetries'] == 'none':

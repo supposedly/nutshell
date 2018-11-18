@@ -218,20 +218,19 @@ class Permute(Napkin):
         empties = sum(1 for _, i in values if not i)
         # filler algo courtesy of Thomas Russell on math.stackexchange
         # https://math.stackexchange.com/a/1081084
-        filler = (ceil((tally-k+1)/empties) for k in range(1, 1+empties))
-        return list(_AdditiveDict(
-          (val.set(idx) if isinstance(val, InlineBinding) else val, num or str(next(filler)))
+        filler = (ceil((tally - k + 1) / empties) for k in range(1, 1+empties))
+        return list(_AccumulativeContainer(
+          (val.set(idx) if isinstance(val, InlineBinding) else val, next(filler) if num is None else int(num))
           for idx, (val, num) in enumerate(values, 1)
           ))
 
-
-class _AdditiveDict(dict):
+class _AccumulativeContainer(list):
     def __init__(self, it):
-        for key, val in it:
-            self[key] = self.get(key, 0) + int(val or 1)
+        for thing, count in it:
+            self.append((thing, 1 if count is None else count))
     
     def __iter__(self):
-        return (i.give() if isinstance(i, InlineBinding) else i for k, v in self.items() for i in [k]*v)
+        return (i.give() if isinstance(i, InlineBinding) else i for k, v in super().__iter__() for i in [k]*v)
 
 
 NAMES = {

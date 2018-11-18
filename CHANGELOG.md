@@ -5,6 +5,16 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 ## [0.4.4] - In progress
 ### Changed
 - Directives are now included in `-c` (`--preserve-comments`)
+- Directives can now handle line's-end comments; as a result, directives and macros can no longer
+  take values containing the `#` character
+### Fixed
+- A niche bug: permute-symmetry transitions resulting in an internal representation containing
+  multiple hash-equivalent objects (e.g. transitions that referred to a named variable more than once,
+  resulting in the same StateList object's being used) would have their terms reordered, because values for
+  tilde-notation expansion were kept in a `dict` subclass. A dict cannot have duplicate keys, so a transition
+  like `..., varname, ..., varname, ...` would have been storing `{varname: 2}` rather than
+  `{varname: 1, ..., varname: 1}`, and would thus have transpiled to `..., varname, varname, ..., ...`;
+  this did not bode well for positional references.
 
 ## [0.4.3] - 2018-11-12
 ### Added

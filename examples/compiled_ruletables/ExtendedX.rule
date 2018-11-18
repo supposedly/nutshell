@@ -1,7 +1,7 @@
 @RULE ExtendedX
 ********************************
 **** COMPILED FROM NUTSHELL ****
-****         v0.4.2         ****
+****         v0.4.4         ****
 ********************************
 Template for "extended" rules, in the vein of extendedlife.
 
@@ -39,6 +39,7 @@ var death.0 = {3,4}
 
 
 #### line 20: 0, <3 / on / off>; 1 ####
+#symmetries: permute
 # Birth; CHANGE THE 3 BELOW
 0, on.0, on.1, on.2, off.0, off.1, off.2, off.3, off.4, 1
 
@@ -50,8 +51,8 @@ var death.0 = {3,4}
 1, death.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 0
 
 #### line 25: 1, <23 / on / off>; 1 ####
-1, on.0, on.1, off.0, off.1, off.2, off.3, off.4, off.5, 1
 1, on.0, on.1, on.2, off.0, off.1, off.2, off.3, off.4, 1
+1, on.0, on.1, off.0, off.1, off.2, off.3, off.4, off.5, 1
 
 #### line 26: 1, any; 0 ####
 1, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
