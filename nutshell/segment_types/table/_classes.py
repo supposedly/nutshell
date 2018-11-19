@@ -355,7 +355,7 @@ class Binding(Reference):
         # surrounding environment must raise Reshape on its behalf.
         r = tr[self.cdir]
         while isinstance(r, Expandable) and not isinstance(r, StateList):
-            if r.cdir == self.cdir:
+            if getattr(r, 'cdir', None) == self.cdir:
                 raise ValueErr(self.ctx, 'Term references itself')
             r = r.within(tr)
         return ResolvedBinding(self.cdir, r) if isinstance(r, StateList) else r
