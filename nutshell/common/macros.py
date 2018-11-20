@@ -18,13 +18,11 @@ def weave(transitions, chunk_size: int):
     lnos = consolidate(transitions)
     transitions = [lnos[i] for i in sorted(lnos)]
     return [
-      j for i in
+      k for i in
       # Flattens list of `chunk_size`-sized chunks from each group of transitions
-      map(chain.from_iterable, zip(*[zipln(*[iter(trs)]*chunk_size) for trs in transitions]))
-      # And this acts like a second chain(), but I also get to...
-      for j in i
-      # ...do this without needing to filter(lambda x: x is not None, ...)
-      if j is not None
+      zipln(*[zipln(*[iter(trs)]*chunk_size) for trs in transitions])
+      for j in i if j is not None
+      for k in j if k is not None
       ]
 
 

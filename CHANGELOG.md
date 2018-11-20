@@ -2,10 +2,21 @@
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 
-## [0.4.5] - In progress
+## [0.4.6] - 2018-11-19
+### Fixed
+- Operations could previously not be referenced without a bad error
+- The `weave` macro was discarding some leftovers rather than leaving them at the end as documented
+- Hopefully the last of the `states: ?` issue. Nutshell was presetting it based on the highest
+  cellstate referred to in `@NUTSHELL`'s constant-state definitions, but this needs a +1.
+
+## [0.4.5] - 2018-11-17
 ### Changed
 - Formatting of comments/source when using `-c` and/or `-s`.
 - The `reorder` macro now supports repetition of a sequence of line numbers.
+### Fixed
+- Inline-rulestring transitions now properly recurse when handling foreground/background references,
+  which means you can include a reference in an operation or statelist or anything and it will be
+  expanded appropriately.
 
 ## [0.4.4] - 2018-11-17
 ### Changed

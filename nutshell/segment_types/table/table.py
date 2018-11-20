@@ -59,7 +59,7 @@ class Table:
             dep.replace(self._src)
             self._constants = dep.constants
             if self._constants:
-                self._n_states = max(self._constants.values())
+                self._n_states = 1 + max(self._constants.values())
         
         self.directives = {'neighborhood': 'Moore', 'symmetries': 'none', 'states': self._n_states}
         self.gollyize_nbhd = None

@@ -833,7 +833,21 @@ to a compass direction, they must refer to either `0` , `BG`, or `FG`&nbsp;-- re
 or foreground state(s).  
 For instance, the resultant state of `0, <2-i34q / (0, 1) / (1, 2, 3)>; [FG: (3, 2, 1)]` is a mapping from the variable
 `(1, 2, 3)`; if it were instead `[BG]`, then it would be a binding to the variable `(0, 1)`. (References are valid
-within the `<>` section as well, as is the "inline binding" syntax.)
+within the `<>` section as well, as is the "inline binding" syntax.)  
+Lastly, the same inline-binding syntax that allows `[expression] ~ 5` or `N..NW [expression]` to be shorthand for,
+respectively, `expression, [1] ~ 4` and `N [expression], NE..NW [N]` is usable here:
+```rb
+# Nutshell
+0, <2 / (1, 2) / 0>; 3
+0, <2 / [(1, 2)] / 0>; 3
+```
+```rb
+# Golly
+var _a0.0 = {1, 2}
+
+0, _a0.0, _a0.1, 0, 0, 0, 0, 0, 0, 3
+0, _a0.0, _a0.0, 0, 0, 0, 0, 0, 0, 3
+```
 
 ### Custom neighborhoods
 The `neighborhood` directive can be given a comma-delimited list of compass directions rather than a name, which makes
