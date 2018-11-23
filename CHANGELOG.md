@@ -4,14 +4,15 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 
 ## [0.4.7] - In Progress
 ### Added
-- Generic `Error` NutshellException type that is shown in some spots
+- A generic `Error` NutshellException type
 ### Fixed
 - References no longer af the value of `states:?` (e.g. `[8]` no longer sets `n_states` to 8), which
-  should not have been happening in the first place but an oversight + odd Lark behavior made it so
-- A formal error is now raised when n_states < 2 (as opposed to the prior behavior of letting it crash)
+  should not have been happening in the first place but an oversight + odd Lark behavior made it so.
+- A formal error is now raised when n_states < 2 (as opposed to the prior behavior of letting it crash).
+- `@NUTSHELL` can now handle non-word characters at the start/end of constant names.
 ### Changed
-- Exceptions in tilde-notation-handling functions are now caught and formatted prettily
-- Updated style guide
+- Exceptions in tilde-notation-handling functions are now caught and formatted prettily.
+- Style guide has been heavily updated to focus only on what's necessary.
 
 ## [0.4.6] - 2018-11-19
 ### Fixed

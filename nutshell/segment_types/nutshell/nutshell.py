@@ -13,7 +13,10 @@ class NutshellSegment(MutableSequence):
         self.constants = {}
         self._src = segment
         self._extract_constants()
-        self.regex = re.compile(r'\b' + r'\b|\b'.join(self.constants) + r'\b') if self.constants else None
+        self.regex = None if not self.constants else re.compile(
+          # the lookarounds are basically \b assertions but allowing for non-word chars
+          r'(?<!\w)' + r'(?!\w)|(?<!\w)'.join(sorted(map(re.escape, self.constants), reverse=True, key=len)) + r'(?!\w)'
+          )
     
     def __getitem__(self, name):
         return self._src.__getitem__(name)
