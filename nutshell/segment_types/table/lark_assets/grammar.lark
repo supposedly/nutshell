@@ -45,10 +45,10 @@ _HOIST_ARROW: _WS? "=>" _WS?
 
 auxiliary: cdir_delay ":" STATE                                               -> aux_bare
   | cdir_delay "[" _aux_expr_no_int "]"                                       -> aux_map_self
-  | cdir_delay "[" (COMPASS_DIR | _digit_bind) "]"                            -> aux_bind_self
-  | cdir_delay "[" (COMPASS_DIR | _digit_bind) ":" _WS? _aux_expr_no_int "]"  -> aux_map_other
+  | cdir_delay "[" (COMPASS_DIR | INT) "]"                            -> aux_bind_self
+  | cdir_delay "[" (COMPASS_DIR | INT) ":" _WS? _aux_expr_no_int "]"  -> aux_map_other
 
-// I'm not sure why I need to specify the _digit_bind explicitly and w/ strings
+// I'm not sure why I need to specify the INT explicitly and w/ strings
 // there; if I include the digits in the COMPASS_DIR regex or actually any regex,
 // Lark will tell me it expected _MULT rather than the right square bracket for
 // any "aux_bind_self" sequence. idgi
@@ -137,11 +137,11 @@ aux_operation: (STATE | aux_reference) _MULT INT    -> repeat_int
   | _NEGATE_ALL _aux_expr                           -> all_except
 
 
-aux_reference: "[" (COMPASS_DIR | _digit_bind) "]"                     -> binding
-  | "[" (COMPASS_DIR | _digit_bind) ":" _WS? _aux_expr_no_int "]"      -> mapping
+aux_reference: "[" (COMPASS_DIR | INT) "]"                     -> binding
+  | "[" (COMPASS_DIR | INT) ":" _WS? _aux_expr_no_int "]"      -> mapping
 
-reference: "[" (COMPASS_DIR | _digit_bind) "]"                     -> binding
-  | "[" (COMPASS_DIR | _digit_bind) ":" _WS? _ref_expr_no_int "]"  -> mapping
+reference: "[" (COMPASS_DIR | INT) "]"                     -> binding
+  | "[" (COMPASS_DIR | INT) ":" _WS? _ref_expr_no_int "]"  -> mapping
 
 
 range: STATE _WS? ".." _WS? STATE
@@ -163,7 +163,6 @@ _LROT: _WS? "<<" _WS?
 _NEGATE_LIVE: "-"
 _NEGATE_ALL: "--"
 
-!_digit_bind: "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 COMPASS_DIR: /NE|SE|SW|NW|N|E|S|W|FG|BG/
 
 // More efficient than /(?!NE|SE|SW|NW|N|E|S|W)[A-Za-z]\w*|(?:NE|SE|SW|NW)[A-Za-z]\w*|(?:N|E|S|W)(?!E|W)[A-Za-z]\w*/

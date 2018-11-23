@@ -31,6 +31,9 @@ class NutshellException(SystemExit):
         self.code = '\n'.join(code) + '\n'
 
 
+class Error(NutshellException):
+    pass
+
 class ReferenceErr(NutshellException):
     pass
 

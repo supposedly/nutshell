@@ -2,9 +2,18 @@
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 
+## [0.4.7] - In Progress
+### Added
+- Generic `Error` NutshellException type that is shown in some spots
+### Fixed
+- References no longer raise the value of `states:?` (e.g. `[8]` no longer sets `n_states` to 8), which
+  should not have been happening in the first place but an oversight + odd Lark behavior made it so
+### Changed
+- Exceptions in tilde-notation-handling functions are now caught and formatted prettily
+
 ## [0.4.6] - 2018-11-19
 ### Fixed
-- Operations could previously not be referenced without a bad error
+- Operations can now be referenced without a bad error
 - The `weave` macro was discarding some leftovers rather than leaving them at the end as documented
 - Hopefully the last of the `states: ?` issue. Nutshell was presetting it based on the highest
   cellstate referred to in `@NUTSHELL`'s constant-state definitions, but this needs a +1.

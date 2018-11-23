@@ -248,7 +248,14 @@ class Preprocess(Transformer):
             raise ReferenceErr((meta.line, meta.end_column - len(str(resultant)), meta.end_column), e.msg)
         if hasattr(self._tbl.symmetries, 'special'):
             seq = [self.unravel_permute(i, meta) for i in children]
-            napkin = dict(enumerate(self.special_transform(initial, resultant, seq), 1))
+            try:
+                napkin = dict(enumerate(self.special_transform(initial, resultant, seq), 1))
+            except Exception as e:
+                raise Error(
+                  fix(meta),
+                  f"Tilde-notation shorthand for {self.directives['symmetries']} raised "
+                  f"{type(e)}: {e}"
+                  )
         else:
             idx = 1
             napkin = {}
@@ -447,7 +454,7 @@ class Preprocess(Transformer):
             elif isinstance(val, int):
                 ret.append(int(val))
             else:
-                raise NutshellException(fix(meta), val)
+                raise Error(fix(meta), val)
         return StateList(ret, context=fix(meta))
     
     def var(self, children, meta):
