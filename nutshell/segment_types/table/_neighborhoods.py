@@ -1,4 +1,8 @@
+import re
 from itertools import count, takewhile
+
+# rough validation
+rHENSEL_RULESTRING = re.compile(r'(?:[0-8]-?[cekainyqjrtwz]*)+')
 
 NBHD_SETS = (
   # for containment-checking
@@ -90,6 +94,8 @@ def fill(ordered_nbhd, tbl, napkin, anys):  # anys == usages of `any`
 def validate_hensel(rulestring):
     nbhds = {}
     cur_key = None
+    if rHENSEL_RULESTRING.match(rulestring) is None:
+        return False
     for letter in rulestring:
         if letter.isdigit():
             if letter not in R4R_NBHDS:

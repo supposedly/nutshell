@@ -1,7 +1,7 @@
 @RULE Simpl
 ********************************
 **** COMPILED FROM NUTSHELL ****
-****         v0.4.4         ****
+****         v0.4.7         ****
 ********************************
 
 From "Simpl" by _zM.
@@ -61,35 +61,25 @@ var _g0.0 = {8,17}
 var _h0.0 = {9,18}
 var _i0.0 = {10,19}
 
-
+#### symmetries: permute
 #### line 27: (2, 11), off; 11 ####
-#symmetries: permute
 _a0.0, off.0, off.1, off.2, off.3, off.4, off.5, off.6, off.7, 11
-
 #### line 28: (3, 12), on ~ 1, off; 12 ####
 _b0.0, on.0, off.0, off.1, off.2, off.3, off.4, off.5, off.6, 12
-
 #### line 29: (4, 13), on ~ 2, off; 13 ####
 _c0.0, on.0, on.1, off.0, off.1, off.2, off.3, off.4, off.5, 13
-
 #### line 30: (5, 14), on ~ 3, off; 14 ####
 _d0.0, on.0, on.1, on.2, off.0, off.1, off.2, off.3, off.4, 14
-
 #### line 31: (6, 15), on, off; 15 ####
 _e0.0, on.0, on.1, on.2, on.3, off.0, off.1, off.2, off.3, 15
-
 #### line 32: (7, 16), on ~ 5, off; 16 ####
 _f0.0, on.0, on.1, on.2, on.3, on.4, off.0, off.1, off.2, 16
-
 #### line 33: (8, 17), on ~ 6, off; 17 ####
 _g0.0, on.0, on.1, on.2, on.3, on.4, on.5, off.0, off.1, 17
-
 #### line 34: (9, 18), on ~ 7, off; 18 ####
 _h0.0, on.0, on.1, on.2, on.3, on.4, on.5, on.6, off.0, 18
-
 #### line 35: (10, 19), on; 19 ####
 _i0.0, on.0, on.1, on.2, on.3, on.4, on.5, on.6, on.7, 19
-
 #### line 37: (11..19), any; [0: (2..10)] ####
 11, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 2
 12, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 3

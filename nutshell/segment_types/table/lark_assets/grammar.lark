@@ -6,13 +6,14 @@ line: NAME ":" _WS? /.+/      -> directive
   | transition _aux?          -> transition
   | rulestring_tr _aux?       -> rulestring_transition
 
-rulestring_tr: _tr_expr _sep _HENSEL_OPEN hensel_rulestring _HENSEL_SEP _rs_expr _HENSEL_SEP _rs_expr _HENSEL_CLOSE _sep (STATE | reference)  -> rulestring_tr
-  | _tr_expr _sep _HENSEL_OPEN hensel_rulestring _WS NAME _HENSEL_SEP _rs_expr _HENSEL_SEP _rs_expr _HENSEL_CLOSE _sep (STATE | reference)    -> special_rulestring_tr
+rulestring_tr: _tr_expr _sep _HENSEL_OPEN rulestring _HENSEL_SEP _rs_expr _HENSEL_SEP _rs_expr _HENSEL_CLOSE _sep (STATE | reference)  -> rulestring_tr
+  | _tr_expr _sep _HENSEL_OPEN rulestring _WS NAME _HENSEL_SEP _rs_expr _HENSEL_SEP _rs_expr _HENSEL_CLOSE _sep (STATE | reference)  -> special_rulestring_tr
 
+rulestring: /\w+/
+_rs_expr: _tr_expr | inline_binding
 _HENSEL_OPEN: _WS? "<" _WS?
 _HENSEL_CLOSE: _WS? ">" _WS?
 _HENSEL_SEP: _WS? "/" _WS?
-_rs_expr: _tr_expr | inline_binding
 
 
 transition: _tr_expr (_sep tr_state)+ _sep _tr_expr -> main  //Can't have (STATE | reference) here in LALR
@@ -169,8 +170,6 @@ COMPASS_DIR: /NE|SE|SW|NW|N|E|S|W|FG|BG/
 // Thanks to Dr. Memes#1508 (<@138628718968045568>) from Discord TCD
 // Modified later to switch from only accepting [A-Za-z]+ sans compass dirs to accepting [A-Za-z]\w* sans the same
 NAME: /(?<![A-Za-z])(?!(?:[NS][EW]?|[EW]|[FB]G)(?!\w))[A-Za-z]\w*/
-
-hensel_rulestring: /(?:[0-8]-?[cekainyqjrtwz]*)+/ // not too strict
 
 STATE: /\d+/
 INT: /[0123456789]+/

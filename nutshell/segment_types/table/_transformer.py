@@ -530,11 +530,11 @@ class Preprocess(Transformer):
         return InlineRulestringMapping(str(idx), self.kill_string(map_to, meta), context=meta)
     
     @inline
-    def hensel_rulestring(self, meta, rulestring):
-        nbhds = nbhoods.validate_hensel(rulestring)
+    def rulestring(self, meta, rs):
+        nbhds = nbhoods.validate_hensel(rs)
         if not nbhds:
             raise SyntaxErr(meta, 'Invalid Hensel-notation rulestring')
-        if not nbhoods.check_hensel_within(rulestring, self._tbl.neighborhood, rulestring_nbhds=nbhds):
+        if not nbhoods.check_hensel_within(rs, self._tbl.neighborhood, rulestring_nbhds=nbhds):
             raise SyntaxErr(
               meta,
               f"Hensel-notation rulestring exceeds neighborhood {self.directives['neighborhood']!r}; "
