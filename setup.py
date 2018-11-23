@@ -3,7 +3,7 @@ import re
 
 VERSION = None
 with open('nutshell/__init__.py') as f:
-    VERSION = re.search(r"^__version__\s*=\s*'(\d+\.\d+\.\d+)'", f.read(), re.MULTILINE).group(1)
+    VERSION = re.search(r"^__version__\s*=\s*'(\d+\.\d+\.\d+\w*)'", f.read(), re.MULTILINE).group(1)
 
 if VERSION is None:
     raise RuntimeError('Missing or invalid version number')

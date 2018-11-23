@@ -56,6 +56,8 @@ class VarName:
 
 class TransitionGroup:
     def __init__(self, tbl, initial, napkin, resultant, *, context, symmetries=None):
+        if tbl.n_states < 2:
+            raise ValueErr(None, 'Table uses fewer than two cellstates. Set `states:` directive to 2 or higher to fix')
         self.ctx = context
         self.tbl = tbl
         self.symmetries = symmetries or tbl.symmetries

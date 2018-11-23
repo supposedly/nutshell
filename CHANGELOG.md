@@ -6,10 +6,12 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 ### Added
 - Generic `Error` NutshellException type that is shown in some spots
 ### Fixed
-- References no longer raise the value of `states:?` (e.g. `[8]` no longer sets `n_states` to 8), which
+- References no longer af the value of `states:?` (e.g. `[8]` no longer sets `n_states` to 8), which
   should not have been happening in the first place but an oversight + odd Lark behavior made it so
+- A formal error is now raised when n_states < 2 (as opposed to the prior behavior of letting it crash)
 ### Changed
 - Exceptions in tilde-notation-handling functions are now caught and formatted prettily
+- Updated style guide
 
 ## [0.4.6] - 2018-11-19
 ### Fixed
