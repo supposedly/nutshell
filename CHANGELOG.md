@@ -2,6 +2,14 @@
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 
+## [0.4.8] - 2018-11-28
+### Added
+- `__main__.py` to allow Nutshell to be run as `python -m nutshell ...`.
+### Fixed
+- The shebang in `to_ruletable.py` requested `python3.6` rather than just `python3`, causing
+  it to show `Requested Python version (3.6) is not installed` when run with 3.7+; changed
+  to `python3`.
+
 ## [0.4.7] - 2018-11-23
 ### Added
 - A generic `Error` NutshellException type

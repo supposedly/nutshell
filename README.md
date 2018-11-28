@@ -51,13 +51,15 @@ of this makes any sense to you and you aren't sure how you got here, check out t
        pip command's variations works for you; you may need to try `python -m pip install`, `python3 -m pip install`,
        on Windows `py -m pip install`, ...) to install via pip directly,
     2. **OR** `git clone` this project, then `cd` to its directory and execute `pip install -U .` (using the correct one of
-       the variations discussed above)
+       the `pip install` variations discussed above)
 4. Write your own "nutshell" rule file, then continue with the **Usage** section below.
 
 ## Usage
 The `pip install` will add a command `nutshell-ca` for use in terminal. If this for any reason does
-not work for you, you may instead `git clone` Nutshell as in step 2.ii above and then run `to_ruletable.py`
-from its root directory as a substitute for `nutshell-ca`.
+not work for you, you may instead either:
+1. Run `python -m nutshell` instad of `nutshel-ca`, or
+2. `git clone` Nutshell as in step 2.ii above, and then run `to_ruletable.py`
+   from its root directory as a substitute for `nutshell-ca`.
 
 ```
 $ nutshell-ca transpile [infile] [outdir] [-v | -q | -s | -c | -p | -t | -f]
