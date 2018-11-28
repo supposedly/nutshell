@@ -57,7 +57,7 @@ of this makes any sense to you and you aren't sure how you got here, check out t
 ## Usage
 The `pip install` will add a command `nutshell-ca` for use in terminal. If this for any reason does
 not work for you, you may instead either:
-1. Run `python -m nutshell` instad of `nutshel-ca`, or
+1. Run `python -m nutshell` instead of `nutshell-ca`, or
 2. `git clone` Nutshell as in step 2.ii above, and then run `to_ruletable.py`
    from its root directory as a substitute for `nutshell-ca`.
 
