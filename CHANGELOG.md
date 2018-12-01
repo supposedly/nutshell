@@ -2,6 +2,28 @@
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 
+## [0.5.0] - In Progress
+### Added
+- Inline rulestrings now accept modifiers (which are yet to be made extensible). The two added thus far are `hensel` and `!hensel`,
+  where `hensel` is the normal behavior and `!hensel` *negates* the rulestring: turns it into its complement.
+### Planned
+- A complete overhaul of symmetries and neighborhoods such that:
+  - Such transformations as reflection and rotation are handled from the *neighborhood* rather than the symmetry type
+  - Nutshell, given the compass directions composing a neighborhood, automatically determines what standard transformations
+    it can undergo
+  - Symmetry types simply have to call, for instance, neighborhood.rotate4() -- rather than themselves reordering the napkin
+  - Symmetry types can be composed from within Nutshell without my having to define a new Python class for each basic combination
+    of symmetries
+- Neighborhood-switching, a la symmetry-switching
+- Automatic filling-in of omitted terms with `any`... only, however, if every given term was accompanied by a compass-direction
+  tag (to make sure that the omissions were intentional)
+- Some solution to the consolidate() line-number problem with inline-rulestring transitions
+- Some solution to the issue with r4r inline rulestrings' foreground/background states not being properly bindable to;
+  probably just going to expose compass directions but that would ruin it when used on more than one neighborhood
+- An "explicit permute" symmetry in the stdlib w/ no automatic expansion (omitted tilde = `~ 1` and that's it)
+- More modifiers, e.g. Langton's Ant and Deficient/genext
+- "Limited variables", as soon as Bismuth explains what that means
+
 ## [0.4.10] - 2018-12-25
 Really just floundering now while I figure out 0.5.0.
 ### Fixed

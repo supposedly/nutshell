@@ -1,5 +1,5 @@
 @NUTSHELL XHistory
-Template for History rules. (LifeHistory by default in Nutshell's examples/ directory)
+Template for History rules. (LifeHistory by default in Nutshell’s examples/ directory)
 
 1: ON cell
 : {History} Indicates whether cell was ever ON

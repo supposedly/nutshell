@@ -1,0 +1,86 @@
+@RULE ExtendedSnowflakes
+********************************
+**** COMPILED FROM NUTSHELL ****
+****        v0.4.10         ****
+********************************
+
+1: ON cell
+2: Forces state-0 neighbors to ON
+3: LifeHistory "grey cell": Forces state-1 neighbors to OFF
+4: Forces state-0 neighbors to ON and state-1 neighbors to OFF
+5: Always OFF
+6: Always ON
+
+@TABLE
+neighborhood: Moore
+symmetries: rotate4reflect
+n_states: 7
+
+var any.0 = {0,1,2,3,4,5,6}
+var any.1 = any.0
+var any.2 = any.0
+var any.3 = any.0
+var any.4 = any.0
+var any.5 = any.0
+var any.6 = any.0
+var any.7 = any.0
+var on.0 = {1,6}
+var on.1 = on.0
+var on.2 = on.0
+var on.3 = on.0
+var on.4 = on.0
+var on.5 = on.0
+var on.6 = on.0
+var on.7 = on.0
+var off.0 = {0,2,3,4,5}
+var off.1 = off.0
+var off.2 = off.0
+var off.3 = off.0
+var off.4 = off.0
+var off.5 = off.0
+var off.6 = off.0
+var off.7 = off.0
+var birth.0 = {2,4}
+var death.0 = {3,4}
+
+#### symmetries: permute
+# Birth
+#### line 19: 0, <2ci3ai4c8 / on / off>; 1 ####
+0, off.0, off.1, off.2, on.0, off.3, on.1, off.4, off.5, 1
+0, off.0, off.1, on.0, off.2, off.3, off.4, on.1, off.5, 1
+0, off.0, off.1, on.0, on.1, on.2, off.2, off.3, off.4, 1
+0, off.0, on.0, on.1, on.2, off.1, off.2, off.3, off.4, 1
+0, off.0, on.0, off.1, on.1, off.2, on.2, off.3, on.3, 1
+0, on.0, on.1, on.2, on.3, on.4, on.5, on.6, on.7, 1
+#### line 20: 0, birth ~ 1, any; 1 ####
+0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, birth.0, 1
+0, any.0, any.1, birth.0, any.2, any.3, any.4, any.5, any.6, 1
+# Survival
+#### line 23: 1, death ~ 1, any; 0 ####
+1, any.0, any.1, any.2, any.3, any.4, any.5, any.6, death.0, 0
+1, any.0, any.1, death.0, any.2, any.3, any.4, any.5, any.6, 0
+#### line 24: 1, <02ae3eijkq4iz5ar6i7e / on / off>; 1 ####
+1, on.0, off.0, off.1, off.2, off.3, off.4, off.5, on.1, 1
+1, off.0, off.1, on.0, off.2, on.1, off.3, off.4, off.5, 1
+1, off.0, on.0, on.1, on.2, off.1, off.2, off.3, off.4, 1
+1, off.0, on.0, off.1, off.2, off.3, on.1, on.2, off.4, 1
+1, on.0, off.0, off.1, off.2, off.3, on.1, on.2, off.4, 1
+1, on.0, off.0, on.1, off.1, off.2, off.3, on.2, off.4, 1
+1, on.0, off.0, on.1, off.1, off.2, on.2, off.3, off.4, 1
+1, on.0, on.1, off.0, off.1, on.2, on.3, off.2, off.3, 1
+1, on.0, on.1, off.0, on.2, on.3, off.1, off.2, off.3, 1
+1, on.0, on.1, on.2, on.3, off.0, off.1, off.2, on.4, 1
+1, on.0, on.1, off.0, off.1, on.2, on.3, off.2, on.4, 1
+1, off.0, on.0, on.1, on.2, off.1, on.3, on.4, on.5, 1
+1, on.0, on.1, on.2, on.3, on.4, on.5, off.0, on.6, 1
+1, off.0, off.1, off.2, off.3, off.4, off.5, off.6, off.7, 1
+#### line 25: 1, any; 0 ####
+1, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
+
+@COLORS
+1 247 247 247
+2 60 196 110
+3 181 77 105
+4 77 181 181
+5 92 91 107
+6 247 208 37

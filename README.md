@@ -851,6 +851,12 @@ var _a0.0 = {1, 2}
 0, _a0.0, _a0.0, 0, 0, 0, 0, 0, 0, 3
 ```
 
+#### Modifiers
+The rulestrings do not strictly have to be Hensel rulestrings -- that is just the default. Placing a modifier after the
+rulestring will cause it to be interpreted differently; currently the only two modifiers are `hensel`, which replicates
+the normal behavior, and `!hensel`, which applies the normal behavior to the *complement* of the given rulestring. For
+example, `<0123-i !hensel / 1 / 0>` will behave as `<3i45678 / 1 / 0>`.
+
 ### Custom neighborhoods
 The `neighborhood` directive can be given a comma-delimited list of compass directions rather than a name, which makes
 the CA use those compass directions (in the listed order) as its neighborhood. Nutshell will then expand all transitions

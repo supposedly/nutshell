@@ -25,7 +25,8 @@ def generate_cardinals(d):
 
 
 class Bidict(bidict.bidict):
-    on_dup_kv = bidict.OVERWRITE
+    on_dup_kv = bidict.IGNORE
+    on_dup_val = bidict.IGNORE
 
 
 class Table:

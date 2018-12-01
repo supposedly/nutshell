@@ -11,11 +11,9 @@ from .lark_assets.parser import Transformer, Tree, Discard, v_args
 from nutshell.common.utils import KILL_WS
 from nutshell.common.errors import *
 from ._classes import *
-from . import _symutils as symutils, _neighborhoods as nbhoods
+from . import _symutils as symutils, _neighborhoods as nbhoods, inline_rulestring
 
 SPECIALS = {'...', '_', 'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'}
-ROTATE_4_REFLECT = symutils.get_sym_type('rotate4reflect')
-PERMUTE = symutils.get_sym_type('permute')
 Meta = namedtuple('Meta', ['lno', 'start', 'end'])
 
 try:
@@ -42,48 +40,6 @@ def inline(func):
 def _add_mod(modulus, index, add, start=1):
     index += add - start
     return index % modulus + start
-
-
-# I don't know where to put these two functions
-def get_rs_cdir(reference, nb_count, letter, meta, *, idx=None):
-    if idx is None:
-        idx = reference.idx
-    if letter is None:
-        if nb_count == '0':
-            if idx == 'FG':
-                raise ValueErr(meta, 'Reference to FG, but given rulestring includes 0, which has no foreground states')
-            return 'N'
-        if nb_count == '8':
-            if idx == 'BG':
-                raise ValueErr(meta, 'Reference to BG, but given rulestring includes 8, which has no background states')
-            return 'N'
-        return 'N' if idx == 'FG' else nbhoods.CDIRS[int(nb_count)] if idx == 'BG' else '0'
-    if idx == 'BG':
-        return nbhoods.BG_LOCATIONS[nb_count][letter]
-    if idx == 'FG':
-        return nbhoods.FG_LOCATIONS[nb_count][letter]
-    return '0'
-
-
-def resolve_rs_ref(term, nb_count, letter, meta):
-    if isinstance(term, StateList):
-        if any(isinstance(i, (InlineRulestringBinding, InlineRulestringMapping)) for i in term):
-            return term.__class__((
-              resolve_rs_ref(i, nb_count, letter, meta)
-                if isinstance(i, (InlineRulestringBinding, InlineRulestringMapping))
-                else i
-                for i in term
-                ),
-              context=term.ctx
-              )
-    if not isinstance(term, (InlineRulestringBinding, InlineRulestringMapping)):
-        return term
-    new_cdir = get_rs_cdir(term, nb_count, letter, meta)
-    if isinstance(term, InlineRulestringBinding):
-        return Binding(new_cdir, context=term.ctx)
-    if isinstance(term, InlineRulestringMapping):
-        return Mapping(new_cdir, term.map_to, context=term.ctx)
-    return term
 
 
 class MetaTuple(tuple):  # eh
@@ -530,114 +486,35 @@ class Preprocess(Transformer):
         return InlineRulestringMapping(str(idx), self.kill_string(map_to, meta), context=meta)
     
     @inline
-    def rulestring(self, meta, rs):
-        nbhds = nbhoods.validate_hensel(rs)
-        if not nbhds:
-            raise SyntaxErr(meta, 'Invalid Hensel-notation rulestring')
-        if not nbhoods.check_hensel_within(rs, self._tbl.neighborhood, rulestring_nbhds=nbhds):
-            raise SyntaxErr(
-              meta,
-              f"Hensel-notation rulestring exceeds neighborhood {self.directives['neighborhood']!r}; "
-              f'in particular, {nbhoods.find_invalids(nbhds, self._tbl.neighborhood)!r}'
-              )
-        return nbhds
-    
-    def _get_getter(self, val, kind):
-        def get_val(*_):
-            return val
-        
-        if isinstance(val, InlineBinding):
-            used = set()
-            def get_val(nb_count, letter, meta):
-                if (nb_count, letter) not in used:
-                    val.reset()
-                    used.add((nb_count, letter))
-                if val.bind is None:
-                    val.set(self._tbl.neighborhood[get_rs_cdir(val, nb_count, letter, meta, idx=kind)])
-                return val.give()
-        
-        if isinstance(val, (InlineRulestringBinding, InlineRulestringMapping)):
-            def get_val(*args):
-                return resolve_rs_ref(val, *args)
-        
-        if isinstance(val, StateList):
-            getters = [self._get_getter(i, kind) for i in val]
-            def get_val(*args):
-                return val.__class__(
-                  (getter(*args) for getter in getters),
-                  context=val.ctx
-                  )
-        
-        if isinstance(val, Operation):
-            get_a, get_b = self._get_getter(val.a, kind), self._get_getter(val.b, kind)
-            def get_val(*args):
-                return val.__class__(
-                  a=get_a(*args),
-                  b=get_b(*args),
-                  context=val.ctx
-                  )
-        
-        return get_val
+    def rulestring_napkin(self, meta, rulestring, foreground, background):
+        return self.modified_rulestring_napkin((rulestring, 'hensel', foreground, background), meta)
     
     @inline
-    def rulestring_tr(self, meta, initial, rulestring_nbhds, foreground, background, resultant):
-        initial = self.kill_string(initial, meta)
-        resultant = self.kill_string(resultant, meta)
+    def modified_rulestring_napkin(self, meta, rulestring, modifier, foreground, background):
+        try:
+            func = inline_rulestring.funcs[modifier]
+        except KeyError:
+            raise ValueErr(meta, f"Unknown modifier '{modifier}'")
+        return func, {
+          'rulestring': str(rulestring),
+          'fg': self.kill_string(foreground, meta),
+          'bg': self.kill_string(background, meta)
+          }
+    
+    @inline
+    def rulestring_tr(self, meta, initial, func__napkin, resultant):
+        func, napkin = func__napkin
+        args = {
+          **napkin,
+          'initial': self.kill_string(initial, meta),
+          'resultant': self.kill_string(resultant, meta),
+          'table': self._tbl,
+          'variables': self.vars,
+          'meta': meta
+        }.items()
+        params = signature(func).parameters
+        return func(**{k: v for k, v in args if k in params})
         
-        fg = self.kill_string(foreground, meta)
-        bg = self.kill_string(background, meta)
-        if isinstance(foreground, StateList):
-            self.vars[self._tbl.new_varname(-1)] = foreground
-        if isinstance(background, StateList):
-            self.vars[self._tbl.new_varname(-1)] = background
-        
-        r4r_nbhds, permute_nbhds = {}, set()
-        for nb_count, letters in rulestring_nbhds.items():
-            if len(letters) == len(nbhoods.R4R_NBHDS[nb_count]):
-                permute_nbhds.add(nb_count)
-            else:
-                r4r_nbhds[nb_count] = letters
-        
-        if permute_nbhds:
-            self._tbl.add_sym_type('permute')
-        if r4r_nbhds:
-            self._tbl.add_sym_type('rotate4reflect')
-        
-        get_fg, get_bg = self._get_getter(fg, 'FG'), self._get_getter(bg, 'BG')
-        get_initial, get_resultant = self._get_getter(initial, None), self._get_getter(resultant, None)
-        ret = [
-          TransitionGroup(
-            self._tbl,
-            get_initial(nb_count, letter, meta),
-            {
-              num: get_fg(nb_count, letter, meta)
-              # XXX: probably suboptimal performance b/c [dot attr access] -> [getitem] -> [getitem]
-              if cdir in nbhoods.R4R_NBHDS[nb_count][letter]
-              else get_bg(nb_count, letter, meta)
-              for cdir, num in self._tbl.neighborhood.items()
-            },
-            get_resultant(nb_count, letter, meta),
-            context=meta, symmetries=ROTATE_4_REFLECT
-            )
-          for nb_count, letters in r4r_nbhds.items()
-          for letter in letters
-        ]
-        ret.extend(
-          TransitionGroup(
-            self._tbl,
-            get_initial(nb_count, None, meta),
-            {
-              num: get_fg(nb_count, None, meta)
-              if num <= nb_count
-              else get_bg(nb_count, None, meta)
-              for num in self._tbl.neighborhood.values()
-            },
-            get_resultant(nb_count, None, meta),
-            context=meta, symmetries=PERMUTE
-            )
-          for nb_count in map(int, permute_nbhds)
-          )
-        return ret
     
     @inline
     def rulestring_transition(self, meta, trs, aux_first=None, aux_second=None):
@@ -650,6 +527,3 @@ class Preprocess(Transformer):
         for tr in trs:
             ret.extend(chain(tr.apply_aux(aux_first), tr.expand(), tr.apply_aux(aux_second)))
         return ret
-    
-    def special_rulestring_tr(self, children, meta):
-        raise UnsupportedFeature(fix(meta), 'Hensel-rulestring transition napkins with modifiers are currently not supported')
