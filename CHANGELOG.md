@@ -8,6 +8,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
   where `hensel` is the normal behavior and `!hensel` *negates* the rulestring: turns it into its complement.
 - Automatic filling-in of omitted terms with `any`&nbsp;-- only, however, if every given term was accompanied by a compass-direction
   tag (to make sure that the omissions were intentional)
+- An "explicit permute" symmetry in the stdlib w/ no automatic expansion (omitted tilde = `~ 1` and that's it)
+### Fixed
+- `symmetries:permute` now raises an error when given too many terms rather than simply telling some values to show up 0 times
 ### Planned
 - A complete overhaul of symmetries and neighborhoods such that:
   - Such transformations as reflection and rotation are handled from the *neighborhood* rather than the symmetry type
@@ -20,9 +23,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 - Some solution to the consolidate() line-number problem with inline-rulestring transitions
 - Some solution to the issue with r4r inline rulestrings' foreground/background states not being properly bindable to;
   probably just going to expose compass directions but that would ruin it when used on more than one neighborhood
-- An "explicit permute" symmetry in the stdlib w/ no automatic expansion (omitted tilde = `~ 1` and that's it)
 - More modifiers, e.g. Langton's Ant and Deficient/genext
 - "Limited variables", as soon as Bismuth explains what that means
+- A `prune` macro
 
 ## [0.4.10] - 2018-12-25
 Really just floundering now while I figure out 0.5.0.

@@ -102,7 +102,7 @@ class Preprocess(Transformer):
         if first.data in ('cdir', 'crange'):
             raise SyntaxErr(
               fix(first.meta),
-              f"Cannot specify compass directions under {self.directives['symmetries']} symmetry"
+              f"Cannot specify compass directions under {self.directives['symmetries']} symmetries"
               )
         # Nothing left to return here... right? Because permute_shorthand trees
         # will already have been transformed (by self.permute_shorthand) and
@@ -178,7 +178,7 @@ class Preprocess(Transformer):
             if permute:
                 raise SyntaxErr(
                   fix(meta),
-                  f"Cannot use tilde-based shorthand under {self.directives['symmetries']} symmetry.\n  "
+                  f"Cannot use tilde-based shorthand under {self.directives['symmetries']} symmetries.\n  "
                   '(Try a range of compass directions instead)'
                   )
             # XXX: this is suspect (cryptic message and i'm not sure it's raised in the right situation)
@@ -209,8 +209,8 @@ class Preprocess(Transformer):
             except Exception as e:
                 raise Error(
                   fix(meta),
-                  f"Tilde-notation shorthand for {self.directives['symmetries']} raised "
-                  f"{type(e)}: {e}"
+                  f"Tilde notation raised "
+                  f"{type(e).__name__}: {e}"
                   )
         else:
             idx = pure_idx = 1

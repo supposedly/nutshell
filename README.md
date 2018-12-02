@@ -907,6 +907,8 @@ that comes with the following:
 - `symmetries: nutshell.\ReflectDiagonal`: Reflection about the NW-SW diagonal axis.
 - `symmetries: nutshell./ReflectDiagonal`: Reflection about the SE-NE diagonal axis.
 - `symmetries: nutshell.XReflectDiagonal`: Reflection about both diagonal axes.
+- `symmetries: nutshell.ExplicitPermute`: Permute symmetries, but there is no automatic expansion of tilde-omitted terms; omission of a tilde
+  here is equivalent to `~ 1`. An error will be raised if an incorrect amount of terms results.
 
 In addition, although the API for it is somewhat clunky at present, you as the user are allowed to define your own custom symmetries
 via Python classes. See [documents/PYTHON-EXTENSIONS.md](documents/PYTHON-EXTENSIONS.md) for more detail.

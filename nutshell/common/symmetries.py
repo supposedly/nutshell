@@ -93,3 +93,18 @@ class AlternatingPermute(Permute):
         permute_sp, length = Permute.special, length // 2
         orth, diag = values[::2], values[1::2]
         return chain.from_iterable(zip(permute_sp(orth, length), permute_sp(diag, length)))
+
+
+class ExplicitPermute(Permute):
+    @staticmethod
+    def special(values, length):
+        new = []
+        for v, count in values:
+            if count is None:
+                count = '1'
+            if not count.isdigit():
+                raise Exception(f"{v} ~ {count}; '{count}' is not a number")
+            new.extend([v] * int(count))
+        if len(new) < length:
+            raise Exception(f'Expected {length} terms, got {len(new)}')
+        return new

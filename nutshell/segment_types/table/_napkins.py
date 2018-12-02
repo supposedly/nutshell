@@ -212,17 +212,28 @@ class Permute(Napkin):
           1, 1, 1, 1, 0, 0, 0, 0
         Order is not preserved.
         """
-        # How many cells filled
-        tally = length - sum(int(i) for _, i in values if i)
-        # And how many empty slots left to fill
-        empties = sum(1 for _, i in values if not i)
         # filler algo courtesy of Thomas Russell on math.stackexchange
         # https://math.stackexchange.com/a/1081084
-        filler = (ceil((tally - k + 1) / empties) for k in range(1, 1+empties))
+        filler = Permute._fill(
+          length,
+          # How many cells filled
+          length - sum(int(i) for _, i in values if i),
+          # And how many empty slots left to fill
+          sum(1 for _, i in values if not i)
+          )
         return list(_AccumulativeContainer(
           (val.set(idx) if isinstance(val, InlineBinding) else val, next(filler) if num is None else int(num))
           for idx, (val, num) in enumerate(values, 1)
           ))
+    
+    @staticmethod
+    def _fill(length, tally, empties):
+        """Only in its own function to be able to raise error on 0"""
+        for k in range(1, 1 + empties):
+            v = ceil(tally - k + 1)
+            if v == 0:
+                raise ValueError(f'Too many terms given (expected no more than {length})')
+            yield v
 
 class _AccumulativeContainer(list):
     def __init__(self, it):
