@@ -97,6 +97,8 @@ def parse_rulestring(rs, meta, table):
 def get_rs_cdir(reference, nb_count, letter, meta, *, idx=None):
     if idx is None:
         idx = reference.idx
+    if idx not in ('FG', 'BG', '0'):
+        return idx
     if letter is None:
         if nb_count == '0':
             if idx == 'FG':
