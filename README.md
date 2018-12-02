@@ -161,6 +161,22 @@ neighborhood: von Neumann
 0, 1, 3, 3, 1, 4
 ```
 
+Additionally, if **all** given terms of a transition have a compass-direction tag, any omitted ones will be filled in with the variable
+`any` (introduced below). Note that, to ensure intent, this is **only** valid if there is not a single term given without a compass direction.
+
+```rb
+# Nutshell
+neighborhood: von Neumann
+
+0, N 1, S 2; 3
+```
+```rb
+# Golly
+neighborhood: vonNeumann
+
+0, 1, any.0, 2, any.1, 3
+```
+
 Transitions, whose terms are listed in clockwise order,
 by default use the Golly-canonical ordering&nbsp;-- usually `C, N, ..., C'`
 (center cellstate, northern cellstate, ..., new center)&nbsp;--

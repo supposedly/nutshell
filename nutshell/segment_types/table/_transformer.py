@@ -68,7 +68,7 @@ class Preprocess(Transformer):
             if val.isdigit():
                 return [int(val)] if li else int(val)
             try:
-                return self._tbl.vars[val]
+                return self.vars[val]
             except KeyError:
                 raise ReferenceErr(
                   fix(meta),
@@ -213,10 +213,11 @@ class Preprocess(Transformer):
                   f"{type(e)}: {e}"
                   )
         else:
-            idx = 1
+            idx = pure_idx = 1
             napkin = {}
             add_mod = partial(_add_mod, self._tbl.trlen)
             offset_initial = False  # whether it starts on a compass dir other than the first
+            all_cdir = True  # whether all terms are tagged with a compass-direction prefix
             
             for tr_state in children:
                 m = fix(tr_state.meta)
@@ -226,18 +227,26 @@ class Preprocess(Transformer):
                 
                 if first_data == 'cdir':
                     cdir = self._tbl.check_cdir(first.children[0], fix(first.meta))
+                    if cdir in napkin:
+                        raise SyntaxErr(
+                          fix(first.meta),
+                          f'Duplicate compass direction {first.children[0]}'
+                          )
                     napkin[cdir], = rest
                     if cdir != idx:
-                        if idx == 1:
-                            idx = cdir
-                            offset_initial = True
-                        else:
+                        if idx == 1 and not offset_initial:
+                            offset_initial = cdir
+                        elif cdir < idx and (not offset_initial or
+                        offset_initial and pure_idx > self._tbl.trlen):
                             raise SyntaxErr(
                               fix(first.meta),
                               'Out-of-sequence compass direction '
-                              f'(expected {self._tbl.neighborhood.inv[idx]}, got {first.children[0]})'
+                              f'(expected {self._tbl.neighborhood.inv[idx] + (" or further" if all_cdir else "")}, got {first.children[0]})'
                               )
+                        pure_idx += abs(cdir - idx)
+                        idx = cdir
                     idx = add_mod(idx, 1)
+                    pure_idx += 1
                 elif first_data == 'crange':
                     a, b = first.children
                     int_a = self._tbl.check_cdir(a, (first.meta.line, first.meta.column, len(a) + first.meta.column))
@@ -250,15 +259,14 @@ class Preprocess(Transformer):
                               fix(first.meta),
                               f'Invalid compass-direction range ({b} does not follow {a} going clockwise)'
                               )
-                        offset_initial = True
+                        offset_initial = 1
                     
                     if not crange and offset_initial:
                         crange = (*range(self._tbl.neighborhood[a], 1+self._tbl.trlen), *range(1, 1+self._tbl.neighborhood[b]))
                     
                     if idx != crange[0]:
                         if idx == 1:
-                            idx = crange[0]
-                            offset_initial = True
+                            idx = offset_initial = crange[0]
                         else:
                             nbhd = self._tbl.neighborhood.inv
                             raise SyntaxErr(
@@ -273,6 +281,7 @@ class Preprocess(Transformer):
                         napkin[crange[0]] = rest.give()
                         crange = range(1+crange[0], 1+crange[-1])
                         idx = add_mod(idx, 1)
+                        pure_idx += 1
                         rest = rest.give()
                     
                     for i in crange:
@@ -284,9 +293,17 @@ class Preprocess(Transformer):
                               )
                         napkin[i] = rest
                         idx = add_mod(idx, 1)
+                        pure_idx += 1
                 else:
+                    all_cdir = False
                     napkin[idx], = self.kill_strings(tr_state.children, m)
                     idx = add_mod(idx, 1)
+                    pure_idx += 1
+            if all_cdir:
+                napkin.update(dict.fromkeys(
+                  [idx for idx in self._tbl.neighborhood.inv if idx not in napkin],
+                  self.vars['any']
+                  ))
             if len(napkin) != self._tbl.trlen:
                 raise ValueErr(
                   (meta.line, children[0].meta.column, children[-1].meta.end_column),
