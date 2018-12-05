@@ -206,7 +206,15 @@ class Transition:
     def __init__(self, tr, tbl, *, context, symmetries=None):
         self.ctx = context
         self.tr = tr
-        self.initial, *self.napkin, self.resultant = tr
+        self.initial, *self.napkin, resultant = tr
+        if isinstance(resultant, StateList) and len(resultant) > 1:
+            # Best to do this check here (regrettably) because the length > 1 can't really be determined earlier
+            raise ValueErr(
+              self.ctx,
+              "Resultant (final) term must be a single cellstate or something that resolves to one. Instead "
+              f"got {resultant.untether()}, a statelist of length {len(resultant)}"
+            )
+        self.resultant = resultant
         nbhd = tbl.neighborhood.inv
         self._tr_dict = {'0': self.initial, **{nbhd[k]: v for k, v in enumerate(self.napkin, 1)}}
         self.symmetries = symmetries or tbl.symmetries

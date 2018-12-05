@@ -2,6 +2,10 @@
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 
+## [0.4.9] - 2018-12-24
+### Changed
+- Using a variable in the resultant term of a transition now causes an error on Nutshell's end rather than Golly's.
+
 ## [0.4.8] - 2018-11-28
 ### Added
 - `__main__.py` to allow Nutshell to be run as `python -m nutshell ...`.
