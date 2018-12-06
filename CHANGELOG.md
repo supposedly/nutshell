@@ -10,7 +10,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
   tag (to make sure that the omissions were intentional)
 - An "explicit permute" symmetry in the stdlib w/ no automatic expansion (omitted tilde = `~ 1` and that's it)
 - Allow bindings directly to compass directions rather than FG/BG with inline rulestrings, which kindasorta addresses the issue of
-  FG/BG of Hensel r4r neighborhoods not being properly bindable to, but is really more of a bad band-aid
+  Hensel r4r neighborhoods' positions mattering (more than just "FG" and "BG" can provide), but it's really more of a bad band-aid
 ### Fixed
 - `symmetries:permute` now raises an error when given too many terms rather than simply telling some values to show up 0 times
 ### Planned
@@ -21,9 +21,10 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
   - Symmetry types simply have to call, for instance, neighborhood.rotate4() -- rather than themselves reordering the napkin
   - Symmetry types can be composed from within Nutshell without my having to define a new Python class for each basic combination
     of symmetries
+  - Also, apgsearch-like symmetry notation...?
 - Neighborhood-switching, a la symmetry-switching
 - Some solution to the consolidate() line-number problem with inline-rulestring transitions
-- More modifiers, e.g. Langton's Ant and Deficient/genext
+- More modifiers, e.g. Langton's Ant and Deficient/genext -- also hex (but hex symmetries are scary)
 - "Limited variables", as soon as Bismuth explains what that means
 - A `prune` macro
 
