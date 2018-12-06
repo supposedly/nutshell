@@ -46,8 +46,10 @@ def write_rule(**kwargs):
 
 
 def main():
-    cli.prepare(strict=True, propagate_unknowns=True)
-    inp = cli.result
+    inp = cli \
+      .prepare(strict=True, propagate_unknowns=True) \
+      .set_defaults(quiet=False) \
+      .result
     if inp is None:
         return
     if 'transpile' in inp:

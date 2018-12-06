@@ -34,7 +34,7 @@ def verbose(nsp):
 
 
 @cli.clump(XOR='verbose|quiet')
-@cli.flag(default=False)
+@cli.flag(default=True)  # when imported as module. When run from console (as set in main.py), default=False
 def quiet():
     return True
 

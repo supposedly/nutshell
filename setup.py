@@ -30,7 +30,7 @@ setuptools.setup(
   include_package_data=True,
   url='https://github.com/eltrhn/nutshell',
   description="Transpiler from a powerful alternative cellular-automaton-specification language to Golly's",
-  install_requires=['bidict', 'ergo>=0.4.7'],  #, 'lark-parser'],
+  install_requires=['bidict', 'ergo>=0.5.1'],  #, 'lark-parser'],
   python_requires='>=3.6',
   entry_points={
     'console_scripts': [

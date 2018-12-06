@@ -2,6 +2,17 @@
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 
+## [0.4.10] - 2018-12-25
+Really just floundering now while I figure out 0.5.0.
+### Fixed
+- The previous fix didn't account for something important, which caused a lot of fatal and erroneous errors. Should have
+  run test.py before pushing!
+### Changed
+- Released a couple updates to ergo that finally streamline the whole "CLI-centric project" idea: console-invocation
+  default values can now be distinguished from imported-as-module default values. For Nutshell, this means that the script
+  no longer prints "Parsing...", "Compiling...", and "Complete!" if it's been imported as a Python module, but it does
+  show those messages when it's invoked as a command-line script.
+
 ## [0.4.9] - 2018-12-24
 ### Changed
 - Using a variable in the resultant term of a transition now causes an error on Nutshell's end rather than Golly's.

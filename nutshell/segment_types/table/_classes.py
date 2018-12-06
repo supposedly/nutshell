@@ -207,8 +207,8 @@ class Transition:
         self.ctx = context
         self.tr = tr
         self.initial, *self.napkin, resultant = tr
-        if isinstance(resultant, StateList) and len(resultant) > 1:
-            # Best to do this check here (regrettably) because the length > 1 can't really be determined earlier
+        if isinstance(resultant, StateList) and not isinstance(resultant, ResolvedBinding) and len(resultant) > 1:
+            # Best to do this check here (regrettably) bc the length > 1 can't really be determined earlier
             raise ValueErr(
               self.ctx,
               "Resultant (final) term must be a single cellstate or something that resolves to one. Instead "
