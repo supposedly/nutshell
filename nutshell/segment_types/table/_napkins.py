@@ -224,13 +224,13 @@ class Permute(Napkin):
         return list(_AccumulativeContainer(
           (val.set(idx) if isinstance(val, InlineBinding) else val, next(filler) if num is None else int(num))
           for idx, (val, num) in enumerate(values, 1)
-          ))
+        ))
     
     @staticmethod
     def _fill(length, tally, empties):
         """Only in its own function to be able to raise error on 0"""
         for k in range(1, 1 + empties):
-            v = ceil(tally - k + 1)
+            v = ceil((tally - k + 1) / empties)
             if v == 0:
                 raise ValueError(f'Too many terms given (expected no more than {length})')
             yield v

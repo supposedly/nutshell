@@ -19,13 +19,13 @@ class IShouldntHaveToDoThisBidict(bidict.bidict):
 
 
 class Icon:
-    HEIGHT = None
     _rRUNS = re.compile(r'(\d*)([$.A-Z]|[p-y][A-O])')
     
-    def __init__(self, rle):
-        if self.HEIGHT not in (7, 15, 31):
-            raise ValueError(f"Need to declare valid height (not '{self.HEIGHT!r}')")
-        self._fill = ['..' * self.HEIGHT]
+    def __init__(self, rle, height):
+        if height not in (7, 15, 31):
+            raise ValueError(f"Need to declare valid height (not '{height!r}')")
+        self.height = height
+        self._fill = ['..' * height]
         self._rle = rle
         self._split = ''.join(
           maybe_double(val) * int(run_length or 1)
@@ -38,14 +38,8 @@ class Icon:
         yield from self.ascii
 
     @classmethod
-    def set_height(cls, dims=None, max_dim=None):
-        if max_dim is None:
-            max_dim = max(map(max, zip(*dims)))
-        cls.HEIGHT = min(filter(max_dim.__le__, (7, 15, 31)), key=lambda x: abs(max_dim - x))
-    
-    @classmethod
-    def solid_color(cls, color):
-        return [maybe_double(color) * cls.HEIGHT] * cls.HEIGHT
+    def solid_color(cls, color, height):
+        return [maybe_double(color) * height] * height
     
     @staticmethod
     def _fix_two(s):
@@ -58,9 +52,9 @@ class Icon:
         earliest = min(lazylen(takewhile('.'.__eq__, line)) for line in self._split)
         max_len = max(map(len, self._split))
         # Vertical padding
-        pre = (self.HEIGHT - len(self._split)) // 2
-        post = (self.HEIGHT - len(self._split)) - pre
-        return self._fill * pre + [self._fix_two(f"{f'{line[earliest:]:.<{max_len}}':.^{2*self.HEIGHT}}") for line in self._split] + self._fill * post
+        pre = (self.height - len(self._split)) // 2
+        post = (self.height - len(self._split)) - pre
+        return self._fill * pre + [self._fix_two(f"{f'{line[earliest:]:.<{max_len}}':.^{2*self.height}}") for line in self._split] + self._fill * post
 
 
 class IconArray:
@@ -71,6 +65,7 @@ class IconArray:
         self._src = segment
         self._set_states = None
         self._fill_gradient = None
+        self._height = None
         
         _colors, _table, _nutshell = dep
         self._n_states = _table and _table.n_states
@@ -81,24 +76,29 @@ class IconArray:
         self._states = self._sep_states(_start_state_def)
         
         # this just constructs a series of (x, y) dimensions to pass to set_height(), grabbed from the RLEs in self._states.values()
-        Icon.set_height(
+        self.set_height(
           map(int, chain.from_iterable(self._rDIMS.findall(i)))
           for i in
           filter(self._rDIMS.match, chain.from_iterable(self._states.values()))
           )
         
-        self.icons = {state: list(Icon(''.join(rle))) for state, (_dims, *rle) in self._states.items()}
+        self.icons = {state: list(Icon(''.join(rle), self._height)) for state, (_dims, *rle) in self._states.items()}
         self._fill_missing_states()
     
     def __iter__(self):
         yield 'XPM'
         # /* width height num_colors chars_per_pixel */
-        yield f'"{Icon.HEIGHT} {len(self.icons)*Icon.HEIGHT} {len(self.colormap)} 2"'
+        yield f'"{self._height} {len(self.icons)*self._height} {len(self.colormap)} 2"'
         # /* colors */
         yield from (f'"{maybe_double(symbol)} c #{color}"' for symbol, color in self.colormap.items())
         # /* icons */
         yield from (f'"{line}"' for icon in (self.icons[key] for key in sorted(self.icons)) for line in icon)
     
+    def set_height(self, dims=None, max_dim=None):
+        if max_dim is None:
+            max_dim = max(map(max, zip(*dims)))
+        self._height = min(filter(max_dim.__le__, (7, 15, 31)), key=lambda x: abs(max_dim - x))
+
     def _make_color_symbol(self):
         name = ''.join(random.sample(SAFE_CHARS, 2))
         while name in self.colormap.values():
@@ -172,4 +172,4 @@ class IconArray:
                 color = self._fill_gradient[state]
             symbol = self.colormap.inv.get(color, self._make_color_symbol())
             self.colormap[symbol] = color
-            self.icons[state] = Icon.solid_color(symbol)
+            self.icons[state] = Icon.solid_color(symbol, self._height)

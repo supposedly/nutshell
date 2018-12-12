@@ -11,6 +11,12 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 - An "explicit permute" symmetry in the stdlib w/ no automatic expansion (omitted tilde = `~ 1` and that's it)
 - Allow bindings directly to compass directions rather than FG/BG with inline rulestrings, which kindasorta addresses the issue of
   Hensel r4r neighborhoods' positions mattering (more than just "FG" and "BG" can provide), but it's really more of a bad band-aid
+- Support for Golly's multiple icon sizes by allowing segments with "modifiers" a la `@ICONS:7` and `@ICONS:15` -- these modifiers
+  have no intrinsic meaning, so you could totally put 15x15 icons under `@ICONS:7` and vice versa, but their purpose is to all
+  coalesce into the Golly table's `@ICONS` once transpiled
+### Changed
+- `symmetries: nutshell.AlternatingPermute` now no longer attempts to infer amounts of terms, because that was *really* messy.
+  It now behaves like `symmetries: nutshell.ExplicitPermute`
 ### Fixed
 - `symmetries:permute` now raises an error when given too many terms rather than simply telling some values to show up 0 times
 ### Planned

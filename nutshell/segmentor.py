@@ -4,12 +4,21 @@ from .segment_types import NutshellSegment, Table, ColorSegment, IconArray
 from .common import errors, utils
 
 
+def seg(name, modifiers, cls=None, *, include_bare=True):
+    name = f'@{name}'
+    if cls is None:
+        # then modifiers holds cls
+        return (name, modifiers)
+    base = [(name, cls)] if include_bare else []
+    return base + [(f'{name}:{modifier}', cls) for modifier in modifiers]
+
+
 Table.hush = False  # a little bit eh but :shrug:
 CONVERTERS = [
-  ('@NUTSHELL', NutshellSegment),
-  ('@TABLE', Table),
-  ('@COLORS', ColorSegment),
-  ('@ICONS', IconArray),
+  seg('NUTSHELL', NutshellSegment),
+  seg('TABLE', Table),
+  seg('COLORS', ColorSegment),
+  *seg('ICONS', (7, 15, 31), IconArray),
   ]
 
 
@@ -29,7 +38,7 @@ def parse(fp):
             # under the `seg` key, and that if it's phrased (as can be
             # done in @RULE) with the segment's first "argument" on the
             # same line, then it will still be the list's first element
-            seg, *name = line.split(None, 1)
+            seg, *name = line.split('#')[0].split(None, 1)
             segments[seg], lines[seg] = name, lno
             continue
         segments[seg].append(line)
@@ -65,4 +74,8 @@ def parse(fp):
                 raise e.__class__(None, e.msg, label)
             raise e.__class__(e.lno, e.msg, label, seg, shift=e.shift or seg_lno)
     
+    for name in list(segments):
+        if ':' in name:
+            segments.setdefault(name.split(':')[0], []).append(segments[name])
+            del segments[name]
     return segments
