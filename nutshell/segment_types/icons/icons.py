@@ -59,7 +59,7 @@ class Icon:
 
 class IconArray:
     _rDIMS = re.compile(r'\s*x\s*=\s*(\d+),\s*y\s*=\s*(\d+)')
-    _rCOLOR = re.compile(r'(\d+:\s*|[.A-Z]\s+|[p-y][A-O]\s+)(\d{0,3}\s+\d{0,3}\s+\d{0,3}|[0-9A-F]{6}|[0-9A-F]{3}).*')
+    _rCOLOR = re.compile(r'(\d+:\s*|[.A-Z]\s+|[p-y][A-O]\s+)(\d{0,3}\s+\d{0,3}\s+\d{0,3}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{3}).*')
     
     def __init__(self, segment, start=0, *, dep: ['@COLORS', '@TABLE', '@NUTSHELL'] = None):
         self._src = segment
@@ -114,19 +114,19 @@ class IconArray:
                 pre, *post = map(str.strip, line.split('[', 1))
                 # Below *_ allows for an arbitrary separator like `000 ... FFF` between the two colors
                 _, start, *_, end = pre.split()
-                # If available, get n_states from said n_states-containing comment
+                # If available, get n_states from said n_states-containing [comment]
                 self._set_states = int(post[0].strip(']').strip()) if post else self._n_states
                 # Construct ColorRange from states and start/end values
-                self._fill_gradient = ColorRange(int(self._set_states), start, end)
+                self._fill_gradient = ColorRange(int(self._set_states), start.upper(), end.upper())
                 continue
             match = self._rCOLOR.match(line)
             if match is None:
                 if line:
                     break
                 continue
-            state, color = match[1].strip().strip(':'), match[2]
+            state, color = match[1].strip().strip(':'), match[2].upper()
             colormap[SYMBOL_MAP[int(state)] if state.isdigit() else maybe_double(state)] = ColorMixin.pack(color).upper()
-        return colormap, lno-1  # -1 because lno is potentially a cellstate-containing comment
+        return colormap, lno - 1  # -1 because lno is potentially a cellstate-containing comment
     
     def _sep_states(self, start) -> dict:
         states = defaultdict(list)
