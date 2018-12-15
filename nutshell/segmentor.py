@@ -8,16 +8,16 @@ def seg(name, modifiers, cls=None, *, include_bare=True):
     name = f'@{name}'
     if cls is None:
         # then modifiers holds cls
-        return (name, modifiers)
+        return [(name, modifiers)]
     base = [(name, cls)] if include_bare else []
     return base + [(f'{name}:{modifier}', cls) for modifier in modifiers]
 
 
 Table.hush = False  # a little bit eh but :shrug:
 CONVERTERS = [
-  seg('NUTSHELL', NutshellSegment),
-  seg('TABLE', Table),
-  seg('COLORS', ColorSegment),
+  *seg('NUTSHELL', NutshellSegment),
+  *seg('TABLE', Table),
+  *seg('COLORS', ColorSegment),
   *seg('ICONS', (7, 15, 31), IconArray),
   ]
 

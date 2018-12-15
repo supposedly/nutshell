@@ -19,6 +19,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
   It now behaves like `symmetries: nutshell.ExplicitPermute`
 ### Fixed
 - `symmetries:permute` now raises an error when given too many terms rather than simply telling some values to show up 0 times
+- Undefined variables in the initial/resultant terms of a transition no longer cause an ugly Python error (was passing just a
+  line-number `int` into an error-handling function that instead expected the object from which the line number came)
 ### Planned
 - A complete overhaul of symmetries and neighborhoods such that:
   - Such transformations as reflection and rotation are handled from the *neighborhood* rather than the symmetry type

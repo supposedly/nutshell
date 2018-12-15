@@ -195,11 +195,11 @@ class Preprocess(Transformer):
         
         initial, resultant = children.pop(0), children.pop(-1)
         try:
-            initial = self.kill_string(initial, meta.line)
+            initial = self.kill_string(initial, meta)
         except ReferenceErr as e:
             raise ReferenceErr((meta.line, meta.column, meta.column + len(str(initial))), e.msg)
         try:
-            resultant = self.kill_string(resultant, meta.line)
+            resultant = self.kill_string(resultant, meta)
         except ReferenceErr as e:
             raise ReferenceErr((meta.line, meta.end_column - len(str(resultant)), meta.end_column), e.msg)
         if hasattr(self._tbl.symmetries, 'special'):
