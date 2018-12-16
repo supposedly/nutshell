@@ -1,3 +1,4 @@
+from itertools import chain, zip_longest as zipln
 from random import Random
 from string import whitespace
 
@@ -59,3 +60,23 @@ def printq(*args, **kwargs):
     if cli.result.quiet:
         return
     print(*args, **kwargs)
+
+
+def multisplit(string, delims, *, amounts=(), filter_bool=True):
+    """
+    string: string to split
+    delims: delimiters to split on
+    amounts: what to pass to second arg of str.split() for
+      each given delimiter
+    filter_bool: whether to filter out strings that
+      don't pass a filter(bool, ...) check
+    return: split string
+    
+    Split a string on more than one delimiter simultaneously.
+    """
+    ret = [string]
+    for delim, amount in zipln(delims, amounts, fillvalue=-1):
+        ret = [j for i in ret for j in i.split(delim, amount)]
+    if filter_bool:
+        return [i for i in ret if i]
+    return ret

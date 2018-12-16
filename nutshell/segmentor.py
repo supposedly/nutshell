@@ -38,7 +38,7 @@ def parse(fp):
             # under the `seg` key, and that if it's phrased (as can be
             # done in @RULE) with the segment's first "argument" on the
             # same line, then it will still be the list's first element
-            seg, *name = line.split('#')[0].split(None, 1)
+            seg, *name = line.split(None, 1)
             segments[seg], lines[seg] = name, lno
             continue
         segments[seg].append(line)

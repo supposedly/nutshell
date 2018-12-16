@@ -2,6 +2,20 @@
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 
+## [0.6.0] - Hypothetical
+## Planned
+- A complete overhaul of symmetries and neighborhoods such that:
+  - Such transformations as reflection and rotation are handled from the *neighborhood* rather than the symmetry type
+  - Nutshell, given the compass directions composing a neighborhood, automatically determines what standard transformations
+    it can undergo
+  - Symmetry types simply have to call, for instance, neighborhood.rotate4() -- rather than themselves reordering the napkin
+  - Symmetry types can be composed from within Nutshell without my having to define a new Python class for each basic combination
+    of symmetries
+  - Also, apgsearch-like symmetry notation...?
+- Neighborhood-switching, a la symmetry-switching
+- A `prune` macro
+- More modifiers, e.g. Langton's Ant and Deficient/genext -- also hex (although hex symmetries are scary)
+
 ## [0.5.0] - In Progress
 ### Added
 - Inline rulestrings now accept modifiers (which are yet to be made extensible). The two added thus far are `hensel` and `!hensel`,
@@ -14,27 +28,22 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 - Support for Golly's multiple icon sizes by allowing segments with "modifiers" a la `@ICONS:7` and `@ICONS:15` -- these modifiers
   have no intrinsic meaning, so you could totally put 15x15 icons under `@ICONS:7` and vice versa, but their purpose is to all
   coalesce into the Golly table's `@ICONS` once transpiled
+- The `@ICONS` segment can now use `@TABLE`-defined varnames to help specify the states an icon applies to
 ### Changed
 - `symmetries: nutshell.AlternatingPermute` now no longer attempts to infer amounts of terms, because that was *really* messy.
   It now behaves like `symmetries: nutshell.ExplicitPermute`
+- The `@ICONS` segment now copies RLE comments over, except for the final comment before an RLE (because that one should be reserved
+  for state definitions)
 ### Fixed
 - `symmetries:permute` now raises an error when given too many terms rather than simply telling some values to show up 0 times
 - Undefined variables in the initial/resultant terms of a transition no longer cause an ugly Python error (was passing just a
   line-number `int` into an error-handling function that instead expected the object from which the line number came)
+- The `@ICONS` segment no longer alters a recieved icon (by removing state-0 empty space) before centering it; it now
+  assumes the icon it gets, including its RLE dimensions and empty space, is what should be centered
 ### Planned
-- A complete overhaul of symmetries and neighborhoods such that:
-  - Such transformations as reflection and rotation are handled from the *neighborhood* rather than the symmetry type
-  - Nutshell, given the compass directions composing a neighborhood, automatically determines what standard transformations
-    it can undergo
-  - Symmetry types simply have to call, for instance, neighborhood.rotate4() -- rather than themselves reordering the napkin
-  - Symmetry types can be composed from within Nutshell without my having to define a new Python class for each basic combination
-    of symmetries
-  - Also, apgsearch-like symmetry notation...?
-- Neighborhood-switching, a la symmetry-switching
 - Some solution to the consolidate() line-number problem with inline-rulestring transitions
-- More modifiers, e.g. Langton's Ant and Deficient/genext -- also hex (but hex symmetries are scary)
-- "Limited variables", as soon as Bismuth explains what that means
-- A `prune` macro
+- Maybe more modifiers, e.g. Langton's Ant and Deficient/genext -- also hex (but hex symmetries are scary)
+- Automatic-fill-in gradient in `@COLOR`
 
 ## [0.4.10] - 2018-12-25
 Really just floundering now while I figure out 0.5.0.

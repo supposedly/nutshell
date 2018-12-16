@@ -5,6 +5,7 @@ from pathlib import Path
 
 from nutshell.cli import cli, icon as _icon
 from nutshell.common.classes import ColorMixin
+from nutshell.common.utils import multisplit
 from nutshell.tools.common import StreamProxy
 
 cmd = _icon.command(
@@ -24,22 +25,6 @@ CHR_MAP = {
 # so collate them into a tuple to check via str.startswith
 STARTS = tuple(chain(*zip(*((f'{symbol} ', f'{num}:') for symbol, num in CHR_MAP.items()))))
 
-def multisplit(string, *vals, amts=(), filter_bool=False):
-    """
-    string: string to split
-    vals: delimiters to split on
-    filter_bool: whether to filter out strings that
-      don't pass a filter(bool, ...) check
-    return: split string
-    
-    Split a string on more than one value simultaneously.
-    """
-    it = [string]
-    for v, n in zip_longest(vals, amts, fillvalue=-1):
-        it = chain.from_iterable([i.split(v, n) for i in it])
-    it = list(it)
-    return [i for i in it if i] if filter_bool else list(it)
-
 
 @cmd.arg(required=True, default=[])
 def infile(path: Path):
@@ -55,7 +40,7 @@ def infile(path: Path):
     return (
       next(((a.split(), b) for a, b in zip(*[map(str.strip, file)]*2) if a.startswith(('@RULE', '@NUTSHELL'))), None),
       [
-        multisplit(i.split('#')[0].strip(), ' ', ':', amts=(1, 1), filter_bool=True)
+        multisplit(i.split('#')[0].strip(), (' ', ':'), amounts=(1, 1))
         for i in
         takewhile(lambda s: not s.startswith('@'), it)
         if i.startswith(STARTS)
