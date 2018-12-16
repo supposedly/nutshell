@@ -40,6 +40,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
   line-number `int` into an error-handling function that instead expected the object from which the line number came)
 - The `@ICONS` segment no longer alters a recieved icon (by removing state-0 empty space) before centering it; it now
   assumes the icon it gets, including its RLE dimensions and empty space, is what should be centered
+- The `@ICONS` segment, while being parsed, can no longer raise "invalid cellstate" errors on numbers it encounters
+  in comments that *don't* immediately precede an RLE (because the comment immediately preceding an RLE is the only
+  one that should contain cellstates)
 ### Planned
 - Some solution to the consolidate() line-number problem with inline-rulestring transitions
 - Maybe more modifiers, e.g. Langton's Ant and Deficient/genext -- also hex (but hex symmetries are scary)

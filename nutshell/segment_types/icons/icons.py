@@ -79,7 +79,7 @@ class IconArray:
         
         self.set_height(dims.values())
         self.icons = {
-          state: list(Icon(''.join(rle[1:]), self._height, *dims[state]))
+          state: list(Icon(''.join(rle), self._height, *dims[state]))
           for state, rle in self._states.items()
           }
         self._fill_missing_states()
@@ -136,34 +136,39 @@ class IconArray:
     def _sep_states(self, start) -> dict:
         states, comments, dims = {}, {}, {}
         cur_states, cur_comments = set(), []
+        last_comment, last_comment_lno = None, 0
         seq = self._src[start-1:] if self._nutshell is None else self._nutshell.replace_iter(self._src[start-1:])
         for lno, line in enumerate(map(str.strip, seq), start):
             if not line:
                 continue
             if line.startswith('#'):
                 cur_comments.append(line)
-                cur_states.clear()
-                for word in multisplit(line, (None, ',')):
+                last_comment_lno = lno
+                continue
+            if last_comment_lno:
+                *cur_comments, last_comment = cur_comments
+                cur_states = set()
+                for word in multisplit(last_comment, (None, ',')):
                     if word.isdigit():
                         state = int(word)
                         if not 0 < state < 256:
-                            raise ValueErr(lno, f'Icon declared for invalid state {state}')
+                            raise ValueErr(last_comment_lno, f'Icon declared for invalid state {state}')
                         if state in states:
-                            raise ValueErr(lno, f'State {state} was already assigned an icon')
+                            raise ValueErr(last_comment_lno, f'State {state} was already assigned an icon')
                         cur_states.add(state)
                     elif word in self._vars:
                         cur_states.update(self._vars[word])
                     elif TableRange.check(word):
                         cur_states.update(TableRange(word))
-                continue
+                last_comment_lno = 0
             if cur_states:
                 line = line.translate(TWO_STATE)
-                cur_comments = cur_comments[:-1]
                 for state in cur_states:
                     states.setdefault(state, []).append(line)
                     comments.setdefault(state, []).extend(cur_comments)
-                cur_comments.clear()
+                cur_comments = []
         for state, rle in states.items():
+            states[state] = rle[1:]
             dims[state] = list(map(int, chain.from_iterable(self._rDIMS.findall(rle[0]))))
         return states, comments, dims
     
