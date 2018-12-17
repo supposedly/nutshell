@@ -8,6 +8,21 @@ from .. import _symutils as symutils
 
 ROTATE_4_REFLECT = symutils.get_sym_type('rotate4reflect')
 PERMUTE = symutils.get_sym_type('permute')
+FOUR_NEIGHBOR = {
+  'c': 'e',
+  'e': 'c',
+  'k': 'k',
+  'a': 'a',
+  'i': 't',
+  'n': 'r',
+  'y': 'j',
+  'q': 'w',
+  'j': 'y',
+  'r': 'n',
+  't': 'i',
+  'w': 'q',
+  'z': 'z',
+}
 
 
 def standard(meta, initial, fg, bg, resultant, rulestring, variables, table):
@@ -124,6 +139,23 @@ def inverted(meta, initial, fg, bg, resultant, rulestring, variables, table):
     for v in to_add:
         nbhds[v] = set()
     return standard(meta, initial, fg, bg, resultant, nbhds, variables, table)
+
+
+def odd_invert(meta, initial, fg, bg, resultant, rulestring, variables, table):
+    max_neighbors = table.trlen
+    nbhds = parse_rulestring(rulestring, meta, table)
+    new_nbhds = {}
+    for count, letters in nbhds.items():
+        count = int(count)
+        new_count = max_neighbors - count
+        new_key = str(new_count)
+        if count == 4:
+            new_letters = {FOUR_NEIGHBOR[i] for i in letters}
+        else:
+            new_letters = letters.intersection(hensel.R4R_NBHDS[new_key])
+        if new_letters or new_count == max_neighbors:
+            new_nbhds[new_key] = new_letters
+    return standard(meta, initial, fg, bg, resultant, new_nbhds, variables, table)
 
 
 def parse_rulestring(rs, meta, table):

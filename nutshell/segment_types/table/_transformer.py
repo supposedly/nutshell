@@ -509,9 +509,9 @@ class Preprocess(Transformer):
     
     @inline
     def modified_rulestring_napkin(self, meta, rulestring, modifier, foreground, background):
+        imp = modifier.split('.', 1)
         try:
-            imp = modifier.split('.', 1)
-            func = inline_rulestring.funcs.get(modifier, getattr(import_module(imp[0]), imp[1]))
+            func = inline_rulestring.funcs.get(modifier, None) or getattr(import_module(imp[0]), imp[1])
         except (ImportError, ModuleNotFoundError):
             raise ValueErr(meta, f"Unknown modifier '{modifier}'")
         return func, {
