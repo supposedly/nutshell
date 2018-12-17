@@ -15,9 +15,9 @@ states: 4
 
 weave: 1
 # Birth conditions
-any-[FG], <3  hensel_r4r / [live] / --[FG]>; [FG]
+any-[FG], <3 hensel-r4r / [live] / --[FG]>; [FG]
 # Survival conditions
-live, <2-i34q  hensel_r4r / [0] / --[0]>; [0]
+live, <23 hensel-r4r / [0] / --[0]>; [0]
 weave: \
 
 live, any; [0: (any-1) << 1]

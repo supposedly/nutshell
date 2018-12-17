@@ -80,3 +80,12 @@ def multisplit(string, delims, *, amounts=(), filter_bool=True):
     if filter_bool:
         return [i for i in ret if i]
     return ret
+
+
+def distinct(iterable):
+    seen = set()
+    record = seen.add  # minor speed thing
+    for i in iterable:
+        if i not in seen:
+            record(i)
+            yield i

@@ -3,9 +3,8 @@ from contextlib import suppress
 from functools import partial
 from itertools import count, cycle
 
-from ._setutils import IndexedSet
 from . import _neighborhoods as nbhds
-from nutshell.common.utils import random
+from nutshell.common.utils import random, distinct
 from nutshell.common.errors import *
 from .lark_assets.exceptions import *
 
@@ -342,7 +341,7 @@ class Transition:
     
     def in_symmetry(self, NewSymmetry):
         initial, *napkin, resultant = self.fix_partial()
-        return [self.fix_final([initial, *i, resultant]) for i in IndexedSet([NewSymmetry(j) for j in self.symmetries(napkin).expand()])]
+        return [self.fix_final([initial, *i, resultant]) for i in distinct(NewSymmetry(j) for j in self.symmetries(napkin).expand())]
 
 
 class FinalTransition(list):

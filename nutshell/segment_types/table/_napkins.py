@@ -1,8 +1,7 @@
 from itertools import permutations
 from math import ceil
 
-from nutshell.common.utils import LazyProperty
-from ._setutils import IndexedSet
+from nutshell.common.utils import LazyProperty, distinct
 from ._classes import InlineBinding
 
 oneDimensional, vonNeumann, hexagonal, Moore = 2, 4, 6, 8
@@ -63,7 +62,7 @@ class Napkin(tuple, metaclass=_NapkinMeta):
     
     @LazyProperty
     def expanded_unique(self):
-        return IndexedSet(self.expanded)
+        return distinct(self.expanded)
     
     def expand(self):
         return map(type(self), self.expanded_unique)
