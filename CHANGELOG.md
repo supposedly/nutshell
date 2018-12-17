@@ -18,8 +18,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 
 ## [0.5.0] - In Progress
 ### Added
-- Inline rulestrings now accept modifiers (which are yet to be made extensible). The two added thus far are `hensel` and `!hensel`,
-  where `hensel` is the normal behavior and `!hensel` *negates* the rulestring: turns it into its complement.
+- Inline rulestrings now accept modifiers (which are extensible in the same way as symmetries).
+  The two added thus far are `hensel` and `!hensel`, where `hensel` is the normal behavior and
+  `!hensel` *negates* the rulestring: turns it into its complement.
 - Automatic filling-in of omitted terms with `any`&nbsp;-- only, however, if every given term was accompanied by a compass-direction
   tag (to make sure that the omissions were intentional)
 - An "explicit permute" symmetry in the stdlib w/ no automatic expansion (omitted tilde = `~ 1` and that's it)

@@ -1,6 +1,7 @@
 from collections import namedtuple
 from functools import wraps
 from inspect import signature
+from importlib import import_module
 from itertools import chain, repeat
 from operator import attrgetter
 from pkg_resources import resource_filename
@@ -509,8 +510,9 @@ class Preprocess(Transformer):
     @inline
     def modified_rulestring_napkin(self, meta, rulestring, modifier, foreground, background):
         try:
-            func = inline_rulestring.funcs[modifier]
-        except KeyError:
+            imp = modifier.split('.', 1)
+            func = inline_rulestring.funcs.get(modifier, getattr(import_module(imp[0]), imp[1]))
+        except (ImportError, ModuleNotFoundError):
             raise ValueErr(meta, f"Unknown modifier '{modifier}'")
         return func, {
           'rulestring': str(rulestring),
