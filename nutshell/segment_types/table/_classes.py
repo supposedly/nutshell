@@ -3,6 +3,7 @@ from contextlib import suppress
 from functools import partial
 from itertools import count, cycle
 
+from ._setutils import IndexedSet
 from . import _neighborhoods as nbhds
 from nutshell.common.utils import random
 from nutshell.common.errors import *
@@ -55,10 +56,12 @@ class VarName:
 
 
 class TransitionGroup:
-    def __init__(self, tbl, initial, napkin, resultant, *, context, symmetries=None):
+    def __init__(self, tbl, initial, napkin, resultant, *, context, extra=None, symmetries=None):
         if tbl.n_states < 2:
             raise ValueErr(None, 'Table uses fewer than two cellstates. Set `states:` directive to 2 or higher to fix')
         self.ctx = context
+        # Extra meta-information beyond ctx
+        self.extra = extra
         self.tbl = tbl
         self.symmetries = symmetries or tbl.symmetries
         nbhd = tbl.neighborhood.inv
@@ -79,8 +82,8 @@ class TransitionGroup:
         return f'TG{self._tr}'
     
     @classmethod
-    def from_seq(cls, tr, tbl, **kw):
-        return cls(tbl, tr[0], dict(enumerate(tr[1:-1], 1)), tr[-1], **kw)
+    def from_seq(cls, tr, tbl, **kwargs):
+        return cls(tbl, tr[0], dict(enumerate(tr[1:-1], 1)), tr[-1], **kwargs)
     
     def expand(self, reference=None):
         if reference is None:
@@ -101,12 +104,16 @@ class TransitionGroup:
                       new_tr for tr in
                       ([*self[:idx], value, *self[1+idx:]] for value in individuals)
                       for new_tr in
-                      TransitionGroup.from_seq(tr, self.tbl, context=self.ctx, symmetries=self.symmetries).expand()
+                      TransitionGroup.from_seq(
+                        tr, self.tbl, context=self.ctx, extra=self.extra, symmetries=self.symmetries
+                      ).expand()
                       )
                     if combine:
                         tr = self[:]
                         tr[idx], tr[orig_idx] = StateList(combine, e.split, context=tethered_var.ctx), e.val
-                        trs.extend(TransitionGroup.from_seq(tr, self.tbl, context=self.ctx, symmetries=self.symmetries).expand())
+                        trs.extend(TransitionGroup.from_seq(
+                          tr, self.tbl, context=self.ctx, extra=self.extra, symmetries=self.symmetries
+                        ).expand())
                     break
                 except Reshape as e:
                     var = self[e.cdir].within(reference)
@@ -115,13 +122,15 @@ class TransitionGroup:
                       new_tr for tr in
                       ([*self[:idx], individual, *self[1+idx:]] for individual in var)
                       for new_tr in
-                      TransitionGroup.from_seq(tr, self.tbl, context=self.ctx, symmetries=self.symmetries).expand()
+                      TransitionGroup.from_seq(
+                        tr, self.tbl, context=self.ctx, extra=self.extra, symmetries=self.symmetries
+                      ).expand()
                       )
                     break
             else:
                 current.append(val)
         else:
-            return [Transition(current, self.tbl, context=self.ctx, symmetries=self.symmetries)]
+            return [Transition(current, self.tbl, context=self.ctx, extra=self.extra, symmetries=self.symmetries)]
         self._expandeds[reference] = trs
         return trs
     
@@ -150,13 +159,15 @@ class TransitionGroup:
                       new_tr for tr in
                       ([*self[:idx], val, *self[1+idx:]] for val in individuals if val.value is not None)
                       for new_tr in
-                      TransitionGroup.from_seq(tr, self.tbl, context=self.ctx, symmetries=self.symmetries).apply_aux([aux], False)
+                      TransitionGroup.from_seq(
+                        tr, self.tbl, context=self.ctx, extra=self.extra, symmetries=self.symmetries
+                      ).apply_aux([aux], False)
                       )
                 if combine and e.val is not None:
                     aux = Auxiliary(self.tbl, i.initial_cdir, None, e.val, context=i.ctx)
                     new.extend(TransitionGroup.from_seq(
                       [*self[:idx], StateList(combine, e.split, context=i.ctx), *self[1+idx:]],
-                      self.tbl, context=self.ctx, symmetries=self.symmetries
+                      self.tbl, context=self.ctx, extra=self.extra, symmetries=self.symmetries
                       ).apply_aux([aux], False))
             except Reshape as e:
                 var = self[e.cdir].within(self)
@@ -166,7 +177,7 @@ class TransitionGroup:
                   ([*self[:idx], val, *self[1+idx:]] for val in var)
                   for new_tr in
                   TransitionGroup.from_seq(
-                    tr, self.tbl, context=self.ctx, symmetries=self.symmetries
+                    tr, self.tbl, context=self.ctx, extra=self.extra, symmetries=self.symmetries
                     ).apply_aux([i], False)
                   )
         
@@ -183,7 +194,7 @@ class TransitionGroup:
                   for i in self.symmetries(napkin).expand()
                   for j in TransitionGroup.from_seq(
                     [next(d[name]) for name in [initial, *i, resultant]],
-                    tr.tbl, context=tr.ctx, symmetries=tr.symmetries
+                    tr.tbl, context=tr.ctx, extra=self.extra, symmetries=tr.symmetries
                     ).apply_aux(stationaries)
                   )
                 rep = len(stationaries)
@@ -203,8 +214,9 @@ class TransitionGroup:
 
 
 class Transition:
-    def __init__(self, tr, tbl, *, context, symmetries=None):
+    def __init__(self, tr, tbl, *, context, extra=None, symmetries=None):
         self.ctx = context
+        self.extra = extra
         self.tr = tr
         self.initial, *self.napkin, resultant = tr
         if isinstance(resultant, StateList) and not isinstance(resultant, ResolvedBinding) and len(resultant) > 1:
@@ -263,9 +275,9 @@ class Transition:
         if self.tbl.gollyize_nbhd is not None:
             return FinalTransition(
               [ret[0], *self.tbl.gollyize_nbhd(self.tbl, ret[1:-1], 1 + seen.get('any', 0)), ret[-1]],
-              context=self.ctx
+              context=self.ctx, extra=self.extra
               )
-        return FinalTransition(ret, context=self.ctx)
+        return FinalTransition(ret, context=self.ctx, extra=self.extra)
     
     def fix_partial(self):
         ret = []
@@ -324,20 +336,21 @@ class Transition:
         if self.tbl.gollyize_nbhd is not None:
             return FinalTransition(
               [ret[0], *self.tbl.gollyize_nbhd(self.tbl, ret[1:-1], seen.get('any', {})), ret[-1]],
-              context=self.ctx
+              context=self.ctx, extra=self.extra
               )
-        return FinalTransition(ret, context=self.ctx)
+        return FinalTransition(ret, context=self.ctx, extra=self.extra)
     
     def in_symmetry(self, NewSymmetry):
         initial, *napkin, resultant = self.fix_partial()
-        return [self.fix_final([initial, *i, resultant]) for i in {NewSymmetry(j) for j in self.symmetries(napkin).expand()}]
+        return [self.fix_final([initial, *i, resultant]) for i in IndexedSet([NewSymmetry(j) for j in self.symmetries(napkin).expand()])]
 
 
 class FinalTransition(list):
-    def __init__(self, it, *, context=None, lno=None):
+    def __init__(self, it, *, context=None, extra=None, lno=None):
         super().__init__(it)
         # at least one of (context, lno) should not be None
         self.ctx = (lno, None, None) if context is None else context
+        self.extra = extra
     
     @property
     def lno(self):

@@ -1,3 +1,5 @@
+from itertools import count
+
 from nutshell.segment_types.table._classes import *
 from nutshell.common.errors import *
 
@@ -16,7 +18,8 @@ def standard(meta, initial, fg, bg, resultant, rulestring, variables, table):
     if isinstance(bg, StateList):
         variables[table.new_varname(-1)] = bg
     
-    r4r_nbhds, permute_nbhds = {}, set()
+    r4r_nbhds = {}
+    permute_nbhds = set()
     for nb_count, letters in rulestring.items():
         if len(letters) == len(hensel.R4R_NBHDS[nb_count]):
             permute_nbhds.add(nb_count)
@@ -30,6 +33,7 @@ def standard(meta, initial, fg, bg, resultant, rulestring, variables, table):
     
     get_fg, get_bg = _get_getter(table, fg, 'FG'), _get_getter(table, bg, 'BG')
     get_initial, get_resultant = _get_getter(table, initial, None), _get_getter(table, resultant, None)
+    counter = count(1)
     ret = [
         TransitionGroup(
         table,
@@ -42,7 +46,8 @@ def standard(meta, initial, fg, bg, resultant, rulestring, variables, table):
             for cdir, num in table.neighborhood.items()
         },
         get_resultant(nb_count, letter, meta),
-        context=meta, symmetries=ROTATE_4_REFLECT
+        context=meta, extra=next(counter),
+        symmetries=ROTATE_4_REFLECT
         )
         for nb_count, letters in r4r_nbhds.items()
         for letter in letters
@@ -58,7 +63,8 @@ def standard(meta, initial, fg, bg, resultant, rulestring, variables, table):
             for num in table.neighborhood.values()
         },
         get_resultant(nb_count, None, meta),
-        context=meta, symmetries=PERMUTE
+        context=meta, extra=next(counter),
+        symmetries=PERMUTE
         )
         for nb_count in map(int, permute_nbhds)
         )

@@ -34,8 +34,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
   It now behaves like `symmetries: nutshell.ExplicitPermute`
 - The `@ICONS` segment now copies RLE comments over, except for the final comment before an RLE (because that one should be reserved
   for state definitions)
+- Brew.ruel is now extensible to 2-state isotropic rules!!
 ### Fixed
-- `symmetries:permute` now raises an error when given too many terms rather than simply telling some values to show up 0 times
+- `symmetries: permute` now raises an error when given too many terms rather than simply telling some values to show up 0 times
 - Undefined variables in the initial/resultant terms of a transition no longer cause an ugly Python error (was passing just a
   line-number `int` into an error-handling function that instead expected the object from which the line number came)
 - The `@ICONS` segment no longer alters a recieved icon (by removing state-0 empty space) before centering it; it now
@@ -43,10 +44,13 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 - The `@ICONS` segment, while being parsed, can no longer raise "invalid cellstate" errors on numbers it encounters
   in comments that *don't* immediately precede an RLE (because the comment immediately preceding an RLE is the only
   one that should contain cellstates)
+- `consolidate_extra()`, plus the "extra" meta-information attribute to transition-y, objects in order to address
+  `consolidate()`'s line-number problem with inline-rulestring transitions. Changed the `weave` macro to use this new
+  function, ensuring it handles IRSes correctly.
+- Permute transitions no longer expand into an arbitrary ordering when there are multiple symmetries in the same table --
+  they instead follow the original ordering and are sorted.
 ### Planned
-- Some solution to the consolidate() line-number problem with inline-rulestring transitions
-- Maybe more modifiers, e.g. Langton's Ant and Deficient/genext -- also hex (but hex symmetries are scary)
-- Automatic-fill-in gradient in `@COLOR`
+- Automatic-fill-in gradient in `@COLORS`
 
 ## [0.4.10] - 2018-12-25
 Really just floundering now while I figure out 0.5.0.

@@ -1,6 +1,6 @@
 from itertools import chain, cycle, takewhile, zip_longest as zipln
 
-from nutshell.macro import consolidate
+from nutshell.macro import consolidate, consolidate_extra
 
 
 def weave(transitions, chunk_size: int):
@@ -15,7 +15,7 @@ def weave(transitions, chunk_size: int):
     And so on for higher chunk_size values. Extraneous transitions (ones that
     don't divide evenly into chunk_size) are left at the end rather than discarded.
     """
-    lnos = consolidate(transitions)
+    lnos = consolidate_extra(transitions)
     transitions = [lnos[i] for i in sorted(lnos)]
     return [
       k for i in

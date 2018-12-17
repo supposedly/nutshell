@@ -6,6 +6,13 @@
 From 83bismuth38.
 Extensible to any number of states by changing the 4 in `states: 4`.
 
+The two transitions were formerly
+> any, [live] ~ 3, --[1]; [1]
+> live, [0] ~ 2, --[0]; [0]
+...which both mirrored the original ruletable and resulted in
+cleaner output. Doing it with inline rulestrings, however, allows
+for ANY isotropic Brew to be constructed from this same Nutshell!
+
 @TABLE
 neighborhood: Moore
 symmetries: permute
@@ -39,15 +46,20 @@ var _c0.4 = _c0.0
 var _c0.5 = _c0.0
 
 #### symmetries: permute
-#### line 10: any, [live] ~ 3, --[1]; [1] ####
-any.0, 1, 1, 1, _a0.0, _a0.1, _a0.2, _a0.3, _a0.4, 1
-#### line 11: live, [0] ~ 2, --[0]; [0] ####
+# Birth conditions
+#### line 18: any-[FG], <3 / [live] / --[FG]>; [FG] ####
+_a0.0, 1, 1, 1, _a0.1, _a0.2, _a0.3, _a0.4, _a0.5, 1
+# Survival conditions
+#### line 20: live, <23 / [0] / --[0]>; [0] ####
+1, 1, 1, 1, _a0.0, _a0.1, _a0.2, _a0.3, _a0.4, 1
 1, 1, 1, _a0.0, _a0.1, _a0.2, _a0.3, _a0.4, _a0.5, 1
-any.0, 2, 2, 2, _b0.0, _b0.1, _b0.2, _b0.3, _b0.4, 2
+_b0.0, 2, 2, 2, _b0.1, _b0.2, _b0.3, _b0.4, _b0.5, 2
+2, 2, 2, 2, _b0.0, _b0.1, _b0.2, _b0.3, _b0.4, 2
 2, 2, 2, _b0.0, _b0.1, _b0.2, _b0.3, _b0.4, _b0.5, 2
-any.0, 3, 3, 3, _c0.0, _c0.1, _c0.2, _c0.3, _c0.4, 3
+_c0.0, 3, 3, 3, _c0.1, _c0.2, _c0.3, _c0.4, _c0.5, 3
+3, 3, 3, 3, _c0.0, _c0.1, _c0.2, _c0.3, _c0.4, 3
 3, 3, 3, _c0.0, _c0.1, _c0.2, _c0.3, _c0.4, _c0.5, 3
-#### line 14: live, any; [0: (any-1) << 1] ####
+#### line 23: live, any; [0: (any-1) << 1] ####
 1, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 2
 2, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 3
 3, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
