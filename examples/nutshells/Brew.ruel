@@ -5,9 +5,9 @@ Extensible to any number of states by changing the 4 in `states: 4`.
 The two transitions were formerly
 > any, [live] ~ 3, --[1]; [1]
 > live, [0] ~ 2, --[0]; [0]
-...which both mirrored the original ruletable and resulted in
-cleaner output. Doing it with inline rulestrings, however, allows
-for ANY isotropic Brew to be constructed from this same Nutshell!
+...which mirrored the original ruletable. Doing it with inline
+rulestrings, however, allows for ANY isotropic Brew to be
+constructed from this same Nutshell!
 
 @TABLE
 symmetries: permute
@@ -15,9 +15,9 @@ states: 4
 
 weave: 1
 # Birth conditions
-any-[FG], <3 / [live] / --[FG]>; [FG]
+any-[FG], <3  hensel_r4r / [live] / --[FG]>; [FG]
 # Survival conditions
-live, <23 / [0] / --[0]>; [0]
+live, <2-i34q  hensel_r4r / [0] / --[0]>; [0]
 weave: \
 
 live, any; [0: (any-1) << 1]
