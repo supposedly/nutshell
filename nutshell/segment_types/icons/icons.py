@@ -154,7 +154,7 @@ class IconArray:
                         if not 0 < state < 256:
                             raise ValueErr(last_comment_lno, f'Icon declared for invalid state {state}')
                         if state in states:
-                            raise ValueErr(last_comment_lno, f'State {state} was already assigned an icon')
+                            raise ValueErr(last_comment_lno, f'State {state} has already been assigned an icon')
                         cur_states.add(state)
                     elif word in self._vars:
                         cur_states.update(self._vars[word])
