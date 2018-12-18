@@ -4,9 +4,8 @@ from itertools import chain, filterfalse, takewhile, repeat
 
 import bidict
 
-from ._classes import ColorRange
 from ._utils import maybe_double, SAFE_CHARS, SYMBOL_MAP
-from nutshell.common.classes import TableRange, ColorMixin
+from nutshell.common.classes import TableRange, ColorMixin, ColorRange
 from nutshell.common.utils import random, multisplit
 from nutshell.common.errors import *
 

@@ -29,7 +29,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 - Support for Golly's multiple icon sizes by allowing segments with "modifiers" a la `@ICONS:7` and `@ICONS:15` -- these modifiers
   have no intrinsic meaning, so you could totally put 15x15 icons under `@ICONS:7` and vice versa, but their purpose is to all
   coalesce into the Golly table's `@ICONS` once transpiled
-- The `@ICONS` segment can now use `@TABLE`-defined varnames to help specify the states an icon applies to
+- The `@ICONS` and `@COLORS` segments can now use `@TABLE`-defined varnames to help specify their cellstates
+- The `@COLORS` segment can now take a gradient (rather than a single color) which distributes itself over all given cellstates
 ### Changed
 - `symmetries: nutshell.AlternatingPermute` now no longer attempts to infer amounts of terms, because that was *really* messy.
   It now behaves like `symmetries: nutshell.ExplicitPermute`

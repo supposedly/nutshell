@@ -1,7 +1,8 @@
 from itertools import repeat
 from operator import itemgetter
 
-from nutshell.common.classes import ColorMixin, TableRange
+from nutshell.common.classes import ColorMixin, ColorRange, TableRange
+from nutshell.common.utils import multisplit
 from nutshell.common.errors import ValueErr
 
 
@@ -11,45 +12,55 @@ class ColorSegment(ColorMixin):
     transferrable into Golly syntax.
     """
     
-    def __init__(self, colors, start=0, *, dep: ['@NUTSHELL'] = None):
-        dep, = dep
+    def __init__(self, colors, start=0, *, dep: ['@NUTSHELL', '@TABLE'] = None):
+        _nutshell, _table = dep
+        self._table = _table
         self._packed_dict = None
         self._src = [i.split('#')[0].strip() for i in colors]
-        self.colors = list(enumerate((k.split(':' if ':' in k else None, 1) for k in self._src if k), 1))
-        if dep is not None:
-            self.colors = [(i, (v[0], dep.replace_line(v[1]))) for i, v in self.colors]
-        try:
-            self.states = {
-              int(state.lstrip('*')): self.unpack(color.strip(), lno)
-              for lno, (color, states) in self.colors
-              for state in TableRange.try_iter(states.split())
-              }
-        except ValueError:
-            lno, state = next(
-              (i, state)
-              for i, (_, states) in self.colors
-              for state in TableRange.try_iter(states.split())
-              if not state.lstrip('*').isdigit()
-              )
-            raise ValueErr(lno, f'State {state} is not an integer')
-        except TypeError as e:
-            raise ValueErr(*e.args)
+        self.colors = list(enumerate((k.split(':', 1) for k in self._src if k), 1))
+        if _nutshell is not None:
+            self.colors = [(i, (v[0], _nutshell.replace_line(v[1]))) for i, v in self.colors]
+        d = {}
+        self.non_override_colors = set()
+        for lno, (color, states) in self.colors:
+            states = self._sep_states(multisplit(states, (None, ',')))
+            if '..' in color:
+                states = list(states)
+                crange = ColorRange(len(states), *(self.unpack(c.strip(), lno) for c in color.split('..')))
+                for state, color in zip(states, crange):
+                    d[state] = self.unpack(color, lno)
+                continue
+            color = self.unpack(color.strip(), lno)
+            for term in states:
+                try:
+                    state = int(term.lstrip('*'))
+                except ValueError:
+                    raise ValueErr(lno, f'State {term} is not an integer')
+                d[state] = color
+                if term.startswith('*'):
+                    self.non_override_colors.add(state)
+        self.states = d
     
     def __iter__(self):
         return (f"{state} {r} {g} {b}" for state, (r, g, b) in self.states.items())
     
     def __getitem__(self, item):
-        if self._packed_dict is None:
-            # Asterisk is workaround to allow non-icon-gradient-overriding colors
-            # (i.e. [*2 *3: FFF] vs [2 3: FFF] -- latters will take precedence
-            # over icon fill gradient, but the formers will not bc it's kept str
-            # and so won't be accessible by ColorSegment[int-type cellstate])
-            try:
-                self._packed_dict = {
-                  int(st) if st.isdigit() else st.lstrip('*'): self.pack(color.strip(), lno)
-                  for lno, (color, states) in self.colors
-                  for st in TableRange.try_iter(states.split())
-                  }
-            except TypeError as e:
-                raise ValueErr(*e.args)
-        return self._packed_dict[item]
+        if item in self.non_override_colors:
+            raise KeyError(item)
+        return self.pack(self.states[item])
+    
+    def _sep_states(self, states):
+        for term in states:
+            it = None
+            no_star = term.lstrip('*')
+            valid_range = TableRange.check(no_star)
+            
+            if valid_range:
+                it = valid_range
+            elif no_star in self._table.vars:
+                it = self._table.vars[no_star]
+            
+            if it is None:
+                yield str(term)
+            else:
+                yield from (f'*{i}' for i in it) if term.startswith('*') else map(str, it)
