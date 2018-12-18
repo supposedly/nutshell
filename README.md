@@ -192,19 +192,6 @@ neighborhood: von Neumann
 0, 1, 3, 3, 1, 4
 ```
 
-Also: if *every given term* of a transition is tagged with a compass direction, the missing terms will be
-filled in automatically with the `any` variable (introduced a bit below).
-```rb
-# Nutshell
-0, N 1, S 3, W 5; 8
-```
-```rb
-# Golly
-0, 1, any.1, any.2, any.3, 3, any.4, 5, any.5, 8
-```
-The compass-direction requirement is to avoid accidental application of this where an error should probably be
-raised instead. (Tagging each given term signifies that the omissions were most-likely deliberate)
-
 Under certain symmetries, however, compass directions have no meaning&nbsp;-- these symmetry types utilize a different,
 tilde-based shorthand. Nutshell's implementation of Golly's `permute` symmetry uses it like so:
 ```rb
@@ -881,26 +868,26 @@ var _a0.0 = {1, 2}
 ```
 Note that binding to a Hensel-notation napkin is tricky business, because unlike in a permute-symmetry napkin,
 positions *do* matter -- in these cases `FG` and `BG` will give you the first available cell from the northmost one, which may
-not be a fine-enough level control. In such cases it's probably best *not* to bind at all to the foreground/background
+not be a fine-enough level of control. In such cases it's probably best *not* to bind at all to the foreground/background
 states, but if one *must*, then compass directions can be used to refer to the cell at that position in a neighborhood's
 [canonical orientation](http://www.ibiblio.org/lifepatterns/neighbors2.html).  
-Note, this is *only* an issue with a rotate4reflect-requiring Hensel-notation rulestring, as in `0, <2-i34q / (1, 2) / 0>; [FG]`.
+Note, this is only an issue with a rotate4reflect-requiring Hensel-notation rulestring, as in `0, <2-i34q / (1, 2) / 0>; [FG]`.
 It is **not** an issue with a permute-symmetry rulestring as in `0, <23 / (1, 2) / 0>; [FG]`, and it even is a non-issue with
-Hensel rulestrings **if** the bound-to term is guaranteed to refer to the same cellstate: `<0, 2-i34q / [(1, 2)] / 0>; [FG]`.
+Hensel rulestrings **if** the bound-to term is guaranteed to be the same cellstate everywhere: `<0, 2-i34q / [(1, 2)] / 0>; [FG]`.
 
 #### Modifiers
 The rulestrings do not strictly have to be Hensel rulestrings -- that is just the default. Placing a modifier after the
 rulestring will cause it to be interpreted differently. Currently-available modifiers:
-- `hensel`, which is an alias for the default behavior
+- `hensel`, which is an alias for the default behavior.
 - `!hensel`, which turns the rulestring into its *complement*. `<012345-i6 !hensel / 1 / 0>` is `<5i78 / 1 / 0>`
 - `force-r4r`, which makes `<3 force-r4r / 1 / 0>` expand into a series of B3 rotate4reflect transitions *rather than*
   a single B3 permute transition as with `<3 / 1 / 0>`. Needed for [Brew.ruel](examples/nutshells/Brew.ruel),
-  and likely in a lot of cases where a macro needs to apply to some inline-rulestring transitions
+  and likely in a lot of cases where a macro needs to apply to some inline-rulestring transitions.
 - `b0-odd`, which applies Golly's odd-generation B0-rule transformation to the given rulestring. See
 [`examples/BeeZero`](examples/nutshells/BeeZero.ruel) for usage.
 
-These are user-creatable in the exact same maner as symmtries are, although the API for them is 100% unsimplified
-as of yet.
+These are user-creatable in the exact same manner as symmetries, although the API for this has not yet been
+made user-friendly.
 
 ### Custom neighborhoods
 The `neighborhood` directive can be given a comma-delimited list of compass directions rather than a name, which makes
