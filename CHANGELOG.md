@@ -16,7 +16,9 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 - A `prune` macro
 - More modifiers, e.g. Langton's Ant and Deficient/genext -- also hex (although hex symmetries are scary)
 
-## [0.5.0] - In Progress
+## [0.5.0] - 2018-12-17
+General upgrades. The biggest changes were to `@ICONS` and `@COLORS`' handling of... everything, but
+other updates happened too.
 ### Added
 - Inline rulestrings now accept modifiers (which are extensible in the same way as symmetries).
 - Automatic filling-in of omitted terms with `any`&nbsp;-- only, however, if every given term was accompanied by a compass-direction
@@ -50,7 +52,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 - Permute transitions no longer expand into an arbitrary ordering when there are multiple symmetries in the same table --
   they instead follow the original ordering and are sorted.
 
-## [0.4.10] - 2018-12-25
+## [0.4.10] - 2018-11-25
 Really just floundering now while I figure out 0.5.0.
 ### Fixed
 - The previous fix didn't account for something important, which caused a lot of fatal and erroneous errors. Should have
@@ -61,7 +63,7 @@ Really just floundering now while I figure out 0.5.0.
   no longer prints "Parsing...", "Compiling...", and "Complete!" if it's been imported as a Python module, but it does
   show those messages when it's invoked as a command-line script.
 
-## [0.4.9] - 2018-12-24
+## [0.4.9] - 2018-11-24
 ### Changed
 - Using a variable in the resultant term of a transition now causes an error on Nutshell's end rather than Golly's.
 
