@@ -2,19 +2,28 @@
 From 83bismuth38.
 Extensible to any number of states by changing the 4 in `states: 4`.
 
+The two transitions were formerly
+> any, [live] ~ 3, --[1]; [1]
+> live, [0] ~ 2, --[0]; [0]
+...which mirrored the original ruletable. Doing it with inline
+rulestrings, however, allows for ANY isotropic Brew to be
+constructed from this same Nutshell!
+
 @TABLE
 symmetries: permute
 states: 4
 
 weave: 1
-any, [live] ~ 3, --[1]; [1]
-live, [0] ~ 2, --[0]; [0]
+# Birth conditions
+--[FG], <3 force-r4r / [live] / --[FG]>; [FG]
+# Survival conditions
+live, <23 force-r4r / [0] / --[0]>; [0]
 weave: \
 
 live, any; [0: (any-1) << 1]
 
 @COLORS
 000: 0
-F00: 1
-0F0: 2
-00F: 3
+F07: 1
+0F7: 2
+07F: 3

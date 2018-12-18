@@ -61,7 +61,22 @@ class Rotate2(OrthNapkin):
         return sorted(self.rotate(2))
 
 
-class AlternatingPermute(Permute):
+class ExplicitPermute(Permute):
+    @staticmethod
+    def special(values, length):
+        new = []
+        for v, count in values:
+            if count is None:
+                count = '1'
+            if not count.isdigit():
+                raise Exception(f"{v} ~ {count}; '{count}' is not a number")
+            new.extend([v] * int(count))
+        if len(new) < length:
+            raise Exception(f'Expected {length} terms, got {len(new)}')
+        return new
+
+
+class AlternatingPermute(ExplicitPermute):
     """
     Permutational symmetry, but only between cells perpendicular to one
     another in the Moore neighborhood. (both orthogonal and diag cells)
@@ -90,6 +105,6 @@ class AlternatingPermute(Permute):
     
     @staticmethod
     def special(values, length):
-        permute_sp, length = Permute.special, length // 2
+        permute_sp, length = ExplicitPermute.special, length // 2
         orth, diag = values[::2], values[1::2]
         return chain.from_iterable(zip(permute_sp(orth, length), permute_sp(diag, length)))

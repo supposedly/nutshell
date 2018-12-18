@@ -1,6 +1,7 @@
 from collections import namedtuple
 from functools import wraps
 from inspect import signature
+from importlib import import_module
 from itertools import chain, repeat
 from operator import attrgetter
 from pkg_resources import resource_filename
@@ -11,11 +12,9 @@ from .lark_assets.parser import Transformer, Tree, Discard, v_args
 from nutshell.common.utils import KILL_WS
 from nutshell.common.errors import *
 from ._classes import *
-from . import _symutils as symutils, _neighborhoods as nbhoods
+from . import _symutils as symutils, _neighborhoods as nbhoods, inline_rulestring
 
 SPECIALS = {'...', '_', 'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'}
-ROTATE_4_REFLECT = symutils.get_sym_type('rotate4reflect')
-PERMUTE = symutils.get_sym_type('permute')
 Meta = namedtuple('Meta', ['lno', 'start', 'end'])
 
 try:
@@ -44,48 +43,6 @@ def _add_mod(modulus, index, add, start=1):
     return index % modulus + start
 
 
-# I don't know where to put these two functions
-def get_rs_cdir(reference, nb_count, letter, meta, *, idx=None):
-    if idx is None:
-        idx = reference.idx
-    if letter is None:
-        if nb_count == '0':
-            if idx == 'FG':
-                raise ValueErr(meta, 'Reference to FG, but given rulestring includes 0, which has no foreground states')
-            return 'N'
-        if nb_count == '8':
-            if idx == 'BG':
-                raise ValueErr(meta, 'Reference to BG, but given rulestring includes 8, which has no background states')
-            return 'N'
-        return 'N' if idx == 'FG' else nbhoods.CDIRS[int(nb_count)] if idx == 'BG' else '0'
-    if idx == 'BG':
-        return nbhoods.BG_LOCATIONS[nb_count][letter]
-    if idx == 'FG':
-        return nbhoods.FG_LOCATIONS[nb_count][letter]
-    return '0'
-
-
-def resolve_rs_ref(term, nb_count, letter, meta):
-    if isinstance(term, StateList):
-        if any(isinstance(i, (InlineRulestringBinding, InlineRulestringMapping)) for i in term):
-            return term.__class__((
-              resolve_rs_ref(i, nb_count, letter, meta)
-                if isinstance(i, (InlineRulestringBinding, InlineRulestringMapping))
-                else i
-                for i in term
-                ),
-              context=term.ctx
-              )
-    if not isinstance(term, (InlineRulestringBinding, InlineRulestringMapping)):
-        return term
-    new_cdir = get_rs_cdir(term, nb_count, letter, meta)
-    if isinstance(term, InlineRulestringBinding):
-        return Binding(new_cdir, context=term.ctx)
-    if isinstance(term, InlineRulestringMapping):
-        return Mapping(new_cdir, term.map_to, context=term.ctx)
-    return term
-
-
 class MetaTuple(tuple):  # eh
     def __new__(cls, meta, it):
         return super().__new__(cls, it)
@@ -112,7 +69,7 @@ class Preprocess(Transformer):
             if val.isdigit():
                 return [int(val)] if li else int(val)
             try:
-                return self._tbl.vars[val]
+                return self.vars[val]
             except KeyError:
                 raise ReferenceErr(
                   fix(meta),
@@ -146,7 +103,7 @@ class Preprocess(Transformer):
         if first.data in ('cdir', 'crange'):
             raise SyntaxErr(
               fix(first.meta),
-              f"Cannot specify compass directions under {self.directives['symmetries']} symmetry"
+              f"Cannot specify compass directions under {self.directives['symmetries']} symmetries"
               )
         # Nothing left to return here... right? Because permute_shorthand trees
         # will already have been transformed (by self.permute_shorthand) and
@@ -222,7 +179,7 @@ class Preprocess(Transformer):
             if permute:
                 raise SyntaxErr(
                   fix(meta),
-                  f"Cannot use tilde-based shorthand under {self.directives['symmetries']} symmetry.\n  "
+                  f"Cannot use tilde-based shorthand under {self.directives['symmetries']} symmetries.\n  "
                   '(Try a range of compass directions instead)'
                   )
             # XXX: this is suspect (cryptic message and i'm not sure it's raised in the right situation)
@@ -239,11 +196,11 @@ class Preprocess(Transformer):
         
         initial, resultant = children.pop(0), children.pop(-1)
         try:
-            initial = self.kill_string(initial, meta.line)
+            initial = self.kill_string(initial, meta)
         except ReferenceErr as e:
             raise ReferenceErr((meta.line, meta.column, meta.column + len(str(initial))), e.msg)
         try:
-            resultant = self.kill_string(resultant, meta.line)
+            resultant = self.kill_string(resultant, meta)
         except ReferenceErr as e:
             raise ReferenceErr((meta.line, meta.end_column - len(str(resultant)), meta.end_column), e.msg)
         if hasattr(self._tbl.symmetries, 'special'):
@@ -253,14 +210,15 @@ class Preprocess(Transformer):
             except Exception as e:
                 raise Error(
                   fix(meta),
-                  f"Tilde-notation shorthand for {self.directives['symmetries']} raised "
-                  f"{type(e)}: {e}"
+                  f"Tilde notation raised "
+                  f"{type(e).__name__}: {e}"
                   )
         else:
-            idx = 1
+            idx = pure_idx = 1
             napkin = {}
             add_mod = partial(_add_mod, self._tbl.trlen)
             offset_initial = False  # whether it starts on a compass dir other than the first
+            all_cdir = True  # whether all terms are tagged with a compass-direction prefix
             
             for tr_state in children:
                 m = fix(tr_state.meta)
@@ -270,18 +228,26 @@ class Preprocess(Transformer):
                 
                 if first_data == 'cdir':
                     cdir = self._tbl.check_cdir(first.children[0], fix(first.meta))
+                    if cdir in napkin:
+                        raise SyntaxErr(
+                          fix(first.meta),
+                          f'Duplicate compass direction {first.children[0]}'
+                          )
                     napkin[cdir], = rest
                     if cdir != idx:
-                        if idx == 1:
-                            idx = cdir
-                            offset_initial = True
-                        else:
+                        if idx == 1 and not offset_initial:
+                            offset_initial = cdir
+                        elif cdir < idx and (not offset_initial or
+                        offset_initial and pure_idx > self._tbl.trlen):
                             raise SyntaxErr(
                               fix(first.meta),
                               'Out-of-sequence compass direction '
-                              f'(expected {self._tbl.neighborhood.inv[idx]}, got {first.children[0]})'
+                              f'(expected {self._tbl.neighborhood.inv[idx] + (" or further" if all_cdir else "")}, got {first.children[0]})'
                               )
+                        pure_idx += abs(cdir - idx)
+                        idx = cdir
                     idx = add_mod(idx, 1)
+                    pure_idx += 1
                 elif first_data == 'crange':
                     a, b = first.children
                     int_a = self._tbl.check_cdir(a, (first.meta.line, first.meta.column, len(a) + first.meta.column))
@@ -294,15 +260,14 @@ class Preprocess(Transformer):
                               fix(first.meta),
                               f'Invalid compass-direction range ({b} does not follow {a} going clockwise)'
                               )
-                        offset_initial = True
+                        offset_initial = 1
                     
                     if not crange and offset_initial:
                         crange = (*range(self._tbl.neighborhood[a], 1+self._tbl.trlen), *range(1, 1+self._tbl.neighborhood[b]))
                     
                     if idx != crange[0]:
                         if idx == 1:
-                            idx = crange[0]
-                            offset_initial = True
+                            idx = offset_initial = crange[0]
                         else:
                             nbhd = self._tbl.neighborhood.inv
                             raise SyntaxErr(
@@ -317,6 +282,7 @@ class Preprocess(Transformer):
                         napkin[crange[0]] = rest.give()
                         crange = range(1+crange[0], 1+crange[-1])
                         idx = add_mod(idx, 1)
+                        pure_idx += 1
                         rest = rest.give()
                     
                     for i in crange:
@@ -328,9 +294,17 @@ class Preprocess(Transformer):
                               )
                         napkin[i] = rest
                         idx = add_mod(idx, 1)
+                        pure_idx += 1
                 else:
+                    all_cdir = False
                     napkin[idx], = self.kill_strings(tr_state.children, m)
                     idx = add_mod(idx, 1)
+                    pure_idx += 1
+            if all_cdir:
+                napkin.update(dict.fromkeys(
+                  [idx for idx in self._tbl.neighborhood.inv if idx not in napkin],
+                  self.vars['any']
+                  ))
             if len(napkin) != self._tbl.trlen:
                 raise ValueErr(
                   (meta.line, children[0].meta.column, children[-1].meta.end_column),
@@ -530,114 +504,36 @@ class Preprocess(Transformer):
         return InlineRulestringMapping(str(idx), self.kill_string(map_to, meta), context=meta)
     
     @inline
-    def rulestring(self, meta, rs):
-        nbhds = nbhoods.validate_hensel(rs)
-        if not nbhds:
-            raise SyntaxErr(meta, 'Invalid Hensel-notation rulestring')
-        if not nbhoods.check_hensel_within(rs, self._tbl.neighborhood, rulestring_nbhds=nbhds):
-            raise SyntaxErr(
-              meta,
-              f"Hensel-notation rulestring exceeds neighborhood {self.directives['neighborhood']!r}; "
-              f'in particular, {nbhoods.find_invalids(nbhds, self._tbl.neighborhood)!r}'
-              )
-        return nbhds
-    
-    def _get_getter(self, val, kind):
-        def get_val(*_):
-            return val
-        
-        if isinstance(val, InlineBinding):
-            used = set()
-            def get_val(nb_count, letter, meta):
-                if (nb_count, letter) not in used:
-                    val.reset()
-                    used.add((nb_count, letter))
-                if val.bind is None:
-                    val.set(self._tbl.neighborhood[get_rs_cdir(val, nb_count, letter, meta, idx=kind)])
-                return val.give()
-        
-        if isinstance(val, (InlineRulestringBinding, InlineRulestringMapping)):
-            def get_val(*args):
-                return resolve_rs_ref(val, *args)
-        
-        if isinstance(val, StateList):
-            getters = [self._get_getter(i, kind) for i in val]
-            def get_val(*args):
-                return val.__class__(
-                  (getter(*args) for getter in getters),
-                  context=val.ctx
-                  )
-        
-        if isinstance(val, Operation):
-            get_a, get_b = self._get_getter(val.a, kind), self._get_getter(val.b, kind)
-            def get_val(*args):
-                return val.__class__(
-                  a=get_a(*args),
-                  b=get_b(*args),
-                  context=val.ctx
-                  )
-        
-        return get_val
+    def rulestring_napkin(self, meta, rulestring, foreground, background):
+        return self.modified_rulestring_napkin((rulestring, 'hensel', foreground, background), meta)
     
     @inline
-    def rulestring_tr(self, meta, initial, rulestring_nbhds, foreground, background, resultant):
-        initial = self.kill_string(initial, meta)
-        resultant = self.kill_string(resultant, meta)
+    def modified_rulestring_napkin(self, meta, rulestring, modifier, foreground, background):
+        imp = modifier.split('.', 1)
+        try:
+            func = inline_rulestring.funcs.get(modifier, None) or getattr(import_module(imp[0]), imp[1])
+        except (ImportError, ModuleNotFoundError):
+            raise ValueErr(meta, f"Unknown modifier '{modifier}'")
+        return func, {
+          'rulestring': str(rulestring),
+          'fg': self.kill_string(foreground, meta),
+          'bg': self.kill_string(background, meta)
+          }
+    
+    @inline
+    def rulestring_tr(self, meta, initial, func__napkin, resultant):
+        func, napkin = func__napkin
+        args = {
+          **napkin,
+          'initial': self.kill_string(initial, meta),
+          'resultant': self.kill_string(resultant, meta),
+          'table': self._tbl,
+          'variables': self.vars,
+          'meta': meta
+        }.items()
+        params = signature(func).parameters
+        return func(**{k: v for k, v in args if k in params})
         
-        fg = self.kill_string(foreground, meta)
-        bg = self.kill_string(background, meta)
-        if isinstance(foreground, StateList):
-            self.vars[self._tbl.new_varname(-1)] = foreground
-        if isinstance(background, StateList):
-            self.vars[self._tbl.new_varname(-1)] = background
-        
-        r4r_nbhds, permute_nbhds = {}, set()
-        for nb_count, letters in rulestring_nbhds.items():
-            if len(letters) == len(nbhoods.R4R_NBHDS[nb_count]):
-                permute_nbhds.add(nb_count)
-            else:
-                r4r_nbhds[nb_count] = letters
-        
-        if permute_nbhds:
-            self._tbl.add_sym_type('permute')
-        if r4r_nbhds:
-            self._tbl.add_sym_type('rotate4reflect')
-        
-        get_fg, get_bg = self._get_getter(fg, 'FG'), self._get_getter(bg, 'BG')
-        get_initial, get_resultant = self._get_getter(initial, None), self._get_getter(resultant, None)
-        ret = [
-          TransitionGroup(
-            self._tbl,
-            get_initial(nb_count, letter, meta),
-            {
-              num: get_fg(nb_count, letter, meta)
-              # XXX: probably suboptimal performance b/c [dot attr access] -> [getitem] -> [getitem]
-              if cdir in nbhoods.R4R_NBHDS[nb_count][letter]
-              else get_bg(nb_count, letter, meta)
-              for cdir, num in self._tbl.neighborhood.items()
-            },
-            get_resultant(nb_count, letter, meta),
-            context=meta, symmetries=ROTATE_4_REFLECT
-            )
-          for nb_count, letters in r4r_nbhds.items()
-          for letter in letters
-        ]
-        ret.extend(
-          TransitionGroup(
-            self._tbl,
-            get_initial(nb_count, None, meta),
-            {
-              num: get_fg(nb_count, None, meta)
-              if num <= nb_count
-              else get_bg(nb_count, None, meta)
-              for num in self._tbl.neighborhood.values()
-            },
-            get_resultant(nb_count, None, meta),
-            context=meta, symmetries=PERMUTE
-            )
-          for nb_count in map(int, permute_nbhds)
-          )
-        return ret
     
     @inline
     def rulestring_transition(self, meta, trs, aux_first=None, aux_second=None):
@@ -650,6 +546,3 @@ class Preprocess(Transformer):
         for tr in trs:
             ret.extend(chain(tr.apply_aux(aux_first), tr.expand(), tr.apply_aux(aux_second)))
         return ret
-    
-    def special_rulestring_tr(self, children, meta):
-        raise UnsupportedFeature(fix(meta), 'Hensel-rulestring transition napkins with modifiers are currently not supported')

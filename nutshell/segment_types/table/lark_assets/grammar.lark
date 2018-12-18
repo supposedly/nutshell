@@ -6,10 +6,10 @@ line: NAME ":" _WS? /.+/      -> directive
   | transition _aux?          -> transition
   | rulestring_tr _aux?       -> rulestring_transition
 
-rulestring_tr: _tr_expr _sep _HENSEL_OPEN rulestring _HENSEL_SEP _rs_expr _HENSEL_SEP _rs_expr _HENSEL_CLOSE _sep (STATE | reference)  -> rulestring_tr
-  | _tr_expr _sep _HENSEL_OPEN rulestring _WS NAME _HENSEL_SEP _rs_expr _HENSEL_SEP _rs_expr _HENSEL_CLOSE _sep (STATE | reference)  -> special_rulestring_tr
+rulestring_tr: _tr_expr _sep rulestring_napkin _sep (STATE | reference)
+rulestring_napkin: _HENSEL_OPEN /[^\s\/]+/ _HENSEL_SEP _rs_expr _HENSEL_SEP _rs_expr _HENSEL_CLOSE  -> rulestring_napkin
+  | _HENSEL_OPEN /[^\s\/]+/ _WS /[^\s\/]+/ _HENSEL_SEP _rs_expr _HENSEL_SEP _rs_expr _HENSEL_CLOSE  -> modified_rulestring_napkin
 
-rulestring: /\w+/
 _rs_expr: _tr_expr | inline_binding
 _HENSEL_OPEN: _WS? "<" _WS?
 _HENSEL_CLOSE: _WS? ">" _WS?

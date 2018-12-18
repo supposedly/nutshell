@@ -28,16 +28,16 @@ class TableRange:
     def check(cls, string):
         # return re.fullmatch(r'\d+(?:\+\d+)?\s*\.\.\s*\d+', string)
         try:
-            cls(string)
+            return cls(string)
         except Exception:
             return False
-        return True
     
     @classmethod
     def try_iter(cls, states):
         for state in states:
-            if cls.check(state):
-                yield from map(str, cls(state))
+            tablerange = cls.check(state)
+            if tablerange:
+                yield from map(str, tablerange)
             else:
                 yield state
 
@@ -76,3 +76,21 @@ class ColorMixin:  # XXX: this feels weird being a class? ...but it's also a mix
             return struct.pack('BBB', *color).hex().upper()
         except (ValueError, TypeError, struct.error):
             raise TypeError(lno, f'Invalid color value {color!r} (attempting to convert from Golly RGB format to hex)')
+
+
+class ColorRange(ColorMixin):
+    def __init__(self, n_states, start=(255, 0, 0), end=(255, 255, 0)):
+        self.n_states = n_states
+        self.start, self.end = map(self.unpack, (start, end))
+        self.avgs = [(final-initial)/n_states for initial, final in zip(self.start, self.end)]
+    
+    def __getitem__(self, state):
+        if not 0 <= state <= self.n_states:
+            raise IndexError('Requested state out of range')
+        if not isinstance(state, int):
+            raise TypeError('Not a state value')
+        return self.pack(int(initial+level*state) for initial, level in zip(self.start, self.avgs))
+    
+    def __len__(self):
+        # for old iteration protocol
+        return self.n_states

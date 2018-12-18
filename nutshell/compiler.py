@@ -76,7 +76,7 @@ def _handle_table(rulefile, tbl):
 def compile(parsed):
     """
     parsed: dict of operated-upon segments from Nutshell file
-    return: completed Golly table therefrom
+    return: text of Golly table compiled from the above
     """
     rulefile = []
     with suppress(KeyError):
@@ -84,5 +84,7 @@ def compile(parsed):
     with suppress(KeyError):
         _handle_table(rulefile, parsed.pop('@TABLE'))
     for label, segment in parsed.items():
+        if isinstance(segment, list):
+            segment = [i for j in segment for i in j]
         rulefile.extend(('', label, *segment))
     return '\n'.join(rulefile) + '\n'

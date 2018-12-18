@@ -2,7 +2,57 @@
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 
-## [0.4.10] - 2018-12-25
+## [0.6.0] - Hypothetical
+## Planned
+- A complete overhaul of symmetries and neighborhoods such that:
+  - Such transformations as reflection and rotation are handled from the *neighborhood* rather than the symmetry type
+  - Nutshell, given the compass directions composing a neighborhood, automatically determines what standard transformations
+    it can undergo
+  - Symmetry types simply have to call, for instance, neighborhood.rotate4() -- rather than themselves reordering the napkin
+  - Symmetry types can be composed from within Nutshell without my having to define a new Python class for each basic combination
+    of symmetries
+  - Also, apgsearch-like symmetry notation...?
+- Neighborhood-switching, a la symmetry-switching
+- A `prune` macro
+- More modifiers, e.g. Langton's Ant and Deficient/genext -- also hex (although hex symmetries are scary)
+
+## [0.5.0] - 2018-12-17
+General upgrades. The biggest changes were to `@ICONS` and `@COLORS`' handling of... everything, but
+other updates happened too.
+### Added
+- Inline rulestrings now accept modifiers (which are extensible in the same way as symmetries).
+- Automatic filling-in of omitted terms with `any`&nbsp;-- only, however, if every given term was accompanied by a compass-direction
+  tag (to make sure that the omissions were intentional)
+- An "explicit permute" symmetry in the stdlib w/ no automatic expansion (omitted tilde = `~ 1` and that's it)
+- Allow bindings directly to compass directions rather than FG/BG with inline rulestrings, which kindasorta addresses the issue of
+  Hensel r4r neighborhoods' positions mattering (more than just "FG" and "BG" can provide), but it's really more of a bad band-aid
+- Support for Golly's multiple icon sizes by allowing segments with "modifiers" a la `@ICONS:7` and `@ICONS:15` -- these modifiers
+  have no intrinsic meaning, so you could totally put 15x15 icons under `@ICONS:7` and vice versa, but their purpose is to all
+  coalesce into the Golly table's `@ICONS` once transpiled
+- The `@ICONS` and `@COLORS` segments can now use `@TABLE`-defined varnames to help specify their cellstates
+- The `@COLORS` segment can now take a gradient (rather than a single color) which distributes itself over all given cellstates
+### Changed
+- `symmetries: nutshell.AlternatingPermute` now no longer attempts to infer amounts of terms, because that was *really* messy.
+  It now behaves like `symmetries: nutshell.ExplicitPermute`
+- The `@ICONS` segment now copies RLE comments over, except for the final comment before an RLE (because that one should be reserved
+  for state definitions)
+- Brew.ruel is now extensible to 2-state isotropic rules!!
+### Fixed
+- `symmetries: permute` now raises an error when given too many terms rather than simply telling some values to show up 0 times
+- Undefined variables in the initial/resultant terms of a transition no longer cause an ugly Python error (was passing just a
+  line-number `int` into an error-handling function that instead expected the object from which the line number came)
+- The `@ICONS` segment no longer alters a recieved icon (by removing state-0 empty space) before centering it; it now
+  assumes the icon it gets, including its RLE dimensions and empty space, is what should be centered
+- The `@ICONS` segment, while being parsed, can no longer raise "invalid cellstate" errors on numbers it encounters
+  in comments that *don't* immediately precede an RLE (because the comment immediately preceding an RLE is the only
+  one that should contain cellstates)
+- `consolidate_extra()`, plus the "extra" meta-information attribute to transition-y, objects in order to address
+  `consolidate()`'s line-number problem with inline-rulestring transitions. Changed the `weave` macro to use this new
+  function, ensuring it handles IRSes correctly.
+- Permute transitions no longer expand into an arbitrary ordering when there are multiple symmetries in the same table --
+  they instead follow the original ordering and are sorted.
+
+## [0.4.10] - 2018-11-25
 Really just floundering now while I figure out 0.5.0.
 ### Fixed
 - The previous fix didn't account for something important, which caused a lot of fatal and erroneous errors. Should have
@@ -13,7 +63,7 @@ Really just floundering now while I figure out 0.5.0.
   no longer prints "Parsing...", "Compiling...", and "Complete!" if it's been imported as a Python module, but it does
   show those messages when it's invoked as a command-line script.
 
-## [0.4.9] - 2018-12-24
+## [0.4.9] - 2018-11-24
 ### Changed
 - Using a variable in the resultant term of a transition now causes an error on Nutshell's end rather than Golly's.
 

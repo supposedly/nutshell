@@ -1,7 +1,7 @@
 from itertools import permutations
 from math import ceil
 
-from nutshell.common.utils import LazyProperty
+from nutshell.common.utils import LazyProperty, distinct
 from ._classes import InlineBinding
 
 oneDimensional, vonNeumann, hexagonal, Moore = 2, 4, 6, 8
@@ -62,7 +62,7 @@ class Napkin(tuple, metaclass=_NapkinMeta):
     
     @LazyProperty
     def expanded_unique(self):
-        return set(self.expanded)
+        return distinct(self.expanded)
     
     def expand(self):
         return map(type(self), self.expanded_unique)
@@ -212,17 +212,28 @@ class Permute(Napkin):
           1, 1, 1, 1, 0, 0, 0, 0
         Order is not preserved.
         """
-        # How many cells filled
-        tally = length - sum(int(i) for _, i in values if i)
-        # And how many empty slots left to fill
-        empties = sum(1 for _, i in values if not i)
         # filler algo courtesy of Thomas Russell on math.stackexchange
         # https://math.stackexchange.com/a/1081084
-        filler = (ceil((tally - k + 1) / empties) for k in range(1, 1+empties))
+        filler = Permute._fill(
+          length,
+          # How many cells filled
+          length - sum(int(i) for _, i in values if i),
+          # And how many empty slots left to fill
+          sum(1 for _, i in values if not i)
+          )
         return list(_AccumulativeContainer(
           (val.set(idx) if isinstance(val, InlineBinding) else val, next(filler) if num is None else int(num))
           for idx, (val, num) in enumerate(values, 1)
-          ))
+        ))
+    
+    @staticmethod
+    def _fill(length, tally, empties):
+        """Only in its own function to be able to raise error on 0"""
+        for k in range(1, 1 + empties):
+            v = ceil((tally - k + 1) / empties)
+            if v == 0:
+                raise ValueError(f'Too many terms given (expected no more than {length})')
+            yield v
 
 class _AccumulativeContainer(list):
     def __init__(self, it):

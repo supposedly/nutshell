@@ -1,7 +1,7 @@
 @RULE roed
 ********************************
 **** COMPILED FROM NUTSHELL ****
-****        v0.4.10         ****
+****        v0.5.0a         ****
 ********************************
 
 http://esolangs.org/wiki/Roie
@@ -492,6 +492,8 @@ XPM
 "DD c #008A00"
 "EE c #FF6000"
 "vc c #A50000"
+/* #C Red "e" symbol */
+/* icon for state 1 */
 "..........AAAAAAAAAA.........."
 "..........AAAAAAAAAA.........."
 "......AAAA..........AAAA......"
@@ -507,6 +509,8 @@ XPM
 "..........AAAAAAAAAA.........."
 "..........AAAAAAAAAA.........."
 ".............................."
+/* #C Northbound OFF pointer */
+/* icon for state 2 */
 "..............BB.............."
 "............BBBBBB............"
 "............BBBBBB............"
@@ -522,6 +526,8 @@ XPM
 "..BBBB..................BBBB.."
 "BBBB......................BBBB"
 "BBBB......................BBBB"
+/* #C Eastbound OFF pointer */
+/* icon for state 3 */
 "BBBB.........................."
 "BBBBBBBB......................"
 "....BBBBBBBB.................."
@@ -537,6 +543,8 @@ XPM
 "....BBBBBBBB.................."
 "BBBBBBBB......................"
 "BBBB.........................."
+/* #C Southbound OFF pointer */
+/* icon for state 4 */
 "BBBB......................BBBB"
 "BBBB......................BBBB"
 "..BBBB..................BBBB.."
@@ -552,6 +560,8 @@ XPM
 "............BBBBBB............"
 "............BBBBBB............"
 "..............BB.............."
+/* #C Westbound OFF pointer */
+/* icon for state 5 */
 "..........................BBBB"
 "......................BBBBBBBB"
 "..................BBBBBBBB...."
@@ -567,6 +577,8 @@ XPM
 "..................BBBBBBBB...."
 "......................BBBBBBBB"
 "..........................BBBB"
+/* #C Northbound ON pointer */
+/* icon for state 6 */
 "..............CC.............."
 "............CCCCCC............"
 "............CCCCCC............"
@@ -582,6 +594,8 @@ XPM
 "..CCCC..................CCCC.."
 "CCCC......................CCCC"
 "CCCC......................CCCC"
+/* #C Eastbound ON pointer */
+/* icon for state 7 */
 "CCCC.........................."
 "CCCCCCCC......................"
 "....CCCCCCCC.................."
@@ -597,6 +611,8 @@ XPM
 "....CCCCCCCC.................."
 "CCCCCCCC......................"
 "CCCC.........................."
+/* #C Southbound ON pointer */
+/* icon for state 8 */
 "CCCC......................CCCC"
 "CCCC......................CCCC"
 "..CCCC..................CCCC.."
@@ -612,6 +628,8 @@ XPM
 "............CCCCCC............"
 "............CCCCCC............"
 "..............CC.............."
+/* # Westbound ON pointer */
+/* icon for state 9 */
 "..........................CCCC"
 "......................CCCCCCCC"
 "..................CCCCCCCC...."
@@ -627,6 +645,8 @@ XPM
 "..................CCCCCCCC...."
 "......................CCCCCCCC"
 "..........................CCCC"
+/* #C Dark-red "o" */
+/* icon for state 10 */
 "..........AAAAAAAAAA.........."
 "..........AAAAAAAAAA.........."
 "......AAAA..........AAAA......"
@@ -642,6 +662,7 @@ XPM
 "..........AAAAAAAAAA.........."
 "..........AAAAAAAAAA.........."
 ".............................."
+/* icon for state 11 */
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
@@ -657,6 +678,7 @@ XPM
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
+/* icon for state 12 */
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
@@ -672,6 +694,7 @@ XPM
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
+/* icon for state 13 */
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
@@ -687,6 +710,7 @@ XPM
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
+/* icon for state 14 */
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
@@ -702,6 +726,7 @@ XPM
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
+/* icon for state 15 */
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
@@ -717,6 +742,7 @@ XPM
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
+/* icon for state 16 */
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
@@ -732,6 +758,7 @@ XPM
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
+/* icon for state 17 */
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
@@ -747,6 +774,7 @@ XPM
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
+/* icon for state 18 */
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
@@ -762,6 +790,7 @@ XPM
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
+/* icon for state 19 */
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
@@ -777,6 +806,7 @@ XPM
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
+/* icon for state 20 */
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
@@ -792,6 +822,7 @@ XPM
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
+/* icon for state 21 */
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
@@ -807,6 +838,7 @@ XPM
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
+/* icon for state 22 */
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
@@ -822,6 +854,7 @@ XPM
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
+/* icon for state 23 */
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
@@ -837,6 +870,7 @@ XPM
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
+/* icon for state 24 */
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
@@ -852,6 +886,7 @@ XPM
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
+/* icon for state 25 */
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
@@ -867,6 +902,7 @@ XPM
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
+/* icon for state 26 */
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
@@ -882,6 +918,7 @@ XPM
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
+/* icon for state 27 */
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
@@ -897,6 +934,8 @@ XPM
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
+/* #C Green "r" */
+/* icon for state 28 */
 ".............................."
 "......DDDDDDDDDDDDDDDD........"
 "......DDDDDDDDDDDDDDDDDD......"
@@ -912,6 +951,7 @@ XPM
 "......DDDD...................."
 ".............................."
 ".............................."
+/* icon for state 29 */
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
@@ -927,6 +967,7 @@ XPM
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
+/* icon for state 30 */
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
@@ -942,6 +983,7 @@ XPM
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
+/* icon for state 31 */
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
@@ -957,6 +999,7 @@ XPM
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
+/* icon for state 32 */
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
@@ -972,6 +1015,7 @@ XPM
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
+/* icon for state 33 */
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
@@ -987,6 +1031,7 @@ XPM
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
+/* icon for state 34 */
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
@@ -1002,6 +1047,7 @@ XPM
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
+/* icon for state 35 */
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
@@ -1017,6 +1063,7 @@ XPM
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
+/* icon for state 36 */
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
@@ -1032,6 +1079,8 @@ XPM
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
 "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
+/* #C Orange "d" */
+/* icon for state 37 */
 ".............................."
 "....................EEEE......"
 "....................EEEE......"
@@ -1047,6 +1096,7 @@ XPM
 "..........EEEEEEEEEEEEEE......"
 ".............................."
 ".............................."
+/* icon for state 38 */
 "EEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"
 "EEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"
 "EEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"

@@ -8,17 +8,33 @@ with open('nutshell/__init__.py') as f:
 if VERSION is None:
     raise RuntimeError('Missing or invalid version number')
 
-PACKAGES = [
-  'nutshell',
-  'nutshell.tools',
-  'nutshell.tools.icons',
-  'nutshell.common',
-  'nutshell.segment_types',
-  'nutshell.segment_types.colors',
-  'nutshell.segment_types.icons',
-  'nutshell.segment_types.nutshell',
-  'nutshell.segment_types.table',
-  'nutshell.segment_types.table.lark_assets',
+class PackageLister:
+    def __getitem__(self, args):
+        if not isinstance(args, tuple):
+           args = [args]
+        ret = []
+        for i in args:
+            if isinstance(i, slice):
+                ret.append(i.start)
+                ret.extend(map(f'{i.start}.'.__add__, i.stop))
+            else:
+                ret.append(i)
+        return ret
+f = PackageLister()
+
+# setuptools.find_packages() misses quite a few
+# Easier just to maintain this
+PACKAGES = f[
+  'nutshell': f[
+    'tools': f['icons'],
+    'common',
+    'segment_types': f[
+      'colors',
+      'icons',
+      'nutshell',
+      'table': f['lark_assets', 'inline_rulestring']
+      ]
+    ]
   ]
 
 setuptools.setup(
