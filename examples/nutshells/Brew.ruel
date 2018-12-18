@@ -15,15 +15,15 @@ states: 4
 
 weave: 1
 # Birth conditions
-any-[FG], <3 hensel-r4r / [live] / --[FG]>; [FG]
+--[FG], <3 force-r4r / [live] / --[FG]>; [FG]
 # Survival conditions
-live, <23 hensel-r4r / [0] / --[0]>; [0]
+live, <23 force-r4r / [0] / --[0]>; [0]
 weave: \
 
 live, any; [0: (any-1) << 1]
 
 @COLORS
 000: 0
-F00: 1
-0F0: 2
-00F: 3
+F07: 1
+0F7: 2
+07F: 3
