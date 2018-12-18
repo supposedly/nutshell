@@ -192,6 +192,19 @@ neighborhood: von Neumann
 0, 1, 3, 3, 1, 4
 ```
 
+Also: if *every given term* of a transition is tagged with a compass direction, the missing terms will be
+filled in automatically with the `any` variable (introduced a bit below).
+```rb
+# Nutshell
+0, N 1, S 3, W 5; 8
+```
+```rb
+# Golly
+0, 1, any.1, any.2, any.3, 3, any.4, 5, any.5, 8
+```
+The compass-direction requirement is to avoid accidental application of this where an error should probably be
+raised instead. (Tagging each given term signifies that the omissions were most-likely deliberate)
+
 Under certain symmetries, however, compass directions have no meaning&nbsp;-- these symmetry types utilize a different,
 tilde-based shorthand. Nutshell's implementation of Golly's `permute` symmetry uses it like so:
 ```rb
@@ -849,7 +862,7 @@ Wire, <12 / Head / (0, Tail, Wire)>; Head
 [References](#references) can be used here as well, but they look a little bit different: rather than referring
 to a compass direction, they must refer to either `0` , `BG`, or `FG`&nbsp;-- respectively, the input, background,
 or foreground state(s).  
-For instance, the resultant state of `0, <2-i34q / (0, 1) / (1, 2, 3)>; [FG: (3, 2, 1)]` is a mapping from the variable
+For instance, the resultant state of `0, <23 / (0, 1) / (1, 2, 3)>; [FG: (3, 2, 1)]` is a mapping from the variable
 `(1, 2, 3)`; if it were instead `[BG]`, then it would be a binding to the variable `(0, 1)`. (References are valid
 within the `<>` section as well, as is the "inline binding" syntax.)  
 Lastly, the same inline-binding syntax that allows `[expression] ~ 5` or `N..NW [expression]` to be shorthand for,
@@ -866,12 +879,28 @@ var _a0.0 = {1, 2}
 0, _a0.0, _a0.1, 0, 0, 0, 0, 0, 0, 3
 0, _a0.0, _a0.0, 0, 0, 0, 0, 0, 0, 3
 ```
+Note that binding to a Hensel-notation napkin is tricky business, because unlike in a permute-symmetry napkin,
+positions *do* matter -- in these cases `FG` and `BG` will give you the first available cell from the northmost one, which may
+not be a fine-enough level control. In such cases it's probably best *not* to bind at all to the foreground/background
+states, but if one *must*, then compass directions can be used to refer to the cell at that position in a neighborhood's
+[canonical orientation](http://www.ibiblio.org/lifepatterns/neighbors2.html).  
+Note, this is *only* an issue with a rotate4reflect-requiring Hensel-notation rulestring, as in `0, <2-i34q / (1, 2) / 0>; [FG]`.
+It is **not** an issue with a permute-symmetry rulestring as in `0, <23 / (1, 2) / 0>; [FG]`, and it even is a non-issue with
+Hensel rulestrings **if** the bound-to term is guaranteed to refer to the same cellstate: `<0, 2-i34q / [(1, 2)] / 0>; [FG]`.
 
 #### Modifiers
 The rulestrings do not strictly have to be Hensel rulestrings -- that is just the default. Placing a modifier after the
-rulestring will cause it to be interpreted differently; currently the only two modifiers are `hensel`, which replicates
-the normal behavior, and `!hensel`, which applies the normal behavior to the *complement* of the given rulestring. For
-example, `<0123-i !hensel / 1 / 0>` will behave as `<3i45678 / 1 / 0>`.
+rulestring will cause it to be interpreted differently. Currently-available modifiers:
+- `hensel`, which is an alias for the default behavior
+- `!hensel`, which turns the rulestring into its *complement*. `<012345-i6 !hensel / 1 / 0>` is `<5i78 / 1 / 0>`
+- `force-r4r`, which makes `<3 force-r4r / 1 / 0>` expand into a series of B3 rotate4reflect transitions *rather than*
+  a single B3 permute transition as with `<3 / 1 / 0>`. Needed for [Brew.ruel](examples/nutshells/Brew.ruel),
+  and likely in a lot of cases where a macro needs to apply to some inline-rulestring transitions
+- `b0-odd`, which applies Golly's odd-generation B0-rule transformation to the given rulestring. See
+[`examples/BeeZero`](examples/nutshells/BeeZero.ruel) for usage.
+
+These are user-creatable in the exact same maner as symmtries are, although the API for them is 100% unsimplified
+as of yet.
 
 ### Custom neighborhoods
 The `neighborhood` directive can be given a comma-delimited list of compass directions rather than a name, which makes
@@ -897,15 +926,19 @@ The implementation of the above-mentioned symmetry-switching also allows, conven
 then simply expanded by Nutshell into one of Golly's symmetry types. Provided by Nutshell is a small "standard library" of sorts
 that comes with the following:
 
+- `symmetries: nutshell.ExplicitPermute`: Permute symmetry, but differs in that it does *not* attempt to infer the desired amounts of
+  its given terms: if a term is given with no tilde, it is treated as `~ 1` rather than being spread out across the transition like
+  `symmetries: permute` would do.
 - `symmetries: nutshell.AlternatingPermute`: Permutational symmetry, like `symmetries: permute`, but only between every *second* cell in
   a napkin. Under the Moore neighborhood, this means that cellstates are permuted between orthogonal neighbors and, separately, between
   diagonal neighbors; under vonNeumann, that cellstates are permuted between opposing pairs of neighbors; and, under hexagonal, between [N, SE, W] and [E, S, NW].  
-  This symmetry type supports the tilde-based shorthand, but it only spreads terms out within their permute space (as in,
-  `0, 1, 2; 0` results in the Moore transition `0, 1, 2, 1, 2, 1, 2, 1, 2; 0` because the 1 and 2 are distributed into alternating slots).
+  This symmetry type supports the tilde-based shorthand in the same manner as `symmetries: nutshell.ExplicitPermute`,
+  but it only spreads terms out __within their permute space__ (as in, `0, 1, 2; 0` results in the Moore transition
+  `0, 1, 2, 1, 2, 1, 2, 1, 2; 0` because the 1 and 2 are distributed into alternating slots).
 - `symmetries: nutshell.Rotate2`: Identical to Golly's hexagonal `rotate2`, but allows Moore and vonNeumann as well.
 - `symmetries: nutshell.ReflectVertical`: Vertical reflection.
-- `symmetries: nutshell.\ReflectDiagonal`: Reflection about the NW-SW diagonal axis.
-- `symmetries: nutshell./ReflectDiagonal`: Reflection about the SE-NE diagonal axis.
+- `symmetries: nutshell.\ReflectDiagonal`: Reflection about the NW-SE diagonal axis.
+- `symmetries: nutshell./ReflectDiagonal`: Reflection about the SE-NW diagonal axis.
 - `symmetries: nutshell.XReflectDiagonal`: Reflection about both diagonal axes.
 - `symmetries: nutshell.ExplicitPermute`: Permute symmetries, but there is no automatic expansion of tilde-omitted terms; omission of a tilde
   here is equivalent to `~ 1`. An error will be raised if an incorrect amount of terms results.
@@ -989,7 +1022,9 @@ The current "standard library" of macros currently consists of two:
     With chunk_size = 2, produces  
       `[a0,a1,b0,b1,c0,c1, a2,a3,b2,b3,c2,c3, ...]`  
     And so on for higher chunk_size values. Extraneous transitions (ones that
-    don't divide evenly into chunk_size) are left at the end rather than discarded.
+    don't divide evenly into chunk_size) are left at the end rather than discarded.  
+    Note that `weave` will appropriately order transitions resulting from inline rulestrings,
+    despite their being from the same line.
 - **reorder**: For when *really* fine control is necessary.
     Takes a series of numbers corresponding to the Nutshell
     transitions covered by this macro, where 1 is the first
@@ -1088,6 +1123,25 @@ be used here as well.
 For instance: `FFF: 2 4 6 8 10` says to assign the color `#FFFFFF` to states 2, 4, 6, 8, and 10, and can also be written
 as `FFF: 2+2..10` or `FFFFFF: 2+2..10` or `255 255 255: 2+2..10`.
 
+The state listing can also contain `@NUTSHELL`-defined constant names -- which substitute for one cellstate each -- **or**
+`@TABLE`-defined variable names, which cause the color to be applied to every state within the variable.
+
+The color can additionally be expressed as a gradient rather than a single color. If this is done, the gradient will distribute
+itself across all given cellstates rather than applying a single color to each. See the following example:
+
+```rb
+# Nutshell
+@COLORS
+FF0..00FFF0: 3, 4, 6
+```
+```rb
+# Golly
+@COLORS
+3 255 255 0
+4 170 255 80
+5 85 255 160
+```
+
 ### The `@ICONS` segment
 This segment is based around Golly's RLE format instead of XPM data; the idea is that you're likely going to be in Golly anyway
 when you're fiddling with a rule, so it'll be easier to quickly copy/paste an RLE in and out of a blank Golly tab than it'd be to
@@ -1096,6 +1150,8 @@ dimensions (7x7/15x15/31x31).
 
 Each individual XRLE pattern listed represents one icon, and to assign this icon to some cellstate,
 include the state or its `@NUTSHELL`-defined constant in a comment immediately above the icon's RLE pattern.
+**`@ICONS` can additionally take here a varname defined in `@TABLE`**, in which case it will apply the icon
+to every cellstate within that variable.
 Multiple cellstates can be assigned to by listing them individually (as long as each cellstate appears either
 with whitespace on both sides or with whitespace before and a comma after) or by describing them with a
 [range literal](#ranges) sans parentheses/curly brackets.
@@ -1151,3 +1207,8 @@ In this case you may append to the gradient line a bracketed number indicating t
 
 **Additionally:** If you have a Golly ruletable with its own `@ICONS` and do not wish to convert it to the Nutshell format manually,
 there is a tool `nutshell-ca icon convert <rulefile> <outdir>` that can do it for you.
+
+Multiple icon sizes can be indicated by repeating the `@ICONS` segment -- if you wish to do this, place your differently-sized icons
+under `@ICONS:7`, `@ICONS:15`, and `@ICONS:31` respectively. Note that the numbers are not checked, so one could totally place 15x15
+icons under `@ICONS:7` -- they're just there to distinguish the multiple segments before coalescing them into a single `@ICONS` in
+the Golly table.

@@ -14,7 +14,7 @@ class ColorSegment(ColorMixin):
     
     def __init__(self, colors, start=0, *, dep: ['@NUTSHELL', '@TABLE'] = None):
         _nutshell, _table = dep
-        self._table = _table
+        self._vars = _table.vars if _table else {}
         self._packed_dict = None
         self._src = [i.split('#')[0].strip() for i in colors]
         self.colors = list(enumerate((k.split(':', 1) for k in self._src if k), 1))
@@ -57,8 +57,8 @@ class ColorSegment(ColorMixin):
             
             if valid_range:
                 it = valid_range
-            elif no_star in self._table.vars:
-                it = self._table.vars[no_star]
+            elif no_star in self._vars:
+                it = self._vars[no_star]
             
             if it is None:
                 yield str(term)

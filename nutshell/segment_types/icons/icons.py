@@ -69,7 +69,7 @@ class IconArray:
         
         _colors, _table, _nutshell = dep
         self._n_states = _table and _table.n_states
-        self._vars = _table and _table.vars
+        self._vars = _table.vars if _table else {}
         self._color_segment = None if isinstance(_colors, list) else _colors
         self._nutshell = _nutshell
         
