@@ -1,7 +1,7 @@
 @RULE bml
 ********************************
 **** COMPILED FROM NUTSHELL ****
-****         v0.5.0         ****
+****         v0.5.1         ****
 ********************************
 The Biham–Middleton–Levine traffic model.
 
@@ -12,6 +12,7 @@ The Biham–Middleton–Levine traffic model.
 4: Rightward-bound car, waiting
 
 Generation 0 will consist only of states 0, 2, 3.
+
 
 @TABLE
 neighborhood: vonNeumann

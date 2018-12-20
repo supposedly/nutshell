@@ -1,10 +1,11 @@
 @RULE RockPaperScissors
 ********************************
 **** COMPILED FROM NUTSHELL ****
-****         v0.5.0         ****
+****         v0.5.1         ****
 ********************************
 
 From "RockScissorsPaperLife" by Dave Greene.
+
 
 @TABLE
 neighborhood: Moore

@@ -52,13 +52,7 @@ def parse(fp):
         # The comment `# golly` can be used segment-initially to
         # indicate that that particular segment should not be touched
         if seg[0].translate(utils.KILL_WS).lower() == '#golly':
-            if label == '@TABLE':
-                # Sentinel of sorts, understood by compiler.py to mean
-                # "don't touch" (special-casing required because @TABLE
-                # is itself a special case)
-                seg[0] = None
-            else:
-                segments[label] = seg[1:]
+            segments[label] = seg[1:]
             continue
         # If the converter requires another segment/other segments to work, it'll have
         # a kwarg called 'dep' annotated with a list of the name/s of said segment/s

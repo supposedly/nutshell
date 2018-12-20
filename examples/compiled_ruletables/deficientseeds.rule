@@ -1,7 +1,7 @@
 @RULE DeficientSeeds
 ********************************
 **** COMPILED FROM NUTSHELL ****
-****         v0.5.0         ****
+****         v0.5.1         ****
 ********************************
 1 c
 2 e
@@ -9,6 +9,7 @@
 4 a
 5 i
 6 n
+
 
 @TABLE
 neighborhood: Moore

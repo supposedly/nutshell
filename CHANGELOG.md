@@ -20,13 +20,13 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 ## [0.5.1] - 2018-12-19
 Making Nutshell a bit friendlier to use as a Python module rather than a CLI tool.
 ### Changed
+- No more special-casing of `@TABLE` -- it now follows the `__iter__()` API that all the other segments use.  
+  Externally this means that `@TABLE` may not end up at the top of a transpiled rulefile anymore. No biggie, though.
 - Some error names: `ValueErr` to `Error` and `ReferenceErr` to `UndefinedErr`. This is the only outwardly-visible change.
 - Names of segment-wrapping classes, so that they all follow the format "SomethingSegment".
 ### Fixed
 - The `dep` kwarg of segment-wrapping classes' `__init__()`s is now given a proper default (tuple of `None`s, not just one `None`)
   to avoid TypeError-None-is-not-iterable errors on external instantiation.
-### Planned
-- No more special-casing of `@TABLE` -- it should follow the `__iter__()` API all the other segments use.
 
 ## [0.5.0] - 2018-12-17
 General upgrades. The biggest changes were to `@ICONS` and `@COLORS`' handling of... everything, but

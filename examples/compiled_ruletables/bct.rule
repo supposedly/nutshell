@@ -1,7 +1,7 @@
 @RULE bct
 ********************************
 **** COMPILED FROM NUTSHELL ****
-****         v0.5.0         ****
+****         v0.5.1         ****
 ********************************
 An implementation of bitwise cyclic tag.
 
@@ -32,6 +32,20 @@ An implementation of bitwise cyclic tag.
 
 16: To-be-moved-down data-tape 0.
 17: To-be-moved-down data-tape 1.
+
+
+@COLORS
+3 200 200 200
+4 90 90 90
+1 235 235 235
+12 235 235 235
+16 235 235 235
+2 30 30 30
+13 30 30 30
+17 30 30 30
+5 0 255 255
+14 0 255 255
+15 0 255 255
 
 @TABLE
 neighborhood: Moore
@@ -171,16 +185,3 @@ data.0, data.1, any.0, any.1, any.2, any.3, any.4, any.5, any.6, data.0
 0, any.0, data.0, data.1, any.1, any.2, any.3, any.4, any.5, 0
 #### line 121: vacdata, E vacdata, SE..NE any; [E] ####
 vacdata.0, any.0, any.1, vacdata.1, any.2, any.3, any.4, any.5, any.6, vacdata.1
-
-@COLORS
-3 200 200 200
-4 90 90 90
-1 235 235 235
-12 235 235 235
-16 235 235 235
-2 30 30 30
-13 30 30 30
-17 30 30 30
-5 0 255 255
-14 0 255 255
-15 0 255 255

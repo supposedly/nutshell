@@ -7,6 +7,7 @@ from inspect import signature, Parameter
 import bidict
 from ergo.misc import typecast
 
+from nutshell.cli import cli
 from nutshell.common.classes import TableRange
 from nutshell.common.utils import printv, printq
 from nutshell.common import macros
@@ -18,6 +19,7 @@ from . import _symutils as symutils, _neighborhoods as nbhoods
 
 # no need to catch \s*,\s* because directive values are translated with KILL_WS
 CUSTOM_NBHD = re.compile(r'(?:[NS][EW]?|[EW])(?:,(?:[NS][EW]?|[EW]))*')
+
 
 def generate_cardinals(d):
     """{'name': ('N', 'E', ...)} >>> {'name': {'N' :: 1, 'E' :: 2, ...}}"""
@@ -39,7 +41,7 @@ class TableSegment:
     TRLENS = {k: len(v) for k, v in CARDINALS.items()}
     hush = True
 
-    def __init__(self, tbl, start=0, *, dep: ['@NUTSHELL'] = None):
+    def __init__(self, tbl, start=0, *, dep: ['@NUTSHELL'] = (None,)):
         # parser (lexer?) dies if there are blank lines right at the start
         # so idk
         tbl = list(tbl)
@@ -78,7 +80,6 @@ class TableSegment:
         self.new_varname = VarName.new_generator()
         
         if not tbl:
-            self._src = ['']  # for compiler.py's sentinel check
             self.final = []
             self._n_states = self.directives['n_states'] = max(2, self.directives.pop('states', 2))
             return
@@ -121,7 +122,46 @@ class TableSegment:
         return self._src[item]
     
     def __iter__(self):
-        yield from self.final
+        """
+        rulefile: stream to write to
+        tbl: segment_types.table.table.Table object
+
+        Formats all info from `tbl` as necessary to comply with Golly's
+        ruletable format (e.g. var declarations and directives and all)
+        """
+        yield f"neighborhood: {self.directives.pop('neighborhood')}"
+        for directive, value in self.directives.items():
+            yield f'{directive}: {value}'
+        if self.vars or self.final:  # if there's anything left to yield
+            yield ''
+        for var, states in self.vars.items():
+            if var.rep == -1:
+                continue
+            # set() removes duplicates and gives braces
+            # Golly gives up reading variables past a certain length so we unfortunately have to .replace(' ', '')
+            yield f'var {var.name}.0 = ' + f'{set(states)}'.replace(' ', '')
+            yield from (f'var {var.name}.{suf} = {var.name}.0' for suf in range(1, 1 + var.rep))
+        if self.vars:  # if that loop ran
+            yield ''
+        yield from self._iter_final_transitions()
+    
+    def _iter_final_transitions(self):
+        src, cmt = cli.result.transpile.comment_src, cli.result.transpile.preserve_comments
+        seen = set()
+        for tr in self.final:
+            if tr.ctx not in seen:
+                seen.add(tr.ctx)
+                lno, start, end = tr.ctx
+                start, end = None if not start else start - 1, None if end is None else end - 1
+                if cmt:
+                    yield from [self.comments.pop(cmt_lno) for cmt_lno in list(self.comments) if cmt_lno < lno]
+                if src:
+                    # yield ''
+                    yield src.format(line=lno+self.start, span=self[lno-1][start:end])
+                if cmt and lno in self.comments:
+                    yield '{}{}'.format(', '.join(map(str, tr)), self.comments.pop(lno))
+                    continue
+            yield ', '.join(map(str, tr))
     
     @property
     def neighborhood(self):

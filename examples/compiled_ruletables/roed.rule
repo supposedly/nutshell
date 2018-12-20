@@ -1,7 +1,7 @@
 @RULE roed
 ********************************
 **** COMPILED FROM NUTSHELL ****
-****         v0.5.0         ****
+****         v0.5.1         ****
 ********************************
 
 http://esolangs.org/wiki/Roie
@@ -76,6 +76,7 @@ http://esolangs.org/wiki/Roie
 51: e
 52: s
 53: w
+
 
 @TABLE
 neighborhood: Moore
