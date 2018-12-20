@@ -2,7 +2,7 @@
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 
-## [0.6.0] - Planned
+## [0.6.0] - In progress?
 ### Planned
 - A complete overhaul of symmetries and neighborhoods such that:
   - Such transformations as reflection and rotation are handled from the *neighborhood* rather than the symmetry type
@@ -24,6 +24,8 @@ Making Nutshell a bit friendlier to use as a Python module rather than a CLI too
   Externally this means that `@TABLE` may not end up at the top of a transpiled rulefile anymore. No biggie, though.
 - Some error names: `ValueErr` to `Error` and `ReferenceErr` to `UndefinedErr`. This is the only outwardly-visible change.
 - Names of segment-wrapping classes, so that they all follow the format "SomethingSegment".
+- No change in CLI output, but SystemExit subclasses are no longer raised internally: they now are Exception subclasses,
+  only turning into SystemExits if allowed to bubble up to the command line.
 ### Fixed
 - The `dep` kwarg of segment-wrapping classes' `__init__()`s is now given a proper default (tuple of `None`s, not just one `None`)
   to avoid TypeError-None-is-not-iterable errors on external instantiation.
