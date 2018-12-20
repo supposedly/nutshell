@@ -39,7 +39,6 @@ class TableSegment:
       'Moore': ('N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'),
       })
     TRLENS = {k: len(v) for k, v in CARDINALS.items()}
-    hush = True
 
     def __init__(self, tbl, start=0, *, dep: ['@NUTSHELL'] = (None,)):
         # parser (lexer?) dies if there are blank lines right at the start
@@ -54,10 +53,6 @@ class TableSegment:
         self.comments = {}
         self._nbhd = self._trlen = None
         dep, = dep
-        
-        if self.hush:
-            global printv, printq
-            printv = printq = lambda *_, **__: None
         
         if dep is not None:
             dep.replace(self._src)
@@ -122,25 +117,20 @@ class TableSegment:
         return self._src[item]
     
     def __iter__(self):
-        """
-        rulefile: stream to write to
-        tbl: segment_types.table.table.Table object
-
-        Formats all info from `tbl` as necessary to comply with Golly's
-        ruletable format (e.g. var declarations and directives and all)
-        """
-        yield f"neighborhood: {self.directives.pop('neighborhood')}"
+        yield f"neighborhood: {self.directives['neighborhood']}"
         for directive, value in self.directives.items():
-            yield f'{directive}: {value}'
-        if self.vars or self.final:  # if there's anything left to yield
+            if directive != 'neighborhood':
+                yield f'{directive}: {value}'
+        if self.vars or self.final:  # if there are more things to yield
             yield ''
         for var, states in self.vars.items():
             if var.rep == -1:
                 continue
             # set() removes duplicates and gives braces
-            # Golly gives up reading variables past a certain length so we unfortunately have to .replace(' ', '')
+            # Golly gives up reading variables past a certain line length so we unfortunately have to .replace(' ', '')
             yield f'var {var.name}.0 = ' + f'{set(states)}'.replace(' ', '')
-            yield from (f'var {var.name}.{suf} = {var.name}.0' for suf in range(1, 1 + var.rep))
+            for suf in range(1, 1+var.rep):
+                yield f'var {var.name}.{suf} = {var.name}.0'
         if self.vars:  # if that loop ran
             yield ''
         yield from self._iter_final_transitions()
@@ -148,18 +138,23 @@ class TableSegment:
     def _iter_final_transitions(self):
         src, cmt = cli.result.transpile.comment_src, cli.result.transpile.preserve_comments
         seen = set()
+        last_cmt_lno = -1
         for tr in self.final:
             if tr.ctx not in seen:
                 seen.add(tr.ctx)
                 lno, start, end = tr.ctx
-                start, end = None if not start else start - 1, None if end is None else end - 1
+                start, end = None if not start else start-1, None if end is None else end-1
                 if cmt:
-                    yield from [self.comments.pop(cmt_lno) for cmt_lno in list(self.comments) if cmt_lno < lno]
+                    for comment_lno in self.comments:
+                        if last_cmt_lno < comment_lno < lno:
+                            last_cmt_lno = comment_lno
+                            yield self.comments[comment_lno]
                 if src:
-                    # yield ''
+                    #yield ''
                     yield src.format(line=lno+self.start, span=self[lno-1][start:end])
                 if cmt and lno in self.comments:
-                    yield '{}{}'.format(', '.join(map(str, tr)), self.comments.pop(lno))
+                    last_cmt_lno = lno
+                    yield '{}{}'.format(', '.join(map(str, tr)), self.comments[lno])
                     continue
             yield ', '.join(map(str, tr))
     

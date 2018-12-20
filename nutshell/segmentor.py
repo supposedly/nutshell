@@ -41,7 +41,10 @@ def parse(fp):
             seg, *name = line.split(None, 1)
             segments[seg], lines[seg] = name, lno
             continue
-        segments[seg].append(line)
+        # May change in the future to allow things to be defined at the top
+        # of a nutshell
+        if seg is not None:
+            segments[seg].append(line)
     
     # Parse and operate on gathered segments
     for label, converter in CONVERTERS:

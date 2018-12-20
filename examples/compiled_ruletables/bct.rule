@@ -1,7 +1,7 @@
 @RULE bct
 ********************************
 **** COMPILED FROM NUTSHELL ****
-****         v0.5.1         ****
+****         v0.5.2         ****
 ********************************
 An implementation of bitwise cyclic tag.
 
@@ -171,7 +171,7 @@ data.0, data.1, 0, any.0, any.1, any.2, any.3, any.4, any.5, 0
 #### line 110: 6, N..NW any; 0 ####
 6, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0  # 3
 #### line 110: S:10 ####
-any.0, 6, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 10
+any.0, 6, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 10  # 3
 # Delete the leftmost bit if a program-tape 0 is encountered
 #### line 113: 0, E data, SE 3, S..NE any; 0 ####
 0, any.0, any.1, data.0, 3, any.2, any.3, any.4, any.5, 0

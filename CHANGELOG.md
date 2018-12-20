@@ -16,6 +16,15 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 - A `prune` macro
 - More modifiers, e.g. Langton's Ant and Deficient/genext -- also hex (although hex symmetries are scary)
 
+## [0.5.2] - 2018-12-19
+### Changed
+- Made `TableSegment.comments` store its values as strings rather than as Lark's Token objects
+- Made an error message having to do with `[inline binding]` clearer
+### Fixed
+- Text at the top of a Nutshell not tied to a particular segment is now silently ignored (tentative behavior) and no longer
+  raises a Python exception
+- In light of v0.5.1's changes, `@TABLE`'s wrapper class now no longer mutates itself (popping keys/values from an internal
+  dict) when iterated over, meaning that can now be done more than once
 
 ## [0.5.1] - 2018-12-19
 Making Nutshell a bit friendlier to use as a Python module rather than a CLI tool.

@@ -1,7 +1,7 @@
 @RULE bf
 ********************************
 **** COMPILED FROM NUTSHELL ****
-****         v0.5.1         ****
+****         v0.5.2         ****
 ********************************
 
 Brainfuck.
@@ -1931,11 +1931,11 @@ vac.0, _c0.0, vac.1, vac.2, any.0, any.1, any.2, anyPrgm.0, vac.3, _c0.0
 #### line 320: prgm, E prgm, 0, 0, SW 3, 0, NW..NE 0; 0 ####
 prgm.0, 0, 0, prgm.1, 0, 0, 3, 0, 0, 0  # ]x
 #### line 320: S[0] ####
-0, prgm.0, prgm.1, 0, any.0, any.1, any.2, 3, 0, prgm.0
+0, prgm.0, prgm.1, 0, any.0, any.1, any.2, 3, 0, prgm.0  # ]x
 #### line 321: prgm, SE 4, 0, 0, W prgm, NW..E 0; 0 ####
 prgm.0, 0, 0, 0, 4, 0, 0, prgm.1, 0, 0  # x[
 #### line 321: S[0] ####
-0, prgm.0, 0, 4, any.0, any.1, any.2, 0, prgm.1, prgm.0
+0, prgm.0, 0, 4, any.0, any.1, any.2, 0, prgm.1, prgm.0  # x[
 ################
 ##### 66 #####
 ################
@@ -2131,7 +2131,7 @@ any.0, _q0.0, 0, any.1, any.2, any.3, any.4, any.5, 39, 32
 #### line 386: 85, N 0, NE 84, E..NW any; 0 ####
 85, 0, 84, any.0, any.1, any.2, any.3, any.4, any.5, 0  # if it's the next up
 #### line 386: N:85 ####
-0, any.0, any.1, 84, any.2, 85, any.3, any.4, any.5, 85
+0, any.0, any.1, 84, any.2, 85, any.3, any.4, any.5, 85  # if it's the next up
 #### line 387: 0, (84, 90), NE..SE any, 85, SW..NW any; 85 ####
 0, _r0.0, any.0, any.1, any.2, 85, any.3, any.4, any.5, 85  # if it's farther down
 #### line 388: 85, N 85, NE..NW any; 0 ####
@@ -2178,7 +2178,7 @@ any.0, _q0.0, any.1, any.2, any.3, any.4, any.5, any.6, 89, 40
 #### line 404: 0, W 87, NW 40, N..SE any, S 4, SW 8; 88 ####
 0, any.0, any.1, any.2, any.3, 4, 8, 87, 40, 88  # emulate l-brack test from below
 #### line 404: W:21 ####
-87, 40, any.0, 0, 4, 8, any.1, any.2, any.3, 21
+87, 40, any.0, 0, 4, 8, any.1, any.2, any.3, 21  # emulate l-brack test from below
 #### line 405: 87, N 40, NE any, E (3, prgm, 0), SE..NW vac; 9 ####
 87, 40, any.0, _t0.0, vac.0, vac.1, vac.2, vac.3, vac.4, 9
 #### line 405: NE[E: (21, _, ...)] ####
@@ -2210,7 +2210,7 @@ any.0, any.1, any.2, any.3, any.4, any.5, any.6, 89, any.7, 89
 #### line 416: 64, N..NW any; 58 ####
 64, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 58  # don't output if there's nothing to output
 #### line 416: N[(0, _, ...)] ####
-0, any.0, any.1, any.2, any.3, 64, any.4, any.5, any.6, 0
+0, any.0, any.1, any.2, any.3, 64, any.4, any.5, any.6, 0  # don't output if there's nothing to output
 # Output
 #### line 418: 66, S 64, SW..SE any; 67 ####
 66, any.0, any.1, any.2, any.3, 64, any.4, any.5, any.6, 67
@@ -2378,12 +2378,12 @@ _q0.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, _q0.0
 #### line 469: 16, E (3, vac), SE..NE any; 87 ####
 16, any.0, any.1, _y0.0, any.2, any.3, any.4, any.5, any.6, 87  # just needs a random non-moving state, so blank_1 works
 #### line 469: NE:0 ####
-any.0, any.1, any.2, any.3, any.4, _y0.0, 16, any.5, any.6, 0
+any.0, any.1, any.2, any.3, any.4, _y0.0, 16, any.5, any.6, 0  # just needs a random non-moving state, so blank_1 works
 ## l-brack test stuff
 #### line 471: (9, pointerOps), SE 4, S anyPrgm-8, SW..E any; 21 ####
 _z0.0, any.0, any.1, any.2, 4, _a1.0, any.3, any.4, any.5, 21  # send out a test signal
 #### line 471: E:88 ####
-any.0, any.1, any.2, any.3, any.4, 4, _a1.0, _z0.0, any.5, 88
+any.0, any.1, any.2, any.3, any.4, 4, _a1.0, _z0.0, any.5, 88  # send out a test signal
 #### line 472: 21, N northbound, NE..NW any; 87 ####
 21, northbound.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 87
 #### line 472: N:0 ####
@@ -2478,7 +2478,7 @@ any.0, any.1, any.2, any.3, any.4, 21, northbound.0, any.5, any.6, 0
 #### line 498: 21, NW northbound, N..W any; 87 ####
 21, any.0, any.1, any.2, any.3, any.4, any.5, any.6, northbound.0, 87  # random non-interfering state (any would do)
 #### line 498: N:0 ####
-any.0, any.1, any.2, any.3, any.4, 21, any.5, northbound.0, any.6, 0
+any.0, any.1, any.2, any.3, any.4, 21, any.5, northbound.0, any.6, 0  # random non-interfering state (any would do)
 #### line 499: 87, S 3, SW..SE any; 3 ####
 87, any.0, any.1, any.2, any.3, 3, any.4, any.5, any.6, 3
 #### line 500: 3, S 3, SW..SE any; 21 ####

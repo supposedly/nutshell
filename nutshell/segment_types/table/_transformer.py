@@ -123,19 +123,19 @@ class Preprocess(Transformer):
         return list(chain(main.apply_aux(aux_first), main.expand(), main.apply_aux(aux_second)))
     
     @inline
-    def print_var(self, meta, var):
-        print(self.kill_string(var, meta))
+    def print_var(self, meta, val):
+        print(self.kill_string(val, meta))
         raise Discard
     
     @inline
     def comment(self, meta, text):
-        self._tbl.comments[meta[0]] = text
+        self._tbl.comments[meta[0]] = str(text)
         raise Discard
     
     @inline
     def end_bs(self, meta, text):
         if text.lstrip().startswith('#'):
-            self._tbl.comments[meta[0]] = text
+            self._tbl.comments[meta[0]] = str(text)
         raise Discard
     
     @inline
@@ -185,7 +185,7 @@ class Preprocess(Transformer):
             # XXX: this is suspect (cryptic message and i'm not sure it's raised in the right situation)
             raise SyntaxErr(
               fix(meta),
-              f"Cannot use inline-binding shorthand with no implication of multiple states"
+              f"Cannot use inline-binding shorthand on only one term (without spreading it over multiple terms)"
               )
         return MetaTuple(meta, (self.kill_string(state, meta), str(permute[0]) if permute else None))
     
