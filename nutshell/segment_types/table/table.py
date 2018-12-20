@@ -29,7 +29,7 @@ class Bidict(bidict.bidict):
     on_dup_val = bidict.IGNORE
 
 
-class Table:
+class TableSegment:
     CARDINALS = generate_cardinals({
       'oneDimensional': ('W', 'E'),
       'vonNeumann': ('N', 'E', 'S', 'W'),
@@ -40,8 +40,9 @@ class Table:
     hush = True
 
     def __init__(self, tbl, start=0, *, dep: ['@NUTSHELL'] = None):
-        # parser or lexer dies if there are blank lines right at the start
+        # parser (lexer?) dies if there are blank lines right at the start
         # so idk
+        tbl = list(tbl)
         while tbl and not tbl[0].split('#', 1)[0].strip():
             del tbl[0]
             start += 1
@@ -82,7 +83,7 @@ class Table:
             self._n_states = self.directives['n_states'] = max(2, self.directives.pop('states', 2))
             return
         
-        trans = Preprocess(tbl=self)
+        transformer = Preprocess(tbl=self)
         parser = lark_standalone.Lark_StandAlone(tbl=self)
         try:
             _parsed = parser.parse('\n'.join(self._src))
@@ -100,7 +101,7 @@ class Table:
               )
         else:
             self.update_special_vars()
-        self._data = trans.transform(_parsed)
+        self._data = transformer.transform(_parsed)
         
         if len(self.sym_types) <= 1 and not hasattr(next(iter(self.sym_types), None), 'fallback'):
             sym = next(iter(self.sym_types), None)
@@ -235,7 +236,7 @@ class Table:
         printq('Complete!\n\nSearching for match...')
         start, *in_napkin, end = tr
         if len(in_napkin) != self.trlen:
-            raise ValueErr(None, f'Bad length for match (expected {2+self.trlen} states, got {2+len(in_napkin)})')
+            raise Error(None, f'Bad length for match (expected {2+self.trlen} states, got {2+len(in_napkin)})')
         in_trs = [(start, *napkin, end) for napkin in self.symmetries(in_napkin).expand()]
         for tr in self._data:
             for in_tr in in_trs:

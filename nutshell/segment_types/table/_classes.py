@@ -57,7 +57,7 @@ class VarName:
 class TransitionGroup:
     def __init__(self, tbl, initial, napkin, resultant, *, context, extra=None, symmetries=None):
         if tbl.n_states < 2:
-            raise ValueErr(None, 'Table uses fewer than two cellstates. Set `states:` directive to 2 or higher to fix')
+            raise Error(None, 'Table uses fewer than two cellstates. Set `states:` directive to 2 or higher to fix')
         self.ctx = context
         # Extra meta-information beyond ctx
         self.extra = extra
@@ -220,7 +220,7 @@ class Transition:
         self.initial, *self.napkin, resultant = tr
         if isinstance(resultant, StateList) and not isinstance(resultant, ResolvedBinding) and len(resultant) > 1:
             # Best to do this check here (regrettably) bc the length > 1 can't really be determined earlier
-            raise ValueErr(
+            raise Error(
               self.ctx,
               "Resultant (final) term must be a single cellstate or something that resolves to one. Instead "
               f"got {resultant.untether()}, a statelist of length {len(resultant)}"
@@ -378,7 +378,7 @@ class Binding(Reference):
         r = tr[self.cdir]
         while isinstance(r, Expandable) and not isinstance(r, StateList):
             if getattr(r, 'cdir', None) == self.cdir:
-                raise ValueErr(self.ctx, 'Term references itself')
+                raise Error(self.ctx, 'Term references itself')
             r = r.within(tr)
         return ResolvedBinding(self.cdir, r) if isinstance(r, StateList) else r
     
@@ -418,7 +418,7 @@ class Mapping(Reference):
         self.map_to = StateList(map_to)
         # XXX: Below is bad because mapping to a single cellstate can happen during reshaping
         # if len(self.map_to) == 1:
-        #     raise ValueErr(self.ctx, 'Mapping to a single cellstate')
+        #     raise Error(self.ctx, 'Mapping to a single cellstate')
     
     def __repr__(self):
         return f'Mapping[{self.cdir}: {self.map_to}]'
@@ -433,7 +433,7 @@ class Mapping(Reference):
             try:
                 return map_to[val.index]
             except IndexError:
-                raise ValueErr(
+                raise Error(
                   self.ctx,
                   f'Variable {val.parent} mapped to smaller '
                   f'variable {self.map_to}. '
@@ -444,7 +444,7 @@ class Mapping(Reference):
                 return 
             return val.within(tr)
         if isinstance(val, int):
-            raise ValueErr(self.ctx, 'Mapping from single cellstate')
+            raise Error(self.ctx, 'Mapping from single cellstate')
         if isinstance(val, StateList):
             map_to = self.map_to.within(tr)
             if map_to[-1].value is Ellipsis:
@@ -457,7 +457,7 @@ class Mapping(Reference):
             if isinstance(ret, StateList):
                 raise Reshape(self.cdir)
             return ret
-        raise ValueErr(self.ctx, f'Unknown map-from value: {val}')
+        raise Error(self.ctx, f'Unknown map-from value: {val}')
 
 
 class InlineRulestringBinding(Expandable):

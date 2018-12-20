@@ -3,7 +3,7 @@ from operator import itemgetter
 
 from nutshell.common.classes import ColorMixin, ColorRange, TableRange
 from nutshell.common.utils import multisplit
-from nutshell.common.errors import ValueErr
+from nutshell.common.errors import Error
 
 
 class ColorSegment(ColorMixin):
@@ -12,7 +12,7 @@ class ColorSegment(ColorMixin):
     transferrable into Golly syntax.
     """
     
-    def __init__(self, colors, start=0, *, dep: ['@NUTSHELL', '@TABLE'] = None):
+    def __init__(self, colors, start=0, *, dep: ['@NUTSHELL', '@TABLE'] = (None, None)):
         _nutshell, _table = dep
         self._vars = _table.vars if _table else {}
         self._packed_dict = None
@@ -35,7 +35,7 @@ class ColorSegment(ColorMixin):
                 try:
                     state = int(term.lstrip('*'))
                 except ValueError:
-                    raise ValueErr(lno, f'State {term} is not an integer')
+                    raise Error(lno, f'State {term} is not an integer')
                 d[state] = color
                 if term.startswith('*'):
                     self.non_override_colors.add(state)

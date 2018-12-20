@@ -71,7 +71,7 @@ class Preprocess(Transformer):
             try:
                 return self.vars[val]
             except KeyError:
-                raise ReferenceErr(
+                raise UndefinedErr(
                   fix(meta),
                   f'Undefined variable {val}'
                   )
@@ -155,11 +155,11 @@ class Preprocess(Transformer):
             self._tbl.update_special_vars(val)
         elif name == 'neighborhood':
             if self._nbhd_assigned:
-                raise ValueErr(meta, '`neighborhood` directive cannot be reassigned')
+                raise Error(meta, '`neighborhood` directive cannot be reassigned')
             try:
                 self._tbl.neighborhood = val
             except ValueError as e:
-                raise ValueErr(meta, e.args[0])
+                raise Error(meta, e.args[0])
             self._nbhd_assigned = True
         else:
             # directives are more like comments than they are source
@@ -197,12 +197,12 @@ class Preprocess(Transformer):
         initial, resultant = children.pop(0), children.pop(-1)
         try:
             initial = self.kill_string(initial, meta)
-        except ReferenceErr as e:
-            raise ReferenceErr((meta.line, meta.column, meta.column + len(str(initial))), e.msg)
+        except UndefinedErr as e:
+            raise UndefinedErr((meta.line, meta.column, meta.column + len(str(initial))), e.msg)
         try:
             resultant = self.kill_string(resultant, meta)
-        except ReferenceErr as e:
-            raise ReferenceErr((meta.line, meta.end_column - len(str(resultant)), meta.end_column), e.msg)
+        except UndefinedErr as e:
+            raise UndefinedErr((meta.line, meta.end_column - len(str(resultant)), meta.end_column), e.msg)
         if hasattr(self._tbl.symmetries, 'special'):
             seq = [self.unravel_permute(i, meta) for i in children]
             try:
@@ -287,7 +287,7 @@ class Preprocess(Transformer):
                     
                     for i in crange:
                         if i in napkin:
-                            raise ValueErr(
+                            raise Error(
                               fix(first.meta),
                               'Compass-direction range contains duplicate '
                               '(i.e. contains at least one compass direction used elsewhere in this transition)'
@@ -306,7 +306,7 @@ class Preprocess(Transformer):
                   self.vars['any']
                   ))
             if len(napkin) != self._tbl.trlen:
-                raise ValueErr(
+                raise Error(
                   (meta.line, children[0].meta.column, children[-1].meta.end_column),
                   f"Bad transition length for {self.directives['neighborhood']} neighborhood "
                   f'(expected {2+self._tbl.trlen} terms, got {2+len(napkin)})'
@@ -513,7 +513,7 @@ class Preprocess(Transformer):
         try:
             func = inline_rulestring.funcs.get(modifier, None) or getattr(import_module(imp[0]), imp[1])
         except (ImportError, ModuleNotFoundError):
-            raise ValueErr(meta, f"Unknown modifier '{modifier}'")
+            raise UndefinedErr(meta, f"Unknown modifier '{modifier}'")
         return func, {
           'rulestring': str(rulestring),
           'fg': self.kill_string(foreground, meta),

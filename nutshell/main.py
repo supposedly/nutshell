@@ -7,6 +7,7 @@ from ergo.misc import ErgoNamespace
 
 from nutshell import segmentor, compiler, tools
 from nutshell.common.utils import printq
+from nutshell.common.errors import NutshellException
 from nutshell.cli import cli
 
 
@@ -45,7 +46,7 @@ def write_rule(**kwargs):
         pass
 
 
-def main():
+def _main():
     inp = cli \
       .prepare(strict=True, propagate_unknowns=True) \
       .set_defaults(quiet=False) \
@@ -58,3 +59,10 @@ def main():
         res = tools.dispatch(inp.icon)
     for val in res:
         printq(*val, sep='\n')
+
+
+def main():
+    try:
+        _main()
+    except NutshellException as e:
+        raise SystemExit(e.code)

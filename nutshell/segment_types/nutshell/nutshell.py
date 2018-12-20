@@ -2,7 +2,7 @@ import re
 from itertools import count
 from collections.abc import MutableSequence
 
-from nutshell.common.errors import ValueErr
+from nutshell.common.errors import Error
 
 
 class NutshellSegment(MutableSequence):
@@ -54,9 +54,9 @@ class NutshellSegment(MutableSequence):
                         taken.add(int(state))
                     continue
                 if name in self.constants:
-                    raise ValueErr(lno, f'Duplicate constant {name!r}')
+                    raise Error(lno, f'Duplicate constant {name!r}')
                 if name in invalid:
-                    raise ValueErr(lno, f'Invalid (reserved) constant name {name!r}')
+                    raise Error(lno, f'Invalid (reserved) constant name {name!r}')
                 else:
                     if state:
                         self.constants[name] = int(state)

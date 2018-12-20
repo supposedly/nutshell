@@ -57,11 +57,11 @@ class Icon:
         return self._fill * pre + [self._fix_two(f"{f'{line:.<{max_len}}':.^{2*self.height}}") for line in self._split] + self._fill * post
 
 
-class IconArray:
+class IconSegment:
     _rDIMS = re.compile(r'\s*x\s*=\s*(\d+),\s*y\s*=\s*(\d+)')
     _rCOLOR = re.compile(r'(\d+:\s*|[.A-Z]\s+|[p-y][A-O]\s+)(\d{0,3}\s+\d{0,3}\s+\d{0,3}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{3}).*')
     
-    def __init__(self, segment, start=0, *, dep: ['@COLORS', '@TABLE', '@NUTSHELL'] = None):
+    def __init__(self, segment, start=0, *, dep: ['@COLORS', '@TABLE', '@NUTSHELL'] = (None, None, None)):
         self._src = segment
         self._set_states = None
         self._fill_gradient = None
@@ -151,9 +151,9 @@ class IconArray:
                     if word.isdigit():
                         state = int(word)
                         if not 0 < state < 256:
-                            raise ValueErr(last_comment_lno, f'Icon declared for invalid state {state}')
+                            raise Error(last_comment_lno, f'Icon declared for invalid state {state}')
                         if state in states:
-                            raise ValueErr(last_comment_lno, f'State {state} has already been assigned an icon')
+                            raise Error(last_comment_lno, f'State {state} has already been assigned an icon')
                         cur_states.add(state)
                     elif word in self._vars:
                         cur_states.update(self._vars[word])
@@ -179,7 +179,7 @@ class IconArray:
                 color = self._color_segment[state]
             except (KeyError, TypeError):  # (state not present, @COLORS is None)
                 if self._fill_gradient is None:
-                    raise ReferenceErr(None,
+                    raise UndefinedErr(None,
                       f'No icon available for state {state}. '
                       'To change this, either (a) define an icon for it in @ICONS, '
                       '(b) define a color for it in non-golly @COLORS to be filled in as a solid square, '

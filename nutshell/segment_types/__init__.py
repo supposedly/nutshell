@@ -1,4 +1,4 @@
 from .colors import ColorSegment
-from .icons import IconArray
-from .table import Table
+from .icons import IconSegment
+from .table import TableSegment
 from .nutshell import NutshellSegment

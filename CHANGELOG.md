@@ -2,8 +2,8 @@
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 
-## [0.6.0] - Hypothetical
-## Planned
+## [0.6.0] - Planned
+### Planned
 - A complete overhaul of symmetries and neighborhoods such that:
   - Such transformations as reflection and rotation are handled from the *neighborhood* rather than the symmetry type
   - Nutshell, given the compass directions composing a neighborhood, automatically determines what standard transformations
@@ -15,6 +15,18 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 - Neighborhood-switching, a la symmetry-switching
 - A `prune` macro
 - More modifiers, e.g. Langton's Ant and Deficient/genext -- also hex (although hex symmetries are scary)
+
+
+## [0.5.1] - 2018-12-19
+Making Nutshell a bit friendlier to use as a Python module rather than a CLI tool.
+### Changed
+- Some error names: `ValueErr` to `Error` and `ReferenceErr` to `UndefinedErr`. This is the only outwardly-visible change.
+- Names of segment-wrapping classes, so that they all follow the format "SomethingSegment".
+### Fixed
+- The `dep` kwarg of segment-wrapping classes' `__init__()`s is now given a proper default (tuple of `None`s, not just one `None`)
+  to avoid TypeError-None-is-not-iterable errors on external instantiation.
+### Planned
+- No more special-casing of `@TABLE` -- it should follow the `__iter__()` API all the other segments use.
 
 ## [0.5.0] - 2018-12-17
 General upgrades. The biggest changes were to `@ICONS` and `@COLORS`' handling of... everything, but

@@ -1,6 +1,6 @@
 import inspect
 
-from .segment_types import NutshellSegment, Table, ColorSegment, IconArray
+from .segment_types import NutshellSegment, TableSegment, ColorSegment, IconSegment
 from .common import errors, utils
 
 
@@ -13,12 +13,12 @@ def seg(name, modifiers, cls=None, *, include_bare=True):
     return base + [(f'{name}:{modifier}', cls) for modifier in modifiers]
 
 
-Table.hush = False  # a little bit eh but :shrug:
+TableSegment.hush = False  # a little bit eh but :shrug:
 CONVERTERS = [
   *seg('NUTSHELL', NutshellSegment),
-  *seg('TABLE', Table),
+  *seg('TABLE', TableSegment),
   *seg('COLORS', ColorSegment),
-  *seg('ICONS', (7, 15, 31), IconArray),
+  *seg('ICONS', (7, 15, 31), IconSegment),
   ]
 
 

@@ -175,11 +175,11 @@ def get_rs_cdir(reference, nb_count, letter, meta, *, idx=None):
     if letter is None:
         if nb_count == '0':
             if idx == 'FG':
-                raise ValueErr(meta, 'Reference to FG, but given rulestring includes 0, which has no foreground states')
+                raise Error(meta, 'Reference to FG, but given rulestring includes 0, which has no foreground states')
             return 'N'
         if nb_count == '8':
             if idx == 'BG':
-                raise ValueErr(meta, 'Reference to BG, but given rulestring includes 8, which has no background states')
+                raise Error(meta, 'Reference to BG, but given rulestring includes 8, which has no background states')
             return 'N'
         return 'N' if idx == 'FG' else hensel.CDIRS[int(nb_count)] if idx == 'BG' else '0'
     if idx == 'BG':

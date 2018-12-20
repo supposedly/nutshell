@@ -1,5 +1,7 @@
 """Errors to be raised during nutshell parsing."""
-class NutshellException(SystemExit):
+
+
+class NutshellException(Exception):
     def __init__(self, lno: int, msg: str, seg_name: str = None, segment: list = None, *, shift: int = 0):
         """
         lno: line number error occurred on
@@ -7,14 +9,14 @@ class NutshellException(SystemExit):
         seg: segment of rulefile error occurred in
         shift: line number seg starts on
         """
-        start = f'\n  {self.__class__.__name__}' if seg_name is None else f'\n  {self.__class__.__name__} in {seg_name}'
+        self.pre = f'\n  {self.__class__.__name__}' if seg_name is None else f'\n  {self.__class__.__name__} in {seg_name}'
         self.lno, self.span, self.msg = lno, None, msg
         self.shift = shift
         if isinstance(lno, tuple):
             self.lno, *self.span = lno
         if isinstance(segment, list):
             code = [
-              f'{start}, line {shift+self.lno}:',
+              f'{self.pre}, line {shift+self.lno}:',
               f'      {segment[self.lno-1]}'
               ]
             if self.span is not None:
@@ -24,7 +26,7 @@ class NutshellException(SystemExit):
             code.append(f'  {msg}')
         else:
             code = [
-              f'{start}:' if self.lno is None else f'{start}, line {shift+self.lno}:',
+              f'{self.pre}:' if self.lno is None else f'{self.pre}, line {shift+self.lno}:',
               f'      {msg}\n'
               ]
         self.lno = lno
@@ -34,7 +36,8 @@ class NutshellException(SystemExit):
 class Error(NutshellException):
     pass
 
-class ReferenceErr(NutshellException):
+
+class UndefinedErr(NutshellException):
     pass
 
 
@@ -42,13 +45,9 @@ class SyntaxErr(NutshellException):
     pass
 
 
-class ValueErr(NutshellException):
-    pass
-
-
 class UnsupportedFeature(NutshellException):
     pass
 
 
-class CoordOutOfBounds(ValueErr):
+class CoordOutOfBounds(NutshellException):
     pass
