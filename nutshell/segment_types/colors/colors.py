@@ -26,7 +26,7 @@ class ColorSegment(ColorMixin):
             states = self._sep_states(multisplit(states, (None, ',')))
             if '..' in color:
                 states = list(states)
-                crange = ColorRange(len(states), *(self.unpack(c.strip(), lno) for c in color.split('..')))
+                crange = ColorRange(len(states)-1, *(self.unpack(c.strip(), lno) for c in color.split('..')))
                 for state, color in zip(states, crange):
                     d[state] = self.unpack(color, lno)
                 continue

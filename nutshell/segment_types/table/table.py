@@ -117,11 +117,12 @@ class TableSegment:
         return self._src[item]
     
     def __iter__(self):
+        vars_valid = any(i.rep > -1 for i in self.vars)
         yield f"neighborhood: {self.directives['neighborhood']}"
         for directive, value in self.directives.items():
             if directive != 'neighborhood':
                 yield f'{directive}: {value}'
-        if self.vars or self.final:  # if there are more things to yield
+        if vars_valid or self.final:  # if there are more things to yield
             yield ''
         for var, states in self.vars.items():
             if var.rep == -1:
@@ -131,7 +132,7 @@ class TableSegment:
             yield f'var {var.name}.0 = ' + f'{set(states)}'.replace(' ', '')
             for suf in range(1, 1+var.rep):
                 yield f'var {var.name}.{suf} = {var.name}.0'
-        if self.vars:  # if that loop ran
+        if vars_valid:  # if that loop ran
             yield ''
         yield from self._iter_final_transitions()
     
@@ -213,7 +214,10 @@ class TableSegment:
         self.vars[self.specials['live']] = StateList(range(1, self.n_states), context=None)
     
     def add_sym_type(self, name):
-        self.sym_types.add(symutils.get_sym_type(name))
+        try:
+            self.sym_types.add(symutils.get_sym_type(name))
+        except (ImportError, ModuleNotFoundError):
+            raise ImportError(f'No symmetry type {name!r} found')
     
     def add_macros(self, path):
         with open(path) as f:

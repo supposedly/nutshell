@@ -169,7 +169,8 @@ x = 9, y = 15, rule = bf
 2.7D$.8D$3D4A2D$2D5A2D$2D2A5D$2D2A5D$2D2A2D$2D2A2D$2D2A2D$2D2A5D$2D2A
 5D$2D5A2D$3D4A2D$.8D$2.7D!
 
-#C Right bracket; RBrack, NorthRBrack, WestRBrack, EastRBrack
+#C Right bracket
+#C RBrack, NorthRBrack, WestRBrack, EastRBrack
 x = 9, y = 15, rule = bf
 7D$8D$2D4A3D$2D5A2D$5D2A2D$5D2A2D$3.2D2A2D$3.2D2A2D$3.2D2A2D$5D2A2D$
 5D2A2D$2D5A2D$2D4A3D$8D$7D!

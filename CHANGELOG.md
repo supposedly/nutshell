@@ -16,6 +16,17 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 - A `prune` macro
 - More modifiers, e.g. Langton's Ant and Deficient/genext -- also hex (although hex symmetries are scary)
 
+## [0.5.4] - 2018-12-21
+### Changed
+- The output of `!expression` in `@TABLE` now includes the original expression alongside its result.
+### Fixed
+- Unrecognized symmetries now raise a Nutshell error rather than an uglier Python one.
+- Import-time esrrors in Python extension files, eg macros and symmetries, now do the same.
+- `TableSegment.__iter__()` no longer gives extraneous empty final lines when there are no variables/transitions.
+  (This had been half-implemented prior, but it failed to consider the case where there *are* variables defined,
+  just not used in the final Golly table)
+- Gradients in `@COLORS` now include the end color (I'd forgotten that I'd made my `ColorRange` class exclusive thereof)
+
 ## [0.5.3] - 2018-12-20
 ### Changed
 - `@ICONS` now obeys the "preserve comments" flag.

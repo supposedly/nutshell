@@ -124,7 +124,7 @@ class Preprocess(Transformer):
     
     @inline
     def print_var(self, meta, val):
-        print(self.kill_string(val, meta))
+        print(f"'{self._tbl[meta[0]-1].lstrip('!')}' => {tuple(self.kill_string(val, meta))}")
         raise Discard
     
     @inline
@@ -141,10 +141,13 @@ class Preprocess(Transformer):
     @inline
     def directive(self, meta, name, val):
         cmt_val = val
-        if '#' in val:  # since comments not handled otherwise
+        if '#' in val:  # since comments are not handled otherwise
             val = val[:val.index('#')].rstrip()
         if name == 'macros':
-            self._tbl.add_macros(val.translate(KILL_WS))
+            try:
+                self._tbl.add_macros(val.translate(KILL_WS))
+            except (Exception, SyntaxError) as e:
+                raise Error(meta, f'Error in Python macro file: {e}')
             raise Discard
         if name in self._tbl.available_macros:
             self._tbl.set_macro(meta, name, val)
@@ -159,13 +162,18 @@ class Preprocess(Transformer):
             try:
                 self._tbl.neighborhood = val
             except ValueError as e:
-                raise Error(meta, e.args[0])
+                raise Error(meta, str(e))
             self._nbhd_assigned = True
         else:
             # directives are more like comments than they are source
             self._tbl.comments[meta[0]] = f'#### {name}: {cmt_val}'
         if name == 'symmetries':
-            self._tbl.add_sym_type(val)
+            try:
+                self._tbl.add_sym_type(val)
+            except ImportError as e:
+                raise Error(meta, str(e))
+            except (Exception, SyntaxError) as e:
+                raise Error(meta, f'Error in Python symmetry file: {e}')
         raise Discard
     
     @inline

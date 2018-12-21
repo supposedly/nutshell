@@ -52,6 +52,8 @@ def find_min_sym_type(symmetries, tr_len):
 
 def get_sym_type(sym):
     if sym not in NAMES:
+        if '.' not in sym:
+            raise ImportError(f'No symmetry type {sym!r} found')
         name, clsname = sym.rsplit('.', 1)
         module = ext_symmetries if name == 'nutshell' else import_module(name.lstrip('_'))
         NAMES[sym] = getattr(module, clsname)
