@@ -5,6 +5,7 @@ from itertools import chain, filterfalse, takewhile, repeat
 import bidict
 
 from ._utils import maybe_double, SAFE_CHARS, SYMBOL_MAP
+from nutshell.cli import cli
 from nutshell.common.classes import TableRange, ColorMixin, ColorRange
 from nutshell.common.utils import random, multisplit
 from nutshell.common.errors import *
@@ -84,6 +85,7 @@ class IconSegment:
         self._fill_missing_states()
     
     def __iter__(self):
+        preserve_comments = cli.result.transpile.preserve_comments
         yield 'XPM'
         # /* width height num_colors chars_per_pixel */
         yield f'"{self._height} {len(self.icons)*self._height} {len(self.colormap)} 2"'
@@ -92,7 +94,8 @@ class IconSegment:
             yield f'"{maybe_double(symbol)} c #{color}"'
         # /* icons */
         for state in sorted(self.icons):
-            yield from map('/* {} */'.format, self._comments.get(state, []))
+            if preserve_comments:
+                yield from map('/* {} */'.format, self._comments.get(state, []))
             yield f'/* icon for state {state} */'
             yield from map('"{}"'.format, self.icons[state])
     
@@ -136,8 +139,8 @@ class IconSegment:
         states, comments, dims = {}, {}, {}
         cur_states, cur_comments = set(), []
         last_comment, last_comment_lno = None, 0
-        seq = self._src[start-1:] if self._nutshell is None else self._nutshell.replace_iter(self._src[start-1:])
-        for lno, line in enumerate(map(str.strip, seq), start):
+        replace_constants = (lambda x: x) if self._nutshell is None else self._nutshell.replace_line
+        for lno, line in enumerate(map(str.strip, self._src[start-1:]), start):
             if not line:
                 continue
             if line.startswith('#'):
@@ -147,7 +150,7 @@ class IconSegment:
             if last_comment_lno:
                 *cur_comments, last_comment = cur_comments
                 cur_states = set()
-                for word in multisplit(last_comment, (None, ',')):
+                for word in multisplit(replace_constants(last_comment), (None, ',')):
                     if word.isdigit():
                         state = int(word)
                         if not 0 < state < 256:

@@ -29,7 +29,5 @@ def compile(parsed):
     with suppress(KeyError):
         _handle_rule(rulefile, '@NUTSHELL' in parsed, parsed.pop('@NUTSHELL', parsed.pop('@RULE', None)))
     for label, segment in parsed.items():
-        if isinstance(segment, list):
-            segment = [i for j in segment for i in j]
         rulefile.extend(('', label, *segment))
     return '\n'.join(rulefile) + '\n'

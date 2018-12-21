@@ -16,6 +16,14 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 - A `prune` macro
 - More modifiers, e.g. Langton's Ant and Deficient/genext -- also hex (although hex symmetries are scary)
 
+## [0.5.3] - 2018-12-20
+### Changed
+- `@ICONS` now obeys the "preserve comments" flag.
+### Fixed
+- Unrecognized segments are now once again transpiled as is, not with a single character on each line.
+  (Bug introduced in v0.5.0)
+- `@ICONS` no longer substitutes cellstates for constants' names that occur *before* a final pre-RLE comment.
+
 ## [0.5.2] - 2018-12-19
 ### Changed
 - Made `TableSegment.comments` store its values as strings rather than as Lark's Token objects

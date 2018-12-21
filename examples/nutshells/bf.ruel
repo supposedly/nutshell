@@ -2,124 +2,122 @@
 
 Brainfuck.
 
- 0: Vacuum
+: +  {Plus}
+: -  {Minus}
+: ]  {RBrack}
+: [  {LBrack}
+: <  {LAngle}
+: >  {RAngle}
+: .  {Dot}
+: ,  {Comma}
 
- 1: +  {PLUS}
- 2: -  {MINUS}
- 3: ]  {R_BRACK}
- 4: [  {L_BRACK}
- 5: <  {L_ANGLE}
- 6: >  {R_ANGLE}
- 7: .  {DOT}
- 8: ,  {COMMA}
+: Plain pointer  {Pointer}
+: Pointer +  {PointerPlus}
+: Pointer -  {PointerMinus}
+: Pointer [  {PointerRBrack}
+: Pointer <  {PointerLAngle}
+: Pointer >  {PointerRAngle}
+: Pointer .  {PointerDot}
+: Pointer ,  {PointerComma}
+: Westbound backtracking pointer  {WestPointer}
 
- 9: Plain pointer  {POINTER}
-10: Pointer +  {POINTER_PLUS}
-11: Pointer -  {POINTER_MINUS}
-12: Pointer [  {POINTER_R_BRACK}
-13: Pointer <  {POINTER_L_ANGLE}
-14: Pointer >  {POINTER_R_ANGLE}
-15: Pointer .  {POINTER_DOT}
-16: Pointer ,  {POINTER_COMMA}
-17: Westbound backtracking pointer  {WEST_POINTER}
+: Northbound no-op {NorthNOP}
 
-18: Northbound no-op {NORTH_NOP}
+: Northbound +  {NorthPlus}
+: Northbound -  {NorthMinus}
+: Northbound ]  {NorthRBrack}
+: Northbound <  {NorthLAngle}
+: Northbound >  {NorthRAngle}
+: Northbound .  {NorthDot}
+: Northbound ,  {NorthComma}
 
-19: Northbound +  {NORTH_PLUS}
-20: Northbound -  {NORTH_MINUS}
-21: Northbound ]  {NORTH_R_BRACK}
-22: Northbound <  {NORTH_L_ANGLE}
-23: Northbound >  {NORTH_R_ANGLE}
-24: Northbound .  {NORTH_DOT}
-25: Northbound ,  {NORTH_COMMA}
+: Westbound +  {WestPlus}
+: Westbound -  {WestMinus}
+: Westbound ]  {WestRBrack}
+: Westbound <  {WestLAngle}
+: Westbound >  {WestRAngle}
+: Westbound .  {WestDot}
+: Westbound ,  {WestComma}
 
-26: Westbound +  {WEST_PLUS}
-27: Westbound -  {WEST_MINUS}
-28: Westbound ]  {WEST_R_BRACK}
-29: Westbound <  {WEST_L_ANGLE}
-30: Westbound >  {WEST_R_ANGLE}
-31: Westbound .  {WEST_DOT}
-32: Westbound ,  {WEST_COMMA}
+: Eastbound +  {EastPlus}
+: Eastbound -  {EastMinus}
+: Eastbound ]  {EastRBrack}
+: Eastbound <  {EastLAngle}
+: Eastbound >  {EastRAngle}
+: Eastbound .  {EastDot}
+: Eastbound ,  {EastComma}
 
-33: Eastbound +  {EAST_PLUS}
-34: Eastbound -  {EAST_MINUS}
-35: Eastbound ]  {EAST_R_BRACK}
-36: Eastbound <  {EAST_L_ANGLE}
-37: Eastbound >  {EAST_R_ANGLE}
-38: Eastbound .  {EAST_DOT}
-39: Eastbound ,  {EAST_COMMA}
+: Southbound ,  {SouthComma}
 
-40: Southbound ,  {SOUTH_COMMA}
+: Eastward-pointing shadow cell  {EastShadow}
+: Westward-pointing shadow cell  {WestShadow}
 
-41: Eastward-pointing shadow cell  {EAST_SHADOW}
-42: Westward-pointing shadow cell  {WEST_SHADOW}
+: Westbound shadow +  {WestShadowPlus}
+: Westbound shadow -  {WestShadowMinus}
+: Westbound shadow ]  {WestShadowRBrack}
+: Westbound shadow <  {WestShadowLAngle}
+: Westbound shadow >  {WestShadowRAngle}
+: Westbound shadow .  {WestShadowDot}
+: Westbound shadow ,  {WestShadowComma}
 
-43: Westbound shadow +  {WEST_SHADOW_PLUS}
-44: Westbound shadow -  {WEST_SHADOW_MINUS}
-45: Westbound shadow ]  {WEST_SHADOW_R_BRACK}
-46: Westbound shadow <  {WEST_SHADOW_L_ANGLE}
-47: Westbound shadow >  {WEST_SHADOW_R_ANGLE}
-48: Westbound shadow .  {WEST_SHADOW_DOT}
-49: Westbound shadow ,  {WEST_SHADOW_COMMA}
+: Eastbound shadow +  {EastShadowPlus}
+: Eastbound shadow -  {EastShadowMinus}
+: Eastbound shadow ]  {EastShadowRBrack}
+: Eastbound shadow <  {EastShadowLAngle}
+: Eastbound shadow >  {EastShadowRAngle}
+: Eastbound shadow .  {EastShadowDot}
+: Eastbound shadow ,  {EastShadowComma}
 
-50: Eastbound shadow +  {EAST_SHADOW_PLUS}
-51: Eastbound shadow -  {EAST_SHADOW_MINUS}
-52: Eastbound shadow ]  {EAST_SHADOW_R_BRACK}
-53: Eastbound shadow <  {EAST_SHADOW_L_ANGLE}
-54: Eastbound shadow >  {EAST_SHADOW_R_ANGLE}
-55: Eastbound shadow .  {EAST_SHADOW_DOT}
-56: Eastbound shadow ,  {EAST_SHADOW_COMMA}
+: Pointer delay state  {DelayedPointer}
 
-57: Pointer delay state  {DELAYED_POINTER}
+: Data pointer    {DataPointer}
+: Data-pointer +  {DataPointerPlus} == "data-output prompter"
+: Data-pointer -  {DataPointerMinus}
+: Data-pointer ]  {DataPointerRBrack}
+: Data-pointer <  {DataPointerLAngle}
+: Data-pointer >  {DataPointerRAngle}
+: Data-pointer .  {DataPointerDot}
+: Data-pointer ,  {DataPointerComma}
 
-58: Data pointer    {DATA_POINTER}
-59: Data-pointer +  {DATA_POINTER_PLUS} == "data-output prompter"
-60: Data-pointer -  {DATA_POINTER_MINUS}
-61: Data-pointer ]  {DATA_POINTER_R_BRACK}
-62: Data-pointer <  {DATA_POINTER_L_ANGLE}
-63: Data-pointer >  {DATA_POINTER_R_ANGLE}
-64: Data-pointer .  {DATA_POINTER_DOT}
-65: Data-pointer ,  {DATA_POINTER_COMMA}
+:          {Data}  Data
+:       {DataOut}  Data turned output signal; reverts to data on next generation
+:  {FinalDataOut}  Data-born output signal that will not extend westward anymore
+:       {ZeroOut}  Vacuum turned output signal; reverts to vacuum on next
+:  {FinalZeroOut}  Vacuum-born output signal that will not extend westward anymore
 
-66:           {DATA}  Data
-67:       {DATA_OUT}  Data turned output signal; reverts to data on next generation
-68: {FINAL_DATA_OUT}  Data-born output signal that will not extend westward anymore
-69:       {ZERO_OUT}  Vacuum turned output signal; reverts to vacuum on next
-70: {FINAL_ZERO_OUT}  Vacuum-born output signal that will not extend westward anymore
+:  {DataPlus}  Plus sign (incrementor) moving through data
+: {DataMinus}  Minus sign (decrementor) moving through data
 
-71:  {DATA_PLUS}  Plus sign (incrementor) moving through data
-72: {DATA_MINUS}  Minus sign (decrementor) moving through data
+: Second pointer delay state  {DelayedPointer2}  (down here b/c poor planning lol)
 
-73: Second pointer delay state  {DELAYED_POINTER_2}  (down here b/c poor planning lol)
+: eastbound YES signal   {EastLoop} (not 0, keep looping) from data pointer after testing for r-bracket 
+: westbound YES signal   {WestLoop}
+: southbound YES signal  {SouthLoop}
+: eastbound NO signal    {EastBreak} (is 0, continue)
+: westbound NO signal    {WestBreak}
+: southbound NO signal   {SouthBreak}
+: west shadow holding southbound NO   {WestShadowBreak}
+: west shadow holding southbound YES  {WestShadowLoop}
+: east shadow holding southound NO    {EastShadowBreak}
+: east shadow holding southbound YES  {EastShadowLoop}
 
-74: eastbound YES signal   {EAST_LOOP} (not 0, keep looping) from data pointer after testing for r-bracket 
-75: westbound YES signal   {WEST_LOOP}
-76: southbound YES signal  {SOUTH_LOOP}
-77: eastbound NO signal    {EAST_BREAK} (is 0, continue)
-78: westbound NO signal    {WEST_BREAK}
-79: southbound NO signal   {SOUTH_BREAK}
-80: west shadow holding southbound NO   {WEST_SHADOW_BREAK}
-81: west shadow holding southbound YES  {WEST_SHADOW_LOOP}
-82: east shadow holding southound NO    {EAST_SHADOW_BREAK}
-83: east shadow holding southbound YES  {EAST_SHADOW_LOOP}
+: Input                 {NorthInput}
+: Input head            {InputHead}, which covers the input tape & directs input toward the data pointer
+: Input traveling east  {EastInput}
 
-84: Input                 {NORTH_INPUT}
-85: Input head            {INPUT_HEAD}, which covers the input tape & directs input toward the data pointer
-86: Input traveling east  {EAST_INPUT}
+: misc state {Blank1}
+: misc state {Blank2}
+: eastbound misc state  {BlankEast}
 
-87: misc state {BLANK_1}
-88: misc state {BLANK_2}
-89: eastbound misc state  {BLANK_EAST}
-
-90: blank input  {INPUT_0}
-91: {FRESH_INPUT} "Uninitialized" input data; this is only here for ease of storage in RLE format,
+: blank input  {Input0}
+: {FreshInput} "Uninitialized" input data; this is only here for ease of storage in RLE format,
     because otherwise the vertical input tape is very unfriendly to Golly. It moves diagonally to
     the southeast until there’s something above it
-92: {FRESH_0}  Uninitialized \x00 input, same as above
-93: {FRESH_INPUT_HEAD} Uninitialized input head, same as above
+: {FreshInput0}  Uninitialized \x00 input, same as above
+: {FreshInputHead} Uninitialized input head, same as above
 
-94: Yet another pointer delay state just to absolutely be sure of no timing conflicts  {DELAYED_POINTER_3}
-95: Loop-skipping pointer  {POINTER_SKIP} (antithesis to WEST_POINTER)
+: Yet another pointer delay state just to absolutely be sure of no timing conflicts  {DelayedPointer3}
+: Loop-skipping pointer  {PointerSkip} (opposite of WestPointer)
 
 
 + To use:
@@ -145,14 +143,14 @@ Brainfuck.
 
 @COLORS
 000: 0
-FFF: FINAL_ZERO_OUT  # can't do 000, golly uses it for transparency
-FF0: INPUT_HEAD, FRESH_INPUT_HEAD
+FFF: FinalZeroOut
+FF0: InputHead, FreshInputHead
 
 
 @ICONS
 ?  0FF .. FFF
 0:  000
-1:  FFF
+1:  FDF
 2:  0A0
 3:  C00
 4:  777
@@ -160,276 +158,276 @@ FF0: INPUT_HEAD, FRESH_INPUT_HEAD
 6:  0AB
 
 #C empty space/shadow
-#C NORTH_NOP, EAST_SHADOW..EAST_SHADOW_COMMA, WEST_SHADOW_BREAK..EAST_SHADOW_LOOP, BLANK_1..BLANK_EAST
+#C NorthNOP, EastShadow..EastShadowComma, WestShadowBreak..EastShadowLoop, Blank1..BlankEast
 x = 13, y = 13, rule = bf
 3.7A$.3A5D3A$.A9DA$2A2D.3D.2D2A$A2D3.D3.2DA$A3D5.3DA$A4D3.4DA$A3D5.3D
 A$A2D3.D3.2DA$2A2D.3D.2D2A$.A9DA$.3A5D3A$3.7A!
 
 #C Left bracket
-#C L_BRACK
+#C LBrack
 x = 9, y = 15, rule = bf
 2.7D$.8D$3D4A2D$2D5A2D$2D2A5D$2D2A5D$2D2A2D$2D2A2D$2D2A2D$2D2A5D$2D2A
 5D$2D5A2D$3D4A2D$.8D$2.7D!
 
-#C Right bracket; R_BRACK, NORTH_R_BRACK, WEST_R_BRACK, EAST_R_BRACK
+#C Right bracket; RBrack, NorthRBrack, WestRBrack, EastRBrack
 x = 9, y = 15, rule = bf
 7D$8D$2D4A3D$2D5A2D$5D2A2D$5D2A2D$3.2D2A2D$3.2D2A2D$3.2D2A2D$5D2A2D$
 5D2A2D$2D5A2D$2D4A3D$8D$7D!
 
 #C Plus sign
-#C PLUS, NORTH_PLUS, WEST_PLUS, EAST_PLUS 
+#C Plus, NorthPlus, WestPlus, EastPlus 
 x = 15, y = 15, rule = bf
 5.5D$4.7D$4.2D3A2D$4.2D3A2D$.5D3A5D$6D3A6D$2D11A2D$2D11A2D$2D11A2D$6D
 3A6D$.5D3A5D$4.2D3A2D$4.2D3A2D$4.7D$5.5D!
 
 #C Minus sign
-#C MINUS, NORTH_MINUS, WEST_MINUS, EAST_MINUS
+#C Minus, NorthMinus, WestMinus, EastMinus
 x = 15, y = 7, rule = bf
 .13D$15D$2D11A2D$2D11A2D$2D11A2D$15D$.13D!
 
 #C Left angle bracket
-#C L_ANGLE, NORTH_L_ANGLE, WEST_L_ANGLE, EAST_L_ANGLE
+#C LAngle, NorthLAngle, WestLAngle, EastLAngle
 x = 15, y = 13, rule = bf
 10.5D$8.7D$6.5D2A2D$4.5D4A2D$2.5D4A4D$5D4A6D$3D4A6D$5D4A6D$2.5D4A4D$
 4.5D4A2D$6.5D2A2D$8.7D$10.5D!
 
 #C Right angle bracket
-#C R_ANGLE, NORTH_R_ANGLE, WEST_R_ANGLE, EAST_R_ANGLE
+#C RAngle, NorthRAngle, WestRAngle, EastRAngle
 x = 15, y = 13, rule = bf
 5D$7D$2D2A5D$2D4A5D$4D4A5D$6D4A5D$2.6D4A3D$6D4A5D$4D4A5D$2D4A5D$2D2A
 5D$7D$5D!
 
 #C Comma
-#C COMMA, NORTH_COMMA, WEST_COMMA, EAST_COMMA, SOUTH_COMMA
+#C Comma, NorthComma, WestComma, EastComma, SouthComma
 x = 13, y = 15, rule = bf
 2.9D$.11D$3D7A3D$2D9A2D$2D9A2D$2D9A2D$2D9A2D$2D9A2D$3D8A2D$.6D4A2D$3.
 4D4A2D$.5D4A3D$.2D6A4D$.11D$2.9D!
 
 #C Period
-#C DOT, NORTH_DOT, WEST_DOT, EAST_DOT
+#C Dot, NorthDot, WestDot, EastDot
 x = 13, y = 13, rule = bf
 4.5D$2.9D$.4D3A4D$.2D7A2D$3D7A3D$2D9A2D$2D9A2D$2D9A2D$3D7A3D$.2D7A2D$
 .4D3A4D$2.9D$4.5D!
 
 #C "V" shape; instruction pointer
-#C POINTER..WEST_POINTER, POINTER_SKIP
+#C Pointer..WestPointer, PointerSkip
 x = 11, y = 12, rule = bf
 4A3.4A$4A3.4A$5A.5A$.4A.4A$.9A$2.7A$2.7A$3.5A$3.5A$4.3A$4.3A$5.A!
 
 #C Darker "V" shape; delayed pointer
-#C DELAYED_POINTER, DELAYED_POINTER_2, DELAYED_POINTER_3
+#C DelayedPointer, DelayedPointer2, DelayedPointer3
 x = 11, y = 12, rule = bf
 4D3.4D$4D3.4D$5D.5D$.4D.4D$.9D$2.7D$2.7D$3.5D$3.5D$4.3D$4.3D$5.D!
 
 #C Data pointer
-#C DATA_POINTER..DATA_POINTER_COMMA
+#C DataPointer..DataPointerComma
 x = 11, y = 11, rule = bf
 4.3E$4.3E$3.5E$3.5E$2.7E$2.7E$.9E$.4E.4E$5E.5E$4E3.4E$4E3.4E!
 
 #C Inert data
-#C DATA
+#C Data
 x = 13, y = 13, rule = bf
 7.4E$6.6E$5.8E$4.9E$3.10E$2.11E$.11E$11E$10E$9E$8E$.6E$2.4E!
 
 #C Active forward-moving data
-#C DATA_OUT, FINAL_DATA_OUT, DATA_PLUS
+#C DataOut, FinalDataOut, DataPlus
 x = 14, y = 14, rule = bf
 5.9C$4.10C$4.2C6A2C$4.3C5A2C$4.4C4A2C$3.4C5A2C$2.4C3AC2A2C$.4C3A3CA2C
 $4C3A7C$3C3A7C$3C2A4C$8C$.6C$2.4C!
 
 #C Active backward-moving data
-#C DATA_MINUS
+#C DataMinus
 x = 14, y = 14, rule = bf
 8.4F$7.6F$6.8F$5.4F2A3F$.7F3A3F$7F3A4F$2FA3F3A4F$2F2AF3A4F$2F5A4F$2F
 4A4F$2F5A3F$2F6A2F$10F$9F!
 
 
 #C Check mark ('yes', aka 'loop')
-#C EAST_LOOP..SOUTH_LOOP
+#C EastLoop..SouthLoop
 x = 13, y = 13, rule = bf
 13B$13B$11BAB$10B2AB$9B3AB$8B3A2B$2BA4B3A3B$2B2A2B3A4B$2B6A5B$3B4A6B$
 4B2A7B$13B$13B!
 
 #C X sign ('no', aka 'break')
-#C EAST_BREAK..SOUTH_BREAK
+#C EastBreak..SouthBreak
 x = 13, y = 13, rule = bf
 13C$C2A7C2AC$C3A5C3AC$2C3A3C3A2C$3C3AC3A3C$4C5A4C$5C3A5C$4C5A4C$3C3AC
 3A3C$2C3A3C3A2C$C3A5C3AC$C2A7C2AC$13C!
 
 #C Digit zero
-#C INPUT_0, FRESH_0
+#C Input0, FreshInput0
 x = 9, y = 13, rule = bf
 2.5C$.C5AC$C7AC$C2A3C2AC$C2A2C3AC$C2AC4AC$C7AC$C4AC2AC$C3A2C2AC$C2A3C
 2AC$C7AC$.C5AC$2.5C!
 
 
 @TABLE
-anyPrgm = (PLUS..COMMA)
-prgm = anyPrgm - (L_BRACK, R_BRACK)
+anyPrgm = (Plus..Comma)
+prgm = anyPrgm - (LBrack, RBrack)
 vac = (0, anyPrgm)
 
-northbound = (NORTH_PLUS..NORTH_COMMA)
-northboundNOP = (northbound, NORTH_NOP)
-pointerOps = (POINTER_PLUS..POINTER_COMMA) - POINTER_R_BRACK
-northboundOps = northbound - NORTH_R_BRACK
-westbound = (WEST_PLUS..WEST_COMMA)
-eastbound = (EAST_PLUS..EAST_COMMA)
+northbound = (NorthPlus..NorthComma)
+northboundNOP = (northbound, NorthNOP)
+pointerOps = (PointerPlus..PointerComma) - PointerRBrack
+northboundOps = northbound - NorthRBrack
+westbound = (WestPlus..WestComma)
+eastbound = (EastPlus..EastComma)
 
-westshadows = (WEST_SHADOW_PLUS..WEST_SHADOW_COMMA, WEST_SHADOW)
-eastshadows = (EAST_SHADOW_PLUS..EAST_SHADOW_COMMA, EAST_SHADOW)
+westshadows = (WestShadowPlus..WestShadowComma, WestShadow)
+eastshadows = (EastShadowPlus..EastShadowComma, EastShadow)
 
-datapointers = (DATA_POINTER_PLUS..DATA_POINTER_COMMA)
+datapointers = (DataPointerPlus..DataPointerComma)
 
-vacdata = (0, DATA)
-data = (DATA..DATA_MINUS)
+vacdata = (0, Data)
+data = (Data..DataMinus)
 
 # Move uninitialized input data into proper position
-(FRESH_INPUT, FRESH_0, FRESH_INPUT_HEAD), E live, SE..NE any; 0 -> SE[0]
-(FRESH_INPUT, FRESH_0, FRESH_INPUT_HEAD), N live, NE..NW any; [0: (NORTH_INPUT, INPUT_0, INPUT_HEAD)]
+(FreshInput, FreshInput0, FreshInputHead), E live, SE..NE any; 0 -> SE[0]
+(FreshInput, FreshInput0, FreshInputHead), N live, NE..NW any; [0: (NorthInput, Input0, InputHead)]
 
 #########################################################
 ##### INITIAL TELESCOPING OF BRACKET-ENCLOSED STUFF #####
 #########################################################
 
 # move program cell down if it has a closing bracket to its east
-(prgm, R_BRACK), E R_BRACK, SE..NW vac, N..NE 0; 0 -> S[0]
+(prgm, RBrack), E RBrack, SE..NW vac, N..NE 0; 0 -> S[0]
 
 # move program cell down if the cell to its east is below it
-(prgm, R_BRACK), SE anyPrgm, S..E vac; 0 -> S[0]
+(prgm, RBrack), SE anyPrgm, S..E vac; 0 -> S[0]
 
 ## (NOTE: The above two groups aren't even necessary but symmetry finishes sooner) ##
 
 # move program cell down if it has an opening bracket to its west
-(prgm, L_BRACK), W L_BRACK, any, 0, NE..SW vac; 0 -> S[0]
+(prgm, LBrack), W LBrack, any, 0, NE..SW vac; 0 -> S[0]
 
 # move program cell down if the cell to its west is below it
-(prgm, L_BRACK), SW anyPrgm, W..S vac; 0 -> S[0]
+(prgm, LBrack), SW anyPrgm, W..S vac; 0 -> S[0]
 
 # special-casing for ][, but could probably be handled above
-L_BRACK, E..SE vac, S 0, SW R_BRACK, W..NE 0; 0 -> S:L_BRACK
-R_BRACK, SE L_BRACK, 0, vac, vac, NW..E 0; 0 -> S:R_BRACK
+LBrack, E..SE vac, S 0, SW RBrack, W..NE 0; 0 -> S:LBrack
+RBrack, SE LBrack, 0, vac, vac, NW..E 0; 0 -> S:RBrack
 
 # if a bracket has nothing in its mouth, assume it needs to travel south
 # to catch up to a different level
 # In the same vein, spawn a bracket if there's an empty cell between a bracket (N) and
 # a prgm tape bit (SW/SE)
-L_BRACK, N..SW 0, W vac, NW vac; 0 -> S:L_BRACK
-R_BRACK, NE..E vac, SE..N 0; 0 -> S:R_BRACK
+LBrack, N..SW 0, W vac, NW vac; 0 -> S:LBrack
+RBrack, NE..E vac, SE..N 0; 0 -> S:RBrack
 
 # if the above happens, move the now-hanging-one-lvl-too-high prgm-tape data south
-prgm, E prgm, 0, 0, SW R_BRACK, 0, NW..NE 0; 0 -> S[0]  # ]x
-prgm, SE L_BRACK, 0, 0, W prgm, NW..E 0; 0 -> S[0]  # x[
+prgm, E prgm, 0, 0, SW RBrack, 0, NW..NE 0; 0 -> S[0]  # ]x
+prgm, SE LBrack, 0, 0, W prgm, NW..E 0; 0 -> S[0]  # x[
 
 
 ################
-##### DATA #####
+##### Data #####
 ################
 
 ### Data-pointer transformations ###
-DATA_POINTER, W eastbound, NW..SW any; [W: datapointers]
-DATA_POINTER, E westbound, SE..NE any; [E: datapointers]
+DataPointer, W eastbound, NW..SW any; [W: datapointers]
+DataPointer, E westbound, SE..NE any; [E: datapointers]
 # If a loaded shadow is directly below data pointer, pretend it's the same as a signal
-DATA_POINTER, S (westshadows-WEST_SHADOW, eastshadows-EAST_SHADOW), SW..SE any; [S: datapointers*2]
+DataPointer, S (westshadows-WestShadow, eastshadows-EastShadow), SW..SE any; [S: datapointers*2]
 
-DATA_POINTER_MINUS, N..NW any; DATA_POINTER -> N:DATA_MINUS
-DATA_POINTER_PLUS, N..NW (DATA, any-DATA); DATA_POINTER -> N[(DATA_PLUS, DATA, ...)]
-(DATA_POINTER_R_ANGLE, DATA_POINTER_L_ANGLE), N..NW any; 0 -> E[0: (DATA_POINTER, _)]  W[0: (_, DATA_POINTER)]
+DataPointerMinus, N..NW any; DataPointer -> N:DataMinus
+DataPointerPlus, N..NW (Data, any-Data); DataPointer -> N[(DataPlus, Data, ...)]
+(DataPointerRAngle, DataPointerLAngle), N..NW any; 0 -> E[0: (DataPointer, _)]  W[0: (_, DataPointer)]
 
 # Test to see whether there is data above the data pointer -- if yes, send back a LOOP signal ('keep looping'), and if no, send a BREAK ('stop looping')
-DATA_POINTER_R_BRACK, N 0, NE..SE any, S (0, WEST_SHADOW, EAST_SHADOW), SW..NW any; DATA_POINTER -> W[S: (_, WEST_SHADOW_BREAK, EAST_SHADOW_BREAK)]
-DATA_POINTER_R_BRACK, N live, NE..SE any, S (0, WEST_SHADOW, EAST_SHADOW), SW..NW any; DATA_POINTER -> W[S: (_, WEST_SHADOW_LOOP, EAST_SHADOW_LOOP)]
+DataPointerRBrack, N 0, NE..SE any, S (0, WestShadow, EastShadow), SW..NW any; DataPointer -> W[S: (_, WestShadowBreak, EastShadowBreak)]
+DataPointerRBrack, N live, NE..SE any, S (0, WestShadow, EastShadow), SW..NW any; DataPointer -> W[S: (_, WestShadowLoop, EastShadowLoop)]
 # we can't send a signal from north to south directly (would exceed lightspeed) so we put it to the west first as a two-step sort of thing; this does delay things by one gen however
-(WEST_SHADOW, EAST_SHADOW), NW (WEST_SHADOW_BREAK, EAST_SHADOW_BREAK, WEST_SHADOW_LOOP, EAST_SHADOW_LOOP), N DATA_POINTER, NE..W any; [NW] -> NW:0  W:0
+(WestShadow, EastShadow), NW (WestShadowBreak, EastShadowBreak, WestShadowLoop, EastShadowLoop), N DataPointer, NE..W any; [NW] -> NW:0  W:0
 # continue on
-WEST_R_BRACK, W DATA_POINTER, NW (0, data), N..SW any; [NW: (EAST_BREAK, EAST_LOOP, ...)]
-EAST_R_BRACK, NE (0, data), E DATA_POINTER, SE..N any; [NE: (WEST_BREAK, WEST_LOOP, ...)]
+WestRBrack, W DataPointer, NW (0, data), N..SW any; [NW: (EastBreak, EastLoop, ...)]
+EastRBrack, NE (0, data), E DataPointer, SE..N any; [NE: (WestBreak, WestLoop, ...)]
 
 # Reroute west-/eastbound yes/no signals to the south because we need to get them to the program-tape pointer
 # ((not relevant at all but i am so proud of how nutshell just takes this and spits out a working translation with no issue))
-(WEST_SHADOW, EAST_SHADOW), N (WEST_BREAK, EAST_BREAK, WEST_LOOP, EAST_LOOP), NE..NW any; [N: (WEST_SHADOW_BREAK, EAST_SHADOW_BREAK, WEST_SHADOW_LOOP, EAST_SHADOW_LOOP)] -> N:0  NW[N: (0, _, 0, _)]  NE[N: (_, 0, _, 0)]
-(WEST_SHADOW_BREAK, EAST_SHADOW_BREAK, WEST_SHADOW_LOOP, EAST_SHADOW_LOOP), N..NW any; [0: (EAST_SHADOW, WEST_SHADOW, EAST_SHADOW, WEST_SHADOW)] -> S[0: (SOUTH_BREAK, SOUTH_BREAK, SOUTH_LOOP, ...)]
+(WestShadow, EastShadow), N (WestBreak, EastBreak, WestLoop, EastLoop), NE..NW any; [N: (WestShadowBreak, EastShadowBreak, WestShadowLoop, EastShadowLoop)] -> N:0  NW[N: (0, _, 0, _)]  NE[N: (_, 0, _, 0)]
+(WestShadowBreak, EastShadowBreak, WestShadowLoop, EastShadowLoop), N..NW any; [0: (EastShadow, WestShadow, EastShadow, WestShadow)] -> S[0: (SouthBreak, SouthBreak, SouthLoop, ...)]
 
 # Finally, the r-brack receives the southbound yes/no signal from above
 # If it's BREAK ('yes'), delete the waiting pointer and move it up to where it can continue traveling
 # if it's LOOP ('no'), turn the waiting pointer into a westbound one to send it back to the appropriate l-brack
-R_BRACK, N (SOUTH_BREAK, SOUTH_LOOP), NE..NW any; [0] -> N[(POINTER_R_BRACK, 0)]  W[N: (0, WEST_POINTER)]
+RBrack, N (SouthBreak, SouthLoop), NE..NW any; [0] -> N[(PointerRBrack, 0)]  W[N: (0, WestPointer)]
 
-any, SW L_BRACK, W BLANK_1, NW..S any; NORTH_R_BRACK -> W:BLANK_2
-WEST_POINTER, W L_BRACK, NW..SE any, S (L_BRACK, prgm), SW any; [S: (BLANK_1, pointerOps)] -> W:L_BRACK
-WEST_POINTER, N..NW any; 0 -> W:WEST_POINTER  N:NORTH_NOP
+any, SW LBrack, W Blank1, NW..S any; NorthRBrack -> W:Blank2
+WestPointer, W LBrack, NW..SE any, S (LBrack, prgm), SW any; [S: (Blank1, pointerOps)] -> W:LBrack
+WestPointer, N..NW any; 0 -> W:WestPointer  N:NorthNOP
 
-(WEST_BREAK, WEST_LOOP), N..NW any; 0 -> W[0]
-(EAST_BREAK, EAST_LOOP), N..NW any; 0 -> E[0]
+(WestBreak, WestLoop), N..NW any; 0 -> W[0]
+(EastBreak, EastLoop), N..NW any; 0 -> E[0]
 
 # Input
 # make the comma signal stay put so the data pointer knows where to send the go-poll-for-input request (to have it reach the shadow cell)
-WEST_COMMA, E 0, SE..SW any, W DATA_POINTER, NW..NE any; BLANK_1  # just need a random nonmoving state
-EAST_COMMA, E DATA_POINTER, SE..SW any, W 0, NW..NE any; BLANK_2  # just need a random nonmoving state
+WestComma, E 0, SE..SW any, W DataPointer, NW..NE any; Blank1  # just need a random nonmoving state
+EastComma, E DataPointer, SE..SW any, W 0, NW..NE any; Blank2  # just need a random nonmoving state
 # when input is requested, get the data pointer to zero the current cell,
-DATA_POINTER_COMMA, N DATA, NE..NW any; [0] -> N:DATA_MINUS
-DATA_POINTER_COMMA, N 0, NE..NW any; DATA_POINTER  # blank cell's cue
+DataPointerComma, N Data, NE..NW any; [0] -> N:DataMinus
+DataPointerComma, N 0, NE..NW any; DataPointer  # blank cell's cue
 # then once done tell the shadow cell to go poll for input
 ## if nothing to south, send it in appropriate direction
-BLANK_1, W DATA_POINTER, NW 0, N..S any, SW 0; 0 -> S:EAST_COMMA
-BLANK_2, NE 0, E DATA_POINTER, SE 0, S..N any; 0 -> S:WEST_COMMA
+Blank1, W DataPointer, NW 0, N..S any, SW 0; 0 -> S:EastComma
+Blank2, NE 0, E DataPointer, SE 0, S..N any; 0 -> S:WestComma
 ## elif shadow cell to south, stay put and do something stupid to give it the signal regardless
 #### (this could be merged into the above transition but I'm lazy)
-DATA_POINTER_COMMA, N 0, NE..SE any, S (WEST_SHADOW, EAST_SHADOW), SW..NW any; DATA_POINTER -> SW:EAST_COMMA
+DataPointerComma, N 0, NE..SE any, S (WestShadow, EastShadow), SW..NW any; DataPointer -> SW:EastComma
 # Also have these misc cells not destroy the shadow if it's to their south
-(BLANK_1, BLANK_2), S WEST_SHADOW, SW..SE any; 0 -> S:WEST_SHADOW  SW:EAST_COMMA
-(BLANK_1, BLANK_2), S EAST_SHADOW, SW..SE any; 0 -> S:EAST_SHADOW  SW:EAST_COMMA
+(Blank1, Blank2), S WestShadow, SW..SE any; 0 -> S:WestShadow  SW:EastComma
+(Blank1, Blank2), S EastShadow, SW..SE any; 0 -> S:EastShadow  SW:EastComma
 ## shadow cell receiving go-poll-for-input signal: (none of those commas would ever appear above it otherwise so we can always assume this'll be the cause)
 ## on receiving the signal it stays put and sends a comma to the west to ask the input-tape head for its stuff
-(EAST_SHADOW, WEST_SHADOW), N..NE any, E WEST_COMMA, SE..SW any, W 0, any; [0] -> S:WEST_COMMA
-(EAST_SHADOW, WEST_SHADOW), N..NE any, E 0, SE..SW any, W EAST_COMMA, any; [0] -> S:WEST_COMMA
+(EastShadow, WestShadow), N..NE any, E WestComma, SE..SW any, W 0, any; [0] -> S:WestComma
+(EastShadow, WestShadow), N..NE any, E 0, SE..SW any, W EastComma, any; [0] -> S:WestComma
 # Input head doubles as data delimiter so have it move east appropriately to move data with
-INPUT_HEAD, N 0, NE NORTH_INPUT, E..NW any; 0 -> N:INPUT_HEAD  # if it's the next up
-0, (NORTH_INPUT, INPUT_0), NE..SE any, INPUT_HEAD, SW..NW any; INPUT_HEAD  # if it's farther down
-INPUT_HEAD, N INPUT_HEAD, NE..NW any; 0
+InputHead, N 0, NE NorthInput, E..NW any; 0 -> N:InputHead  # if it's the next up
+0, (NorthInput, Input0), NE..SE any, InputHead, SW..NW any; InputHead  # if it's farther down
+InputHead, N InputHead, NE..NW any; 0
 # Input head is otherwise invincible
-INPUT_HEAD, N..NW any; [0]
+InputHead, N..NW any; [0]
 # When the west comma finds the input head,
 # move the comma down one to let the input (if any) know it's there
-INPUT_HEAD, NE WEST_COMMA, E..N any; [0] -> N:0  E:WEST_COMMA
-INPUT_0, NE WEST_COMMA, E..N any; INPUT_HEAD
+InputHead, NE WestComma, E..N any; [0] -> N:0  E:WestComma
+Input0, NE WestComma, E..N any; InputHead
 # Move input up and then send it back to the shadow cell
-NORTH_INPUT, NE (WEST_COMMA, NORTH_INPUT), E..SE any, S..N any; 0 -> E:NORTH_INPUT
-NORTH_INPUT, W INPUT_HEAD, NW..SW any; 0 -> N:EAST_INPUT
-(NORTH_INPUT, INPUT_0), N..SE 0, S any, SW..NW any; 0 -> N[0]
+NorthInput, NE (WestComma, NorthInput), E..SE any, S..N any; 0 -> E:NorthInput
+NorthInput, W InputHead, NW..SW any; 0 -> N:EastInput
+(NorthInput, Input0), N..SE 0, S any, SW..NW any; 0 -> N[0]
 # When shadow cell receives eastbound input, relay it as an "inc" signal
-DATA_POINTER, S (WEST_SHADOW, EAST_SHADOW), SW EAST_INPUT, W..SE any; DATA_POINTER_PLUS
-(EAST_SHADOW, WEST_SHADOW), W EAST_INPUT, NW..SW any; [0] -> N[0: (EAST_PLUS, WEST_PLUS)]
+DataPointer, S (WestShadow, EastShadow), SW EastInput, W..SE any; DataPointerPlus
+(EastShadow, WestShadow), W EastInput, NW..SW any; [0] -> N[0: (EastPlus, WestPlus)]
 # When it receives the "we're done" signal, restore the program-tape pointer & send it on its way
-(EAST_SHADOW, WEST_SHADOW), W BLANK_EAST, NW..SW any; [0] -> S:SOUTH_COMMA
-0, W BLANK_1, NW SOUTH_COMMA, N..SE any, S L_BRACK, SW COMMA; BLANK_2 -> W:NORTH_R_BRACK  # emulate l-brack test from below
-BLANK_1, N SOUTH_COMMA, NE any, E (R_BRACK, prgm, 0), SE..NW vac; POINTER -> NE[E: (NORTH_R_BRACK, _, ...)]
+(EastShadow, WestShadow), W BlankEast, NW..SW any; [0] -> S:SouthComma
+0, W Blank1, NW SouthComma, N..SE any, S LBrack, SW Comma; Blank2 -> W:NorthRBrack  # emulate l-brack test from below
+Blank1, N SouthComma, NE any, E (RBrack, prgm, 0), SE..NW vac; Pointer -> NE[E: (NorthRBrack, _, ...)]
 # Also move eastbound input eastward
-EAST_INPUT, N..NW any; 0 -> E:EAST_INPUT
+EastInput, N..NW any; 0 -> E:EastInput
 # Send a "we're done" signal when there's no data or none left
-INPUT_HEAD, E (WEST_COMMA, NORTH_INPUT), SE..NE any; [0] -> SE:BLANK_1
+InputHead, E (WestComma, NorthInput), SE..NE any; [0] -> SE:Blank1
 # Move "we're done" signal
-BLANK_1, W 0, NW INPUT_HEAD, N..SW any; 0 -> N:BLANK_1
-BLANK_1, W INPUT_HEAD, NW 0, N..SW any; 0 -> N:BLANK_EAST
-BLANK_EAST, N..NW any; 0 -> E:BLANK_EAST
+Blank1, W 0, NW InputHead, N..SW any; 0 -> N:Blank1
+Blank1, W InputHead, NW 0, N..SW any; 0 -> N:BlankEast
+BlankEast, N..NW any; 0 -> E:BlankEast
 
 ### Actual handling of data ###
-DATA_POINTER_DOT, N..NW any; DATA_POINTER -> N[(0, _, ...)]  # don't output if there's nothing to output
+DataPointerDot, N..NW any; DataPointer -> N[(0, _, ...)]  # don't output if there's nothing to output
 # Output
-DATA, S DATA_POINTER_DOT, SW..SE any; DATA_OUT
-vacdata, E 0, SE any, S (ZERO_OUT, DATA_OUT), SW..NE any; [0: (FINAL_ZERO_OUT, FINAL_DATA_OUT)]
-(FINAL_ZERO_OUT, FINAL_DATA_OUT), N..NW (vacdata, any-vacdata); [0: vacdata] -> N[(FINAL_ZERO_OUT, FINAL_DATA_OUT, _, ...)]
+Data, S DataPointerDot, SW..SE any; DataOut
+vacdata, E 0, SE any, S (ZeroOut, DataOut), SW..NE any; [0: (FinalZeroOut, FinalDataOut)]
+(FinalZeroOut, FinalDataOut), N..NW (vacdata, any-vacdata); [0: vacdata] -> N[(FinalZeroOut, FinalDataOut, _, ...)]
 
-DATA_OUT, N..NW (vacdata, any-vacdata); DATA -> N[(ZERO_OUT, DATA_OUT, _, ...)]
-(ZERO_OUT, DATA_OUT), N..NW (vacdata, any-vacdata); [0: vacdata] -> N[(ZERO_OUT, DATA_OUT, _, ...)]  NE[(_, DATA_OUT, _, ...)]
+DataOut, N..NW (vacdata, any-vacdata); Data -> N[(ZeroOut, DataOut, _, ...)]
+(ZeroOut, DataOut), N..NW (vacdata, any-vacdata); [0: vacdata] -> N[(ZeroOut, DataOut, _, ...)]  NE[(_, DataOut, _, ...)]
 
 # inc/dec instructions
-DATA, SW DATA_MINUS, W..S any; [NE: (0, DATA_MINUS, ...)]
-vacdata, SW DATA_PLUS, W..S any; [0: (DATA, DATA_PLUS)]
-0, SW DATA_PLUS, W..S any; [NE: (DATA, DATA_PLUS, ...)]
+Data, SW DataMinus, W..S any; [NE: (0, DataMinus, ...)]
+vacdata, SW DataPlus, W..S any; [0: (Data, DataPlus)]
+0, SW DataPlus, W..S any; [NE: (Data, DataPlus, ...)]
 
-DATA_MINUS, SW 0, W..S any; [NE: (0, DATA, ...)]
-DATA_MINUS, NE 0, E..N any; 0
-(DATA_PLUS, DATA_MINUS), N..NW any; DATA
+DataMinus, SW 0, W..S any; [NE: (0, Data, ...)]
+DataMinus, NE 0, E..N any; 0
+(DataPlus, DataMinus), N..NW any; Data
 
 
 #######################
@@ -437,10 +435,10 @@ DATA_MINUS, NE 0, E..N any; 0
 #######################
 
 # If shadow is touching data pointer, flip direction before moving to it
-EAST_SHADOW, NW DATA_POINTER, N..W any; WEST_SHADOW
-WEST_SHADOW, NE DATA_POINTER, E..N any; EAST_SHADOW
-eastshadows, SE northboundNOP, S..NW any, N DATA_POINTER, NE..E any; 0 -> E[SE: westshadows]
-westshadows, SW northboundNOP, W..NW any, N DATA_POINTER, NE..S any; 0 -> W[SW: eastshadows]
+EastShadow, NW DataPointer, N..W any; WestShadow
+WestShadow, NE DataPointer, E..N any; EastShadow
+eastshadows, SE northboundNOP, S..NW any, N DataPointer, NE..E any; 0 -> E[SE: westshadows]
+westshadows, SW northboundNOP, W..NW any, N DataPointer, NE..S any; 0 -> W[SW: eastshadows]
 
 # If a northbound cell is coming at shadow from a corner, move toward it & load self with it
 eastshadows, SW northboundNOP, W..S any; 0 -> W[SW: eastshadows]
@@ -454,58 +452,58 @@ eastshadows, S northboundNOP, SW..SE any; [S: eastshadows]
 westshadows, S northboundNOP, SW..SE any; [S: westshadows]
 
 # A "loaded" shadow cell turns into a normal one and releases its signal
-eastshadows, N..NW any; EAST_SHADOW -> N[0: (eastbound, _)]
-westshadows, N..NW any; WEST_SHADOW -> N[0: (westbound, _)]
+eastshadows, N..NW any; EastShadow -> N[0: (eastbound, _)]
+westshadows, N..NW any; WestShadow -> N[0: (westbound, _)]
 
 # override northbound-signal transitions from ptr-movement section
-(EAST_SHADOW, WEST_SHADOW), N..NW any; [0]
+(EastShadow, WestShadow), N..NW any; [0]
 
 
 ############################
-##### POINTER MOVEMENT #####
+##### Pointer MOVEMENT #####
 ############################
 
 # Stop moving after reaching a comma or l-brack
-POINTER_COMMA, E (R_BRACK, vac), SE..NE any; BLANK_1 -> NE:0  # just needs a random non-moving state, so blank_1 works
+PointerComma, E (RBrack, vac), SE..NE any; Blank1 -> NE:0  # just needs a random non-moving state, so blank_1 works
 ## l-brack test stuff
-(POINTER, pointerOps), SE L_BRACK, S anyPrgm-COMMA, SW..E any; NORTH_R_BRACK -> E:BLANK_2  # send out a test signal
-NORTH_R_BRACK, N northbound, NE..NW any; BLANK_1 -> N:0
-(BLANK_1, BLANK_2), E BLANK_2, SE..NE any; [0: (BLANK_2, NORTH_R_BRACK)]
+(Pointer, pointerOps), SE LBrack, S anyPrgm-Comma, SW..E any; NorthRBrack -> E:Blank2  # send out a test signal
+NorthRBrack, N northbound, NE..NW any; Blank1 -> N:0
+(Blank1, Blank2), E Blank2, SE..NE any; [0: (Blank2, NorthRBrack)]
 ### for most cases:
-BLANK_2, NW (SOUTH_LOOP, SOUTH_BREAK), N..SE any, S L_BRACK, SW..W any; [NW: (POINTER, POINTER_SKIP)] -> W:0  N:NORTH_NOP
+Blank2, NW (SouthLoop, SouthBreak), N..SE any, S LBrack, SW..W any; [NW: (Pointer, PointerSkip)] -> W:0  N:NorthNOP
 ### and for when it's on an l-brack that's right after a first l-brack:
-BLANK_2, N (SOUTH_LOOP, SOUTH_BREAK), NE..SE any, S L_BRACK, SW..NW any; [N: (POINTER, POINTER_SKIP)]
+Blank2, N (SouthLoop, SouthBreak), NE..SE any, S LBrack, SW..NW any; [N: (Pointer, PointerSkip)]
 ### and one more edge case:
-BLANK_2, NE (SOUTH_LOOP, SOUTH_BREAK), E..SE any, S L_BRACK, SW..N any; [NE: (POINTER, POINTER_SKIP)] -> E:0
+Blank2, NE (SouthLoop, SouthBreak), E..SE any, S LBrack, SW..N any; [NE: (Pointer, PointerSkip)] -> E:0
 ## keep moving eastward till pointer_skip finds an r-brack
-POINTER_SKIP, SE (R_BRACK, 0), S..E any; 0 -> E[SE: (POINTER, POINTER_SKIP, ...)]  NE:NORTH_NOP
+PointerSkip, SE (RBrack, 0), S..E any; 0 -> E[SE: (Pointer, PointerSkip, ...)]  NE:NorthNOP
 # Also don't put out north-bound signals after hitting r-brack
-pointerOps, N..NE any, E R_BRACK, SE..NW any; POINTER -> NE:NORTH_R_BRACK
+pointerOps, N..NE any, E RBrack, SE..NW any; Pointer -> NE:NorthRBrack
 # But elsewhere do so as normal
-(POINTER, pointerOps), any, 0, vac, SE (L_BRACK, prgm), S..SW vac, (L_BRACK, vac), any; DELAYED_POINTER -> N[0: (_, northboundOps)]
-DELAYED_POINTER, N..NW any; DELAYED_POINTER_2
-DELAYED_POINTER_2, N..NW any; DELAYED_POINTER_3  # need 3 delay states to give data pointer breathing room from both sides
-DELAYED_POINTER_3, any, 0, vac, SE (L_BRACK, prgm), S..SW vac, (L_BRACK, vac), any; 0 -> E[SE: (POINTER, pointerOps)]
-L_BRACK, N POINTER, NE..E 0, SE (L_BRACK, prgm), S..NW any; L_BRACK -> N:NORTH_NOP  E[SE: (BLANK_2, pointerOps)]
-0, S BLANK_2, SW L_BRACK, W NORTH_NOP, NW..SE 0; NORTH_R_BRACK
-0, S NORTH_R_BRACK, SW 0, W NORTH_NOP, NW..SE any; NORTH_R_BRACK -> S:0
-# Replicate the above NE-output behavior if a bare pointer is on top of an R_BRACK with another to its east
+(Pointer, pointerOps), any, 0, vac, SE (LBrack, prgm), S..SW vac, (LBrack, vac), any; DelayedPointer -> N[0: (_, northboundOps)]
+DelayedPointer, N..NW any; DelayedPointer2
+DelayedPointer2, N..NW any; DelayedPointer3  # need 3 delay states to give data pointer breathing room from both sides
+DelayedPointer3, any, 0, vac, SE (LBrack, prgm), S..SW vac, (LBrack, vac), any; 0 -> E[SE: (Pointer, pointerOps)]
+LBrack, N Pointer, NE..E 0, SE (LBrack, prgm), S..NW any; LBrack -> N:NorthNOP  E[SE: (Blank2, pointerOps)]
+0, S Blank2, SW LBrack, W NorthNOP, NW..SE 0; NorthRBrack
+0, S NorthRBrack, SW 0, W NorthNOP, NW..SE any; NorthRBrack -> S:0
+# Replicate the above NE-output behavior if a bare pointer is on top of an RBrack with another to its east
 # (this needs a special case; nothing happens otherwise)
-POINTER_R_BRACK, E (R_BRACK, any), SE..NE any; POINTER -> NE[E: (NORTH_R_BRACK, _, ...)]
+PointerRBrack, E (RBrack, any), SE..NE any; Pointer -> NE[E: (NorthRBrack, _, ...)]
 
 # Make north_r_brack wait 4 generations before going up to absolutely make sure it won't collide badly with the data pointer
-NORTH_R_BRACK, W northbound, NW..SW any; [0] -> N:0
-NORTH_R_BRACK, NW northbound, N..W any; BLANK_1 -> N:0  # random non-interfering state (any would do)
-BLANK_1, S R_BRACK, SW..SE any; R_BRACK
-R_BRACK, S R_BRACK, SW..SE any; NORTH_R_BRACK
+NorthRBrack, W northbound, NW..SW any; [0] -> N:0
+NorthRBrack, NW northbound, N..W any; Blank1 -> N:0  # random non-interfering state (any would do)
+Blank1, S RBrack, SW..SE any; RBrack
+RBrack, S RBrack, SW..SE any; NorthRBrack
 # Move signals
-(NORTH_R_BRACK, northboundNOP), N..NW any; 0 => N[0]
-(WEST_R_BRACK, westbound), N..NW any; 0 => W[0]
-(EAST_R_BRACK, eastbound), N..NW any; 0 => E[0]
-(SOUTH_COMMA, SOUTH_BREAK, SOUTH_LOOP), N..NW any; 0 -> S[0]
+(NorthRBrack, northboundNOP), N..NW any; 0 => N[0]
+(WestRBrack, westbound), N..NW any; 0 => W[0]
+(EastRBrack, eastbound), N..NW any; 0 => E[0]
+(SouthComma, SouthBreak, SouthLoop), N..NW any; 0 -> S[0]
 
 # Pointer stops after reaching end
-(POINTER, POINTER_R_BRACK, pointerOps), E..SE 0, S anyPrgm-L_BRACK, SW..NE any; 0 -> E:POINTER
+(Pointer, PointerRBrack, pointerOps), E..SE 0, S anyPrgm-LBrack, SW..NE any; 0 -> E:Pointer
 # ...with some edge-case handling
-POINTER, E POINTER, SE 0, S R_BRACK, SW..NE any; 0  # avoid double pointer if r-brack is the last character
-POINTER, W BLANK_1, NW..S 0, SW any; 0  # avoid punching through the prgm tape if comma is the last character
+Pointer, E Pointer, SE 0, S RBrack, SW..NE any; 0  # avoid double pointer if r-brack is the last character
+Pointer, W Blank1, NW..S 0, SW any; 0  # avoid punching through the prgm tape if comma is the last character

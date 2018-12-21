@@ -1,12 +1,10 @@
 @RULE bf
 ********************************
 **** COMPILED FROM NUTSHELL ****
-****         v0.5.2         ****
+****         v0.5.3         ****
 ********************************
 
 Brainfuck.
-
-0: Vacuum
 
 1: +
 2: -
@@ -123,7 +121,7 @@ the southeast until there’s something above it
 93: Uninitialized input head, same as above
 
 94: Yet another pointer delay state just to absolutely be sure of no timing conflicts
-95: Loop-skipping pointer (antithesis to WEST_POINTER)
+95: Loop-skipping pointer (opposite of WestPointer)
 
 
 + To use:
@@ -156,15 +154,16 @@ $7rSrU12rSrU10rSrUrTrU5rSrM$43.I$44.AB2DFHCHCEDGDBCEC!
 
 @ICONS
 XPM
-"15 1440 12 2"
+"15 1440 13 2"
 ".. c #000000"
-"AA c #FFFFFF"
+"AA c #FFDDFF"
 "BB c #00AA00"
 "CC c #CC0000"
 "DD c #777777"
 "EE c #CCBB00"
 "FF c #00AABB"
 "vc c #B7FFFF"
+"t+ c #FFFFFF"
 "_? c #DFFFFF"
 "/7 c #FFFF00"
 ""\ c #E4FFFF"
@@ -1338,21 +1337,21 @@ XPM
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 "vcvcvcvcvcvcvcvcvcvcvcvcvcvcvc"
 /* icon for state 70 */
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
 /* #C Active forward-moving data */
 /* icon for state 71 */
 "..........CCCCCCCCCCCCCCCCCC.."
@@ -1774,21 +1773,21 @@ XPM
 ".............................."
 ".............................."
 /* icon for state 96 */
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
+"t+t+t+t+t+t+t+t+t+t+t+t+t+t+t+"
 
 @TABLE
 neighborhood: Moore
@@ -1874,11 +1873,11 @@ var _k1.0 = {9,10,11,12,13,14,15,16}
 var _l1.0 = {1,2,3,5,6,7,8}
 
 # Move uninitialized input data into proper position
-#### line 287: (91, 92, 93), E live, SE..NE any; 0 ####
+#### line 285: (91, 92, 93), E live, SE..NE any; 0 ####
 _a0.0, any.0, any.1, live.0, any.2, any.3, any.4, any.5, any.6, 0
-#### line 287: SE[0] ####
+#### line 285: SE[0] ####
 any.0, live.0, any.1, any.2, any.3, any.4, any.5, any.6, _a0.0, _a0.0
-#### line 288: (91, 92, 93), N live, NE..NW any; [0: (84, 90, 85)] ####
+#### line 286: (91, 92, 93), N live, NE..NW any; [0: (84, 90, 85)] ####
 91, live.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 84
 92, live.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 90
 93, live.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 85
@@ -1886,61 +1885,61 @@ any.0, live.0, any.1, any.2, any.3, any.4, any.5, any.6, _a0.0, _a0.0
 ##### INITIAL TELESCOPING OF BRACKET-ENCLOSED STUFF #####
 #########################################################
 # move program cell down if it has a closing bracket to its east
-#### line 295: (prgm, 3), E 3, SE..NW vac, N..NE 0; 0 ####
+#### line 293: (prgm, 3), E 3, SE..NW vac, N..NE 0; 0 ####
 _b0.0, 0, 0, 3, vac.0, vac.1, vac.2, vac.3, vac.4, 0
-#### line 295: S[0] ####
+#### line 293: S[0] ####
 vac.0, _b0.0, 3, vac.1, any.0, any.1, any.2, vac.2, vac.3, _b0.0
 # move program cell down if the cell to its east is below it
-#### line 298: (prgm, 3), SE anyPrgm, S..E vac; 0 ####
+#### line 296: (prgm, 3), SE anyPrgm, S..E vac; 0 ####
 _b0.0, vac.0, vac.1, vac.2, anyPrgm.0, vac.3, vac.4, vac.5, vac.6, 0
-#### line 298: S[0] ####
+#### line 296: S[0] ####
 vac.0, _b0.0, vac.1, anyPrgm.0, any.0, any.1, any.2, vac.2, vac.3, _b0.0
 ## (NOTE: The above two groups aren't even necessary but symmetry finishes sooner) ##
 # move program cell down if it has an opening bracket to its west
-#### line 303: (prgm, 4), W 4, any, 0, NE..SW vac; 0 ####
+#### line 301: (prgm, 4), W 4, any, 0, NE..SW vac; 0 ####
 _c0.0, 0, vac.0, vac.1, vac.2, vac.3, vac.4, 4, any.0, 0
-#### line 303: S[0] ####
+#### line 301: S[0] ####
 vac.0, _c0.0, vac.1, vac.2, any.0, any.1, any.2, vac.3, 4, _c0.0
 # move program cell down if the cell to its west is below it
-#### line 306: (prgm, 4), SW anyPrgm, W..S vac; 0 ####
+#### line 304: (prgm, 4), SW anyPrgm, W..S vac; 0 ####
 _c0.0, vac.0, vac.1, vac.2, vac.3, vac.4, anyPrgm.0, vac.5, vac.6, 0
-#### line 306: S[0] ####
+#### line 304: S[0] ####
 vac.0, _c0.0, vac.1, vac.2, any.0, any.1, any.2, anyPrgm.0, vac.3, _c0.0
 # special-casing for ][, but could probably be handled above
-#### line 309: 4, E..SE vac, S 0, SW 3, W..NE 0; 0 ####
+#### line 307: 4, E..SE vac, S 0, SW 3, W..NE 0; 0 ####
 4, 0, 0, vac.0, vac.1, 0, 3, 0, 0, 0
-#### line 309: S:4 ####
+#### line 307: S:4 ####
 0, 4, vac.0, vac.1, any.0, any.1, any.2, 3, 0, 4
-#### line 310: 3, SE 4, 0, vac, vac, NW..E 0; 0 ####
+#### line 308: 3, SE 4, 0, vac, vac, NW..E 0; 0 ####
 3, 0, 0, 0, 4, 0, vac.0, vac.1, 0, 0
-#### line 310: S:3 ####
+#### line 308: S:3 ####
 0, 3, 0, 4, any.0, any.1, any.2, vac.0, vac.1, 3
 # if a bracket has nothing in its mouth, assume it needs to travel south
 # to catch up to a different level
 # In the same vein, spawn a bracket if there's an empty cell between a bracket (N) and
 # a prgm tape bit (SW/SE)
-#### line 316: 4, N..SW 0, W vac, NW vac; 0 ####
+#### line 314: 4, N..SW 0, W vac, NW vac; 0 ####
 4, 0, 0, 0, 0, 0, 0, vac.0, vac.1, 0
-#### line 316: S:4 ####
+#### line 314: S:4 ####
 0, 4, 0, 0, any.0, any.1, any.2, 0, vac.0, 4
-#### line 317: 3, NE..E vac, SE..N 0; 0 ####
+#### line 315: 3, NE..E vac, SE..N 0; 0 ####
 3, 0, vac.0, vac.1, 0, 0, 0, 0, 0, 0
-#### line 317: S:3 ####
+#### line 315: S:3 ####
 0, 3, vac.0, 0, any.0, any.1, any.2, 0, 0, 3
 # if the above happens, move the now-hanging-one-lvl-too-high prgm-tape data south
-#### line 320: prgm, E prgm, 0, 0, SW 3, 0, NW..NE 0; 0 ####
+#### line 318: prgm, E prgm, 0, 0, SW 3, 0, NW..NE 0; 0 ####
 prgm.0, 0, 0, prgm.1, 0, 0, 3, 0, 0, 0  # ]x
-#### line 320: S[0] ####
+#### line 318: S[0] ####
 0, prgm.0, prgm.1, 0, any.0, any.1, any.2, 3, 0, prgm.0  # ]x
-#### line 321: prgm, SE 4, 0, 0, W prgm, NW..E 0; 0 ####
+#### line 319: prgm, SE 4, 0, 0, W prgm, NW..E 0; 0 ####
 prgm.0, 0, 0, 0, 4, 0, 0, prgm.1, 0, 0  # x[
-#### line 321: S[0] ####
+#### line 319: S[0] ####
 0, prgm.0, 0, 4, any.0, any.1, any.2, 0, prgm.1, prgm.0  # x[
 ################
 ##### 66 #####
 ################
-### Data-pointer transformations ###
-#### line 329: 58, W eastbound, NW..SW any; [W: datapointers] ####
+### 66-pointer transformations ###
+#### line 327: 58, W eastbound, NW..SW any; [W: datapointers] ####
 58, any.0, any.1, any.2, any.3, any.4, any.5, 33, any.6, 59
 58, any.0, any.1, any.2, any.3, any.4, any.5, 34, any.6, 60
 58, any.0, any.1, any.2, any.3, any.4, any.5, 35, any.6, 61
@@ -1948,7 +1947,7 @@ prgm.0, 0, 0, 0, 4, 0, 0, prgm.1, 0, 0  # x[
 58, any.0, any.1, any.2, any.3, any.4, any.5, 37, any.6, 63
 58, any.0, any.1, any.2, any.3, any.4, any.5, 38, any.6, 64
 58, any.0, any.1, any.2, any.3, any.4, any.5, 39, any.6, 65
-#### line 330: 58, E westbound, SE..NE any; [E: datapointers] ####
+#### line 328: 58, E westbound, SE..NE any; [E: datapointers] ####
 58, any.0, any.1, 26, any.2, any.3, any.4, any.5, any.6, 59
 58, any.0, any.1, 27, any.2, any.3, any.4, any.5, any.6, 60
 58, any.0, any.1, 28, any.2, any.3, any.4, any.5, any.6, 61
@@ -1957,7 +1956,7 @@ prgm.0, 0, 0, 0, 4, 0, 0, prgm.1, 0, 0  # x[
 58, any.0, any.1, 31, any.2, any.3, any.4, any.5, any.6, 64
 58, any.0, any.1, 32, any.2, any.3, any.4, any.5, any.6, 65
 # If a loaded shadow is directly below data pointer, pretend it's the same as a signal
-#### line 332: 58, S (westshadows-42, eastshadows-41), SW..SE any; [S: datapointers*2] ####
+#### line 330: 58, S (westshadows-42, eastshadows-41), SW..SE any; [S: datapointers*2] ####
 58, any.0, any.1, any.2, any.3, 43, any.4, any.5, any.6, 59
 58, any.0, any.1, any.2, any.3, 44, any.4, any.5, any.6, 60
 58, any.0, any.1, any.2, any.3, 45, any.4, any.5, any.6, 61
@@ -1972,86 +1971,86 @@ prgm.0, 0, 0, 0, 4, 0, 0, prgm.1, 0, 0  # x[
 58, any.0, any.1, any.2, any.3, 54, any.4, any.5, any.6, 63
 58, any.0, any.1, any.2, any.3, 55, any.4, any.5, any.6, 64
 58, any.0, any.1, any.2, any.3, 56, any.4, any.5, any.6, 65
-#### line 334: 60, N..NW any; 58 ####
+#### line 332: 60, N..NW any; 58 ####
 60, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 58
-#### line 334: N:72 ####
+#### line 332: N:72 ####
 any.0, any.1, any.2, any.3, any.4, 60, any.5, any.6, any.7, 72
-#### line 335: 59, N..NW (66, any-66); 58 ####
+#### line 333: 59, N..NW (66, any-66); 58 ####
 59, _d0.0, _d0.1, _d0.2, _d0.3, _d0.4, _d0.5, _d0.6, _d0.7, 58
-#### line 335: N[(71, 66, ...)] ####
+#### line 333: N[(71, 66, ...)] ####
 66, any.0, any.1, _d0.0, _d0.1, 59, _d0.2, _d0.3, any.2, 71
 _e0.0, any.0, any.1, _d0.0, _d0.1, 59, _d0.2, _d0.3, any.2, 66
-#### line 336: (63, 62), N..NW any; 0 ####
+#### line 334: (63, 62), N..NW any; 0 ####
 _f0.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
-#### line 336: E[0: (58, _)] ####
+#### line 334: E[0: (58, _)] ####
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, 63, any.7, 58
-#### line 336: W[0: (_, 58)] ####
+#### line 334: W[0: (_, 58)] ####
 any.0, any.1, any.2, 62, any.3, any.4, any.5, any.6, any.7, 58
 # Test to see whether there is data above the data pointer -- if yes, send back a LOOP signal ('keep looping'), and if no, send a BREAK ('stop looping')
-#### line 339: 61, N 0, NE..SE any, S (0, 42, 41), SW..NW any; 58 ####
+#### line 337: 61, N 0, NE..SE any, S (0, 42, 41), SW..NW any; 58 ####
 61, 0, any.0, any.1, any.2, _g0.0, any.3, any.4, any.5, 58
-#### line 339: W[S: (_, 80, 82)] ####
+#### line 337: W[S: (_, 80, 82)] ####
 any.0, any.1, 0, 61, 42, any.2, any.3, any.4, any.5, 80
 any.0, any.1, 0, 61, 41, any.2, any.3, any.4, any.5, 82
-#### line 340: 61, N live, NE..SE any, S (0, 42, 41), SW..NW any; 58 ####
+#### line 338: 61, N live, NE..SE any, S (0, 42, 41), SW..NW any; 58 ####
 61, live.0, any.0, any.1, any.2, _g0.0, any.3, any.4, any.5, 58
-#### line 340: W[S: (_, 81, 83)] ####
+#### line 338: W[S: (_, 81, 83)] ####
 any.0, any.1, live.0, 61, 42, any.2, any.3, any.4, any.5, 81
 any.0, any.1, live.0, 61, 41, any.2, any.3, any.4, any.5, 83
 # we can't send a signal from north to south directly (would exceed lightspeed) so we put it to the west first as a two-step sort of thing; this does delay things by one gen however
-#### line 342: (42, 41), NW (80, 82, 81, 83), N 58, NE..W any; [NW] ####
+#### line 340: (42, 41), NW (80, 82, 81, 83), N 58, NE..W any; [NW] ####
 _h0.0, 58, any.0, any.1, any.2, any.3, any.4, any.5, _i0.0, _i0.0
-#### line 342: NW:0 ####
+#### line 340: NW:0 ####
 _i0.0, any.0, any.1, 58, _h0.0, any.2, any.3, any.4, any.5, 0
-#### line 342: W:0 ####
+#### line 340: W:0 ####
 any.0, _i0.0, 58, _h0.0, any.1, any.2, any.3, any.4, any.5, 0
 # continue on
-#### line 344: 28, W 58, NW (0, data), N..SW any; [NW: (77, 74, ...)] ####
+#### line 342: 28, W 58, NW (0, data), N..SW any; [NW: (77, 74, ...)] ####
 28, any.0, any.1, any.2, any.3, any.4, any.5, 58, 0, 77
 28, any.0, any.1, any.2, any.3, any.4, any.5, 58, data.0, 74
-#### line 345: 35, NE (0, data), E 58, SE..N any; [NE: (78, 75, ...)] ####
+#### line 343: 35, NE (0, data), E 58, SE..N any; [NE: (78, 75, ...)] ####
 35, any.0, 0, 58, any.1, any.2, any.3, any.4, any.5, 78
 35, any.0, data.0, 58, any.1, any.2, any.3, any.4, any.5, 75
 # Reroute west-/eastbound yes/no signals to the south because we need to get them to the program-tape pointer
 # ((not relevant at all but i am so proud of how nutshell just takes this and spits out a working translation with no issue))
-#### line 349: (42, 41), N (78, 77, 75, 74), NE..NW any; [N: (80, 82, 81, 83)] ####
+#### line 347: (42, 41), N (78, 77, 75, 74), NE..NW any; [N: (80, 82, 81, 83)] ####
 _h0.0, 78, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 80
 _h0.0, 77, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 82
 _h0.0, 75, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 81
 _h0.0, 74, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 83
-#### line 349: N:0 ####
+#### line 347: N:0 ####
 _j0.0, any.0, any.1, any.2, any.3, _h0.0, any.4, any.5, any.6, 0
-#### line 349: NW[N: (0, _, 0, _)] ####
+#### line 347: NW[N: (0, _, 0, _)] ####
 any.0, any.1, any.2, 78, _h0.0, any.3, any.4, any.5, any.6, 0
 any.0, any.1, any.2, 75, _h0.0, any.3, any.4, any.5, any.6, 0
-#### line 349: NE[N: (_, 0, _, 0)] ####
+#### line 347: NE[N: (_, 0, _, 0)] ####
 any.0, any.1, any.2, any.3, any.4, any.5, _h0.0, 77, any.6, 0
 any.0, any.1, any.2, any.3, any.4, any.5, _h0.0, 74, any.6, 0
-#### line 350: (80, 82, 81, 83), N..NW any; [0: (41, 42, 41, 42)] ####
+#### line 348: (80, 82, 81, 83), N..NW any; [0: (41, 42, 41, 42)] ####
 80, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 41
 82, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 42
 81, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 41
 83, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 42
-#### line 350: S[0: (79, 79, 76, ...)] ####
+#### line 348: S[0: (79, 79, 76, ...)] ####
 any.0, 80, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 79
 any.0, 82, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 79
 any.0, _k0.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 76
 # Finally, the r-brack receives the southbound yes/no signal from above
 # If it's BREAK ('yes'), delete the waiting pointer and move it up to where it can continue traveling
 # if it's LOOP ('no'), turn the waiting pointer into a westbound one to send it back to the appropriate l-brack
-#### line 355: 3, N (79, 76), NE..NW any; [0] ####
+#### line 353: 3, N (79, 76), NE..NW any; [0] ####
 3, _l0.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 3
-#### line 355: N[(12, 0)] ####
+#### line 353: N[(12, 0)] ####
 79, any.0, any.1, any.2, any.3, 3, any.4, any.5, any.6, 12
 76, any.0, any.1, any.2, any.3, 3, any.4, any.5, any.6, 0
-#### line 355: W[N: (0, 17)] ####
+#### line 353: W[N: (0, 17)] ####
 any.0, any.1, 79, 3, any.2, any.3, any.4, any.5, any.6, 0
 any.0, any.1, 76, 3, any.2, any.3, any.4, any.5, any.6, 17
-#### line 357: any, SW 4, W 87, NW..S any; 21 ####
+#### line 355: any, SW 4, W 87, NW..S any; 21 ####
 any.0, any.1, any.2, any.3, any.4, any.5, 4, 87, any.6, 21
-#### line 357: W:88 ####
+#### line 355: W:88 ####
 87, any.0, any.1, any.2, any.3, 4, any.4, any.5, any.6, 88
-#### line 358: 17, W 4, NW..SE any, S (4, prgm), SW any; [S: (87, pointerOps)] ####
+#### line 356: 17, W 4, NW..SE any, S (4, prgm), SW any; [S: (87, pointerOps)] ####
 17, any.0, any.1, any.2, any.3, 4, any.4, 4, any.5, 87
 17, any.0, any.1, any.2, any.3, 1, any.4, 4, any.5, 10
 17, any.0, any.1, any.2, any.3, 2, any.4, 4, any.5, 11
@@ -2059,211 +2058,211 @@ any.0, any.1, any.2, any.3, any.4, any.5, 4, 87, any.6, 21
 17, any.0, any.1, any.2, any.3, 6, any.4, 4, any.5, 14
 17, any.0, any.1, any.2, any.3, 7, any.4, 4, any.5, 15
 17, any.0, any.1, any.2, any.3, 8, any.4, 4, any.5, 16
-#### line 358: W:4 ####
+#### line 356: W:4 ####
 4, any.0, any.1, 17, _m0.0, any.2, any.3, any.4, any.5, 4
-#### line 359: 17, N..NW any; 0 ####
+#### line 357: 17, N..NW any; 0 ####
 17, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
-#### line 359: W:17 ####
+#### line 357: W:17 ####
 any.0, any.1, any.2, 17, any.3, any.4, any.5, any.6, any.7, 17
-#### line 359: N:18 ####
+#### line 357: N:18 ####
 any.0, any.1, any.2, any.3, any.4, 17, any.5, any.6, any.7, 18
-#### line 361: (78, 75), N..NW any; 0 ####
+#### line 359: (78, 75), N..NW any; 0 ####
 _n0.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
-#### line 361: W[0] ####
+#### line 359: W[0] ####
 any.0, any.1, any.2, _n0.0, any.3, any.4, any.5, any.6, any.7, _n0.0
-#### line 362: (77, 74), N..NW any; 0 ####
+#### line 360: (77, 74), N..NW any; 0 ####
 _o0.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
-#### line 362: E[0] ####
+#### line 360: E[0] ####
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, _o0.0, any.7, _o0.0
 # Input
 # make the comma signal stay put so the data pointer knows where to send the go-poll-for-input request (to have it reach the shadow cell)
-#### line 366: 32, E 0, SE..SW any, W 58, NW..NE any; 87 ####
+#### line 364: 32, E 0, SE..SW any, W 58, NW..NE any; 87 ####
 32, any.0, any.1, 0, any.2, any.3, any.4, 58, any.5, 87  # just need a random nonmoving state
-#### line 367: 39, E 58, SE..SW any, W 0, NW..NE any; 88 ####
+#### line 365: 39, E 58, SE..SW any, W 0, NW..NE any; 88 ####
 39, any.0, any.1, 58, any.2, any.3, any.4, 0, any.5, 88  # just need a random nonmoving state
 # when input is requested, get the data pointer to zero the current cell,
-#### line 369: 65, N 66, NE..NW any; [0] ####
+#### line 367: 65, N 66, NE..NW any; [0] ####
 65, 66, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 65
-#### line 369: N:72 ####
+#### line 367: N:72 ####
 66, any.0, any.1, any.2, any.3, 65, any.4, any.5, any.6, 72
-#### line 370: 65, N 0, NE..NW any; 58 ####
+#### line 368: 65, N 0, NE..NW any; 58 ####
 65, 0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 58  # blank cell's cue
 # then once done tell the shadow cell to go poll for input
 ## if nothing to south, send it in appropriate direction
-#### line 373: 87, W 58, NW 0, N..S any, SW 0; 0 ####
+#### line 371: 87, W 58, NW 0, N..S any, SW 0; 0 ####
 87, any.0, any.1, any.2, any.3, any.4, 0, 58, 0, 0
-#### line 373: S:39 ####
+#### line 371: S:39 ####
 any.0, 87, any.1, any.2, any.3, any.4, any.5, 0, 58, 39
-#### line 374: 88, NE 0, E 58, SE 0, S..N any; 0 ####
+#### line 372: 88, NE 0, E 58, SE 0, S..N any; 0 ####
 88, any.0, 0, 58, 0, any.1, any.2, any.3, any.4, 0
-#### line 374: S:32 ####
+#### line 372: S:32 ####
 any.0, 88, 58, 0, any.1, any.2, any.3, any.4, any.5, 32
 ## elif shadow cell to south, stay put and do something stupid to give it the signal regardless
 #### (this could be merged into the above transition but I'm lazy)
-#### line 377: 65, N 0, NE..SE any, S (42, 41), SW..NW any; 58 ####
+#### line 375: 65, N 0, NE..SE any, S (42, 41), SW..NW any; 58 ####
 65, 0, any.0, any.1, any.2, _h0.0, any.3, any.4, any.5, 58
-#### line 377: SW:39 ####
+#### line 375: SW:39 ####
 any.0, any.1, 65, _h0.0, any.2, any.3, any.4, any.5, any.6, 39
 # Also have these misc cells not destroy the shadow if it's to their south
-#### line 379: (87, 88), S 42, SW..SE any; 0 ####
+#### line 377: (87, 88), S 42, SW..SE any; 0 ####
 _p0.0, any.0, any.1, any.2, any.3, 42, any.4, any.5, any.6, 0
-#### line 379: S:42 ####
+#### line 377: S:42 ####
 42, _p0.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 42
-#### line 379: SW:39 ####
+#### line 377: SW:39 ####
 any.0, any.1, _p0.0, 42, any.2, any.3, any.4, any.5, any.6, 39
-#### line 380: (87, 88), S 41, SW..SE any; 0 ####
+#### line 378: (87, 88), S 41, SW..SE any; 0 ####
 _p0.0, any.0, any.1, any.2, any.3, 41, any.4, any.5, any.6, 0
-#### line 380: S:41 ####
+#### line 378: S:41 ####
 41, _p0.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 41
-#### line 380: SW:39 ####
+#### line 378: SW:39 ####
 any.0, any.1, _p0.0, 41, any.2, any.3, any.4, any.5, any.6, 39
 ## shadow cell receiving go-poll-for-input signal: (none of those commas would ever appear above it otherwise so we can always assume this'll be the cause)
 ## on receiving the signal it stays put and sends a comma to the west to ask the input-tape head for its stuff
-#### line 383: (41, 42), N..NE any, E 32, SE..SW any, W 0, any; [0] ####
+#### line 381: (41, 42), N..NE any, E 32, SE..SW any, W 0, any; [0] ####
 _q0.0, any.0, any.1, 32, any.2, any.3, any.4, 0, any.5, _q0.0
-#### line 383: S:32 ####
+#### line 381: S:32 ####
 any.0, _q0.0, 32, any.1, any.2, any.3, any.4, any.5, 0, 32
-#### line 384: (41, 42), N..NE any, E 0, SE..SW any, W 39, any; [0] ####
+#### line 382: (41, 42), N..NE any, E 0, SE..SW any, W 39, any; [0] ####
 _q0.0, any.0, any.1, 0, any.2, any.3, any.4, 39, any.5, _q0.0
-#### line 384: S:32 ####
+#### line 382: S:32 ####
 any.0, _q0.0, 0, any.1, any.2, any.3, any.4, any.5, 39, 32
 # Input head doubles as data delimiter so have it move east appropriately to move data with
-#### line 386: 85, N 0, NE 84, E..NW any; 0 ####
+#### line 384: 85, N 0, NE 84, E..NW any; 0 ####
 85, 0, 84, any.0, any.1, any.2, any.3, any.4, any.5, 0  # if it's the next up
-#### line 386: N:85 ####
+#### line 384: N:85 ####
 0, any.0, any.1, 84, any.2, 85, any.3, any.4, any.5, 85  # if it's the next up
-#### line 387: 0, (84, 90), NE..SE any, 85, SW..NW any; 85 ####
+#### line 385: 0, (84, 90), NE..SE any, 85, SW..NW any; 85 ####
 0, _r0.0, any.0, any.1, any.2, 85, any.3, any.4, any.5, 85  # if it's farther down
-#### line 388: 85, N 85, NE..NW any; 0 ####
+#### line 386: 85, N 85, NE..NW any; 0 ####
 85, 85, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 0
 # Input head is otherwise invincible
-#### line 390: 85, N..NW any; [0] ####
+#### line 388: 85, N..NW any; [0] ####
 85, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 85
 # When the west comma finds the input head,
 # move the comma down one to let the input (if any) know it's there
-#### line 393: 85, NE 32, E..N any; [0] ####
+#### line 391: 85, NE 32, E..N any; [0] ####
 85, any.0, 32, any.1, any.2, any.3, any.4, any.5, any.6, 85
-#### line 393: N:0 ####
+#### line 391: N:0 ####
 any.0, any.1, any.2, 32, any.3, 85, any.4, any.5, any.6, 0
-#### line 393: E:32 ####
+#### line 391: E:32 ####
 any.0, 32, any.1, any.2, any.3, any.4, any.5, 85, any.6, 32
-#### line 394: 90, NE 32, E..N any; 85 ####
+#### line 392: 90, NE 32, E..N any; 85 ####
 90, any.0, 32, any.1, any.2, any.3, any.4, any.5, any.6, 85
 # Move input up and then send it back to the shadow cell
-#### line 396: 84, NE (32, 84), E..SE any, S..N any; 0 ####
+#### line 394: 84, NE (32, 84), E..SE any, S..N any; 0 ####
 84, any.0, _s0.0, any.1, any.2, any.3, any.4, any.5, any.6, 0
-#### line 396: E:84 ####
+#### line 394: E:84 ####
 any.0, _s0.0, any.1, any.2, any.3, any.4, any.5, 84, any.6, 84
-#### line 397: 84, W 85, NW..SW any; 0 ####
+#### line 395: 84, W 85, NW..SW any; 0 ####
 84, any.0, any.1, any.2, any.3, any.4, any.5, 85, any.6, 0
-#### line 397: N:86 ####
+#### line 395: N:86 ####
 any.0, any.1, any.2, any.3, any.4, 84, 85, any.5, any.6, 86
-#### line 398: (84, 90), N..SE 0, S any, SW..NW any; 0 ####
+#### line 396: (84, 90), N..SE 0, S any, SW..NW any; 0 ####
 _r0.0, 0, 0, 0, 0, any.0, any.1, any.2, any.3, 0
-#### line 398: N[0] ####
+#### line 396: N[0] ####
 0, any.0, any.1, 0, 0, _r0.0, any.2, any.3, any.4, _r0.0
 # When shadow cell receives eastbound input, relay it as an "inc" signal
-#### line 400: 58, S (42, 41), SW 86, W..SE any; 59 ####
+#### line 398: 58, S (42, 41), SW 86, W..SE any; 59 ####
 58, any.0, any.1, any.2, any.3, _h0.0, 86, any.4, any.5, 59
-#### line 401: (41, 42), W 86, NW..SW any; [0] ####
+#### line 399: (41, 42), W 86, NW..SW any; [0] ####
 _q0.0, any.0, any.1, any.2, any.3, any.4, any.5, 86, any.6, _q0.0
-#### line 401: N[0: (33, 26)] ####
+#### line 399: N[0: (33, 26)] ####
 any.0, any.1, any.2, any.3, any.4, 41, 86, any.5, any.6, 33
 any.0, any.1, any.2, any.3, any.4, 42, 86, any.5, any.6, 26
 # When it receives the "we're done" signal, restore the program-tape pointer & send it on its way
-#### line 403: (41, 42), W 89, NW..SW any; [0] ####
+#### line 401: (41, 42), W 89, NW..SW any; [0] ####
 _q0.0, any.0, any.1, any.2, any.3, any.4, any.5, 89, any.6, _q0.0
-#### line 403: S:40 ####
+#### line 401: S:40 ####
 any.0, _q0.0, any.1, any.2, any.3, any.4, any.5, any.6, 89, 40
-#### line 404: 0, W 87, NW 40, N..SE any, S 4, SW 8; 88 ####
+#### line 402: 0, W 87, NW 40, N..SE any, S 4, SW 8; 88 ####
 0, any.0, any.1, any.2, any.3, 4, 8, 87, 40, 88  # emulate l-brack test from below
-#### line 404: W:21 ####
+#### line 402: W:21 ####
 87, 40, any.0, 0, 4, 8, any.1, any.2, any.3, 21  # emulate l-brack test from below
-#### line 405: 87, N 40, NE any, E (3, prgm, 0), SE..NW vac; 9 ####
+#### line 403: 87, N 40, NE any, E (3, prgm, 0), SE..NW vac; 9 ####
 87, 40, any.0, _t0.0, vac.0, vac.1, vac.2, vac.3, vac.4, 9
-#### line 405: NE[E: (21, _, ...)] ####
+#### line 403: NE[E: (21, _, ...)] ####
 any.0, any.1, any.2, any.3, any.4, 3, 87, 40, any.5, 21
 # Also move eastbound input eastward
-#### line 407: 86, N..NW any; 0 ####
+#### line 405: 86, N..NW any; 0 ####
 86, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
-#### line 407: E:86 ####
+#### line 405: E:86 ####
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, 86, any.7, 86
 # Send a "we're done" signal when there's no data or none left
-#### line 409: 85, E (32, 84), SE..NE any; [0] ####
+#### line 407: 85, E (32, 84), SE..NE any; [0] ####
 85, any.0, any.1, _s0.0, any.2, any.3, any.4, any.5, any.6, 85
-#### line 409: SE:87 ####
+#### line 407: SE:87 ####
 any.0, _s0.0, any.1, any.2, any.3, any.4, any.5, any.6, 85, 87
 # Move "we're done" signal
-#### line 411: 87, W 0, NW 85, N..SW any; 0 ####
+#### line 409: 87, W 0, NW 85, N..SW any; 0 ####
 87, any.0, any.1, any.2, any.3, any.4, any.5, 0, 85, 0
-#### line 411: N:87 ####
+#### line 409: N:87 ####
 any.0, any.1, any.2, any.3, any.4, 87, 0, 85, any.5, 87
-#### line 412: 87, W 85, NW 0, N..SW any; 0 ####
+#### line 410: 87, W 85, NW 0, N..SW any; 0 ####
 87, any.0, any.1, any.2, any.3, any.4, any.5, 85, 0, 0
-#### line 412: N:89 ####
+#### line 410: N:89 ####
 any.0, any.1, any.2, any.3, any.4, 87, 85, 0, any.5, 89
-#### line 413: 89, N..NW any; 0 ####
+#### line 411: 89, N..NW any; 0 ####
 89, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
-#### line 413: E:89 ####
+#### line 411: E:89 ####
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, 89, any.7, 89
 ### Actual handling of data ###
-#### line 416: 64, N..NW any; 58 ####
+#### line 414: 64, N..NW any; 58 ####
 64, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 58  # don't output if there's nothing to output
-#### line 416: N[(0, _, ...)] ####
+#### line 414: N[(0, _, ...)] ####
 0, any.0, any.1, any.2, any.3, 64, any.4, any.5, any.6, 0  # don't output if there's nothing to output
 # Output
-#### line 418: 66, S 64, SW..SE any; 67 ####
+#### line 416: 66, S 64, SW..SE any; 67 ####
 66, any.0, any.1, any.2, any.3, 64, any.4, any.5, any.6, 67
-#### line 419: vacdata, E 0, SE any, S (69, 67), SW..NE any; [0: (70, 68)] ####
+#### line 417: vacdata, E 0, SE any, S (69, 67), SW..NE any; [0: (70, 68)] ####
 0, any.0, any.1, 0, any.2, _u0.0, any.3, any.4, any.5, 70
 66, any.0, any.1, 0, any.2, _u0.0, any.3, any.4, any.5, 68
-#### line 420: (70, 68), N..NW (vacdata, any-vacdata); [0: vacdata] ####
+#### line 418: (70, 68), N..NW (vacdata, any-vacdata); [0: vacdata] ####
 70, _v0.0, _v0.1, _v0.2, _v0.3, _v0.4, _v0.5, _v0.6, _v0.7, 0
 68, _v0.0, _v0.1, _v0.2, _v0.3, _v0.4, _v0.5, _v0.6, _v0.7, 66
-#### line 420: N[(70, 68, _, ...)] ####
+#### line 418: N[(70, 68, _, ...)] ####
 0, any.0, any.1, _v0.0, _v0.1, _w0.0, _v0.2, _v0.3, any.2, 70
 66, any.0, any.1, _v0.0, _v0.1, _w0.0, _v0.2, _v0.3, any.2, 68
-#### line 422: 67, N..NW (vacdata, any-vacdata); 66 ####
+#### line 420: 67, N..NW (vacdata, any-vacdata); 66 ####
 67, _v0.0, _v0.1, _v0.2, _v0.3, _v0.4, _v0.5, _v0.6, _v0.7, 66
-#### line 422: N[(69, 67, _, ...)] ####
+#### line 420: N[(69, 67, _, ...)] ####
 0, any.0, any.1, _v0.0, _v0.1, 67, _v0.2, _v0.3, any.2, 69
 66, any.0, any.1, _v0.0, _v0.1, 67, _v0.2, _v0.3, any.2, 67
-#### line 423: (69, 67), N..NW (vacdata, any-vacdata); [0: vacdata] ####
+#### line 421: (69, 67), N..NW (vacdata, any-vacdata); [0: vacdata] ####
 69, _v0.0, _v0.1, _v0.2, _v0.3, _v0.4, _v0.5, _v0.6, _v0.7, 0
 67, _v0.0, _v0.1, _v0.2, _v0.3, _v0.4, _v0.5, _v0.6, _v0.7, 66
-#### line 423: N[(69, 67, _, ...)] ####
+#### line 421: N[(69, 67, _, ...)] ####
 0, any.0, any.1, _v0.0, _v0.1, _u0.0, _v0.2, _v0.3, any.2, 69
 66, any.0, any.1, _v0.0, _v0.1, _u0.0, _v0.2, _v0.3, any.2, 67
-#### line 423: NE[(_, 67, _, ...)] ####
+#### line 421: NE[(_, 67, _, ...)] ####
 66, any.0, any.1, any.2, any.3, _v0.0, _u0.0, _v0.1, any.4, 67
 # inc/dec instructions
-#### line 426: 66, SW 72, W..S any; [NE: (0, 72, ...)] ####
+#### line 424: 66, SW 72, W..S any; [NE: (0, 72, ...)] ####
 66, any.0, 0, any.1, any.2, any.3, 72, any.4, any.5, 0
 66, any.0, live.0, any.1, any.2, any.3, 72, any.4, any.5, 72
-#### line 427: vacdata, SW 71, W..S any; [0: (66, 71)] ####
+#### line 425: vacdata, SW 71, W..S any; [0: (66, 71)] ####
 0, any.0, any.1, any.2, any.3, any.4, 71, any.5, any.6, 66
 66, any.0, any.1, any.2, any.3, any.4, 71, any.5, any.6, 71
-#### line 428: 0, SW 71, W..S any; [NE: (66, 71, ...)] ####
+#### line 426: 0, SW 71, W..S any; [NE: (66, 71, ...)] ####
 0, any.0, 0, any.1, any.2, any.3, 71, any.4, any.5, 66
 0, any.0, live.0, any.1, any.2, any.3, 71, any.4, any.5, 71
-#### line 430: 72, SW 0, W..S any; [NE: (0, 66, ...)] ####
+#### line 428: 72, SW 0, W..S any; [NE: (0, 66, ...)] ####
 72, any.0, 0, any.1, any.2, any.3, 0, any.4, any.5, 0
 72, any.0, live.0, any.1, any.2, any.3, 0, any.4, any.5, 66
-#### line 431: 72, NE 0, E..N any; 0 ####
+#### line 429: 72, NE 0, E..N any; 0 ####
 72, any.0, 0, any.1, any.2, any.3, any.4, any.5, any.6, 0
-#### line 432: (71, 72), N..NW any; 66 ####
+#### line 430: (71, 72), N..NW any; 66 ####
 _x0.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 66
 #######################
 ##### SHADOW CELL #####
 #######################
 # If shadow is touching data pointer, flip direction before moving to it
-#### line 440: 41, NW 58, N..W any; 42 ####
+#### line 438: 41, NW 58, N..W any; 42 ####
 41, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 58, 42
-#### line 441: 42, NE 58, E..N any; 41 ####
+#### line 439: 42, NE 58, E..N any; 41 ####
 42, any.0, 58, any.1, any.2, any.3, any.4, any.5, any.6, 41
-#### line 442: eastshadows, SE northboundNOP, S..NW any, N 58, NE..E any; 0 ####
+#### line 440: eastshadows, SE northboundNOP, S..NW any, N 58, NE..E any; 0 ####
 eastshadows.0, 58, any.0, any.1, northboundNOP.0, any.2, any.3, any.4, any.5, 0
-#### line 442: E[SE: westshadows] ####
+#### line 440: E[SE: westshadows] ####
 any.0, any.1, any.2, any.3, any.4, 19, any.5, eastshadows.0, 58, 43
 any.0, any.1, any.2, any.3, any.4, 20, any.5, eastshadows.0, 58, 44
 any.0, any.1, any.2, any.3, any.4, 21, any.5, eastshadows.0, 58, 45
@@ -2272,9 +2271,9 @@ any.0, any.1, any.2, any.3, any.4, 23, any.5, eastshadows.0, 58, 47
 any.0, any.1, any.2, any.3, any.4, 24, any.5, eastshadows.0, 58, 48
 any.0, any.1, any.2, any.3, any.4, 25, any.5, eastshadows.0, 58, 49
 any.0, any.1, any.2, any.3, any.4, 18, any.5, eastshadows.0, 58, 42
-#### line 443: westshadows, SW northboundNOP, W..NW any, N 58, NE..S any; 0 ####
+#### line 441: westshadows, SW northboundNOP, W..NW any, N 58, NE..S any; 0 ####
 westshadows.0, 58, any.0, any.1, any.2, any.3, northboundNOP.0, any.4, any.5, 0
-#### line 443: W[SW: eastshadows] ####
+#### line 441: W[SW: eastshadows] ####
 any.0, any.1, 58, westshadows.0, any.2, 19, any.3, any.4, any.5, 50
 any.0, any.1, 58, westshadows.0, any.2, 20, any.3, any.4, any.5, 51
 any.0, any.1, 58, westshadows.0, any.2, 21, any.3, any.4, any.5, 52
@@ -2284,9 +2283,9 @@ any.0, any.1, 58, westshadows.0, any.2, 24, any.3, any.4, any.5, 55
 any.0, any.1, 58, westshadows.0, any.2, 25, any.3, any.4, any.5, 56
 any.0, any.1, 58, westshadows.0, any.2, 18, any.3, any.4, any.5, 41
 # If a northbound cell is coming at shadow from a corner, move toward it & load self with it
-#### line 446: eastshadows, SW northboundNOP, W..S any; 0 ####
+#### line 444: eastshadows, SW northboundNOP, W..S any; 0 ####
 eastshadows.0, any.0, any.1, any.2, any.3, any.4, northboundNOP.0, any.5, any.6, 0
-#### line 446: W[SW: eastshadows] ####
+#### line 444: W[SW: eastshadows] ####
 any.0, any.1, any.2, eastshadows.0, any.3, 19, any.4, any.5, any.6, 50
 any.0, any.1, any.2, eastshadows.0, any.3, 20, any.4, any.5, any.6, 51
 any.0, any.1, any.2, eastshadows.0, any.3, 21, any.4, any.5, any.6, 52
@@ -2295,9 +2294,9 @@ any.0, any.1, any.2, eastshadows.0, any.3, 23, any.4, any.5, any.6, 54
 any.0, any.1, any.2, eastshadows.0, any.3, 24, any.4, any.5, any.6, 55
 any.0, any.1, any.2, eastshadows.0, any.3, 25, any.4, any.5, any.6, 56
 any.0, any.1, any.2, eastshadows.0, any.3, 18, any.4, any.5, any.6, 41
-#### line 447: westshadows, SW northboundNOP, W..S any; 0 ####
+#### line 445: westshadows, SW northboundNOP, W..S any; 0 ####
 westshadows.0, any.0, any.1, any.2, any.3, any.4, northboundNOP.0, any.5, any.6, 0
-#### line 447: W[SW: westshadows] ####
+#### line 445: W[SW: westshadows] ####
 any.0, any.1, any.2, westshadows.0, any.3, 19, any.4, any.5, any.6, 43
 any.0, any.1, any.2, westshadows.0, any.3, 20, any.4, any.5, any.6, 44
 any.0, any.1, any.2, westshadows.0, any.3, 21, any.4, any.5, any.6, 45
@@ -2306,9 +2305,9 @@ any.0, any.1, any.2, westshadows.0, any.3, 23, any.4, any.5, any.6, 47
 any.0, any.1, any.2, westshadows.0, any.3, 24, any.4, any.5, any.6, 48
 any.0, any.1, any.2, westshadows.0, any.3, 25, any.4, any.5, any.6, 49
 any.0, any.1, any.2, westshadows.0, any.3, 18, any.4, any.5, any.6, 42
-#### line 449: eastshadows, SE northboundNOP, S..E any; 0 ####
+#### line 447: eastshadows, SE northboundNOP, S..E any; 0 ####
 eastshadows.0, any.0, any.1, any.2, northboundNOP.0, any.3, any.4, any.5, any.6, 0
-#### line 449: E[SE: eastshadows] ####
+#### line 447: E[SE: eastshadows] ####
 any.0, any.1, any.2, any.3, any.4, 19, any.5, eastshadows.0, any.6, 50
 any.0, any.1, any.2, any.3, any.4, 20, any.5, eastshadows.0, any.6, 51
 any.0, any.1, any.2, any.3, any.4, 21, any.5, eastshadows.0, any.6, 52
@@ -2317,9 +2316,9 @@ any.0, any.1, any.2, any.3, any.4, 23, any.5, eastshadows.0, any.6, 54
 any.0, any.1, any.2, any.3, any.4, 24, any.5, eastshadows.0, any.6, 55
 any.0, any.1, any.2, any.3, any.4, 25, any.5, eastshadows.0, any.6, 56
 any.0, any.1, any.2, any.3, any.4, 18, any.5, eastshadows.0, any.6, 41
-#### line 450: westshadows, SE northboundNOP, S..E any; 0 ####
+#### line 448: westshadows, SE northboundNOP, S..E any; 0 ####
 westshadows.0, any.0, any.1, any.2, northboundNOP.0, any.3, any.4, any.5, any.6, 0
-#### line 450: E[SE: westshadows] ####
+#### line 448: E[SE: westshadows] ####
 any.0, any.1, any.2, any.3, any.4, 19, any.5, westshadows.0, any.6, 43
 any.0, any.1, any.2, any.3, any.4, 20, any.5, westshadows.0, any.6, 44
 any.0, any.1, any.2, any.3, any.4, 21, any.5, westshadows.0, any.6, 45
@@ -2329,7 +2328,7 @@ any.0, any.1, any.2, any.3, any.4, 24, any.5, westshadows.0, any.6, 48
 any.0, any.1, any.2, any.3, any.4, 25, any.5, westshadows.0, any.6, 49
 any.0, any.1, any.2, any.3, any.4, 18, any.5, westshadows.0, any.6, 42
 # If it's coming from right below, just load without moving
-#### line 453: eastshadows, S northboundNOP, SW..SE any; [S: eastshadows] ####
+#### line 451: eastshadows, S northboundNOP, SW..SE any; [S: eastshadows] ####
 eastshadows.0, any.0, any.1, any.2, any.3, 19, any.4, any.5, any.6, 50
 eastshadows.0, any.0, any.1, any.2, any.3, 20, any.4, any.5, any.6, 51
 eastshadows.0, any.0, any.1, any.2, any.3, 21, any.4, any.5, any.6, 52
@@ -2338,7 +2337,7 @@ eastshadows.0, any.0, any.1, any.2, any.3, 23, any.4, any.5, any.6, 54
 eastshadows.0, any.0, any.1, any.2, any.3, 24, any.4, any.5, any.6, 55
 eastshadows.0, any.0, any.1, any.2, any.3, 25, any.4, any.5, any.6, 56
 eastshadows.0, any.0, any.1, any.2, any.3, 18, any.4, any.5, any.6, 41
-#### line 454: westshadows, S northboundNOP, SW..SE any; [S: westshadows] ####
+#### line 452: westshadows, S northboundNOP, SW..SE any; [S: westshadows] ####
 westshadows.0, any.0, any.1, any.2, any.3, 19, any.4, any.5, any.6, 43
 westshadows.0, any.0, any.1, any.2, any.3, 20, any.4, any.5, any.6, 44
 westshadows.0, any.0, any.1, any.2, any.3, 21, any.4, any.5, any.6, 45
@@ -2348,9 +2347,9 @@ westshadows.0, any.0, any.1, any.2, any.3, 24, any.4, any.5, any.6, 48
 westshadows.0, any.0, any.1, any.2, any.3, 25, any.4, any.5, any.6, 49
 westshadows.0, any.0, any.1, any.2, any.3, 18, any.4, any.5, any.6, 42
 # A "loaded" shadow cell turns into a normal one and releases its signal
-#### line 457: eastshadows, N..NW any; 41 ####
+#### line 455: eastshadows, N..NW any; 41 ####
 eastshadows.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 41
-#### line 457: N[0: (eastbound, _)] ####
+#### line 455: N[0: (eastbound, _)] ####
 any.0, any.1, any.2, any.3, any.4, 50, any.5, any.6, any.7, 33
 any.0, any.1, any.2, any.3, any.4, 51, any.5, any.6, any.7, 34
 any.0, any.1, any.2, any.3, any.4, 52, any.5, any.6, any.7, 35
@@ -2358,9 +2357,9 @@ any.0, any.1, any.2, any.3, any.4, 53, any.5, any.6, any.7, 36
 any.0, any.1, any.2, any.3, any.4, 54, any.5, any.6, any.7, 37
 any.0, any.1, any.2, any.3, any.4, 55, any.5, any.6, any.7, 38
 any.0, any.1, any.2, any.3, any.4, 56, any.5, any.6, any.7, 39
-#### line 458: westshadows, N..NW any; 42 ####
+#### line 456: westshadows, N..NW any; 42 ####
 westshadows.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 42
-#### line 458: N[0: (westbound, _)] ####
+#### line 456: N[0: (westbound, _)] ####
 any.0, any.1, any.2, any.3, any.4, 43, any.5, any.6, any.7, 26
 any.0, any.1, any.2, any.3, any.4, 44, any.5, any.6, any.7, 27
 any.0, any.1, any.2, any.3, any.4, 45, any.5, any.6, any.7, 28
@@ -2369,76 +2368,76 @@ any.0, any.1, any.2, any.3, any.4, 47, any.5, any.6, any.7, 30
 any.0, any.1, any.2, any.3, any.4, 48, any.5, any.6, any.7, 31
 any.0, any.1, any.2, any.3, any.4, 49, any.5, any.6, any.7, 32
 # override northbound-signal transitions from ptr-movement section
-#### line 461: (41, 42), N..NW any; [0] ####
+#### line 459: (41, 42), N..NW any; [0] ####
 _q0.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, _q0.0
 ############################
 ##### 9 MOVEMENT #####
 ############################
 # Stop moving after reaching a comma or l-brack
-#### line 469: 16, E (3, vac), SE..NE any; 87 ####
+#### line 467: 16, E (3, vac), SE..NE any; 87 ####
 16, any.0, any.1, _y0.0, any.2, any.3, any.4, any.5, any.6, 87  # just needs a random non-moving state, so blank_1 works
-#### line 469: NE:0 ####
+#### line 467: NE:0 ####
 any.0, any.1, any.2, any.3, any.4, _y0.0, 16, any.5, any.6, 0  # just needs a random non-moving state, so blank_1 works
 ## l-brack test stuff
-#### line 471: (9, pointerOps), SE 4, S anyPrgm-8, SW..E any; 21 ####
+#### line 469: (9, pointerOps), SE 4, S anyPrgm-8, SW..E any; 21 ####
 _z0.0, any.0, any.1, any.2, 4, _a1.0, any.3, any.4, any.5, 21  # send out a test signal
-#### line 471: E:88 ####
+#### line 469: E:88 ####
 any.0, any.1, any.2, any.3, any.4, 4, _a1.0, _z0.0, any.5, 88  # send out a test signal
-#### line 472: 21, N northbound, NE..NW any; 87 ####
+#### line 470: 21, N northbound, NE..NW any; 87 ####
 21, northbound.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 87
-#### line 472: N:0 ####
+#### line 470: N:0 ####
 northbound.0, any.0, any.1, any.2, any.3, 21, any.4, any.5, any.6, 0
-#### line 473: (87, 88), E 88, SE..NE any; [0: (88, 21)] ####
+#### line 471: (87, 88), E 88, SE..NE any; [0: (88, 21)] ####
 87, any.0, any.1, 88, any.2, any.3, any.4, any.5, any.6, 88
 88, any.0, any.1, 88, any.2, any.3, any.4, any.5, any.6, 21
 ### for most cases:
-#### line 475: 88, NW (76, 79), N..SE any, S 4, SW..W any; [NW: (9, 95)] ####
+#### line 473: 88, NW (76, 79), N..SE any, S 4, SW..W any; [NW: (9, 95)] ####
 88, any.0, any.1, any.2, any.3, 4, any.4, any.5, 76, 9
 88, any.0, any.1, any.2, any.3, 4, any.4, any.5, 79, 95
-#### line 475: W:0 ####
+#### line 473: W:0 ####
 any.0, _b1.0, any.1, 88, 4, any.2, any.3, any.4, any.5, 0
-#### line 475: N:18 ####
+#### line 473: N:18 ####
 any.0, any.1, any.2, any.3, any.4, 88, any.5, _b1.0, any.6, 18
 ### and for when it's on an l-brack that's right after a first l-brack:
-#### line 477: 88, N (76, 79), NE..SE any, S 4, SW..NW any; [N: (9, 95)] ####
+#### line 475: 88, N (76, 79), NE..SE any, S 4, SW..NW any; [N: (9, 95)] ####
 88, 76, any.0, any.1, any.2, 4, any.3, any.4, any.5, 9
 88, 79, any.0, any.1, any.2, 4, any.3, any.4, any.5, 95
 ### and one more edge case:
-#### line 479: 88, NE (76, 79), E..SE any, S 4, SW..N any; [NE: (9, 95)] ####
+#### line 477: 88, NE (76, 79), E..SE any, S 4, SW..N any; [NE: (9, 95)] ####
 88, any.0, 76, any.1, any.2, 4, any.3, any.4, any.5, 9
 88, any.0, 79, any.1, any.2, 4, any.3, any.4, any.5, 95
-#### line 479: E:0 ####
+#### line 477: E:0 ####
 any.0, _b1.0, any.1, any.2, any.3, any.4, 4, 88, any.5, 0
 ## keep moving eastward till pointer_skip finds an r-brack
-#### line 481: 95, SE (3, 0), S..E any; 0 ####
+#### line 479: 95, SE (3, 0), S..E any; 0 ####
 95, any.0, any.1, any.2, _c1.0, any.3, any.4, any.5, any.6, 0
-#### line 481: E[SE: (9, 95, ...)] ####
+#### line 479: E[SE: (9, 95, ...)] ####
 any.0, any.1, any.2, any.3, any.4, 3, any.5, 95, any.6, 9
 any.0, any.1, any.2, any.3, any.4, _d1.0, any.5, 95, any.6, 95
-#### line 481: NE:18 ####
+#### line 479: NE:18 ####
 any.0, any.1, any.2, any.3, any.4, any.5, 95, any.6, any.7, 18
 # Also don't put out north-bound signals after hitting r-brack
-#### line 483: pointerOps, N..NE any, E 3, SE..NW any; 9 ####
+#### line 481: pointerOps, N..NE any, E 3, SE..NW any; 9 ####
 pointerOps.0, any.0, any.1, 3, any.2, any.3, any.4, any.5, any.6, 9
-#### line 483: NE:21 ####
+#### line 481: NE:21 ####
 any.0, any.1, any.2, any.3, any.4, 3, pointerOps.0, any.5, any.6, 21
 # But elsewhere do so as normal
-#### line 485: (9, pointerOps), any, 0, vac, SE (4, prgm), S..SW vac, (4, vac), any; 57 ####
+#### line 483: (9, pointerOps), any, 0, vac, SE (4, prgm), S..SW vac, (4, vac), any; 57 ####
 _z0.0, any.0, 0, vac.0, _m0.0, vac.1, vac.2, _e1.0, any.1, 57
-#### line 485: N[0: (_, northboundOps)] ####
+#### line 483: N[0: (_, northboundOps)] ####
 any.0, any.1, any.2, 0, vac.0, 10, _e1.0, any.3, any.4, 19
 any.0, any.1, any.2, 0, vac.0, 11, _e1.0, any.3, any.4, 20
 any.0, any.1, any.2, 0, vac.0, 13, _e1.0, any.3, any.4, 22
 any.0, any.1, any.2, 0, vac.0, 14, _e1.0, any.3, any.4, 23
 any.0, any.1, any.2, 0, vac.0, 15, _e1.0, any.3, any.4, 24
 any.0, any.1, any.2, 0, vac.0, 16, _e1.0, any.3, any.4, 25
-#### line 486: 57, N..NW any; 73 ####
+#### line 484: 57, N..NW any; 73 ####
 57, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 73
-#### line 487: 73, N..NW any; 94 ####
+#### line 485: 73, N..NW any; 94 ####
 73, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 94  # need 3 delay states to give data pointer breathing room from both sides
-#### line 488: 94, any, 0, vac, SE (4, prgm), S..SW vac, (4, vac), any; 0 ####
+#### line 486: 94, any, 0, vac, SE (4, prgm), S..SW vac, (4, vac), any; 0 ####
 94, any.0, 0, vac.0, _m0.0, vac.1, vac.2, _e1.0, any.1, 0
-#### line 488: E[SE: (9, pointerOps)] ####
+#### line 486: E[SE: (9, pointerOps)] ####
 vac.0, 0, any.0, any.1, any.2, 4, vac.1, 94, any.3, 9
 vac.0, 0, any.0, any.1, any.2, 1, vac.1, 94, any.3, 10
 vac.0, 0, any.0, any.1, any.2, 2, vac.1, 94, any.3, 11
@@ -2446,11 +2445,11 @@ vac.0, 0, any.0, any.1, any.2, 5, vac.1, 94, any.3, 13
 vac.0, 0, any.0, any.1, any.2, 6, vac.1, 94, any.3, 14
 vac.0, 0, any.0, any.1, any.2, 7, vac.1, 94, any.3, 15
 vac.0, 0, any.0, any.1, any.2, 8, vac.1, 94, any.3, 16
-#### line 489: 4, N 9, NE..E 0, SE (4, prgm), S..NW any; 4 ####
+#### line 487: 4, N 9, NE..E 0, SE (4, prgm), S..NW any; 4 ####
 4, 9, 0, 0, _m0.0, any.0, any.1, any.2, any.3, 4
-#### line 489: N:18 ####
+#### line 487: N:18 ####
 9, any.0, any.1, 0, 0, 4, any.2, any.3, any.4, 18
-#### line 489: E[SE: (88, pointerOps)] ####
+#### line 487: E[SE: (88, pointerOps)] ####
 0, 0, any.0, any.1, any.2, 4, any.3, 4, 9, 88
 0, 0, any.0, any.1, any.2, 1, any.3, 4, 9, 10
 0, 0, any.0, any.1, any.2, 2, any.3, 4, 9, 11
@@ -2458,55 +2457,55 @@ vac.0, 0, any.0, any.1, any.2, 8, vac.1, 94, any.3, 16
 0, 0, any.0, any.1, any.2, 6, any.3, 4, 9, 14
 0, 0, any.0, any.1, any.2, 7, any.3, 4, 9, 15
 0, 0, any.0, any.1, any.2, 8, any.3, 4, 9, 16
-#### line 490: 0, S 88, SW 4, W 18, NW..SE 0; 21 ####
+#### line 488: 0, S 88, SW 4, W 18, NW..SE 0; 21 ####
 0, 0, 0, 0, 0, 88, 4, 18, 0, 21
-#### line 491: 0, S 21, SW 0, W 18, NW..SE any; 21 ####
+#### line 489: 0, S 21, SW 0, W 18, NW..SE any; 21 ####
 0, any.0, any.1, any.2, any.3, 21, 0, 18, any.4, 21
-#### line 491: S:0 ####
+#### line 489: S:0 ####
 21, 0, any.0, any.1, any.2, any.3, any.4, 0, 18, 0
 # Replicate the above NE-output behavior if a bare pointer is on top of an 3 with another to its east
 # (this needs a special case; nothing happens otherwise)
-#### line 494: 12, E (3, any), SE..NE any; 9 ####
+#### line 492: 12, E (3, any), SE..NE any; 9 ####
 12, any.0, any.1, _f1.0, any.2, any.3, any.4, any.5, any.6, 9
-#### line 494: NE[E: (21, _, ...)] ####
+#### line 492: NE[E: (21, _, ...)] ####
 any.0, any.1, any.2, any.3, any.4, 3, 12, any.5, any.6, 21
 # Make north_r_brack wait 4 generations before going up to absolutely make sure it won't collide badly with the data pointer
-#### line 497: 21, W northbound, NW..SW any; [0] ####
+#### line 495: 21, W northbound, NW..SW any; [0] ####
 21, any.0, any.1, any.2, any.3, any.4, any.5, northbound.0, any.6, 21
-#### line 497: N:0 ####
+#### line 495: N:0 ####
 any.0, any.1, any.2, any.3, any.4, 21, northbound.0, any.5, any.6, 0
-#### line 498: 21, NW northbound, N..W any; 87 ####
+#### line 496: 21, NW northbound, N..W any; 87 ####
 21, any.0, any.1, any.2, any.3, any.4, any.5, any.6, northbound.0, 87  # random non-interfering state (any would do)
-#### line 498: N:0 ####
+#### line 496: N:0 ####
 any.0, any.1, any.2, any.3, any.4, 21, any.5, northbound.0, any.6, 0  # random non-interfering state (any would do)
-#### line 499: 87, S 3, SW..SE any; 3 ####
+#### line 497: 87, S 3, SW..SE any; 3 ####
 87, any.0, any.1, any.2, any.3, 3, any.4, any.5, any.6, 3
-#### line 500: 3, S 3, SW..SE any; 21 ####
+#### line 498: 3, S 3, SW..SE any; 21 ####
 3, any.0, any.1, any.2, any.3, 3, any.4, any.5, any.6, 21
 # Move signals
-#### line 502: N[0] ####
+#### line 500: N[0] ####
 any.0, any.1, any.2, any.3, any.4, _g1.0, any.5, any.6, any.7, _g1.0
-#### line 502: (21, northboundNOP), N..NW any; 0 ####
+#### line 500: (21, northboundNOP), N..NW any; 0 ####
 _g1.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
-#### line 503: W[0] ####
+#### line 501: W[0] ####
 any.0, any.1, any.2, _h1.0, any.3, any.4, any.5, any.6, any.7, _h1.0
-#### line 503: (28, westbound), N..NW any; 0 ####
+#### line 501: (28, westbound), N..NW any; 0 ####
 _h1.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
-#### line 504: E[0] ####
+#### line 502: E[0] ####
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, _i1.0, any.7, _i1.0
-#### line 504: (35, eastbound), N..NW any; 0 ####
+#### line 502: (35, eastbound), N..NW any; 0 ####
 _i1.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
-#### line 505: (40, 79, 76), N..NW any; 0 ####
+#### line 503: (40, 79, 76), N..NW any; 0 ####
 _j1.0, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
-#### line 505: S[0] ####
+#### line 503: S[0] ####
 any.0, _j1.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, _j1.0
-# Pointer stops after reaching end
-#### line 508: (9, 12, pointerOps), E..SE 0, S anyPrgm-4, SW..NE any; 0 ####
+# 9 stops after reaching end
+#### line 506: (9, 12, pointerOps), E..SE 0, S anyPrgm-4, SW..NE any; 0 ####
 _k1.0, any.0, any.1, 0, 0, _l1.0, any.2, any.3, any.4, 0
-#### line 508: E:9 ####
+#### line 506: E:9 ####
 0, any.0, any.1, any.2, any.3, 0, _l1.0, _k1.0, any.4, 9
 # ...with some edge-case handling
-#### line 510: 9, E 9, SE 0, S 3, SW..NE any; 0 ####
+#### line 508: 9, E 9, SE 0, S 3, SW..NE any; 0 ####
 9, any.0, any.1, 9, 0, 3, any.2, any.3, any.4, 0  # avoid double pointer if r-brack is the last character
-#### line 511: 9, W 87, NW..S 0, SW any; 0 ####
+#### line 509: 9, W 87, NW..S 0, SW any; 0 ####
 9, 0, 0, 0, 0, 0, any.0, 87, 0, 0  # avoid punching through the prgm tape if comma is the last character

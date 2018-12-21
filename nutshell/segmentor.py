@@ -13,7 +13,6 @@ def seg(name, modifiers, cls=None, *, include_bare=True):
     return base + [(f'{name}:{modifier}', cls) for modifier in modifiers]
 
 
-TableSegment.hush = False  # a little bit eh but :shrug:
 CONVERTERS = [
   *seg('NUTSHELL', NutshellSegment),
   *seg('TABLE', TableSegment),
@@ -73,6 +72,6 @@ def parse(fp):
     
     for name in list(segments):
         if ':' in name:
-            segments.setdefault(name.split(':')[0], []).append(segments[name])
+            segments.setdefault(name.split(':')[0], []).extend(segments[name])
             del segments[name]
     return segments
