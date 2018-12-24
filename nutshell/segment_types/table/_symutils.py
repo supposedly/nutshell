@@ -61,24 +61,33 @@ def get_sym_type(sym):
     return NAMES[sym]
 
 
-def reflect(nbhd, endpoint):
-    endpoints = (endpoint, endpoint)
-    if '+' in endpoint:
-        endpoints = endpoint.split('+')
-    first, second = map(Coord.from_name, endpoints)
-    symmetries = (nbhd.cdirs, nbhd.reflect_across(first, second).cdirs)
+def compose(symmetries):
+    expanded = sorted([t for s in symmetries for t in s.expanded])
+    names = [s.__name__ for s in symmetries]
+    return type('+'.join(names), (object,), {
+      'expanded': property(lambda self: expanded)
+    })
+
+
+def reflect(nbhd, first, second=None):
+    first = Coord.from_name(first)
+    second = first if second is None else Coord.from_name(second)
+    expanded = sorted([nbhd.cdirs, nbhd.reflect_across((first, second)).cdirs])
     # TODO: inherit from napkin
-    return type(f'ReflectFrom{first}{second}', (object,), {
-      'expanded': property(lambda self: symmetries),
+    return type(f'Reflect_{first}_{second}', (object,), {
+      'expanded': property(lambda self: expanded),
     })
 
 
 def rotate(nbhd, n):
-    symmetries = (nbhd.cdirs, *[i.cdirs for i in nbhd.rotations_by(int(n))])
-    return type(f'RotateBy{n}', (object,), {
-      'expanded': property(lambda self: symmetries),
+    expanded = sorted([i.cdirs for i in nbhd.rotations_by(int(n))])
+    return type(f'Rotate_{n}', (object,), {
+      'expanded': property(lambda self: expanded),
     })
 
 
-def permute(nbhd, cdirs):
-    ...  # TODO
+def permute(nbhd, cdirs=None):
+    expanded = sorted(nbhd.permutations(cdirs))
+    return type(f"Permute_{'_'.join(cdirs)}", (object,), {
+        'expanded': property(lambda self: expanded)
+    })

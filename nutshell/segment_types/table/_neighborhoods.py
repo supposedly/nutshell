@@ -1,4 +1,4 @@
-from itertools import takewhile
+from itertools import takewhile, permutations
 from ._classes import Coord
 
 NBHD_SETS = (
@@ -77,12 +77,10 @@ class Neighborhood:
         return f'Neighborhood({self.cdirs!r})'
     
     def __str__(self):
-        blank = '.'
-        
-        return '\n'.join(
-          ' '.join(str(self.get(cdir, blank)) for cdir in row)
-          for row in (('NW', 'N', 'NE'), ('W', 'C', 'E'), ('SW', 'S', 'SE'))
-          )
+        return '\n'.join(map(' '.join, self.to_list()))
+    
+    def to_list(self, blank='.'):
+        return [[self.get(cdir, blank) for cdir in row] for row in (('NW', 'N', 'NE'), ('W', 'C', 'E'), ('SW', 'S', 'SE'))]
     
     def cdir_at(self, idx):
         if idx < 1:  # like negative access on python sequences
@@ -93,13 +91,15 @@ class Neighborhood:
         return get_gollyizer(tbl, self.cdirs)
     
     def reflect_across(self, endpoint):
+        if not isinstance(endpoint, tuple):
+            raise TypeError('Endpoint of line of reflection should be given as tuple of compass directions')
         a, b = endpoint
         if isinstance(a, str):
             a = Coord.from_name(a)
         if isinstance(b, str):
             b = Coord.from_name(b)
         if a != b and a.cw(1) != b:
-            raise ValueError('Endpoint compass directions of a line of reflection must be adjacent and given in clockwise order')
+            raise ValueError('Endpoint compass directions of a line of reflection must be both adjacent and given in clockwise order')
         to_check = [cdir for cdir in self.coord_cdirs if cdir not in {a, b, a.inv, b.inv}]
         if len(to_check) % 2 or any(c.inv.name not in self for c in to_check):
             raise ValueError('Neighborhood is asymmetrical across the requested line of reflection')
@@ -118,9 +118,18 @@ class Neighborhood:
         r = {cdir: self[orig_cdir] for orig_cdir, cdir in d.items()}
         return Neighborhood(sorted(r, key=r.get))
     
+    def rotate_by(self, offset):
+        return Neighborhood(self.cdirs[offset:] + self.cdirs[:offset])
+    
     def rotations_by(self, amt):
         if len(self) % amt:
             raise ValueError(f'Neighborhood cannot be rotated evenly by {amt}')
         if not self.symmetrical:
             raise ValueError('Neighborhood is asymmetrical, cannot be rotated except by 1')
-        return [Neighborhood(self.cdirs[offset:] + self.cdirs[:offset]) for offset in range(0, len(self), len(self) // amt)]
+        return [self.rotate_by(offset) for offset in range(0, len(self), len(self) // amt)]
+    
+    def permutations(self, cdirs=None):
+        if cdirs is None:
+            cdirs = self.cdirs
+        check = set(cdirs)
+        return [Neighborhood(next(permute) if c in check else c for c in self) for permute in map(iter, permutations(cdirs))]
