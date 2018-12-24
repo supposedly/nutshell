@@ -50,13 +50,12 @@ def fill(ordered_nbhd, tbl, napkin, anys):  # anys == usages of `any`
 
 
 class Neighborhood:
-    MOORE = dict(zip(ORDERED_NBHDS['Moore'], range(8)))
-    
     def __init__(self, cdirs):
         self.cdirs = tuple(cdirs)
         self.coord_cdirs = tuple(map(Coord.from_name, cdirs))
         self._inv = dict(enumerate(cdirs, 1))
         self.idxes = {v: k for k, v in self._inv.items()}
+        self.get = self.idxes.get
         self.symmetrical = all(c.inv.name in self for c in self.coord_cdirs)
     
     def __contains__(self, item):
@@ -74,6 +73,17 @@ class Neighborhood:
     def __len__(self):
         return len(self.cdirs)
     
+    def __repr__(self):
+        return f'Neighborhood({self.cdirs!r})'
+    
+    def __str__(self):
+        blank = '.'
+        
+        return '\n'.join(
+          ' '.join(str(self.get(cdir, blank)) for cdir in row)
+          for row in (('NW', 'N', 'NE'), ('W', 'C', 'E'), ('SW', 'S', 'SE'))
+          )
+    
     def cdir_at(self, idx):
         if idx < 1:  # like negative access on python sequences
             return self._inv[len(self) + idx]
@@ -82,19 +92,29 @@ class Neighborhood:
     def gollyizer_for(self, tbl):
         return get_gollyizer(tbl, self.cdirs)
     
-    def reflect_across(self, a, b=None):
-        if b is None:
-            b = a
+    def reflect_across(self, endpoint):
+        a, b = endpoint
+        if isinstance(a, str):
+            a = Coord.from_name(a)
+        if isinstance(b, str):
+            b = Coord.from_name(b)
         if a != b and a.cw(1) != b:
             raise ValueError('Endpoint compass directions of a line of reflection must be adjacent and given in clockwise order')
+        to_check = [cdir for cdir in self.coord_cdirs if cdir not in {a, b, a.inv, b.inv}]
+        if len(to_check) % 2 or any(c.inv.name not in self for c in to_check):
+            raise ValueError('Neighborhood is asymmetrical across the requested line of reflection')
+        if a == b:
+            # i think the naive approach is the only way to go :(
+            while a.name not in self:
+                a = a.ccw(1)
+            while b.name not in self:
+                b = b.cw(1)
         d = {}
         try:
             for cdir in self.coord_cdirs:
                 d[cdir.name] = a.cw(b.ccw_distance(cdir, self), self).name
         except KeyError as e:
             raise ValueError(f'Neighborhood does not contain {e}')
-        if set(d) != set(d.values()):
-            raise ValueError('Neighborhood is asymmetrical across the requested line of reflection')
         r = {cdir: self[orig_cdir] for orig_cdir, cdir in d.items()}
         return Neighborhood(sorted(r, key=r.get))
     
