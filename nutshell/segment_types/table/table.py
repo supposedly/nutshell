@@ -32,13 +32,7 @@ class Bidict(bidict.bidict):
 
 
 class TableSegment:
-    CARDINALS = generate_cardinals({
-      'oneDimensional': ('W', 'E'),
-      'vonNeumann': ('N', 'E', 'S', 'W'),
-      'hexagonal': ('N', 'E', 'SE', 'S', 'W', 'NW'),
-      'Moore': ('N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'),
-      })
-    TRLENS = {k: len(v) for k, v in CARDINALS.items()}
+    CARDINALS = generate_cardinals(nbhoods.ORDERED_NBHDS)
 
     def __init__(self, tbl, start=0, *, dep: ['@NUTSHELL'] = (None,)):
         # parser (lexer?) dies if there are blank lines right at the start

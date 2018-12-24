@@ -708,7 +708,7 @@ class Auxiliary:
         self.ctx = context
         self.tbl = tbl
         self.initial_cdir = initial_cdir
-        self.orig = Coord.from_name(initial_cdir, tbl).inv
+        self.orig = Coord.from_name(initial_cdir).inv
         self.resultant = resultant
         self.symmetries = symmetries or tbl.symmetries
         self.stationary = False
@@ -718,7 +718,7 @@ class Auxiliary:
               f'Delayed auxiliaries (as in "{initial_cdir}+{delay}") are not supported as of yet'
               )
         if isinstance(resultant, Mapping):
-            if resultant.cdir != '0' and not self.orig.toward(resultant.cdir).valid():
+            if resultant.cdir != '0' and not self.orig.toward(resultant.cdir).valid_in(tbl.neighborhood):
                 nbhd = tbl.directives['neighborhood']
                 raise CoordOutOfBounds(
                   self.ctx,
@@ -740,22 +740,23 @@ class Auxiliary:
     def _make_tr(self, tr, resultant):
         new_tr = [tr[self.initial_cdir], *[self.tbl.vars['any']]*self.tbl.trlen, resultant]
         orig = self.orig
+        nbhd = self.tbl.neighborhood
         # Adjacent cells to original cell (diagonal to current)
         with suppress(KeyError):
-            new_tr[orig.idx] = tr[0]
+            new_tr[orig.idx_in(nbhd)] = tr[0]
         with suppress(KeyError):
-            new_tr[orig.cw.idx] = tr[orig.cw.toward(self.initial_cdir).idx]
+            new_tr[orig.cw(1).idx_in(nbhd)] = tr[orig.cw(1).toward(self.initial_cdir).idx_in(nbhd)]
         with suppress(KeyError):
-            new_tr[orig.ccw.idx] = tr[orig.ccw.toward(self.initial_cdir).idx]
+            new_tr[orig.ccw(1).idx_in(nbhd)] = tr[orig.ccw(1).toward(self.initial_cdir).idx_in(nbhd)]
         # If we're orthogonal to orig, we have to account for the cells adjacent to us too
         if not orig.diagonal():
             # In this case orig.cw(2).toward(self.initial_cdir) happens to be equivalent
             # to orig.cw(3), which is also shorter, but in the interest of remaining
             # consistent with the general technique I'll write it the longer way
             with suppress(KeyError):
-                new_tr[orig.cw(2).idx] = tr[orig.cw(2).toward(self.initial_cdir).idx]
+                new_tr[orig.cw(2).idx_in(nbhd)] = tr[orig.cw(2).toward(self.initial_cdir).idx_in(nbhd)]
             with suppress(KeyError):
-                new_tr[orig.ccw(2).idx] = tr[orig.ccw(2).toward(self.initial_cdir).idx]
+                new_tr[orig.ccw(2).idx_in(nbhd)] = tr[orig.ccw(2).toward(self.initial_cdir).idx_in(nbhd)]
         return new_tr
     
     def from_int(self, tr):
@@ -768,7 +769,7 @@ class Auxiliary:
         # if isinstance(within, ResolvedBinding):
         #    raise Reshape(self.resultant.cdir)
         if isinstance(within, ResolvedBinding):
-            within.cdir = Coord.from_name(within.cdir, self.tbl).move(*self.orig).name
+            within.cdir = Coord.from_name(within.cdir).move(*self.orig).name
         return TransitionGroup.from_seq(
           self._make_tr(tr, within), self.tbl, context=self.ctx, symmetries=self.symmetries
         ).expand(tr)
@@ -799,45 +800,54 @@ class Coord(tuple):
       '0': (0, 0),
       }
     _DIRMAP = dict(zip(_DIRS, range(8)))
-    _NAMES = {**{v: k for k, v in _OFFSETS.items()}, (0, 0): '0'}
+    _NAMES = {v: k for k, v in _OFFSETS.items()}
     
-    def __new__(cls, it, tbl=None):
+    def __new__(cls, it):
         return super().__new__(cls, it)
     
-    def __init__(self, tup, tbl=None):
-        self.tbl = tbl
+    def __init__(self, tup):
         self.tuple = tuple(super().__iter__())
-        if not (-2 < self.x < 2 and -2 < self.y < 2):
+        if len(tup) != 2 or not (-2 < self.x < 2 and -2 < self.y < 2):
             raise CoordOutOfBoundsError(self)
     
     def __repr__(self):
         return f'Coord({super().__repr__()})'
     
+    def __eq__(self, other):
+        if isinstance(other, Coord):
+            return self.tuple == other.tuple
+        return NotImplemented
+    
+    def __hash__(self):
+        return super().__hash__()
+    
+    def __lt__(self, other):
+        return self.idx < other.idx
+    
+    def __le__(self, other):
+        return self < other or self == other
+    
+    def __gt__(self, other):
+        return self.idx > other.idx
+    
+    def __ge__(self, other):
+        return self > other or self == other
+    
     @classmethod
-    def from_name(cls, cdir, tbl=None):
-        return cls(cls._OFFSETS[cdir], tbl)
+    def from_name(cls, cdir):
+        return cls(cls._OFFSETS[cdir])
     
     @property
     def name(self):
         return self._NAMES[self]
     
     @property
-    def idx(self):
-        return self.tbl.neighborhood[self.name]
-    
-    @property
     def inv(self):
-        return Coord((-self.x, -self.y), self.tbl)
+        return Coord((-self.x, -self.y))
     
     @property
-    def cw(self):
-        idx = 1 + self._DIRMAP[self.name]
-        return _MaybeCallableCW(self._OFFSETS[self._DIRS[idx % 8]], self.tbl)
-    
-    @property
-    def ccw(self):
-        idx = self._DIRMAP[self.name]
-        return _MaybeCallableCCW(self._OFFSETS[self._DIRS[idx-1]], self.tbl)
+    def idx(self):
+        return self._DIRMAP[self.name]
     
     @property
     def x(self):
@@ -847,8 +857,33 @@ class Coord(tuple):
     def y(self):
         return self[1]
     
-    def valid(self):
-        return self.center() or self.tbl and self.name in self.tbl.neighborhood
+    def idx_in(self, nbhd):
+        return nbhd[self.name]
+    
+    def valid_in(self, nbhd):
+        return self.center() or self.name in nbhd
+    
+    def cw_distance(self, other, nbhd=None):
+        """Returns n such that self.cw(n) == other"""
+        if nbhd is None:
+            return (8 - self.ccw_distance(other)) % 8
+        return (len(nbhd) - self.ccw_distance(other, nbhd)) % len(nbhd)
+    
+    def ccw_distance(self, other, nbhd=None):
+        """Returns n such that self.ccw(n) == other"""
+        if nbhd is None:
+            return (self.idx - other.idx) % 8
+        return (self.idx_in(nbhd) - other.idx_in(nbhd)) % len(nbhd)
+    
+    def cw(self, count, nbhd=None):
+        if nbhd is None:
+            return Coord(self._OFFSETS[self._DIRS[(count + self._DIRMAP[self.name]) % 8]])
+        return Coord(self._OFFSETS[nbhd.cdir_at((nbhd[self.name] + count - 1) % len(nbhd) + 1)])
+    
+    def ccw(self, count, nbhd=None):
+        if nbhd is None:
+            return Coord(self._OFFSETS[self._DIRS[self._DIRMAP[self.name] - count]])
+        return Coord(self._OFFSETS[nbhd.cdir_at(nbhd[self.name] - count)])
     
     def diagonal(self):
         return all(self)
@@ -860,21 +895,4 @@ class Coord(tuple):
         return self.move(*self._OFFSETS[cd.upper()])
     
     def move(self, x=0, y=0):
-        return Coord((x + self.x, y + self.y), self.tbl)
-
-
-class _MaybeCallableCW(Coord):
-    """
-    Allows Coord.cw.cw.cw.cw to be replaced by Coord.cw(4), and so on.
-    (The former will still work, however.)
-    """
-    def __call__(self, num):
-        return Coord(self.cw(num-1) if num > 1 else self, self.tbl)
-
-
-class _MaybeCallableCCW(Coord):
-    """
-    Ditto above, but counterclockwise.
-    """
-    def __call__(self, num):
-        return Coord(self.ccw(num-1) if num > 1 else self, self.tbl)
+        return Coord((x + self.x, y + self.y))

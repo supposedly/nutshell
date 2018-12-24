@@ -1,6 +1,7 @@
 from importlib import import_module
 
 from nutshell.common import symmetries as ext_symmetries
+from ._classes import Coord
 from . import _napkins as napkins
 
 NAMES = napkins.NAMES.copy()
@@ -58,3 +59,26 @@ def get_sym_type(sym):
         module = ext_symmetries if name == 'nutshell' else import_module(name.lstrip('_'))
         NAMES[sym] = getattr(module, clsname)
     return NAMES[sym]
+
+
+def reflect(nbhd, endpoint):
+    endpoints = (endpoint, endpoint)
+    if '+' in endpoint:
+        endpoints = endpoint.split('+')
+    first, second = map(Coord.from_name, endpoints)
+    symmetries = (nbhd.cdirs, nbhd.reflect_across(first, second).cdirs)
+    # TODO: inherit from napkin
+    return type(f'ReflectFrom{first}{second}', (object,), {
+      'expanded': property(lambda self: symmetries),
+    })
+
+
+def rotate(nbhd, n):
+    symmetries = (nbhd.cdirs, *[i.cdirs for i in nbhd.rotations_by(int(n))])
+    return type(f'RotateBy{n}', (object,), {
+      'expanded': property(lambda self: symmetries),
+    })
+
+
+def permute(nbhd, cdirs):
+    ...  # TODO

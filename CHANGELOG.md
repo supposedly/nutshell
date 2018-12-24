@@ -2,13 +2,13 @@
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 
-## [0.6.0] - In progress?
+## [0.6.0] - In progress
 ### Planned
 - A complete overhaul of symmetries and neighborhoods such that:
   - Such transformations as reflection and rotation are handled from the *neighborhood* rather than the symmetry type
   - Nutshell, given the compass directions composing a neighborhood, automatically determines what standard transformations
     it can undergo
-  - Symmetry types simply have to call, for instance, neighborhood.rotate4() -- rather than themselves reordering the napkin
+  - ~~Symmetry types simply have to call, for instance, neighborhood.rotate4() -- rather than themselves reordering the napkin~~
   - Symmetry types can be composed from within Nutshell without my having to define a new Python class for each basic combination
     of symmetries
   - Also, apgsearch-like symmetry notation...?
