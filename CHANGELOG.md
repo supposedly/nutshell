@@ -16,6 +16,13 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 - A `prune` macro
 - More modifiers, e.g. Langton's Ant and Deficient/genext -- also hex (although hex symmetries are scary)
 
+## [0.5.5] - 2018-12-24
+### Changed
+- Permute in inline rulestrings was transpiling wrong, and it was annoying to have to `force-r4r` with Brew, so that's out --
+  r4r is now the default
+### Fixed
+- Bug having to do with the above
+
 ## [0.5.4] - 2018-12-21
 ### Changed
 - The output of `!expression` in `@TABLE` now includes the original expression alongside its result.

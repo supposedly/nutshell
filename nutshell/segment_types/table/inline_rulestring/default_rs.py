@@ -26,63 +26,7 @@ FOUR_NEIGHBOR = {
 
 
 def standard(meta, initial, fg, bg, resultant, rulestring, variables, table):
-    if isinstance(rulestring, str):
-        rulestring = parse_rulestring(rulestring, meta, table)
-    if isinstance(fg, StateList):
-        variables[table.new_varname(-1)] = fg
-    if isinstance(bg, StateList):
-        variables[table.new_varname(-1)] = bg
-    
-    get_fg, get_bg = _get_getter(table, fg, 'FG'), _get_getter(table, bg, 'BG')
-    get_initial, get_resultant = _get_getter(table, initial, None), _get_getter(table, resultant, None)
-    
-    ret = []
-    found_permute = found_r4r = False
-    counter = count(1)
-    for nb_count, letters in rulestring.items():
-        if len(letters) < len(hensel.R4R_NBHDS[nb_count]):
-            found_permute = True
-            int_count = int(nb_count)
-            ret.append(TransitionGroup(
-              table,
-              get_initial(nb_count, None, meta),
-              {
-                num: get_fg(nb_count, None, meta)
-                if num <= int_count
-                else get_bg(nb_count, None, meta)
-                for num in table.neighborhood.values()
-              },
-              get_resultant(nb_count, None, meta),
-              context=meta, extra=next(counter),
-              symmetries=PERMUTE
-            ))
-        else:
-            found_r4r = True
-            for letter in letters:
-                ret.append(TransitionGroup(
-                  table,
-                  get_initial(nb_count, letter, meta),
-                  {
-                    num: get_fg(nb_count, letter, meta)
-                    # XXX: probably suboptimal performance b/c [dot attr access] -> [getitem] -> [getitem]
-                    if cdir in hensel.R4R_NBHDS[nb_count][letter]
-                    else get_bg(nb_count, letter, meta)
-                    for cdir, num in table.neighborhood.items()
-                  },
-                  get_resultant(nb_count, letter, meta),
-                  context=meta, extra=next(counter),
-                  symmetries=ROTATE_4_REFLECT
-                ))
-    
-    if found_permute:
-        table.add_sym_type('permute')
-    if found_r4r:
-        table.add_sym_type('rotate4reflect')
-    
-    return ret
-
-
-def r4r_only(meta, initial, fg, bg, resultant, rulestring, variables, table):
+    # r4r only, permute's a headache for some reason
     if isinstance(rulestring, str):
         rulestring = parse_rulestring(rulestring, meta, table)
     if isinstance(fg, StateList):
