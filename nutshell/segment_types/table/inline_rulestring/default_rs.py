@@ -6,8 +6,6 @@ from nutshell.common.errors import *
 from . import hensel
 from .. import _symutils as symutils
 
-ROTATE_4_REFLECT = symutils.get_sym_type('rotate4reflect')
-PERMUTE = symutils.get_sym_type('permute')
 FOUR_NEIGHBOR = {
   'c': 'e',
   'e': 'c',
@@ -40,6 +38,7 @@ def standard(meta, initial, fg, bg, resultant, rulestring, variables, table):
     
     if r4r_nbhds:
         table.add_sym_type('rotate4reflect')
+    r4r = symutils.get_sym_type(table.neighborhood, 'rotate4reflect')
     
     get_fg, get_bg = _get_getter(table, fg, 'FG'), _get_getter(table, bg, 'BG')
     get_initial, get_resultant = _get_getter(table, initial, None), _get_getter(table, resultant, None)
@@ -57,7 +56,7 @@ def standard(meta, initial, fg, bg, resultant, rulestring, variables, table):
         },
         get_resultant(nb_count, letter, meta),
         context=meta, extra=next(counter),
-        symmetries=ROTATE_4_REFLECT
+        symmetries=r4r
         )
         for nb_count, letters in r4r_nbhds.items()
         for letter in letters

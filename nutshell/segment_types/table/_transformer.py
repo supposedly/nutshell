@@ -250,7 +250,7 @@ class Preprocess(Transformer):
                             raise SyntaxErr(
                               fix(first.meta),
                               'Out-of-sequence compass direction '
-                              f'(expected {self._tbl.neighborhood.inv[idx] + (" or further" if all_cdir else "")}, got {first.children[0]})'
+                              f'(expected {self._tbl.neighborhood.cdir_at(idx) + (" or further" if all_cdir else "")}, got {first.children[0]})'
                               )
                         pure_idx += abs(cdir - idx)
                         idx = cdir
@@ -277,11 +277,11 @@ class Preprocess(Transformer):
                         if idx == 1:
                             idx = offset_initial = crange[0]
                         else:
-                            nbhd = self._tbl.neighborhood.inv
+                            cdir_at = tbl.neighborhood.cdir_at
                             raise SyntaxErr(
                               (first.meta.line, first.meta.column, len(a) + first.meta.column),
                               'Out-of-sequence compass direction '
-                              f'(expected {nbhd[idx]}, got {nbhd[crange[0]]})'
+                              f'(expected {cdir_at(idx)}, got {cdir_at(crange[0])})'
                               )
                     
                     rest, = rest
@@ -310,7 +310,7 @@ class Preprocess(Transformer):
                     pure_idx += 1
             if all_cdir:
                 napkin.update(dict.fromkeys(
-                  [idx for idx in self._tbl.neighborhood.inv if idx not in napkin],
+                  [idx for idx in range(1, 1+len(self._tbl.neighborhood)) if idx not in napkin],
                   self.vars['any']
                   ))
             if len(napkin) != self._tbl.trlen:

@@ -22,8 +22,7 @@ CUSTOM_NBHD = re.compile(r'(?:[NS][EW]?|[EW])(?:,(?:[NS][EW]?|[EW]))*')
 
 
 def generate_cardinals(d):
-    """{'name': ('N', 'E', ...)} >>> {'name': {'N' :: 1, 'E' :: 2, ...}}"""
-    return {k: bidict.bidict(enumerate(v, 1)).inv for k, v in d.items()}
+    return {k: nbhoods.Neighborhood(v) for k, v in d.items()}
 
 
 class Bidict(bidict.bidict):
@@ -165,8 +164,8 @@ class TableSegment:
             nbhd = val.split(',')
             if len(nbhd) != len(set(nbhd)):
                 raise ValueError('Duplicate compass directions in neighborhood')
-            self._nbhd = bidict.bidict(enumerate(nbhd, 1)).inv
-            self.gollyize_nbhd = nbhoods.get_gollyizer(self, nbhd)
+            self._nbhd = nbhoods.Neighborhood(nbhd)
+            self.gollyize_nbhd = self._nbhd.gollyizer_for(self)
         elif val in self.CARDINALS:
             self._nbhd = self.CARDINALS[val]
         else:
@@ -181,7 +180,7 @@ class TableSegment:
     
     @property
     def symmetries(self):
-        return symutils.get_sym_type(self.directives['symmetries'])
+        return symutils.get_sym_type(self.neighborhood, self.directives['symmetries'])
     
     @property
     def n_states(self):

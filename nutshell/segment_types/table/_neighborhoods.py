@@ -17,54 +17,18 @@ ORDERED_NBHDS = {
 }
 
 
-def get_gollyizer(tbl, nbhd):
-    nbhd_set = set(nbhd)
-    for s, name in NBHD_SETS:
-        if nbhd_set <= s:
-            tbl.directives['neighborhood'] = name
-            if nbhd_set < s:
-                return fill.__get__(ORDERED_NBHDS[name])
-            return lambda tbl, napkin, _anys: reorder(ORDERED_NBHDS[name], tbl, napkin)
-    raise ValueError('Invalid (non-Moore-subset) neighborhood {nbhd_set}}')
-
-
-def reorder(ordered_nbhd, tbl, napkin):
-    cdir_at = tbl.neighborhood.cdir_at
-    d = {cdir_at(k): v for k, v in enumerate(napkin, 1)}
-    return [d[cdir] for cdir in ordered_nbhd]
-
-
-def fill(ordered_nbhd, tbl, napkin, anys):  # anys == usages of `any`
-    if isinstance(anys, int):
-        anys = set(range(anys))
-    cdir_at = tbl.neighborhood.cdir_at
-    d = {cdir_at(k): v for k, v in enumerate(napkin, 1)}
-    available_tags = [i for i in range(10) if i not in anys]
-    # (ew, but grabbing VarName object)
-    tbl.vars.inv[tbl.vars['any']].update_rep(
-      max(anys) + len(ordered_nbhd) - len(tbl.neighborhood) - sum(takewhile(max(anys).__gt__, available_tags))
-      )
-    tagged_names = (f'any.{i}' for i in available_tags)
-    # `or` because this needs lazy evaluation
-    return [d.get(cdir) or next(tagged_names) for cdir in ordered_nbhd]
-
-
 class Neighborhood:
     def __init__(self, cdirs):
         self.cdirs = tuple(cdirs)
         self.coord_cdirs = tuple(map(Coord.from_name, cdirs))
         self._inv = dict(enumerate(cdirs, 1))
         self.idxes = {v: k for k, v in self._inv.items()}
-        self.get = self.idxes.get
         self.symmetrical = all(c.inv.name in self for c in self.coord_cdirs)
     
     def __contains__(self, item):
         return item in self.idxes
     
     def __getitem__(self, item):
-        if isinstance(item, slice):
-            # old-'inv of bidict'-style syntax, obj[:item]
-            return self.cdir_at(item.stop)
         return self.idxes[item]
     
     def __iter__(self):
@@ -78,6 +42,9 @@ class Neighborhood:
     
     def __str__(self):
         return '\n'.join(map(' '.join, self.to_list()))
+    
+    def get(self, item, default=None):
+        return self.idxes.get(item, default)
     
     def to_list(self, blank='.'):
         return [[self.get(cdir, blank) for cdir in row] for row in (('NW', 'N', 'NE'), ('W', 'C', 'E'), ('SW', 'S', 'SE'))]
@@ -131,5 +98,37 @@ class Neighborhood:
     def permutations(self, cdirs=None):
         if cdirs is None:
             cdirs = self.cdirs
-        check = set(cdirs)
-        return [Neighborhood(next(permute) if c in check else c for c in self) for permute in map(iter, permutations(cdirs))]
+        permuted_cdirs = set(cdirs)
+        return [Neighborhood(next(permute) if c in permuted_cdirs else c for c in self) for permute in map(iter, permutations(cdirs))]
+
+
+def get_gollyizer(tbl, nbhd):
+    nbhd_set = set(nbhd)
+    for s, name in NBHD_SETS:
+        if nbhd_set <= s:
+            tbl.directives['neighborhood'] = name
+            if nbhd_set < s:
+                return fill.__get__(ORDERED_NBHDS[name])
+            return lambda tbl, napkin, _anys: reorder(ORDERED_NBHDS[name], tbl, napkin)
+    raise ValueError('Invalid (non-Moore-subset) neighborhood {nbhd_set}}')
+
+
+def reorder(ordered_nbhd, tbl, napkin):
+    cdir_at = tbl.neighborhood.cdir_at
+    d = {cdir_at(k): v for k, v in enumerate(napkin, 1)}
+    return [d[cdir] for cdir in ordered_nbhd]
+
+
+def fill(ordered_nbhd, tbl, napkin, anys):  # anys == usages of `any`
+    if isinstance(anys, int):
+        anys = set(range(anys))
+    cdir_at = tbl.neighborhood.cdir_at
+    d = {cdir_at(k): v for k, v in enumerate(napkin, 1)}
+    available_tags = [i for i in range(10) if i not in anys]
+    # (ew, but grabbing VarName object)
+    tbl.vars.inv[tbl.vars['any']].update_rep(
+      max(anys) + len(ordered_nbhd) - len(tbl.neighborhood) - sum(takewhile(max(anys).__gt__, available_tags))
+      )
+    tagged_names = (f'any.{i}' for i in available_tags)
+    # `or` because this needs lazy evaluation
+    return [d.get(cdir) or next(tagged_names) for cdir in ordered_nbhd]

@@ -3,7 +3,6 @@ from contextlib import suppress
 from functools import partial
 from itertools import count, cycle
 
-from . import _neighborhoods as nbhds
 from nutshell.common.utils import random, distinct
 from nutshell.common.errors import *
 from .lark_assets.exceptions import *
@@ -63,8 +62,8 @@ class TransitionGroup:
         self.extra = extra
         self.tbl = tbl
         self.symmetries = symmetries or tbl.symmetries
-        nbhd = tbl.neighborhood.inv
-        self._tr_dict = {'0': initial, **{nbhd[k]: v for k, v in napkin.items()}}
+        cdir_at = tbl.neighborhood.cdir_at
+        self._tr_dict = {'0': initial, **{cdir_at(k): v for k, v in napkin.items()}}
         self._tr = [initial, *map(napkin.get, range(1, 1+len(napkin))), resultant]
         self._n = napkin
         self._expandeds = {}
@@ -226,8 +225,8 @@ class Transition:
               f"got {resultant.untether()}, a statelist of length {len(resultant)}"
             )
         self.resultant = resultant
-        nbhd = tbl.neighborhood.inv
-        self._tr_dict = {'0': self.initial, **{nbhd[k]: v for k, v in enumerate(self.napkin, 1)}}
+        cdir_at = tbl.neighborhood.cdir_at
+        self._tr_dict = {'0': self.initial, **{cdir_at(k): v for k, v in enumerate(self.napkin, 1)}}
         self.symmetries = symmetries or tbl.symmetries
         self.tbl = tbl
     
@@ -878,12 +877,12 @@ class Coord(tuple):
     def cw(self, count, nbhd=None):
         if nbhd is None:
             return Coord(self._OFFSETS[self._DIRS[(count + self._DIRMAP[self.name]) % 8]])
-        return Coord(self._OFFSETS[nbhd.cdir_at((nbhd[self.name] + count - 1) % len(nbhd) + 1)])
+        return Coord(self._OFFSETS[nbhd.cdir_at((self.idx_in(nbhd) + count - 1) % len(nbhd) + 1)])
     
     def ccw(self, count, nbhd=None):
         if nbhd is None:
             return Coord(self._OFFSETS[self._DIRS[self._DIRMAP[self.name] - count]])
-        return Coord(self._OFFSETS[nbhd.cdir_at(nbhd[self.name] - count)])
+        return Coord(self._OFFSETS[nbhd.cdir_at(self.idx_in(nbhd) - count)])
     
     def diagonal(self):
         return all(self)

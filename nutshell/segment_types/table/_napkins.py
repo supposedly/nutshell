@@ -201,7 +201,7 @@ class Permute(Napkin):
     @staticmethod
     def special(values, length):
         """
-        Given a shorthand permutationally-symmetric transition:
+        Given a shorthand permutationally-symmetrical transition:
           length=8 (Moore neighborhood)
           -------
           1, 0
