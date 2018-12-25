@@ -90,7 +90,6 @@ def _new_sym_type(name, expanded):
 
 
 def compose(*symmetries):
-    print([i.expanded for i in symmetries])
     return _new_sym_type(
       '+'.join([s.__name__ for s in symmetries]),
       sorted({t for s in symmetries for t in s.expanded})

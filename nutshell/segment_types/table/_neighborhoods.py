@@ -47,7 +47,7 @@ class Neighborhood:
         return self.idxes.get(item, default)
     
     def to_list(self, blank='.'):
-        return [[self.get(cdir, blank) for cdir in row] for row in (('NW', 'N', 'NE'), ('W', 'C', 'E'), ('SW', 'S', 'SE'))]
+        return [[str(self.get(cdir, blank)) for cdir in row] for row in (('NW', 'N', 'NE'), ('W', 'C', 'E'), ('SW', 'S', 'SE'))]
     
     def cdir_at(self, idx):
         if idx < 1:  # like negative access on python sequences
