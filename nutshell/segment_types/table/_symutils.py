@@ -1,5 +1,6 @@
 from functools import reduce
 from importlib import import_module
+from operator import and_ as bitwise_and
 
 from nutshell.common import symmetries as ext_symmetries, utils
 from ._classes import Coord
@@ -68,16 +69,9 @@ class Napkin(tuple, metaclass=NapkinMeta):
     
     @classmethod
     def compose(cls, other):
-        def _not_lambda(self):
-            # why bother with .__get__() rather than just iterating through .expanded?
-            # because (1) each class's nbhd may not yet have been initialized, which will
-            # make .expanded error, and (2) when we're composing, we don't really care about
-            # the method as relating to a specific class -- we only care about the *transformation*
-            # provided by the pure, unbound method
-            return [j for i in other.expand.__get__(self)() for j in cls.expand.__get__(self.__class__(i))()]
         return _new_sym_type(
           f'{cls.__name__}+{other.__name__}',
-          _not_lambda
+          lambda self: [j for i in other.expand(self) for j in cls.expand(self.__class__(i))]
           )
     
     def _convert(self, iterable):
@@ -96,8 +90,12 @@ class Napkin(tuple, metaclass=NapkinMeta):
 
 def find_min_sym_type(symmetries, nbhd):
     dummy = range(len(nbhd))
-    # `return permute_under_nbhd(dummy) & ...` for non-golly symmetries too
-    return reduce(frozenset.__and__, [cls(dummy).expanded for cls in symmetries])
+    superset = permute()
+    superset.nbhd = nbhd
+    return superset(dummy) & reduce(
+      bitwise_and,
+      [cls(dummy).expanded for cls in symmetries]
+      )
 
 
 def get_sym_type(nbhd, string):
