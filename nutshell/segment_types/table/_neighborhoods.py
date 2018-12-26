@@ -85,6 +85,9 @@ class Neighborhood:
         r = {cdir: self[orig_cdir] for orig_cdir, cdir in d.items()}
         return Neighborhood(sorted(r, key=r.get))
     
+    def reflections_across(self, endpoint):
+        return (self, self.reflect_across(endpoint))
+    
     def rotate_by(self, offset):
         return Neighborhood(self.cdirs[offset:] + self.cdirs[:offset])
     
