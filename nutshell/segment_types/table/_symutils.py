@@ -1,15 +1,16 @@
-from functools import reduce
+from functools import reduce, lru_cache
 from importlib import import_module
 from operator import and_ as bitwise_and
 
 from nutshell.common import symmetries as ext_symmetries, utils
+from ._neighborhoods import Neighborhood
 from ._classes import Coord
-# from ._neighborhoods import Neighborhood
-    
+
 
 class Napkin(tuple):
     nbhd = None
     transformations = None
+    _RECENTS = {}
 
     def __init__(self, _):
         self._expanded = None
@@ -20,6 +21,7 @@ class Napkin(tuple):
             raise NotImplementedError('Please override class attribute `nbhd` in Napkin subclass')
         if cls.transformations is None:
             raise NotImplementedError('Please override class attribute `transformations` in Napkin subclass')
+        cls._RECENTS = {}
         cls.test_nbhd()
     
     def __hash__(self):
@@ -70,16 +72,20 @@ class Napkin(tuple):
         return self._convert(self.nbhd.rotations_by(*args, as_cls=False))
     
     def permutations(self, *args):
-        return self._convert(self.nbhd.permutations(*args, as_cls=False))
+        if args not in self._RECENTS:
+            self._RECENTS[args] = self._convert(self.nbhd.permutations(*args, as_cls=False))
+        return self._RECENTS[args]
 
 
 def find_min_sym_type(symmetries, nbhd):
     dummy = range(len(nbhd))
-    superset = permute()(dummy)
-    return superset(dummy).expanded & reduce(
+    result = reduce(
       bitwise_and,
       [cls(dummy).expanded for cls in symmetries]
       )
+    if result in _GOLLY_NAMES:
+        return result, _GOLLY_NAMES[result]
+    return none(nbhd), 'none'
 
 
 def get_sym_type(nbhd, string):
@@ -94,8 +100,7 @@ def get_sym_type(nbhd, string):
     all_syms.append(current)
     resultant_sym = None
     for name, *args in all_syms:
-        _cur_sym = PRESETS[name](nbhd) if name in PRESETS else FUNCS[name](*args)
-        cur_sym = _cur_sym(nbhd)
+        cur_sym = PRESETS[name](nbhd) if name in PRESETS else FUNCS[name](*args)(nbhd)
         resultant_sym = cur_sym if resultant_sym is None else resultant_sym.compose(cur_sym)
     return resultant_sym
 
@@ -113,37 +118,43 @@ def _new_sym_type(nbhd, name, transformations, func=None):
     })
 
 
+@lru_cache()
 def compose(*funcs):
-    return lambda nbhd: reduce(Napkin.compose.__func__, [f(nbhd) for f in funcs])
+    return lru_cache()(lambda nbhd: reduce(Napkin.compose.__func__, [f(nbhd) for f in funcs]))
 
 
+@lru_cache()
 def reflect(first, second=None):
     first = Coord.from_name(first)
     second = first if second is None else Coord.from_name(second)
-    return lambda nbhd: _new_sym_type(
+    return lru_cache()(lambda nbhd: _new_sym_type(
       nbhd,
       f'Reflect_{first.name}_{second.name}',
       ('reflections_across', (first, second))  # lambda self: self.reflections_across((first, second))
-      )
+    ))
 
 
+@lru_cache()
 def rotate(n):
-    return lambda nbhd: _new_sym_type(
+    return lru_cache()(lambda nbhd: _new_sym_type(
       nbhd,
       f'Rotate_{n}',
       ('rotations_by', int(n))  # lambda self: self.rotations_by(int(n))
-    )
+    ))
 
 
+@lru_cache()
 def permute(*cdirs):
-    return lambda nbhd: _new_sym_type(
+    return lru_cache()(lambda nbhd: _new_sym_type(
       nbhd,
       f"Permute_{'_'.join(cdirs) if cdirs else 'All'}",
       ('permutations', cdirs or None)  # lambda self: self.permutations(cdirs or None)
-    )
+    ))
 
-def _none(nbhd):
-    return _new_sym_type(nbhd, 'NoSymmetry', lambda self: [self])
+
+@lru_cache()
+def none(nbhd):
+    return _new_sym_type(nbhd, 'NoSymmetry', (), lambda self: [tuple(self)])
 
 
 PRESETS = {
@@ -153,7 +164,7 @@ PRESETS = {
   'rotate4': rotate(4),
   'reflect_horizontal': reflect('W'),
   'reflect_vertical': reflect('N'),
-  'none': _none
+  'none': none
 }
 
 FUNCS = {
@@ -161,3 +172,14 @@ FUNCS = {
   'reflect': reflect,
   'rotate': rotate,
 }
+
+_permute = permute()
+_GOLLY_NAMES = {}
+for nbhd_name, nbhd in [(name, Neighborhood(name)) for name in Neighborhood.GOLLY_NBHDS]:
+    dummy = range(len(nbhd))
+    for sym_name, func in PRESETS.items():
+        try:
+            _GOLLY_NAMES[func(nbhd)(dummy).expanded] = sym_name
+        except:
+            pass
+    _GOLLY_NAMES[_permute(nbhd)(dummy).expanded] = 'permute'

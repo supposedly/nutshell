@@ -18,7 +18,16 @@ ORDERED_NBHDS = {
 
 
 class Neighborhood:
+    GOLLY_NBHDS = {
+      'oneDimensional': ('W', 'E'),
+      'vonNeumann': ('N', 'E', 'S', 'W'),
+      'hexagonal': ('N', 'E', 'SE', 'S', 'W', 'NW'),
+      'Moore': ('N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW')
+    }
+    
     def __init__(self, cdirs):
+        if isinstance(cdirs, str):
+            cdirs = self.GOLLY_NBHDS[cdirs]
         self.cdirs = tuple(cdirs)
         self.coord_cdirs = tuple(map(Coord.from_name, cdirs))
         self._inv = dict(enumerate(cdirs, 1))
