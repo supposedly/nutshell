@@ -4,43 +4,23 @@ from operator import and_ as bitwise_and
 
 from nutshell.common import symmetries as ext_symmetries, utils
 from ._classes import Coord
-from . import _napkins as napkins
-
-
-# pretty sure this is a hacky observer-pattern implementation
-class NapkinMeta(type):
-    def __init__(cls, *_):
-        cls.__tested = False
+# from ._neighborhoods import Neighborhood
     
-    @property
-    def nbhd(cls):
-        if not hasattr(cls, '_nbhd'):
-            cls._nbhd = None
-        if cls._nbhd is not None and not cls.__tested:
-            cls.__tested = True
-            cls.test_nbhd()
-        return cls._nbhd
-    
-    @nbhd.setter
-    def nbhd(cls, neighborhood):
-        old, cls._nbhd = cls._nbhd, neighborhood
-        try:
-            cls.test_nbhd()
-        except:
-            cls._nbhd = old
-            raise
-    
-    def test_nbhd(cls):
-        cls(range(len(cls.nbhd))).expanded
 
+class Napkin(tuple):
+    nbhd = None
+    transformations = None
 
-class Napkin(tuple, metaclass=NapkinMeta):
-    def __new__(cls, iterable):
-        return super().__new__(cls, iterable)
-    
     def __init__(self, _):
         self._expanded = None
         self._hash = None
+    
+    def __init_subclass__(cls):
+        if cls.nbhd is None:
+            raise NotImplementedError('Please override class attribute `nbhd` in Napkin subclass')
+        if cls.transformations is None:
+            raise NotImplementedError('Please override class attribute `transformations` in Napkin subclass')
+        cls.test_nbhd()
     
     def __hash__(self):
         if self._hash is None:
@@ -51,7 +31,7 @@ class Napkin(tuple, metaclass=NapkinMeta):
         return f'{self.__class__.__name__}{super().__repr__()}'
     
     def expand(self):
-        raise NotImplementedError("Please override method `expand()` in Napkin subclass")
+        raise NotImplementedError('Please override method `expand()` in Napkin subclass')
     
     @property
     def expanded(self):
@@ -61,38 +41,42 @@ class Napkin(tuple, metaclass=NapkinMeta):
     
     @property
     def cdir_map(self):
-        return dict(zip(self._neighborhood, self))
-    
-    @property
-    def _neighborhood(self):
-        return self.__class__.nbhd
+        return dict(zip(self.nbhd, self))
     
     @classmethod
     def compose(cls, other):
+        if cls.nbhd != other.nbhd:
+            raise TypeError('Cannot compose symmetries of different neighborhoods {cls.nbhd!r} and {other.nbhd!r}')
         return _new_sym_type(
+          cls.nbhd,
           f'{cls.__name__}+{other.__name__}',
+          cls.transformations + other.transformations,
           lambda self: [j for i in other.expand(self) for j in cls.expand(self.__class__(i))]
           )
+    
+    @classmethod
+    def test_nbhd(cls):
+        if not cls.nbhd.supports(cls):
+            raise ValueError(f'Neighborhood does not support {cls.__name__} symmetries')
     
     def _convert(self, iterable):
         cdir_map = self.cdir_map
         return [tuple(cdir_map[j] for j in i) for i in iterable]
     
     def reflections_across(self, *args):
-        return self._convert(self._neighborhood.reflections_across(*args))
+        return self._convert(self.nbhd.reflections_across(*args, as_cls=False))
     
     def rotations_by(self, *args):
-        return self._convert(self._neighborhood.rotations_by(*args))
+        return self._convert(self.nbhd.rotations_by(*args, as_cls=False))
     
     def permutations(self, *args):
-        return self._convert(self._neighborhood.permutations(*args))
+        return self._convert(self.nbhd.permutations(*args, as_cls=False))
 
 
 def find_min_sym_type(symmetries, nbhd):
     dummy = range(len(nbhd))
-    superset = permute()
-    superset.nbhd = nbhd
-    return superset(dummy) & reduce(
+    superset = permute()(dummy)
+    return superset(dummy).expanded & reduce(
       bitwise_and,
       [cls(dummy).expanded for cls in symmetries]
       )
@@ -110,47 +94,56 @@ def get_sym_type(nbhd, string):
     all_syms.append(current)
     resultant_sym = None
     for name, *args in all_syms:
-        cur_sym = PRESETS[name] if name in PRESETS else FUNCS[name](*args)
+        _cur_sym = PRESETS[name](nbhd) if name in PRESETS else FUNCS[name](*args)
+        cur_sym = _cur_sym(nbhd)
         resultant_sym = cur_sym if resultant_sym is None else resultant_sym.compose(cur_sym)
-    resultant_sym.nbhd = nbhd
     return resultant_sym
 
 
-def _new_sym_type(name, func):
+def _new_sym_type(nbhd, name, transformations, func=None):
+    if func is None:
+        method = getattr(Napkin, transformations[0])
+        args = transformations[1:]
+        func = lambda self: method(self, *args)
+        transformations = [transformations]
     return type(name, (Napkin,), {
       'expand': func,
-      '_nbhd': None
+      'transformations': transformations,
+      'nbhd': nbhd
     })
 
 
 def compose(*funcs):
-    return reduce(lambda a, b: a.compose(b), funcs)
+    return lambda nbhd: reduce(Napkin.compose.__func__, [f(nbhd) for f in funcs])
 
 
 def reflect(first, second=None):
     first = Coord.from_name(first)
     second = first if second is None else Coord.from_name(second)
-    return _new_sym_type(
+    return lambda nbhd: _new_sym_type(
+      nbhd,
       f'Reflect_{first.name}_{second.name}',
-      lambda self: self.reflections_across((first, second))
+      ('reflections_across', (first, second))  # lambda self: self.reflections_across((first, second))
       )
 
 
 def rotate(n):
-    return _new_sym_type(
+    return lambda nbhd: _new_sym_type(
+      nbhd,
       f'Rotate_{n}',
-      lambda self: self.rotations_by(int(n))
+      ('rotations_by', int(n))  # lambda self: self.rotations_by(int(n))
     )
 
 
 def permute(*cdirs):
-    return _new_sym_type(
+    return lambda nbhd: _new_sym_type(
+      nbhd,
       f"Permute_{'_'.join(cdirs) if cdirs else 'All'}",
-      lambda self: self.permutations(cdirs or None)
+      ('permutations', cdirs or None)  # lambda self: self.permutations(cdirs or None)
     )
 
-def _none(self):
-    return [self]
+def _none(nbhd):
+    return _new_sym_type(nbhd, 'NoSymmetry', lambda self: [self])
 
 
 PRESETS = {
@@ -160,7 +153,7 @@ PRESETS = {
   'rotate4': rotate(4),
   'reflect_horizontal': reflect('W'),
   'reflect_vertical': reflect('N'),
-  'none': _new_sym_type('NoSymmetry', _none)
+  'none': _none
 }
 
 FUNCS = {

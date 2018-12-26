@@ -45,7 +45,7 @@ of this makes any sense to you and you aren't sure how you got here, check out t
     - [The `@ICONS` segment](#the-icons-segment)
 
 ## Setup
-1. [Download & install Python 3.6](https://www.python.org/downloads/release/python-365/) or higher (support for < 3.6 hopefully coming soon)
+1. [Download & install Python 3.6](https://www.python.org/downloads/release/python-365/) or higher
 2. Either:
     1. Execute the terminal command `pip install -U git+git://github.com/eltrhn/nutshell.git` (or whichever of the
        pip command's variations works for you; you may need to try `python -m pip install`, `python3 -m pip install`,

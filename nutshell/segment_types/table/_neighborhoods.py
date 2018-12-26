@@ -57,7 +57,22 @@ class Neighborhood:
     def gollyizer_for(self, tbl):
         return get_gollyizer(tbl, self.cdirs)
     
-    def reflect_across(self, endpoint):
+    def supports(self, sym_type):
+        for method, *args in sym_type.transformations:
+            if method == 'rotations_by':
+                amt, = args
+                if len(self) % int(amt) or not self.symmetrical:
+                    return False
+            if method == 'reflections_across':
+                try:
+                    self.reflect_across(*args)
+                except Exception:
+                    return False
+            # if method == 'permute':
+            #     True
+        return True
+    
+    def reflect_across(self, endpoint, *, as_cls=True):
         if not isinstance(endpoint, tuple):
             raise TypeError('Endpoint of line of reflection should be given as tuple of compass directions')
         a, b = endpoint
@@ -83,26 +98,33 @@ class Neighborhood:
         except KeyError as e:
             raise ValueError(f'Neighborhood does not contain {e}')
         r = {cdir: self[orig_cdir] for orig_cdir, cdir in d.items()}
-        return Neighborhood(sorted(r, key=r.get))
+        if as_cls:
+            return Neighborhood(sorted(r, key=r.get))
+        return tuple(sorted(r, key=r.get))
     
-    def reflections_across(self, endpoint):
-        return (self, self.reflect_across(endpoint))
+    def reflections_across(self, endpoint, as_cls):
+        if as_cls:
+            return (self, self.reflect_across(endpoint))
+        return [self.cdirs, self.reflect_across(endpoint, as_cls=as_cls)]
     
-    def rotate_by(self, offset):
-        return Neighborhood(self.cdirs[offset:] + self.cdirs[:offset])
+    def rotate_by(self, offset, *, as_cls=True):
+        if as_cls:
+            return Neighborhood(self.cdirs[offset:] + self.cdirs[:offset])
+        return self.cdirs[offset:] + self.cdirs[:offset]
     
-    def rotations_by(self, amt):
+    def rotations_by(self, amt, *, as_cls=True):
         if len(self) % amt:
             raise ValueError(f'Neighborhood cannot be rotated evenly by {amt}')
         if not self.symmetrical:
             raise ValueError('Neighborhood is asymmetrical, cannot be rotated except by 1')
-        return [self.rotate_by(offset) for offset in range(0, len(self), len(self) // amt)]
+        return [self.rotate_by(offset, as_cls=as_cls) for offset in range(0, len(self), len(self) // amt)]
     
-    def permutations(self, cdirs=None):
+    def permutations(self, cdirs=None, *, as_cls=True):
         if cdirs is None:
-            cdirs = self.cdirs
+            return [Neighborhood(i) for i in permutations(self.cdirs)] if as_cls else list(permutations(self.cdirs))
         permuted_cdirs = set(cdirs)
-        return [Neighborhood(next(permute) if c in permuted_cdirs else c for c in self) for permute in map(iter, permutations(cdirs))]
+        cls = Neighborhood if as_cls else tuple
+        return [cls(next(permute) if c in permuted_cdirs else c for c in self) for permute in map(iter, permutations(cdirs))]
 
 
 def get_gollyizer(tbl, nbhd):
