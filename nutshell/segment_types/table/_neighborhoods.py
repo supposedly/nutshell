@@ -52,6 +52,16 @@ class Neighborhood:
     def __str__(self):
         return '\n'.join(map(' '.join, self.to_list()))
     
+    def __eq__(self, other):
+        if isinstance(other, tuple):
+            return self.cdirs.__eq__(other)
+        if isinstance(other, Neighborhood):
+            return self.cdirs.__eq__(other.cdirs)
+        return NotImplemented
+    
+    def __hash__(self):
+        return self.cdirs.__hash__()
+    
     def get(self, item, default=None):
         return self.idxes.get(item, default)
     

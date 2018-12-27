@@ -48,7 +48,7 @@ class Napkin(tuple):
     @classmethod
     def compose(cls, other):
         if cls.nbhd != other.nbhd:
-            raise TypeError('Cannot compose symmetries of different neighborhoods {cls.nbhd!r} and {other.nbhd!r}')
+            raise TypeError(f'Cannot compose symmetries of different neighborhoods {cls.nbhd!r} and {other.nbhd!r}')
         return _new_sym_type(
           cls.nbhd,
           f'{cls.__name__}+{other.__name__}',
@@ -59,7 +59,7 @@ class Napkin(tuple):
     @classmethod
     def combine(cls, other):
         if cls.nbhd != other.nbhd:
-            raise TypeError('Cannot combine symmetries of different neighborhoods {cls.nbhd!r} and {other.nbhd!r}')
+            raise TypeError(f'Cannot combine symmetries of different neighborhoods {cls.nbhd!r} and {other.nbhd!r}')
         return _new_sym_type(
           cls.nbhd,
           f'{cls.__name__}/{other.__name__}',
@@ -83,9 +83,7 @@ class Napkin(tuple):
         return self._convert(self.nbhd.rotations_by(*args, as_cls=False))
     
     def permutations(self, *args):
-        if args not in self._RECENTS:
-            self._RECENTS[args] = self._convert(self.nbhd.permutations(*args, as_cls=False))
-        return self._RECENTS[args]
+        return self._convert(self.nbhd.permutations(*args, as_cls=False))
 
 
 def find_min_sym_type(symmetries, nbhd):
