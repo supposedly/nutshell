@@ -57,6 +57,17 @@ class Napkin(tuple):
           )
     
     @classmethod
+    def combine(cls, other):
+        if cls.nbhd != other.nbhd:
+            raise TypeError('Cannot combine symmetries of different neighborhoods {cls.nbhd!r} and {other.nbhd!r}')
+        return _new_sym_type(
+          cls.nbhd,
+          f'{cls.__name__}/{other.__name__}',
+          cls.transformations + other.transformations,
+          lambda self: [*other.expand(self), *cls.expand(self)]
+          )
+    
+    @classmethod
     def test_nbhd(cls):
         if not cls.nbhd.supports(cls):
             raise ValueError(f'Neighborhood does not support {cls.__name__} symmetries')
@@ -89,19 +100,30 @@ def find_min_sym_type(symmetries, nbhd):
 
 
 def get_sym_type(nbhd, string):
-    all_syms = []
     current = []
+    all_syms = [[]]
     for token in utils.multisplit(string, (None, *'(),')):
+        if token == '/':
+            if current:
+                all_syms[-1].append(current)
+            if all_syms[-1]:
+                all_syms.append([])
+            current = []
+            continue
         if token in PRESETS or token in FUNCS:
             if current:
-                all_syms.append(current)
+                all_syms[-1].append(current)
             current = []
         current.append(token)
-    all_syms.append(current)
+    if current:
+        all_syms[-1].append(current)
     resultant_sym = None
-    for name, *args in all_syms:
-        cur_sym = PRESETS[name](nbhd) if name in PRESETS else FUNCS[name](*args)(nbhd)
-        resultant_sym = cur_sym if resultant_sym is None else resultant_sym.compose(cur_sym)
+    for compose_group in all_syms:
+        composed_sym = None
+        for name, *args in compose_group:
+            cur_sym = PRESETS[name](nbhd) if name in PRESETS else FUNCS[name](*args)(nbhd)
+            composed_sym = cur_sym if composed_sym is None else composed_sym.compose(cur_sym)
+        resultant_sym = composed_sym if resultant_sym is None else resultant_sym.combine(composed_sym)
     return resultant_sym
 
 
