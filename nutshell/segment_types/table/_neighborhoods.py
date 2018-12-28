@@ -65,6 +65,9 @@ class Neighborhood:
     def get(self, item, default=None):
         return self.idxes.get(item, default)
     
+    def items(self):
+        return self.idxes.items()
+    
     def to_list(self, blank='.'):
         return [[str(self.get(cdir, blank)) for cdir in row] for row in (('NW', 'N', 'NE'), ('W', 'C', 'E'), ('SW', 'S', 'SE'))]
     

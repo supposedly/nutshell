@@ -3,7 +3,6 @@ from functools import wraps
 from inspect import signature
 from importlib import import_module
 from itertools import chain, repeat
-from operator import attrgetter
 from pkg_resources import resource_filename
 
 import bidict
@@ -16,13 +15,6 @@ from . import _symutils as symutils, _neighborhoods as nbhoods, inline_rulestrin
 
 SPECIALS = {'...', '_', 'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'}
 Meta = namedtuple('Meta', ['lno', 'start', 'end'])
-
-try:
-    with open(resource_filename('nutshell', 'segment_types/table/lark_assets/grammar.lark')) as f:
-        NUTSHELL_GRAMMAR = f.read()
-except FileNotFoundError:
-    with open('nutshell/segment_types/table/lark_assets/grammar.lark') as f:
-        NUTSHELL_GRAMMAR = f.read()
 
 
 def fix(meta):
@@ -80,18 +72,17 @@ class Preprocess(Transformer):
     def kill_strings(self, val, meta):
         return [self.kill_string(i, meta) for i in val]
     
-    def special_transform(self, initial, resultant, napkin):
+    def tilde_transform(self, initial, resultant, napkin):
         """
-        Handle the special ~ syntax for current symmetries
+        Handle the tilde ~ syntax for current symmetries
         """
         special_params = {
-          'length': self._tbl.trlen,
           'initial': initial,
           'resultant': resultant,
           'values': napkin,
           }.items()
-        params = signature(self._tbl.symmetries.special).parameters
-        return self._tbl.symmetries.special(**{k: v for k, v in special_params if k in params})
+        params = signature(self._tbl.symmetries.tilde).parameters
+        return self._tbl.symmetries.tilde(self._tbl.symmetries, **{k: v for k, v in special_params if k in params})
     
     def unravel_permute(self, tree, meta):
         if isinstance(tree, tuple):
@@ -183,7 +174,7 @@ class Preprocess(Transformer):
     
     def permute_shorthand(self, children, meta):
         state, *permute = children
-        if not hasattr(self._tbl.symmetries, 'special'):
+        if self._tbl.symmetries.tilde is None:
             if permute:
                 raise SyntaxErr(
                   fix(meta),
@@ -211,10 +202,10 @@ class Preprocess(Transformer):
             resultant = self.kill_string(resultant, meta)
         except UndefinedErr as e:
             raise UndefinedErr((meta.line, meta.end_column - len(str(resultant)), meta.end_column), e.msg)
-        if hasattr(self._tbl.symmetries, 'special'):
+        if self._tbl.symmetries.tilde is not None:
             seq = [self.unravel_permute(i, meta) for i in children]
             try:
-                napkin = dict(enumerate(self.special_transform(initial, resultant, seq), 1))
+                napkin = dict(enumerate(self.tilde_transform(initial, resultant, seq), 1))
             except Exception as e:
                 raise Error(
                   fix(meta),

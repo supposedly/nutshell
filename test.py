@@ -9,6 +9,7 @@ import pytest
 from nutshell.cli import cli
 from nutshell.main import transpile, write_rule
 from nutshell.common.utils import RAND_SEED, random as nutshell_rand
+from nutshell.common.errors import NutshellException
 
 ARGV = sys.argv + [None, None][len(sys.argv):]
 wtf = cli.commands['transpile']
@@ -17,10 +18,14 @@ cli.commands['transpile'].set_defaults(
   preserve_comments=True
   )
 
+
 def test_codecov():
     for fname in list(os.walk('./examples/nutshells'))[0][2]:
         with open('./examples/nutshells/' + fname) as fp:
-            transpile(fp)
+            try:
+                transpile(fp)
+            except NutshellException as e:
+                raise SystemExit(e.code)
 
 
 if __name__ == '__main__':
@@ -33,11 +38,17 @@ if __name__ == '__main__':
             for fname in walk:
                 print(fname)
                 if len(ARGV) < 3 or fname.split('.')[0] in ARGV[2:]:
-                    write_rule(infiles=['./examples/nutshells/' + fname], outdirs=['./examples/compiled_ruletables/'], find=False)
+                    try:
+                        write_rule(infiles=['./examples/nutshells/' + fname], outdirs=['./examples/compiled_ruletables/'], find=False)
+                    except NutshellException as e:
+                        raise SystemExit(e.code)
                 nutshell_rand.seed(RAND_SEED)
         else:
             for fname in walk:
                 if len(ARGV) < 3 or fname.split('.')[0] in ARGV[2:]:
                     with open('./examples/nutshells/' + fname) as fp:
-                        transpile(fp)
+                        try:
+                            transpile(fp)
+                        except NutshellException as e:
+                            raise SystemExit(e.code)
                 nutshell_rand.seed(RAND_SEED)

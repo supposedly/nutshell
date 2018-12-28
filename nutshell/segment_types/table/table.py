@@ -9,11 +9,11 @@ from ergo.misc import typecast
 
 from nutshell.cli import cli
 from nutshell.common.classes import TableRange
-from nutshell.common.utils import printv, printq
+from nutshell.common.utils import printq, multisplit
 from nutshell.common import macros
 from nutshell.common.errors import *
 from .lark_assets import parser as lark_standalone
-from ._transformer import Preprocess, NUTSHELL_GRAMMAR
+from ._transformer import Preprocess
 from ._classes import VarName, StateList
 from . import _symutils as symutils, _neighborhoods as nbhoods
 
@@ -63,7 +63,7 @@ class TableSegment:
         self.current_macros = []
         self._prepped_macros = {}
         self.available_macros = macros.__dict__.copy()
-
+        
         self.specials = {'any': VarName('any'), 'live': VarName('live')}
         self.new_varname = VarName.new_generator()
         
@@ -92,17 +92,12 @@ class TableSegment:
             self.update_special_vars()
         self._data = transformer.transform(_parsed)
         
-        if len(self.sym_types) <= 1 and not hasattr(next(iter(self.sym_types), None), 'fallback'):
-            sym = next(iter(self.sym_types), None)
-            if sym is not None:
-                # force these to be equal (in the event of, say, inline-rulestring
-                # napkins' having been used, which don't update directives)
-                self.directives['symmetries'] = sym.name[0] if hasattr(sym, 'name') else sym.__name__.lower()
+        MinSym, name = symutils.find_golly_sym_type(self.sym_types, self.neighborhood)
+        if len(self.sym_types) <= 1 and self.symmetries.nested_transformations == MinSym.nested_transformations:
             self.final = [t.fix_vars() for t in self._data]
         else:
-            MinSym = symutils.find_min_sym_type(self.sym_types, self.trlen)
-            self.directives['symmetries'] = MinSym.name[0] if hasattr(MinSym, 'name') else MinSym.__name__.lower()
             self.final = [new_tr for tr in self._data for new_tr in tr.in_symmetry(MinSym)]
+        self.directives['symmetries'] = name
         self.directives['n_states'] = self.directives.pop('states')
         self._apply_macros()
     
@@ -161,7 +156,7 @@ class TableSegment:
     @neighborhood.setter
     def neighborhood(self, val):
         if CUSTOM_NBHD.fullmatch(val):
-            nbhd = val.split(',')
+            nbhd = multisplit(val, (None, ','))
             if len(nbhd) != len(set(nbhd)):
                 raise ValueError('Duplicate compass directions in neighborhood')
             self._nbhd = nbhoods.Neighborhood(nbhd)
@@ -206,11 +201,8 @@ class TableSegment:
         self.vars[self.specials['any']] = StateList(range(self.n_states), context=None)
         self.vars[self.specials['live']] = StateList(range(1, self.n_states), context=None)
     
-    def add_sym_type(self, name):
-        try:
-            self.sym_types.add(symutils.get_sym_type(name))
-        except (ImportError, ModuleNotFoundError):
-            raise ImportError(f'No symmetry type {name!r} found')
+    def add_sym_type(self, string):
+        self.sym_types.add(symutils.get_sym_type(self.neighborhood, string))
     
     def add_macros(self, path):
         with open(path) as f:
@@ -247,7 +239,7 @@ class TableSegment:
     def check_cdir(self, cdir, meta, *, return_int=True, enforce_int=False):
         if cdir in ('FG', 'BG'):
             raise SyntaxErr(meta, f'Invalid reference {cdir!r} outside of inline-rulestring transition')
-        if enforce_int and hasattr(self.symmetries, 'special') and not cdir.isdigit():
+        if enforce_int and self.symmetries.tilde is not None and not cdir.isdigit():
             raise SyntaxErr(
               meta,
               f"Compass directions have no meaning under {self.directives['symmetries']} symmetry. "
@@ -256,7 +248,7 @@ class TableSegment:
         try:
             if return_int:
                 return int(cdir) if cdir.isdigit() else self.neighborhood[str(cdir)]
-            return int(cdir != '0') and self.neighborhood.inv[int(cdir)] if cdir.isdigit() else str(cdir)
+            return int(cdir != '0') and self.neighborhood.cdir_at(int(cdir)) if cdir.isdigit() else str(cdir)
         except KeyError:
             pre = 'Transition index' if cdir.isdigit() else 'Compass direction'
             raise ReferenceErr(

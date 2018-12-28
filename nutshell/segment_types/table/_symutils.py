@@ -1,16 +1,18 @@
 from collections import OrderedDict
-from functools import reduce, lru_cache
-from importlib import import_module
+from functools import lru_cache, reduce, partial
+from math import ceil
 from operator import and_ as bitwise_and
 
-from nutshell.common import symmetries as ext_symmetries, utils
+from nutshell.common.utils import multisplit
 from ._neighborhoods import Neighborhood
-from ._classes import Coord
+from ._classes import Coord, InlineBinding
 
 
 class Napkin(tuple):
     nbhd = None
     transformations = None
+    nested_transformations = None
+    tilde = None
     _RECENTS = {}
 
     def __init__(self, _):
@@ -58,7 +60,8 @@ class Napkin(tuple):
           cls.nbhd,
           f'{cls.__name__}+{other.__name__}',
           cls.transformations + other.transformations,
-          lambda self: [j for i in other.expand(self) for j in cls.expand(self.__class__(i))]
+          lambda self: [j for i in other.expand(self) for j in cls.expand(self.__class__(i))],
+          nested_transformations=cls.nested_transformations | other.nested_transformations
           )
     
     @classmethod
@@ -69,7 +72,8 @@ class Napkin(tuple):
           cls.nbhd,
           f'{cls.__name__}/{other.__name__}',
           cls.transformations + other.transformations,
-          lambda self: [*other.expand(self), *cls.expand(self)]
+          lambda self: [*other.expand(self), *cls.expand(self)],
+          nested_transformations=frozenset((cls.nested_transformations, other.nested_transformations))
           )
     
     @classmethod
@@ -91,7 +95,7 @@ class Napkin(tuple):
         return self._convert(self.nbhd.permutations(*args, as_cls=False))
 
 
-def find_min_sym_type(symmetries, nbhd):
+def find_golly_sym_type(symmetries, nbhd):
     dummy = range(len(nbhd))
     result = reduce(
       bitwise_and,
@@ -109,13 +113,14 @@ def find_min_sym_type(symmetries, nbhd):
     if result in _GOLLY_NAMES:
         name = _GOLLY_NAMES[result]
         return (PRESETS.get(name) or FUNCS[name]())(nbhd), name
+    print(result)
     return none(nbhd), 'none'
 
 
 def get_sym_type(nbhd, string):
     current = []
     all_syms = [[]]
-    for token in utils.multisplit(string, (None, *'(),')):
+    for token in multisplit(string, (None, *'(),')):
         if token == '/':
             if current:
                 all_syms[-1].append(current)
@@ -140,16 +145,20 @@ def get_sym_type(nbhd, string):
     return resultant_sym
 
 
-def new_sym_type(nbhd, name, transformations, func=None):
+def new_sym_type(nbhd, name, transformations, func=None, *, tilde=None, nested_transformations=None):
     if func is None:
         method = getattr(Napkin, transformations[0])
         args = transformations[1:]
         func = lambda self: method(self, *args)
-        transformations = [transformations]
+        transformations = (transformations,)
+    if nested_transformations is None:
+        nested_transformations = frozenset(transformations)
     return type(name, (Napkin,), {
       'expand': func,
       'transformations': transformations,
-      'nbhd': nbhd
+      'nested_transformations': nested_transformations,
+      'nbhd': nbhd,
+      'tilde': tilde,
     })
 
 
@@ -171,7 +180,7 @@ def reflect(first=None, second=None):
     second = first if second is None else Coord.from_name(second)
     return lru_cache()(lambda nbhd: new_sym_type(
       nbhd,
-      f'Reflect_{first.name}_{second.name}',
+      f'Reflect({first.name} {second.name})',
       ('reflections_across', (first, second))  # lambda self: self.reflections_across((first, second))
     ))
 
@@ -180,23 +189,84 @@ def reflect(first=None, second=None):
 def rotate(n):
     return lru_cache()(lambda nbhd: new_sym_type(
       nbhd,
-      f'Rotate_{n}',
+      f'Rotate({n})',
       ('rotations_by', int(n))  # lambda self: self.rotations_by(int(n))
     ))
 
 
 @lru_cache()
-def permute(*cdirs):
+def permute(*cdirs, explicit=False):
     return lru_cache()(lambda nbhd: new_sym_type(
       nbhd,
-      f"Permute_{'_'.join(cdirs) if cdirs else 'All'}",
-      ('permutations', cdirs or None)  # lambda self: self.permutations(cdirs or None)
+      f"Permute({' '.join(cdirs) if cdirs else 'All'})",
+      ('permutations', cdirs or None),  # lambda self: self.permutations(cdirs or None)
+      tilde=permute_tilde_explicit if explicit or len(cdirs) == len(nbhd) else permute_tilde
     ))
 
 
 @lru_cache()
 def none(nbhd):
     return new_sym_type(nbhd, 'NoSymmetry', (), lambda self: [tuple(self)])
+
+
+def permute_tilde_explicit(self, values):
+    new = []
+    for v, count in values:
+        if count is None:
+            count = '1'
+        if not count.isdigit():
+            raise Exception(f"{v} ~ {count}; '{count}' is not a number")
+        new.extend([v] * int(count))
+    if len(new) < len(self.nbhd):
+        raise Exception(f'Expected {len(self.nbhd)} terms, got {len(new)}')
+    return new
+
+
+def permute_tilde(self, values):
+    """
+    Given a shorthand permutationally-symmetrical transition:
+        length=8 (Moore neighborhood)
+        -------
+        1, 0
+        1~4, 0~4
+        1~4, 0
+        1~3, 1, 0, 0
+    Return its expanded representation:
+        1, 1, 1, 1, 0, 0, 0, 0
+    Order is not preserved.
+    """
+    length = len(self.nbhd)
+    # filler algo courtesy of Thomas Russell on math.stackexchange
+    # https://math.stackexchange.com/a/1081084
+    filler = _fill(
+        length,
+        # How many cells filled
+        length - sum(int(i) for _, i in values if i),
+        # And how many empty slots left to fill
+        sum(1 for _, i in values if not i)
+        )
+    return list(_AccumulativeContainer(
+        (val.set(idx) if isinstance(val, InlineBinding) else val, next(filler) if num is None else int(num))
+        for idx, (val, num) in enumerate(values, 1)
+    ))
+
+
+def _fill(length, tally, empties):
+    """Only in its own function to be able to raise error on 0"""
+    for k in range(1, 1 + empties):
+        v = ceil((tally - k + 1) / empties)
+        if v == 0:
+            raise ValueError(f'Too many terms given (expected no more than {length})')
+        yield v
+
+
+class _AccumulativeContainer(list):
+    def __init__(self, it):
+        for thing, count in it:
+            self.append((thing, 1 if count is None else count))
+    
+    def __iter__(self):
+        return (i.give() if isinstance(i, InlineBinding) else i for k, v in super().__iter__() for i in [k]*v)
 
 
 _hex = Neighborhood('hexagonal')
@@ -218,6 +288,7 @@ _GOLLY_NAMES = {}
 
 FUNCS = {
   'permute': permute,
+  'explicit_permute': partial(permute, explicit=True),
   'reflect': reflect,
   'rotate': rotate,
 }
