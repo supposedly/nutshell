@@ -1,12 +1,13 @@
+from collections import OrderedDict
 from itertools import takewhile, permutations
 from ._classes import Coord
 
-NBHD_SETS = (
+NBHD_SETS = OrderedDict(
   # for containment-checking
-  (frozenset({'E', 'W'}), 'oneDimensional'),
-  (frozenset({'N', 'E', 'S', 'W'}), 'vonNeumann'),
-  (frozenset({'N', 'E', 'SE', 'S', 'W', 'NW'}), 'hexagonal'),
-  (frozenset({'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'}), 'Moore'),
+  oneDimensional=frozenset({'E', 'W'}),
+  vonNeumann=frozenset({'N', 'E', 'S', 'W'}),
+  hexagonal=frozenset({'N', 'E', 'SE', 'S', 'W', 'NW'}),
+  Moore=frozenset({'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'}),
 )
 
 ORDERED_NBHDS = {
@@ -32,7 +33,6 @@ class Neighborhood:
         self.coord_cdirs = tuple(map(Coord.from_name, cdirs))
         self._inv = dict(enumerate(cdirs, 1))
         self.idxes = {v: k for k, v in self._inv.items()}
-        self.symmetrical = all(c.inv.name in self for c in self.coord_cdirs)
     
     def __contains__(self, item):
         return item in self.idxes
@@ -76,11 +76,11 @@ class Neighborhood:
     def gollyizer_for(self, tbl):
         return get_gollyizer(tbl, self.cdirs)
     
-    def supports(self, sym_type):
-        for method, *args in sym_type.transformations:
+    def supports_transformations(self, transformations):
+        for method, *args in transformations:
             if method == 'rotations_by':
                 amt, = args
-                if len(self) % int(amt) or not self.symmetrical:
+                if len(self) % int(amt):
                     return False
             if method == 'reflections_across':
                 try:
@@ -90,6 +90,9 @@ class Neighborhood:
             # if method == 'permute':
             #     True
         return True
+    
+    def supports(self, sym_type):
+        return self.supports_transformations(sym_type.transformations)
     
     def reflect_across(self, endpoint, *, as_cls=True):
         if not isinstance(endpoint, tuple):
@@ -134,8 +137,8 @@ class Neighborhood:
     def rotations_by(self, amt, *, as_cls=True):
         if len(self) % amt:
             raise ValueError(f'Neighborhood cannot be rotated evenly by {amt}')
-        if not self.symmetrical:
-            raise ValueError('Neighborhood is asymmetrical, cannot be rotated except by 1')
+        #if not self.symmetrical:
+        #    raise ValueError('Neighborhood is asymmetrical, cannot be rotated except by 1')
         return [self.rotate_by(offset, as_cls=as_cls) for offset in range(0, len(self), len(self) // amt)]
     
     def permutations(self, cdirs=None, *, as_cls=True):
@@ -146,9 +149,16 @@ class Neighborhood:
         return [cls(next(permute) if c in permuted_cdirs else c for c in self) for permute in map(iter, permutations(cdirs))]
 
 
-def get_gollyizer(tbl, nbhd):
+def get_gollyizer(tbl, nbhd, *, golly_nbhd=None):
     nbhd_set = set(nbhd)
-    for s, name in NBHD_SETS:
+    if golly_nbhd is not None:
+        golly_set = NBHD_SETS[golly_nbhd]
+        return (
+          fill.__get__(ORDERED_NBHDS[golly_nbhd])
+          if nbhd_set < golly_set
+          else lambda tbl, napkin, _anys: reorder(ORDERED_NBHDS[name], tbl, napkin)
+        )
+    for name, s in NBHD_SETS.items():
         if nbhd_set <= s:
             tbl.directives['neighborhood'] = name
             if nbhd_set < s:

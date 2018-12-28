@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from functools import reduce, lru_cache
 from importlib import import_module
 from operator import and_ as bitwise_and
@@ -16,9 +17,10 @@ class Napkin(tuple):
         self._expanded = None
         self._hash = None
     
+    # 3.6-only: pep 487
     def __init_subclass__(cls):
-        if cls.nbhd is None:
-            raise NotImplementedError('Please override class attribute `nbhd` in Napkin subclass')
+        # if cls.nbhd is None:
+        #    raise NotImplementedError('Please override class attribute `nbhd` in Napkin subclass')
         if cls.transformations is None:
             raise NotImplementedError('Please override class attribute `transformations` in Napkin subclass')
         cls._RECENTS = {}
@@ -28,6 +30,9 @@ class Napkin(tuple):
         if self._hash is None:
             self._hash = hash(tuple(sorted(self.expanded)))
         return self._hash
+    
+    def __eq__(self, other):
+        return isinstance(other, tuple) and any(map(other.__eq__, self.expanded))
     
     def __repr__(self):
         return f'{self.__class__.__name__}{super().__repr__()}'
@@ -49,7 +54,7 @@ class Napkin(tuple):
     def compose(cls, other):
         if cls.nbhd != other.nbhd:
             raise TypeError(f'Cannot compose symmetries of different neighborhoods {cls.nbhd!r} and {other.nbhd!r}')
-        return _new_sym_type(
+        return new_sym_type(
           cls.nbhd,
           f'{cls.__name__}+{other.__name__}',
           cls.transformations + other.transformations,
@@ -60,7 +65,7 @@ class Napkin(tuple):
     def combine(cls, other):
         if cls.nbhd != other.nbhd:
             raise TypeError(f'Cannot combine symmetries of different neighborhoods {cls.nbhd!r} and {other.nbhd!r}')
-        return _new_sym_type(
+        return new_sym_type(
           cls.nbhd,
           f'{cls.__name__}/{other.__name__}',
           cls.transformations + other.transformations,
@@ -92,8 +97,18 @@ def find_min_sym_type(symmetries, nbhd):
       bitwise_and,
       [cls(dummy).expanded for cls in symmetries]
       )
+    if result not in _GOLLY_NAMES:
+        # Pretty sure this is 100% wrong for the general case.
+        # it works for alternatingpermute->rotate4reflect, at least.
+        HighestSupportedSym = (
+          compose(rotate(len(nbhd)), reflect('N'))
+          if nbhd.supports_transformations([['reflect_across', 'N']])
+          else rotate(len(nbhd))
+        )(nbhd)
+        result &= HighestSupportedSym(dummy).expanded
     if result in _GOLLY_NAMES:
-        return result, _GOLLY_NAMES[result]
+        name = _GOLLY_NAMES[result]
+        return (PRESETS.get(name) or FUNCS[name]())(nbhd), name
     return none(nbhd), 'none'
 
 
@@ -125,7 +140,7 @@ def get_sym_type(nbhd, string):
     return resultant_sym
 
 
-def _new_sym_type(nbhd, name, transformations, func=None):
+def new_sym_type(nbhd, name, transformations, func=None):
     if func is None:
         method = getattr(Napkin, transformations[0])
         args = transformations[1:]
@@ -144,10 +159,17 @@ def compose(*funcs):
 
 
 @lru_cache()
-def reflect(first, second=None):
+def combine(*funcs):
+    return lru_cache()(lambda nbhd: reduce(Napkin.combine.__func__, [f(nbhd) for f in funcs]))
+
+
+@lru_cache()
+def reflect(first=None, second=None):
+    if first is None:
+        first = second = 'N'
     first = Coord.from_name(first)
     second = first if second is None else Coord.from_name(second)
-    return lru_cache()(lambda nbhd: _new_sym_type(
+    return lru_cache()(lambda nbhd: new_sym_type(
       nbhd,
       f'Reflect_{first.name}_{second.name}',
       ('reflections_across', (first, second))  # lambda self: self.reflections_across((first, second))
@@ -156,7 +178,7 @@ def reflect(first, second=None):
 
 @lru_cache()
 def rotate(n):
-    return lru_cache()(lambda nbhd: _new_sym_type(
+    return lru_cache()(lambda nbhd: new_sym_type(
       nbhd,
       f'Rotate_{n}',
       ('rotations_by', int(n))  # lambda self: self.rotations_by(int(n))
@@ -165,7 +187,7 @@ def rotate(n):
 
 @lru_cache()
 def permute(*cdirs):
-    return lru_cache()(lambda nbhd: _new_sym_type(
+    return lru_cache()(lambda nbhd: new_sym_type(
       nbhd,
       f"Permute_{'_'.join(cdirs) if cdirs else 'All'}",
       ('permutations', cdirs or None)  # lambda self: self.permutations(cdirs or None)
@@ -174,18 +196,25 @@ def permute(*cdirs):
 
 @lru_cache()
 def none(nbhd):
-    return _new_sym_type(nbhd, 'NoSymmetry', (), lambda self: [tuple(self)])
+    return new_sym_type(nbhd, 'NoSymmetry', (), lambda self: [tuple(self)])
 
 
-PRESETS = {
-  'rotate8reflect': compose(rotate(8), reflect('W')),
-  'rotate8': rotate(8),
-  'rotate4reflect': compose(rotate(4), reflect('W')),
-  'rotate4': rotate(4),
-  'reflect_horizontal': reflect('W'),
-  'reflect_vertical': reflect('N'),
-  'none': none
-}
+_hex = Neighborhood('hexagonal')
+# 3.6-only: pep 468
+PRESETS = OrderedDict(
+  none=none,
+  reflect_vertical=reflect('W'),
+  reflect_horizontal=reflect('N'),
+  rotate2=rotate(2),
+  rotate3=rotate(3),
+  rotate4=rotate(4),
+  rotate4reflect=compose(rotate(4), reflect('N')),
+  rotate6=rotate(6),
+  rotate6reflect=compose(rotate(6), reflect('N')),
+  rotate8=rotate(8),
+  rotate8reflect=compose(rotate(8), reflect('N'))
+)
+_GOLLY_NAMES = {}
 
 FUNCS = {
   'permute': permute,
@@ -194,12 +223,18 @@ FUNCS = {
 }
 
 _permute = permute()
-_GOLLY_NAMES = {}
-for nbhd_name, nbhd in [(name, Neighborhood(name)) for name in Neighborhood.GOLLY_NBHDS]:
+_FORBIDDEN = {('hexagonal', 'reflect'), ('Moore', 'rotate2'), ('vonNeumann', 'rotate2'), ('oneDimensional', 'rotate2')}
+for nbhd_name in Neighborhood.GOLLY_NBHDS:
+    nbhd = Neighborhood(nbhd_name)
     dummy = range(len(nbhd))
     for sym_name, func in PRESETS.items():
+        if sym_name == 'reflect_horizontal':
+            sym_name = 'reflect'
+        if sym_name == 'reflect_vertical' or (nbhd_name, sym_name) in _FORBIDDEN:
+            continue
         try:
-            _GOLLY_NAMES[func(nbhd)(dummy).expanded] = sym_name
-        except:
-            pass
+            sym = func(nbhd)
+        except Exception:
+            continue
+        _GOLLY_NAMES[sym(dummy).expanded] = sym_name
     _GOLLY_NAMES[_permute(nbhd)(dummy).expanded] = 'permute'
