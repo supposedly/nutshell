@@ -9,6 +9,7 @@ from ._classes import Coord, InlineBinding
 
 
 class Napkin(tuple):
+    _hash_func = None
     nbhd = None
     transformations = None
     nested_transformations = None
@@ -39,13 +40,21 @@ class Napkin(tuple):
     def __repr__(self):
         return f'{self.__class__.__name__}{super().__repr__()}'
     
-    def expand(self):
-        raise NotImplementedError('Please override method `expand()` in Napkin subclass')
+    def expand(self, cls=None):
+        if cls is None:
+            cls = self.__class__
+        searchable = cls._hash_func(self)
+        if searchable not in cls._RECENTS:
+            cls._RECENTS[searchable] = cls._expand(self)
+        return cls._RECENTS[searchable]
+    
+    def _expand(self):
+        raise NotImplementedError('Please override method `_expand()` in Napkin subclass')
     
     @property
     def expanded(self):
         if self._expanded is None:
-            self._expanded = frozenset(self.expand())
+            self._expanded = frozenset(self._expand())
         return self._expanded
     
     @property
@@ -60,7 +69,7 @@ class Napkin(tuple):
           cls.nbhd,
           f'{cls.__name__}+{other.__name__}',
           cls.transformations + other.transformations,
-          lambda self: [j for i in other.expand(self) for j in cls.expand(self.__class__(i))],
+          lambda self: [j for i in other.expand(self, other) for j in cls.expand(self.__class__(i), cls)],
           nested_transformations=cls.nested_transformations | other.nested_transformations
           )
     
@@ -72,7 +81,7 @@ class Napkin(tuple):
           cls.nbhd,
           f'{cls.__name__}/{other.__name__}',
           cls.transformations + other.transformations,
-          lambda self: [*other.expand(self), *cls.expand(self)],
+          lambda self: [*other.expand(self, other), *cls.expand(self, cls)],
           nested_transformations=frozenset((cls.nested_transformations, other.nested_transformations))
           )
     
@@ -113,7 +122,6 @@ def find_golly_sym_type(symmetries, nbhd):
     if result in _GOLLY_NAMES:
         name = _GOLLY_NAMES[result]
         return (PRESETS.get(name) or FUNCS[name]())(nbhd), name
-    print(result)
     return none(nbhd), 'none'
 
 
@@ -145,20 +153,21 @@ def get_sym_type(nbhd, string):
     return resultant_sym
 
 
-def new_sym_type(nbhd, name, transformations, func=None, *, tilde=None, nested_transformations=None):
+def new_sym_type(nbhd, name, transformations, func=None, *, tilde=None, nested_transformations=None, hash_func=tuple):
     if func is None:
         method = getattr(Napkin, transformations[0])
-        args = transformations[1:]
-        func = lambda self: method(self, *args)
+        method_args = transformations[1:]
+        func = lambda self: method(self, *method_args)
         transformations = (transformations,)
     if nested_transformations is None:
         nested_transformations = frozenset(transformations)
     return type(name, (Napkin,), {
-      'expand': func,
+      '_expand': func,
       'transformations': transformations,
       'nested_transformations': nested_transformations,
       'nbhd': nbhd,
       'tilde': tilde,
+      '_hash_func': hash_func
     })
 
 
@@ -200,13 +209,14 @@ def permute(*cdirs, explicit=False):
       nbhd,
       f"Permute({' '.join(cdirs) if cdirs else 'All'})",
       ('permutations', cdirs or None),  # lambda self: self.permutations(cdirs or None)
-      tilde=permute_tilde_explicit if explicit or len(cdirs) == len(nbhd) else permute_tilde
+      tilde=permute_tilde_explicit if explicit or len(cdirs) == len(nbhd) else permute_tilde,
+      hash_func=frozenset
     ))
 
 
 @lru_cache()
 def none(nbhd):
-    return new_sym_type(nbhd, 'NoSymmetry', (), lambda self: [tuple(self)])
+    return new_sym_type(nbhd, 'NoSymmetry', (), lambda self, **_: [tuple(self)])
 
 
 def permute_tilde_explicit(self, values):

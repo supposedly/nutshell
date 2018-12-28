@@ -21,7 +21,6 @@ var any.8 = any.0
 var live.0 = {1,2,3,4,5,6,7,8,9,10,11}
 var live.1 = live.0
 var live.2 = live.0
-var live.3 = live.0
 var _a0.0 = {1,3,4,5,6,7,8,9,10,11}
 var _a0.1 = _a0.0
 var _a0.2 = _a0.0
@@ -84,16 +83,12 @@ live.0, live.1, 0, 0, 0, live.2, 0, 0, 0, 1
 live.0, 0, live.1, 0, live.2, 0, 0, 0, 0, 1
 live.0, 0, live.1, 0, 0, 0, live.2, 0, 0, 1
 #### line 19: live, live ~ 3, 0; 1 ####
-live.0, live.1, live.2, live.3, 0, 0, 0, 0, 0, 1 # s3
-live.0, live.1, live.2, 0, live.3, 0, 0, 0, 0, 1
-live.0, live.1, live.2, 0, 0, live.3, 0, 0, 0, 1
-live.0, live.1, live.2, 0, 0, 0, live.3, 0, 0, 1
-live.0, live.1, live.2, 0, 0, 0, 0, live.3, 0, 1
-live.0, live.1, live.2, 0, 0, 0, 0, 0, live.3, 1
-live.0, live.1, 0, live.2, 0, live.3, 0, 0, 0, 1
-live.0, live.1, 0, live.2, 0, 0, live.3, 0, 0, 1
-live.0, live.1, 0, 0, live.2, 0, live.3, 0, 0, 1
-live.0, 0, live.1, 0, live.2, 0, live.3, 0, 0, 1
+live.0, live.1, live.2, 0, 0, 0, 0, 0, 0, 1 # s3
+live.0, live.1, 0, live.2, 0, 0, 0, 0, 0, 1
+live.0, live.1, 0, 0, live.2, 0, 0, 0, 0, 1
+live.0, live.1, 0, 0, 0, live.2, 0, 0, 0, 1
+live.0, 0, live.1, 0, live.2, 0, 0, 0, 0, 1
+live.0, 0, live.1, 0, 0, 0, live.2, 0, 0, 1
 # Death otherwise
 #### line 22: any, any; 0 ####
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, any.8, 0
