@@ -189,6 +189,7 @@ class Preprocess(Transformer):
         return MetaTuple(meta, (self.kill_string(state, meta), str(permute[0]) if permute else None))
     
     def main(self, children, meta):
+        trlen = self._tbl.trlen
         if not self._tbl.default_sym_used and self.directives['symmetries'] == 'none':
             self._tbl.default_sym_used = True
             self._tbl.add_sym_type('none')
@@ -215,7 +216,7 @@ class Preprocess(Transformer):
         else:
             idx = pure_idx = 1
             napkin = {}
-            add_mod = partial(_add_mod, self._tbl.trlen)
+            add_mod = partial(_add_mod, trlen)
             offset_initial = False  # whether it starts on a compass dir other than the first
             all_cdir = True  # whether all terms are tagged with a compass-direction prefix
             
@@ -237,7 +238,7 @@ class Preprocess(Transformer):
                         if idx == 1 and not offset_initial:
                             offset_initial = cdir
                         elif cdir < idx and (not offset_initial or
-                        offset_initial and pure_idx > self._tbl.trlen):
+                        offset_initial and pure_idx > trlen):
                             raise SyntaxErr(
                               fix(first.meta),
                               'Out-of-sequence compass direction '
@@ -262,7 +263,7 @@ class Preprocess(Transformer):
                         offset_initial = 1
                     
                     if not crange and offset_initial:
-                        crange = (*range(self._tbl.neighborhood[a], 1+self._tbl.trlen), *range(1, 1+self._tbl.neighborhood[b]))
+                        crange = (*range(self._tbl.neighborhood[a], 1+trlen), *range(1, 1+self._tbl.neighborhood[b]))
                     
                     if idx != crange[0]:
                         if idx == 1:
@@ -295,6 +296,11 @@ class Preprocess(Transformer):
                         idx = add_mod(idx, 1)
                         pure_idx += 1
                 else:
+                    if not offset_initial and pure_idx > trlen:
+                        raise Error(
+                          m,
+                          f'Too many napkin terms (this is number {trlen+1}; expected no more than {trlen})'
+                          )
                     all_cdir = False
                     napkin[idx], = self.kill_strings(tr_state.children, m)
                     idx = add_mod(idx, 1)
@@ -304,11 +310,11 @@ class Preprocess(Transformer):
                   [idx for idx in range(1, 1+len(self._tbl.neighborhood)) if idx not in napkin],
                   self.vars['any']
                   ))
-            if len(napkin) != self._tbl.trlen:
+            if len(napkin) != trlen:
                 raise Error(
                   (meta.line, children[0].meta.column, children[-1].meta.end_column),
                   f"Bad transition length for {self.directives['neighborhood']} neighborhood "
-                  f'(expected {2+self._tbl.trlen} terms, got {2+len(napkin)})'
+                  f'(expected {2+trlen} terms, got {2+len(napkin)})'
                   )
         return TransitionGroup(self._tbl, initial, napkin, resultant, context=fix(meta))
     

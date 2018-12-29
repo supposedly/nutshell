@@ -105,7 +105,7 @@ class TransitionGroup:
                       TransitionGroup.from_seq(
                         tr, self.tbl, context=self.ctx, extra=self.extra, symmetries=self.symmetries
                       ).expand()
-                      )
+                    )
                     if combine:
                         tr = self[:]
                         tr[idx], tr[orig_idx] = StateList(combine, e.split, context=tethered_var.ctx), e.val
@@ -123,7 +123,7 @@ class TransitionGroup:
                       TransitionGroup.from_seq(
                         tr, self.tbl, context=self.ctx, extra=self.extra, symmetries=self.symmetries
                       ).expand()
-                      )
+                    )
                     break
             else:
                 current.append(val)
@@ -176,8 +176,8 @@ class TransitionGroup:
                   for new_tr in
                   TransitionGroup.from_seq(
                     tr, self.tbl, context=self.ctx, extra=self.extra, symmetries=self.symmetries
-                    ).apply_aux([i], False)
-                  )
+                  ).apply_aux([i], False)
+                )
         
         stationaries = [aux for aux in auxiliaries if aux.stationary]
         if stationaries:
