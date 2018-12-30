@@ -150,6 +150,11 @@ class Neighborhood:
         permuted_cdirs = set(cdirs)
         cls = Neighborhood if as_cls else tuple
         return [cls(next(permute) if c in permuted_cdirs else c for c in self) for permute in map(iter, permutations(cdirs))]
+    
+    def identity(self, *, as_cls=True):
+        if as_cls:
+            return (self,)
+        return (self.cdirs,)
 
 
 def get_gollyizer(tbl, nbhd, *, golly_nbhd=None):

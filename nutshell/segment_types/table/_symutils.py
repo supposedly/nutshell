@@ -1,7 +1,7 @@
 from collections import OrderedDict
 from functools import lru_cache, reduce, partial
 from math import ceil
-from operator import and_ as bitwise_and
+from operator import and_ as bitwise_and, or_ as bitwise_or
 
 from nutshell.common.utils import multisplit
 from ._neighborhoods import Neighborhood
@@ -9,14 +9,15 @@ from ._classes import Coord, InlineBinding
 
 
 class Napkin(tuple):
-    hash_func = None
+    permute_hash_indices = None
     nbhd = None
+    transformation_names = None
     transformations = None
-    nested_transformations = None
     tilde = None
     _RECENTS = {}
 
     def __init__(self, _):
+        self.cdir_map = dict(zip(self.nbhd, self))
         self._expanded = None
         self._hash = None
     
@@ -24,8 +25,13 @@ class Napkin(tuple):
     def __init_subclass__(cls):
         # if cls.nbhd is None:
         #    raise NotImplementedError('Please override class attribute `nbhd` in Napkin subclass')
-        if cls.transformations is None:
-            raise NotImplementedError('Please override class attribute `transformations` in Napkin subclass')
+        if cls.transformation_names is None:
+            raise NotImplementedError('Please override class attribute `transformation_names` in Napkin subclass')
+        if cls.transformations is None and cls.nbhd is not None:
+            if len(cls.transformation_names) > 1:
+                raise NotImplementedError('Please override class attribute `transformations` in Napkin subclass')
+            func, *args = cls.transformation_names[0]
+            cls.transformations = frozenset(getattr(cls.nbhd, func)(*args, as_cls=False))
         cls._RECENTS = {}
         cls.test_nbhd()
     
@@ -44,37 +50,40 @@ class Napkin(tuple):
     def compose(cls, other):
         if cls.nbhd != other.nbhd:
             raise TypeError(f'Cannot compose symmetries of different neighborhoods {cls.nbhd!r} and {other.nbhd!r}')
-        if cls.hash_func is None or other.hash_func is None:
-            hash_func = None
+        if cls.permute_hash_indices is None or other.permute_hash_indices is None:
+            hash_indices = None
         else:
-            def hash_func(nbhd, self):
-                cls_tuple, cls_permute = cls.hash_func(nbhd, self)
-                other_tuple, other_permute = other.hash_func(nbhd, self)
-                return ((frozenset(cls_tuple), other_permute), (frozenset(other_tuple), cls_permute))
+            # Make sure we can compose them w/o headache
+            cls_stationary, cls_permutable = cls.permute_hash_indices
+            other_stationary, other_permutable = other.permute_hash_indices
+            both_stationary = cls_stationary | other_stationary
+            both_permutable = reduce(bitwise_or, cls_permutable) | reduce(bitwise_or, other_permutable)
+            
+            if reduce(bitwise_and, cls_permutable) or reduce(bitwise_and, other_permutable) \
+            or both_permutable & both_stationary:
+                hash_indices = None
+            else:
+                hash_indices = (
+                  {i for i in both_stationary if i not in both_permutable},
+                  cls_permutable + other_permutable
+                )
         return new_sym_type(
           cls.nbhd,
           f'{cls.__name__}+{other.__name__}',
-          cls.transformations + other.transformations,
-          lambda self: [j for i in other(self).expanded for j in cls(i).expanded],
-          nested_transformations=cls.nested_transformations | other.nested_transformations,
-          #hash_func=hash_func
+          cls.transformation_names + other.transformation_names,
+          transformations=frozenset([*other.transformations, *[j for i in other.transformations for j in cls(i).expanded]]),
+          permute_hash_indices=hash_indices
           )
     
     @classmethod
     def combine(cls, other):
         if cls.nbhd != other.nbhd:
             raise TypeError(f'Cannot combine symmetries of different neighborhoods {cls.nbhd!r} and {other.nbhd!r}')
-        #if cls.hash_func is None or other.hash_func is None:
-        #    hash_func = None
-        #else:
-        #    hash_func = lambda nbhd, self: frozenset((other.hash_func(nbhd, self), cls.hash_func(nbhd, self)))
         return new_sym_type(
           cls.nbhd,
           f'{cls.__name__}/{other.__name__}',
-          cls.transformations + other.transformations,
-          lambda self: [*other(self).expand(), *cls(self).expand()],
-          nested_transformations=frozenset((cls.nested_transformations, other.nested_transformations)),
-          hash_func=None
+          cls.transformation_names + other.transformation_names,
+          transformations=cls.transformations|other.transformations
           )
     
     @classmethod
@@ -83,39 +92,41 @@ class Napkin(tuple):
             raise ValueError(f'Neighborhood does not support {cls.__name__} symmetries')
     
     @property
-    def cdir_map(self):
-        return dict(zip(self.nbhd, self))
-    
-    @property
     def expanded(self):
         if self._expanded is None:
-            self._expanded = frozenset(self.expand())
+            cls = self.__class__
+            if cls.permute_hash_indices is None:
+                self._expanded = frozenset(self._expand())
+            else:
+                hashable = self._get_hashable()
+                if hashable not in cls._RECENTS:
+                    cls._RECENTS[hashable] = frozenset(self._expand())
+                self._expanded = cls._RECENTS[hashable]
         return self._expanded
     
-    def expand(self):
-        #cls = self.__class__
-        #if cls.hash_func is None:
-            return self._expand()
-        #searchable = cls.hash_func(cls.nbhd, self)
-        #if searchable not in cls._RECENTS:
-        #    cls._RECENTS[searchable] = self._expand()
-        #return cls._RECENTS[searchable]
+    def _get_hashable(self):
+        stationary, permutables = self.__class__.permute_hash_indices
+        return (
+          tuple([self[i] for i in stationary]),
+          tuple([frozenset([self[i] for i in permutable]) for permutable in permutables])
+          )
     
     def _expand(self):
-        raise NotImplementedError('Please override method `_expand()` in Napkin subclass')
+        cdir_map = self.cdir_map
+        return {tuple(cdir_map[i] for i in transformation) for transformation in self.transformations}
     
-    def _convert(self, iterable):
+    def _expand_other(self, iterable):
         cdir_map = self.cdir_map
         return [tuple(cdir_map[j] for j in i) for i in iterable]
     
     def reflections_across(self, *args):
-        return self._convert(self.nbhd.reflections_across(*args, as_cls=False))
+        return self._expand_other(self.nbhd.reflections_across(*args, as_cls=False))
     
     def rotations_by(self, *args):
-        return self._convert(self.nbhd.rotations_by(*args, as_cls=False))
+        return self._expand_other(self.nbhd.rotations_by(*args, as_cls=False))
     
     def permutations(self, *args):
-        return self._convert(self.nbhd.permutations(*args, as_cls=False))
+        return self._expand_other(self.nbhd.permutations(*args, as_cls=False))
 
 
 def find_golly_sym_type(symmetries, nbhd):
@@ -167,21 +178,13 @@ def get_sym_type(nbhd, string):
     return resultant_sym
 
 
-def new_sym_type(nbhd, name, transformations, func=None, *, tilde=None, nested_transformations=None, hash_func=None):
-    if func is None:
-        method = getattr(Napkin, transformations[0])
-        method_args = transformations[1:]
-        func = lambda self: method(self, *method_args)
-        transformations = (transformations,)
-    if nested_transformations is None:
-        nested_transformations = frozenset(transformations)
+def new_sym_type(nbhd, name, transformation_names, *, transformations=None, tilde=None, permute_hash_indices=None):
     return type(name, (Napkin,), {
-      '_expand': func,
+      'transformation_names': transformation_names,
       'transformations': transformations,
-      'nested_transformations': nested_transformations,
       'nbhd': nbhd,
       'tilde': tilde,
-      'hash_func': hash_func
+      'permute_hash_indices': permute_hash_indices
     })
 
 
@@ -204,7 +207,7 @@ def reflect(first=None, second=None):
     return lru_cache()(lambda nbhd: new_sym_type(
       nbhd,
       f'Reflect({first.name} {second.name})',
-      ('reflections_across', (first, second))  # lambda self: self.reflections_across((first, second))
+      [('reflections_across', (first, second))]  # lambda self: self.reflections_across((first, second))
     ))
 
 
@@ -213,7 +216,7 @@ def rotate(n):
     return lru_cache()(lambda nbhd: new_sym_type(
       nbhd,
       f'Rotate({n})',
-      ('rotations_by', int(n))  # lambda self: self.rotations_by(int(n))
+      [('rotations_by', int(n))]  # lambda self: self.rotations_by(int(n))
     ))
 
 
@@ -222,21 +225,19 @@ def permute(*cdirs, explicit=False):
     @lru_cache()
     def _(nbhd):
         not_cdirs = [i for i in nbhd if i not in cdirs]
-        def hash_func(nbhd, self):
-            return (tuple(self[nbhd[i]-1] for i in cdirs), frozenset(self[nbhd[i]-1] for i in not_cdirs))
         return new_sym_type(
           nbhd,
           f"Permute({' '.join(cdirs) if cdirs else 'All'})",
-          ('permutations', cdirs or None),  # lambda self: self.permutations(cdirs or None)
+          [('permutations', cdirs or None)],  # lambda self: self.permutations(cdirs or None)
           tilde=permute_tilde_explicit if explicit or cdirs and len(cdirs) < len(nbhd) else permute_tilde,
-          #hash_func=hash_func
+          permute_hash_indices=({nbhd[i] - 1 for i in cdirs}, [{nbhd[i] - 1 for i in not_cdirs}])
         )
     return _
 
 
 @lru_cache()
 def none(nbhd):
-    return new_sym_type(nbhd, 'NoSymmetry', (), lambda self, **_: [tuple(self)])
+    return new_sym_type(nbhd, 'NoSymmetry', [('identity',)])
 
 
 def permute_tilde_explicit(self, values):

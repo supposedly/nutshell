@@ -93,7 +93,7 @@ class TableSegment:
         self._data = transformer.transform(_parsed)
         
         MinSym, name = symutils.find_golly_sym_type(self.sym_types, self.neighborhood)
-        if len(self.sym_types) <= 1 and self.symmetries.nested_transformations == MinSym.nested_transformations:
+        if len(self.sym_types) <= 1 and self.symmetries.transformations == MinSym.transformations:
             self.final = [t.fix_vars() for t in self._data]
         else:
             self.final = [new_tr for tr in self._data for new_tr in tr.in_symmetry(MinSym)]

@@ -340,7 +340,7 @@ class Transition:
     
     def in_symmetry(self, NewSymmetry):
         initial, *napkin, resultant = self.fix_partial()
-        return [self.fix_final([initial, *i, resultant]) for i in distinct(NewSymmetry(j) for j in self.symmetries(napkin).expand())]
+        return [self.fix_final([initial, *i, resultant]) for i in distinct(NewSymmetry(j) for j in self.symmetries(napkin).expanded)]
 
 
 class FinalTransition(list):

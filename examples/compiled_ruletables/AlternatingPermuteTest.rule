@@ -43,7 +43,7 @@ var _a0.3 = _a0.0
 
 @TABLE
 neighborhood: Moore
-symmetries: rotate4reflect
+symmetries: none
 n_states: 4
 
 var any.0 = {0,1,2,3}
@@ -65,14 +65,26 @@ var _a0.3 = _a0.0
 
 #### symmetries: permute(N, E, S, W) permute(NE, SE, SW, NW)
 #### line 48: 0, h, t, any, b, any, any, any, any, h ####
+0, any.0, t.0, any.1, any.2, any.3, b.0, h.0, any.4, h.1
+0, any.0, t.0, any.1, any.2, h.0, b.0, any.3, any.4, h.1
+0, h.0, any.0, any.1, any.2, any.3, b.0, any.4, t.0, h.1
 0, h.0, b.0, any.0, any.1, any.2, any.3, any.4, t.0, h.1
-0, any.0, b.0, any.1, any.2, any.3, any.4, h.0, t.0, h.1
-0, any.0, b.0, any.1, any.2, h.0, any.3, any.4, t.0, h.1
-0, any.0, b.0, h.0, any.1, any.2, any.3, any.4, t.0, h.1
+0, h.0, any.0, any.1, t.0, any.2, b.0, any.3, any.4, h.1
+0, h.0, t.0, any.0, any.1, any.2, b.0, any.3, any.4, h.1
+0, h.0, any.0, any.1, b.0, any.2, t.0, any.3, any.4, h.1
+0, h.0, any.0, any.1, b.0, any.2, any.3, any.4, t.0, h.1
 0, h.0, any.0, any.1, t.0, any.2, any.3, any.4, b.0, h.1
-0, any.0, any.1, any.2, t.0, h.0, any.3, any.4, b.0, h.1
+0, h.0, t.0, any.0, b.0, any.1, any.2, any.3, any.4, h.1
+0, h.0, b.0, any.0, t.0, any.1, any.2, any.3, any.4, h.1
+0, h.0, t.0, any.0, any.1, any.2, any.3, any.4, b.0, h.1
+0, any.0, t.0, h.0, any.1, any.2, b.0, any.3, any.4, h.1
+0, h.0, any.0, any.1, any.2, any.3, t.0, any.4, b.0, h.1
+0, h.0, b.0, any.0, any.1, any.2, t.0, any.3, any.4, h.1
 #### line 49: 0, h, --t, any, --t, any, --t, any, --t, h ####
 0, h.0, _a0.0, any.0, _a0.1, any.1, _a0.2, any.2, _a0.3, h.1
+0, any.0, _a0.0, any.1, _a0.1, h.0, _a0.2, any.2, _a0.3, h.1
+0, any.0, _a0.0, h.0, _a0.1, any.1, _a0.2, any.2, _a0.3, h.1
+0, any.0, _a0.0, any.1, _a0.1, any.2, _a0.2, h.0, _a0.3, h.1
 #### line 50: (h, t), any, any, any, any, any, any, any, any, [0:(t, 0)] ####
 2, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 1
 1, any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 0
