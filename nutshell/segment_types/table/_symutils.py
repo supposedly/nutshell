@@ -67,11 +67,13 @@ class Napkin(tuple):
                   {i for i in both_stationary if i not in both_permutable},
                   cls_permutable + other_permutable
                 )
+        nbhd = cls.nbhd
         return new_sym_type(
-          cls.nbhd,
+          nbhd,
           f'{cls.__name__}+{other.__name__}',
           cls.transformation_names + other.transformation_names,
-          transformations=frozenset([*other.transformations, *[j for i in other.transformations for j in cls(i).expanded]]),
+          # I don't actually get why this works but not frozenset([j for i in cls.transformations for j in other(i).expanded])
+          transformations=frozenset([tuple(a[nbhd[i]-1] for i in b) for a in cls.transformations for b in other.transformations]),
           permute_hash_indices=hash_indices
           )
     
