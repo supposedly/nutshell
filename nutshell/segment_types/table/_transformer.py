@@ -4,7 +4,6 @@ from inspect import signature
 from importlib import import_module
 from itertools import chain, repeat
 from operator import attrgetter
-from pkg_resources import resource_filename
 
 import bidict
 from .lark_assets.parser import Transformer, Tree, Discard, v_args
@@ -16,13 +15,6 @@ from . import _symutils as symutils, _neighborhoods as nbhoods, inline_rulestrin
 
 SPECIALS = {'...', '_', 'N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'}
 Meta = namedtuple('Meta', ['lno', 'start', 'end'])
-
-try:
-    with open(resource_filename('nutshell', 'segment_types/table/lark_assets/grammar.lark')) as f:
-        NUTSHELL_GRAMMAR = f.read()
-except FileNotFoundError:
-    with open('nutshell/segment_types/table/lark_assets/grammar.lark') as f:
-        NUTSHELL_GRAMMAR = f.read()
 
 
 def fix(meta):

@@ -13,7 +13,7 @@ from nutshell.common.utils import printv, printq
 from nutshell.common import macros
 from nutshell.common.errors import *
 from .lark_assets import parser as lark_standalone
-from ._transformer import Preprocess, NUTSHELL_GRAMMAR
+from ._transformer import Preprocess
 from ._classes import VarName, StateList
 from . import _symutils as symutils, _neighborhoods as nbhoods
 
