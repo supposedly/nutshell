@@ -136,130 +136,8 @@ Brainfuck.
     the input tape will right itself automatically once the simulation starts.)
 
 + An example:
-  x = 61, y = 13, rule = bf
-  53.qR$52.qR$51.qR$50.qR$49.qR$47.2qR$42.qR3.2qR$41.qR3.2qR$41.qJ$43.pR
-  $7rSrU12rSrU10rSrUrTrU5rSrM$43.I$44.AB2DFHCHCEDGDBCEC!
-
-
-@COLORS
-000: 0
-FFF: FinalZeroOut
-FF0: InputHead, FreshInputHead
-
-
-@ICONS
-?  0FF .. FFF
-0:  000
-1:  FDF
-2:  0A0
-3:  C00
-4:  777
-5:  CB0
-6:  0AB
-
-#C empty space/shadow
-#C NorthNOP, EastShadow..EastShadowComma, WestShadowBreak..EastShadowLoop, Blank1..BlankEast
-x = 13, y = 13, rule = bf
-3.7A$.3A5D3A$.A9DA$2A2D.3D.2D2A$A2D3.D3.2DA$A3D5.3DA$A4D3.4DA$A3D5.3D
-A$A2D3.D3.2DA$2A2D.3D.2D2A$.A9DA$.3A5D3A$3.7A!
-
-#C Left bracket
-#C LBrack
-x = 9, y = 15, rule = bf
-2.7D$.8D$3D4A2D$2D5A2D$2D2A5D$2D2A5D$2D2A2D$2D2A2D$2D2A2D$2D2A5D$2D2A
-5D$2D5A2D$3D4A2D$.8D$2.7D!
-
-#C Right bracket
-#C RBrack, NorthRBrack, WestRBrack, EastRBrack
-x = 9, y = 15, rule = bf
-7D$8D$2D4A3D$2D5A2D$5D2A2D$5D2A2D$3.2D2A2D$3.2D2A2D$3.2D2A2D$5D2A2D$
-5D2A2D$2D5A2D$2D4A3D$8D$7D!
-
-#C Plus sign
-#C Plus, NorthPlus, WestPlus, EastPlus 
-x = 15, y = 15, rule = bf
-5.5D$4.7D$4.2D3A2D$4.2D3A2D$.5D3A5D$6D3A6D$2D11A2D$2D11A2D$2D11A2D$6D
-3A6D$.5D3A5D$4.2D3A2D$4.2D3A2D$4.7D$5.5D!
-
-#C Minus sign
-#C Minus, NorthMinus, WestMinus, EastMinus
-x = 15, y = 7, rule = bf
-.13D$15D$2D11A2D$2D11A2D$2D11A2D$15D$.13D!
-
-#C Left angle bracket
-#C LAngle, NorthLAngle, WestLAngle, EastLAngle
-x = 15, y = 13, rule = bf
-10.5D$8.7D$6.5D2A2D$4.5D4A2D$2.5D4A4D$5D4A6D$3D4A6D$5D4A6D$2.5D4A4D$
-4.5D4A2D$6.5D2A2D$8.7D$10.5D!
-
-#C Right angle bracket
-#C RAngle, NorthRAngle, WestRAngle, EastRAngle
-x = 15, y = 13, rule = bf
-5D$7D$2D2A5D$2D4A5D$4D4A5D$6D4A5D$2.6D4A3D$6D4A5D$4D4A5D$2D4A5D$2D2A
-5D$7D$5D!
-
-#C Comma
-#C Comma, NorthComma, WestComma, EastComma, SouthComma
-x = 13, y = 15, rule = bf
-2.9D$.11D$3D7A3D$2D9A2D$2D9A2D$2D9A2D$2D9A2D$2D9A2D$3D8A2D$.6D4A2D$3.
-4D4A2D$.5D4A3D$.2D6A4D$.11D$2.9D!
-
-#C Period
-#C Dot, NorthDot, WestDot, EastDot
-x = 13, y = 13, rule = bf
-4.5D$2.9D$.4D3A4D$.2D7A2D$3D7A3D$2D9A2D$2D9A2D$2D9A2D$3D7A3D$.2D7A2D$
-.4D3A4D$2.9D$4.5D!
-
-#C "V" shape; instruction pointer
-#C Pointer..WestPointer, PointerSkip
-x = 11, y = 12, rule = bf
-4A3.4A$4A3.4A$5A.5A$.4A.4A$.9A$2.7A$2.7A$3.5A$3.5A$4.3A$4.3A$5.A!
-
-#C Darker "V" shape; delayed pointer
-#C DelayedPointer, DelayedPointer2, DelayedPointer3
-x = 11, y = 12, rule = bf
-4D3.4D$4D3.4D$5D.5D$.4D.4D$.9D$2.7D$2.7D$3.5D$3.5D$4.3D$4.3D$5.D!
-
-#C Data pointer
-#C DataPointer..DataPointerComma
-x = 11, y = 11, rule = bf
-4.3E$4.3E$3.5E$3.5E$2.7E$2.7E$.9E$.4E.4E$5E.5E$4E3.4E$4E3.4E!
-
-#C Inert data
-#C Data
-x = 13, y = 13, rule = bf
-7.4E$6.6E$5.8E$4.9E$3.10E$2.11E$.11E$11E$10E$9E$8E$.6E$2.4E!
-
-#C Active forward-moving data
-#C DataOut, FinalDataOut, DataPlus
-x = 14, y = 14, rule = bf
-5.9C$4.10C$4.2C6A2C$4.3C5A2C$4.4C4A2C$3.4C5A2C$2.4C3AC2A2C$.4C3A3CA2C
-$4C3A7C$3C3A7C$3C2A4C$8C$.6C$2.4C!
-
-#C Active backward-moving data
-#C DataMinus
-x = 14, y = 14, rule = bf
-8.4F$7.6F$6.8F$5.4F2A3F$.7F3A3F$7F3A4F$2FA3F3A4F$2F2AF3A4F$2F5A4F$2F
-4A4F$2F5A3F$2F6A2F$10F$9F!
-
-
-#C Check mark ('yes', aka 'loop')
-#C EastLoop..SouthLoop
-x = 13, y = 13, rule = bf
-13B$13B$11BAB$10B2AB$9B3AB$8B3A2B$2BA4B3A3B$2B2A2B3A4B$2B6A5B$3B4A6B$
-4B2A7B$13B$13B!
-
-#C X sign ('no', aka 'break')
-#C EastBreak..SouthBreak
-x = 13, y = 13, rule = bf
-13C$C2A7C2AC$C3A5C3AC$2C3A3C3A2C$3C3AC3A3C$4C5A4C$5C3A5C$4C5A4C$3C3AC
-3A3C$2C3A3C3A2C$C3A5C3AC$C2A7C2AC$13C!
-
-#C Digit zero
-#C Input0, FreshInput0
-x = 9, y = 13, rule = bf
-2.5C$.C5AC$C7AC$C2A3C2AC$C2A2C3AC$C2AC4AC$C7AC$C4AC2AC$C3A2C2AC$C2A3C
-2AC$C7AC$.C5AC$2.5C!
+x = 19, y = 5, rule = bf
+4.qJ$6.pR$2rSrM$6.I$7.H2DF2AEBCFGC!
 
 
 @TABLE
@@ -508,3 +386,122 @@ RBrack, S RBrack, SW..SE any; NorthRBrack
 # ...with some edge-case handling
 Pointer, E Pointer, SE 0, S RBrack, SW..NE any; 0  # avoid double pointer if r-brack is the last character
 Pointer, W Blank1, NW..S 0, SW any; 0  # avoid punching through the prgm tape if comma is the last character
+
+@COLORS
+000: 0
+FFF: FinalZeroOut
+FF0: InputHead, FreshInputHead
+
+
+@ICONS
+?  0FF .. FFF
+0:  000
+1:  FFF
+2:  0A0
+3:  C00
+4:  666
+5:  CB0
+6:  0AF
+
+#C empty space/shadow
+#C NorthNOP, EastShadow..EastShadowComma, WestShadowBreak..EastShadowLoop, Blank1..BlankEast
+x = 13, y = 13, rule = bf
+3.7A$.3A5D3A$.A9DA$2A2D.3D.2D2A$A2D3.D3.2DA$A3D5.3DA$A4D3.4DA$A3D5.3D
+A$A2D3.D3.2DA$2A2D.3D.2D2A$.A9DA$.3A5D3A$3.7A!
+
+#C Left bracket
+#C LBrack
+x = 9, y = 15, rule = bf
+2.7D$.8D$3D4A2D$2D5A2D$2D2A5D$2D2A5D$2D2A2D$2D2A2D$2D2A2D$2D2A5D$2D2A
+5D$2D5A2D$3D4A2D$.8D$2.7D!
+
+#C Right bracket
+#C RBrack, NorthRBrack, WestRBrack, EastRBrack
+x = 9, y = 15, rule = bf
+7D$8D$2D4A3D$2D5A2D$5D2A2D$5D2A2D$3.2D2A2D$3.2D2A2D$3.2D2A2D$5D2A2D$
+5D2A2D$2D5A2D$2D4A3D$8D$7D!
+
+#C Plus sign
+#C Plus, NorthPlus, WestPlus, EastPlus 
+x = 15, y = 15, rule = bf
+5.5D$4.7D$4.2D3A2D$4.2D3A2D$.5D3A5D$6D3A6D$2D11A2D$2D11A2D$2D11A2D$6D
+3A6D$.5D3A5D$4.2D3A2D$4.2D3A2D$4.7D$5.5D!
+
+#C Minus sign
+#C Minus, NorthMinus, WestMinus, EastMinus
+x = 15, y = 7, rule = bf
+.13D$15D$2D11A2D$2D11A2D$2D11A2D$15D$.13D!
+
+#C Left angle bracket
+#C LAngle, NorthLAngle, WestLAngle, EastLAngle
+x = 15, y = 13, rule = bf
+10.5D$8.7D$6.5D2A2D$4.5D4A2D$2.5D4A4D$5D4A6D$3D4A6D$5D4A6D$2.5D4A4D$
+4.5D4A2D$6.5D2A2D$8.7D$10.5D!
+
+#C Right angle bracket
+#C RAngle, NorthRAngle, WestRAngle, EastRAngle
+x = 15, y = 13, rule = bf
+5D$7D$2D2A5D$2D4A5D$4D4A5D$6D4A5D$2.6D4A3D$6D4A5D$4D4A5D$2D4A5D$2D2A
+5D$7D$5D!
+
+#C Comma
+#C Comma, NorthComma, WestComma, EastComma, SouthComma
+x = 13, y = 15, rule = bf
+2.9D$.11D$3D7A3D$2D9A2D$2D9A2D$2D9A2D$2D9A2D$2D9A2D$3D8A2D$.6D4A2D$3.
+4D4A2D$.5D4A3D$.2D6A4D$.11D$2.9D!
+
+#C Period
+#C Dot, NorthDot, WestDot, EastDot
+x = 13, y = 13, rule = bf
+4.5D$2.9D$.4D3A4D$.2D7A2D$3D7A3D$2D9A2D$2D9A2D$2D9A2D$3D7A3D$.2D7A2D$
+.4D3A4D$2.9D$4.5D!
+
+#C "V" shape; instruction pointer
+#C Pointer..WestPointer, PointerSkip
+x = 11, y = 12, rule = bf
+4A3.4A$4A3.4A$5A.5A$.4A.4A$.9A$2.7A$2.7A$3.5A$3.5A$4.3A$4.3A$5.A!
+
+#C Darker "V" shape; delayed pointer
+#C DelayedPointer, DelayedPointer2, DelayedPointer3
+x = 11, y = 12, rule = bf
+4D3.4D$4D3.4D$5D.5D$.4D.4D$.9D$2.7D$2.7D$3.5D$3.5D$4.3D$4.3D$5.D!
+
+#C Data pointer
+#C DataPointer..DataPointerComma
+x = 11, y = 11, rule = bf
+4.3E$4.3E$3.5E$3.5E$2.7E$2.7E$.9E$.4E.4E$5E.5E$4E3.4E$4E3.4E!
+
+#C Inert data
+#C Data
+x = 13, y = 13, rule = bf
+7.4E$6.6E$5.8E$4.9E$3.10E$2.11E$.11E$11E$10E$9E$8E$.6E$2.4E!
+
+#C Active forward-moving data
+#C DataOut, FinalDataOut, DataPlus
+x = 15, y = 15, rule = bf
+2.13A$3.A10BA$4.A9BA$4.A9BA$3.A10BA$2.A11BA$.A12BA$A13BA$A13BA$A13BA$
+.A9B2ABA$2.A7BA2.2A$3.A5BA4.A$4.A3BA$5.3A!
+
+#C Active backward-moving data
+#C DataMinus
+x = 15, y = 15, rule = bf
+7.3A$6.A3FA$A4.A5FA$2A2.A7FA$AF2A9FA$A13FA$A13FA$A13FA$A12FA$A11FA$A
+10FA$A9FA$A9FA$A10FA$13A!
+
+#C Check mark ('yes', aka 'loop')
+#C EastLoop..SouthLoop
+x = 13, y = 13, rule = bf
+13B$13B$11BAB$10B2AB$9B3AB$8B3A2B$2BA4B3A3B$2B2A2B3A4B$2B6A5B$3B4A6B$
+4B2A7B$13B$13B!
+
+#C X sign ('no', aka 'break')
+#C EastBreak..SouthBreak
+x = 13, y = 13, rule = bf
+13C$C2A7C2AC$C3A5C3AC$2C3A3C3A2C$3C3AC3A3C$4C5A4C$5C3A5C$4C5A4C$3C3AC
+3A3C$2C3A3C3A2C$C3A5C3AC$C2A7C2AC$13C!
+
+#C Digit zero
+#C Input0, FreshInput0
+x = 9, y = 13, rule = bf
+2.5C$.C5AC$C7AC$C2A3C2AC$C2A2C3AC$C2AC4AC$C7AC$C4AC2AC$C3A2C2AC$C2A3C
+2AC$C7AC$.C5AC$2.5C!

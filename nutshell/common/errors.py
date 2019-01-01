@@ -47,7 +47,3 @@ class SyntaxErr(NutshellException):
 
 class UnsupportedFeature(NutshellException):
     pass
-
-
-class CoordOutOfBounds(NutshellException):
-    pass

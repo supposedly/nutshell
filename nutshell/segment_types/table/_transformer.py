@@ -10,6 +10,7 @@ from .lark_assets.parser import Transformer, Tree, Discard, v_args
 
 from nutshell.common.utils import KILL_WS
 from nutshell.common.errors import *
+from ._errors import InvalidSymmetries, NeighborhoodError
 from ._classes import *
 from . import _symutils as symutils, _neighborhoods as nbhoods, inline_rulestring
 
@@ -131,7 +132,7 @@ class Preprocess(Transformer):
     
     @inline
     def directive(self, meta, name, val):
-        cmt_val = val
+        cmt_val = str(val)
         if '#' in val:  # since comments are not handled otherwise
             val = val[:val.index('#')].rstrip()
         if name == 'macros':
@@ -154,17 +155,29 @@ class Preprocess(Transformer):
                 self._tbl.neighborhood = val
             except ValueError as e:
                 raise Error(meta, str(e))
+            except NeighborhoodError:
+                nbhd_str = '    ' + '\n    '.join(map(' '.join, self._tbl.neighborhood.to_list()))
+                raise InvalidSymmetries(
+                  meta,
+                  'Chosen neighborhood\n'
+                  f"{nbhd_str}\n"
+                  f'  does not support current symmetry type {self._tbl.symmetries.__name__!r}'
+                  )
             self._nbhd_assigned = True
         else:
             # directives are more like comments than they are source
             self._tbl.comments[meta[0]] = f'#### {name}: {cmt_val}'
         if name == 'symmetries':
             try:
-                self._tbl.add_sym_type(val)
-            except ImportError as e:
-                raise Error(meta, str(e))
-            except (Exception, SyntaxError) as e:
-                raise Error(meta, f'Error in Python symmetry file: {e}')
+                self._tbl.symmetries = cmt_val
+            except NeighborhoodError as e:
+                nbhd_str = '    ' + '\n    '.join(map(' '.join, self._tbl.neighborhood.to_list()))
+                raise InvalidSymmetries(
+                  meta,
+                  'Current neighborhood\n'
+                  f"{nbhd_str}\n"
+                  f'  does not support chosen symmetry type {cmt_val!r}'
+                  )
         raise Discard
     
     @inline
@@ -344,7 +357,7 @@ class Preprocess(Transformer):
     @inline
     def symmetried_aux(self, meta, symmetries, *auxiliaries):
         self._tbl.add_sym_type(symmetries)
-        symmetries = symutils.get_sym_type(symmetries)
+        symmetries = symutils.get_sym_type(self._tbl.neighborhood, symmetries)
         for aux in auxiliaries:
             aux.symmetries = symmetries
         return auxiliaries
@@ -352,7 +365,7 @@ class Preprocess(Transformer):
     @inline
     def stationary_symmetried_aux(self, meta, symmetries, *auxiliaries):
         self._tbl.add_sym_type(symmetries)
-        symmetries = symutils.get_sym_type(symmetries)
+        symmetries = symutils.get_sym_type(self._tbl.neighborhood, symmetries)
         for aux in auxiliaries:
             aux.symmetries = symmetries
             aux.stationary = True

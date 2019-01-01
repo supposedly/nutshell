@@ -12,6 +12,7 @@ from nutshell.common.classes import TableRange
 from nutshell.common.utils import printq, multisplit
 from nutshell.common import macros
 from nutshell.common.errors import *
+from ._errors import NeighborhoodError
 from .lark_assets import parser as lark_standalone
 from ._transformer import Preprocess
 from ._classes import VarName, StateList
@@ -31,7 +32,7 @@ class Bidict(bidict.bidict):
 
 
 class TableSegment:
-    CARDINALS = generate_cardinals(nbhoods.ORDERED_NBHDS)
+    NEIGHBORHOODS = generate_cardinals(nbhoods.ORDERED_NBHDS)
 
     def __init__(self, tbl, start=0, *, dep: ['@NUTSHELL'] = (None,)):
         # parser (lexer?) dies if there are blank lines right at the start
@@ -44,7 +45,7 @@ class TableSegment:
         self.start = start
         self._n_states = 0
         self.comments = {}
-        self._nbhd = self._trlen = None
+        self._trlen = None
         dep, = dep
         
         if dep is not None:
@@ -54,6 +55,9 @@ class TableSegment:
                 self._n_states = 1 + max(self._constants.values())
         
         self.directives = {'neighborhood': 'Moore', 'symmetries': 'none', 'states': self._n_states}
+        self._nbhd = None
+        self._symmetries = None   # these go together
+        self.symmetries = 'none'  # these go together
         self.gollyize_nbhd = None
         self.default_sym_used = False
         self.vars = Bidict()  # {VarName(name) | str(name) :: Variable(value)}
@@ -150,7 +154,7 @@ class TableSegment:
     @property
     def neighborhood(self):
         if self._nbhd is None:
-            self._nbhd = self.CARDINALS[self.directives['neighborhood']]
+            self._nbhd = self.NEIGHBORHOODS[self.directives['neighborhood']]
         return self._nbhd
     
     @neighborhood.setter
@@ -161,10 +165,16 @@ class TableSegment:
                 raise ValueError('Duplicate compass directions in neighborhood')
             self._nbhd = nbhoods.Neighborhood(nbhd)
             self.gollyize_nbhd = self._nbhd.gollyizer_for(self)
-        elif val in self.CARDINALS:
-            self._nbhd = self.CARDINALS[val]
+        elif val in self.NEIGHBORHOODS:
+            self._nbhd = self.NEIGHBORHOODS[val]
         else:
             raise ValueError('Unknown or invalid neighborhood')
+        self.symmetries = self._symmetries.with_neighborhood(self.neighborhood)
+        if not self.neighborhood.supports_transformations(self.symmetries.transformation_names):
+            raise NeighborhoodError(
+              f'Symmetry type {self.symmetries.__name__!r} is not supported '
+              f'by neighborhood {self.neighborhood.cdirs}'
+              )
         self._trlen = None
 
     @property
@@ -175,7 +185,14 @@ class TableSegment:
     
     @property
     def symmetries(self):
-        return symutils.get_sym_type(self.neighborhood, self.directives['symmetries'])
+        if self._symmetries is None:
+            self._symmetries = symutils.get_sym_type(self.neighborhood, self.directives['symmetries'])
+        return self._symmetries
+    
+    @symmetries.setter
+    def symmetries(self, value):
+        self.directives['symmetries'] = value
+        self._symmetries = symutils.get_sym_type(self.neighborhood, value) if isinstance(value, str) else value
     
     @property
     def n_states(self):
@@ -201,8 +218,11 @@ class TableSegment:
         self.vars[self.specials['any']] = StateList(range(self.n_states), context=None)
         self.vars[self.specials['live']] = StateList(range(1, self.n_states), context=None)
     
-    def add_sym_type(self, string):
-        self.sym_types.add(symutils.get_sym_type(self.neighborhood, string))
+    def add_sym_type(self, sym):
+        if isinstance(sym, str):
+            self.sym_types.add(symutils.get_sym_type(self.neighborhood, sym))
+        else:
+            self.sym_types.add(sym)
     
     def add_macros(self, path):
         with open(path) as f:

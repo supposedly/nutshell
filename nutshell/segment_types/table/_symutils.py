@@ -4,6 +4,7 @@ from math import ceil
 from operator import and_ as bitwise_and, or_ as bitwise_or
 
 from nutshell.common.utils import multisplit
+from ._errors import NeighborhoodError
 from ._neighborhoods import Neighborhood
 from ._classes import Coord, InlineBinding
 
@@ -33,7 +34,8 @@ class Napkin(tuple):
             func, *args = cls.transformation_names[0]
             cls.transformations = frozenset(getattr(cls.nbhd, func)(*args, as_cls=False))
         cls._RECENTS = {}
-        cls.test_nbhd()
+        if not cls.test_nbhd():
+            raise NeighborhoodError(f'Symmetry type {cls.__name__!r} is not supported by its neighborhood {cls.nbhd.cdirs}')
     
     def __hash__(self):
         if self._hash is None:
@@ -45,6 +47,17 @@ class Napkin(tuple):
     
     def __repr__(self):
         return f'{self.__class__.__name__}{super().__repr__()}'
+    
+    @classmethod
+    def with_neighborhood(cls, nbhd):
+        return new_sym_type(
+          nbhd,
+          cls.__name__,
+          cls.transformation_names,
+          transformations=cls.transformations,
+          tilde=cls.tilde,
+          permute_hash_indices=cls.permute_hash_indices
+        )
     
     @classmethod
     def compose(cls, other):
@@ -90,8 +103,9 @@ class Napkin(tuple):
     
     @classmethod
     def test_nbhd(cls):
-        if not cls.nbhd.supports(cls):
-            raise ValueError(f'Neighborhood does not support {cls.__name__} symmetries')
+        if cls.nbhd is None:
+            return
+        return cls.nbhd.supports(cls)
     
     @property
     def expanded(self):

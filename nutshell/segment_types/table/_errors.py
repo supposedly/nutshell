@@ -1,3 +1,18 @@
+from nutshell.common.errors import NutshellException
+
+
+class CoordOutOfBounds(NutshellException):
+    pass
+
+
+class InvalidSymmetries(NutshellException):
+    pass
+
+
+class NeighborhoodError(Exception):
+    pass
+
+
 class Reshape(Exception):
     def __init__(self, cdir, backup=None):
         self.cdir = cdir

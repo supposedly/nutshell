@@ -4,17 +4,27 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 
 ## [0.6.0] - In progress
 ### Planned
-- A complete overhaul of symmetries and neighborhoods such that:
-  - Such transformations as reflection and rotation are handled from the *neighborhood* rather than the symmetry type
+- Neighborhood-switching, a la symmetry-switching
+- More modifiers, e.g. Langton's Ant and Deficient/genext -- also hex
+- Extensions to macros and inline-rulestring modifiers:
+  - Macros that do their thing before statelists are re-resolved into names (to allow a macro to add new statelists)
+  - Maybe a `?` element, usable in transitions, indicating an unknown value that will be replaced by a macro?
+  - Simplify both APIs, maybe with \*args or something (there are currently a *lot* of parameters that need to be passed through)
+  - Allow macros and inline-rulestring modifiers to be defined either in their own `@MACROS` segment or at the headerless top
+    of a Nutshell (rather than needing to be in their own, separate file, which means that when I distribute a rule I either
+    have to share the extra file along with it or I have to add the macro/modifier to the stdlib)
+- A `prune` macro
+### Changed
+- Completely overhauled symmetries and neighborhoods such that:
+  - Transformations like reflection and rotation are handled from the *neighborhood* rather than the symmetry type
   - Nutshell, given the compass directions composing a neighborhood, automatically determines what standard transformations
     it can undergo
-  - ~~Symmetry types simply have to call, for instance, neighborhood.rotate4() -- rather than themselves reordering the napkin~~
-  - Symmetry types can be composed from within Nutshell without my having to define a new Python class for each basic combination
-    of symmetries
-  - Also, apgsearch-like symmetry notation...?
-- Neighborhood-switching, a la symmetry-switching
-- A `prune` macro
-- More modifiers, e.g. Langton's Ant and Deficient/genext -- also hex (although hex symmetries are scary)
+  - Symmetry types only have to call, for instance, neighborhood.rotate4() -- rather than themselves reordering the napkin
+  - Symmetry types can be composed from within Nutshell **without** the user's having to define a new Python class for each basic
+    non-fundamental symmetry type
+- Made errors reflect the new symmetry-type/neighborhood relationship: if a symmetry error occurs, the neighborhood's
+  `__str__()` is shown with a "does not support symmetries" message
+- Tilde notation is no longer available for symmetries that aren't "permute all cells"
 
 ## [0.5.5] - 2018-12-24
 ### Changed

@@ -1,6 +1,7 @@
 from collections import OrderedDict
 from itertools import takewhile, permutations
 from ._classes import Coord
+from ._errors import NeighborhoodError
 
 NBHD_SETS = OrderedDict(
   # for containment-checking
@@ -109,7 +110,7 @@ class Neighborhood:
             raise ValueError('Endpoint compass directions of a line of reflection must be both adjacent and given in clockwise order')
         to_check = [cdir for cdir in self.coord_cdirs if cdir not in {a, b, a.inv, b.inv}]
         if len(to_check) % 2 or any(c.inv.name not in self for c in to_check):
-            raise ValueError('Neighborhood is asymmetrical across the requested line of reflection')
+            raise NeighborhoodError('Neighborhood is asymmetrical across the requested line of reflection')
         if a == b:
             # i think the naive approach is the only way to go :(
             while a.name not in self:
@@ -121,7 +122,7 @@ class Neighborhood:
             for cdir in self.coord_cdirs:
                 d[cdir.name] = a.cw(b.ccw_distance(cdir, self), self).name
         except KeyError as e:
-            raise ValueError(f'Neighborhood does not contain {e}')
+            raise NeighborhoodError(f'Neighborhood does not contain {e}')
         r = {cdir: self[orig_cdir] for orig_cdir, cdir in d.items()}
         if as_cls:
             return Neighborhood(sorted(r, key=r.get))
@@ -139,7 +140,7 @@ class Neighborhood:
     
     def rotations_by(self, amt, *, as_cls=True):
         if len(self) % amt:
-            raise ValueError(f'Neighborhood cannot be rotated evenly by {amt}')
+            raise NeighborhoodError(f'Neighborhood cannot be rotated evenly by {amt}')
         #if not self.symmetrical:
         #    raise ValueError('Neighborhood is asymmetrical, cannot be rotated except by 1')
         return [self.rotate_by(offset, as_cls=as_cls) for offset in range(0, len(self), len(self) // amt)]

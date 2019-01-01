@@ -5,7 +5,7 @@ from itertools import count, cycle
 
 from nutshell.common.utils import random, distinct
 from nutshell.common.errors import *
-from .lark_assets.exceptions import *
+from ._errors import *
 
 
 class VarName:
