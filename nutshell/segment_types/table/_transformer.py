@@ -135,12 +135,6 @@ class Preprocess(Transformer):
         cmt_val = str(val)
         if '#' in val:  # since comments are not handled otherwise
             val = val[:val.index('#')].rstrip()
-        if name == 'macros':
-            try:
-                self._tbl.add_macros(val.translate(KILL_WS))
-            except (Exception, SyntaxError) as e:
-                raise Error(meta, f'Error in Python macro file: {e}')
-            raise Discard
         if name in self._tbl.available_macros:
             self._tbl.set_macro(meta, name, val)
             raise Discard

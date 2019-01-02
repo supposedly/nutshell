@@ -1,0 +1,42 @@
+@NUTSHELL MacroTest
+test macros and colors and stuff
+
+@DEFINE
+from itertools import count
+FinalTransition = nutshell.macro.FinalTransition
+
+MACRO-AFTER split_colors(transitions, start_state: int, *, table):
+    return [
+      FinalTransition(tr[:-1] + [resultant], context=tr.ctx)
+      for tr, resultant in zip(transitions, count(start_state))
+      ]
+
+@TABLE
+symmetries: permute
+
+# this is annoying for now because we still have to "know"
+# that the table's final n_states will be 11 (even though we're
+# using the macro)
+# i should probably make it so that macros are executed before
+# references and variables and stuff are resolved
+
+split_colors: 2
+0, <3 / live / 0>; 11  # end state will be modified by macro
+split_colors: \
+
+live, <23 / live / 0>; [0]
+any, any; 0
+
+@COLORS
+F00 .. 0CF: live
+# FFFFFF: 1
+# FF0000: 2
+# 0000FF: 3
+# FF8000: 4
+# 808080: 5
+# FFFF00: 6
+# 00FFFF: 7
+# 800000: 8
+# FF00FF: 9
+# 008000: 10
+# 8000FF: 11

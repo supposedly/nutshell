@@ -34,7 +34,7 @@ class Bidict(bidict.bidict):
 class TableSegment:
     NEIGHBORHOODS = generate_cardinals(nbhoods.ORDERED_NBHDS)
 
-    def __init__(self, tbl, start=0, *, dep: ['@NUTSHELL'] = (None,)):
+    def __init__(self, tbl, start=0, *, dep: ['@NUTSHELL', '@DEFINE'] = (None, None)):
         # parser (lexer?) dies if there are blank lines right at the start
         # so idk
         tbl = list(tbl)
@@ -46,27 +46,30 @@ class TableSegment:
         self._n_states = 0
         self.comments = {}
         self._trlen = None
-        dep, = dep
+        _nutshell, _define = dep
         
-        if dep is not None:
-            dep.replace(self._src)
-            self._constants = dep.constants
+        if _nutshell is not None:
+            _nutshell.replace(self._src)
+            self._constants = _nutshell.constants
             if self._constants:
                 self._n_states = 1 + max(self._constants.values())
         
         self.directives = {'neighborhood': 'Moore', 'symmetries': 'none', 'states': self._n_states}
+        self.sym_types = set()
+        self.transitions = []
         self._nbhd = None
         self._symmetries = None   # these go together
         self.symmetries = 'none'  # these go together
         self.gollyize_nbhd = None
         self.default_sym_used = False
         self.vars = Bidict()  # {VarName(name) | str(name) :: Variable(value)}
-        self.sym_types = set()
-        self.transitions = []
         self._constants = {}
         self.current_macros = []
         self._prepped_macros = {}
         self.available_macros = macros.__dict__.copy()
+        
+        if _define is not None:
+            self.available_macros.update(_define.macros_after)
         
         self.specials = {'any': VarName('any'), 'live': VarName('live')}
         self.new_varname = VarName.new_generator()
@@ -193,6 +196,7 @@ class TableSegment:
     def symmetries(self, value):
         self.directives['symmetries'] = value
         self._symmetries = symutils.get_sym_type(self.neighborhood, value) if isinstance(value, str) else value
+        self.add_sym_type(self._symmetries)
     
     @property
     def n_states(self):
@@ -223,10 +227,6 @@ class TableSegment:
             self.sym_types.add(symutils.get_sym_type(self.neighborhood, sym))
         else:
             self.sym_types.add(sym)
-    
-    def add_macros(self, path):
-        with open(path) as f:
-            exec(f.read(), self.available_macros)
     
     def set_macro(self, meta, name, args):
         self.current_macros.append((meta.lno, self._prep_macro(self.available_macros[name]), args.split()))

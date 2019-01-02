@@ -1,19 +1,28 @@
 import inspect
 
-from .segment_types import NutshellSegment, TableSegment, ColorSegment, IconSegment
 from .common import errors, utils
+from .segment_types import (
+  ColorSegment,
+  DefineSegment,
+  IconSegment,
+  NutshellSegment,
+  TableSegment
+  )
 
+NUTSHELL_ONLY_SEGMENTS = set()
 
-def seg(name, modifiers, cls=None, *, include_bare=True):
+def seg(name, modifiers, cls=None, *, include_bare=True, delete=False):
     name = f'@{name}'
+    if delete:
+        NUTSHELL_ONLY_SEGMENTS.add(name)
     if cls is None:
         # then modifiers holds cls
         return [(name, modifiers)]
     base = [(name, cls)] if include_bare else []
     return base + [(f'{name}:{modifier}', cls) for modifier in modifiers]
 
-
 CONVERTERS = [
+  *seg('DEFINE', DefineSegment, delete=True),
   *seg('NUTSHELL', NutshellSegment),
   *seg('TABLE', TableSegment),
   *seg('COLORS', ColorSegment),
@@ -31,13 +40,13 @@ def parse(fp):
     seg = None
     
     # Gather all @-headed segments
-    for lno, line in enumerate(map(str.strip, fp), 1):
+    for lno, line in enumerate(fp, 1):
         if line.startswith('@'):
             # Splat operator ensures that a list will always be placed
             # under the `seg` key, and that if it's phrased (as can be
             # done in @RULE) with the segment's first "argument" on the
             # same line, then it will still be the list's first element
-            seg, *name = line.split(None, 1)
+            seg, *name = line.strip().split(None, 1)
             segments[seg], lines[seg] = name, lno
             continue
         # May change in the future to allow things to be defined at the top
@@ -74,4 +83,7 @@ def parse(fp):
         if ':' in name:
             segments.setdefault(name.split(':')[0], []).extend(segments[name])
             del segments[name]
+        elif name in NUTSHELL_ONLY_SEGMENTS:
+            del segments[name]
+    
     return segments
