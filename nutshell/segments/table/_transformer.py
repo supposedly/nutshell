@@ -1,9 +1,7 @@
 from collections import namedtuple
 from functools import wraps
 from inspect import signature
-from importlib import import_module
 from itertools import chain, repeat
-from pkg_resources import resource_filename
 
 import bidict
 from .lark_assets.parser import Transformer, Tree, Discard, v_args

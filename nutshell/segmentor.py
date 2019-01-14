@@ -1,7 +1,7 @@
 import inspect
 
 from .common import errors, utils
-from .segment_types import (
+from .segments import (
   ColorSegment,
   DefineSegment,
   IconSegment,
@@ -12,21 +12,21 @@ from .segment_types import (
 NUTSHELL_ONLY_SEGMENTS = set()
 
 def seg(name, modifiers, cls=None, *, include_bare=True, delete=False):
-    name = f'@{name}'
     if delete:
         NUTSHELL_ONLY_SEGMENTS.add(name)
     if cls is None:
-        # then modifiers holds cls
+        # then cls was passed to modifiers
         return [(name, modifiers)]
     base = [(name, cls)] if include_bare else []
     return base + [(f'{name}:{modifier}', cls) for modifier in modifiers]
 
 CONVERTERS = [
-  *seg('DEFINE', DefineSegment, delete=True),
-  *seg('NUTSHELL', NutshellSegment),
-  *seg('TABLE', TableSegment),
-  *seg('COLORS', ColorSegment),
-  *seg('ICONS', (7, 15, 31), IconSegment),
+  *seg(None, ..., delete=True),
+  *seg('@DEFINE', DefineSegment, delete=True),
+  *seg('@NUTSHELL', NutshellSegment),
+  *seg('@TABLE', TableSegment),
+  *seg('@COLORS', ColorSegment),
+  *seg('@ICONS', (7, 15, 31), IconSegment),
   ]
 
 

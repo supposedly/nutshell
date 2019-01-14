@@ -1,5 +1,5 @@
 """Macro-related utilities"""
-from .segment_types.table._classes import FinalTransition
+from .segments.table._classes import FinalTransition
 
 def consolidate(transitions):
     lnos = {}

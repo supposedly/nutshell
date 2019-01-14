@@ -1,13 +1,13 @@
 from types import SimpleNamespace
 
-from nutshell import macro, segment_types, common
+from nutshell import macro, segments, common
 
 NUTSHELL_NAMESPACE = SimpleNamespace(
   common=common,
-  hensel=segment_types.table.inline_rulestring.hensel,
-  rulestring_tr=segment_types.table.inline_rulestring.default_rs,
+  hensel=segments.table.inline_rulestring.hensel,
+  rulestring_tr=segments.table.inline_rulestring.default_rs,
   macro=macro,
-  segment_types=segment_types,
+  segments=segments,
 )
 
 

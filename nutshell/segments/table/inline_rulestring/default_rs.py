@@ -1,6 +1,6 @@
 from itertools import count
 
-from nutshell.segment_types.table._classes import *
+from nutshell.segments.table._classes import *
 from nutshell.common.errors import *
 
 from . import hensel

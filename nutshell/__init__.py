@@ -1,3 +1,3 @@
 __version__ = '0.6.0a'
 from .common import *
-from . import segment_types
+from . import segments
