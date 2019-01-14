@@ -521,20 +521,17 @@ class Preprocess(Transformer):
     
     @inline
     def modified_rulestring_napkin(self, meta, rulestring, modifier, foreground, background):
-        imp = modifier.split('.', 1)
-        try:
-            func = inline_rulestring.funcs.get(modifier, None) or getattr(import_module(imp[0]), imp[1])
-        except (ImportError, ModuleNotFoundError):
+        if modifier not in self._tbl.modifiers:
             raise UndefinedErr(meta, f"Unknown modifier '{modifier}'")
-        return func, {
+        return self._tbl.modifiers[modifier], {
           'rulestring': str(rulestring),
           'fg': self.kill_string(foreground, meta),
           'bg': self.kill_string(background, meta)
           }
     
     @inline
-    def rulestring_tr(self, meta, initial, func__napkin, resultant):
-        func, napkin = func__napkin
+    def rulestring_tr(self, meta, initial, func_and_napkin, resultant):
+        func, napkin = func_and_napkin
         args = {
           **napkin,
           'initial': self.kill_string(initial, meta),

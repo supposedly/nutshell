@@ -16,7 +16,7 @@ from ._errors import NeighborhoodError
 from .lark_assets import parser as lark_standalone
 from ._transformer import Preprocess
 from ._classes import VarName, StateList
-from . import _symutils as symutils, _neighborhoods as nbhoods
+from . import _symutils as symutils, _neighborhoods as nbhoods, inline_rulestring
 
 # no need to catch \s*,\s* because directive values are translated with KILL_WS
 CUSTOM_NBHD = re.compile(r'(?:[NS][EW]?|[EW])(?:,(?:[NS][EW]?|[EW]))*')
@@ -67,9 +67,11 @@ class TableSegment:
         self.current_macros = []
         self._prepped_macros = {}
         self.available_macros = macros.__dict__.copy()
+        self.modifiers = inline_rulestring.funcs
         
         if _define is not None:
             self.available_macros.update(_define.macros_after)
+            self.modifiers.update(_define.modifiers)
         
         self.specials = {'any': VarName('any'), 'live': VarName('live')}
         self.new_varname = VarName.new_generator()

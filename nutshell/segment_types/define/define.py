@@ -1,6 +1,14 @@
 from types import SimpleNamespace
 
-from nutshell import macro
+from nutshell import macro, segment_types, common
+
+NUTSHELL_NAMESPACE = SimpleNamespace(
+  common=common,
+  hensel=segment_types.table.inline_rulestring.hensel,
+  rulestring_tr=segment_types.table.inline_rulestring.default_rs,
+  macro=macro,
+  segment_types=segment_types,
+)
 
 
 class DefineSegment:
@@ -14,11 +22,11 @@ class DefineSegment:
             if line.startswith(deco_names):
                 first, rest = line.split(None, 1)
                 segment[i] = f"@{first.replace('-', '_')}\ndef {rest}"
-        exec( '\n'.join(segment), {
+        exec('\n'.join(segment), {
           'MACRO_AFTER': self.after,
           'MACRO_DURING': self.during,
           'MODIFIER': self.modifier,
-          'nutshell': SimpleNamespace(macro=macro),
+          'nutshell': NUTSHELL_NAMESPACE,
         })
     
     def after(self, func):

@@ -3,6 +3,42 @@ Demo of kind-of-automatic B0 rule creation. Demonstrated rule is B017/S01.
 Can be changed to any Hensel-notation B0 rule by separating the B/S parts of its rulestring,
 placing its birth rule in place of the two "017"s and its survival rule in place of the two "01"s.
 
+@DEFINE
+FOUR_NEIGHBOR = {
+  'c': 'e',
+  'e': 'c',
+  'k': 'k',
+  'a': 'a',
+  'i': 't',
+  'n': 'r',
+  'y': 'j',
+  'q': 'w',
+  'j': 'y',
+  'r': 'n',
+  't': 'i',
+  'w': 'q',
+  'z': 'z',
+}
+
+
+# The modifier API really needs simplification + documentation. I'll take
+# care of both before merging to master.
+MODIFIER odd_b0(meta, initial, fg, bg, resultant, rulestring, variables, table):
+    max_neighbors = table.trlen
+    nbhds = nutshell.rulestring_tr.parse_rulestring(rulestring, meta, table)
+    new_nbhds = {}
+    for count, letters in nbhds.items():
+        count = int(count)
+        new_count = max_neighbors - count
+        new_key = str(new_count)
+        if count == 4:
+            new_letters = {FOUR_NEIGHBOR[i] for i in letters}
+        else:
+            new_letters = letters.intersection(nutshell.hensel.R4R_NBHDS[new_key])
+        if new_letters or new_count == max_neighbors:
+            new_nbhds[new_key] = new_letters
+    return nutshell.rulestring_tr.standard(meta, initial, fg, bg, resultant, new_nbhds, variables, table)
+
 @TABLE
 symmetries: permute
 
@@ -13,9 +49,9 @@ symmetries: permute
 1, <01 !hensel / 1 / 0>; 2
 
 # Birth - ODD generations
-0, <01 b0-odd / 2 / 0>; 1
+0, <01 odd_b0 / 2 / 0>; 1
 
 # Survival - ODD generations
-2, <017 b0-odd / 2 / 0>; 1
+2, <017 odd_b0 / 2 / 0>; 1
 
 any, any; 0
