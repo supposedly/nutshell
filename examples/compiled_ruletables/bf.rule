@@ -94,7 +94,7 @@ Brainfuck.
 
 73: Second pointer delay state  (down here b/c poor planning lol)
 
-74: eastbound YES signal (not 0, keep looping) from data pointer after testing for r-bracket
+74: eastbound YES signal (not 0, keep looping) from data pointer after testing for r-bracket 
 75: westbound YES signal
 76: southbound YES signal
 77: eastbound NO signal (is 0, continue)
@@ -115,8 +115,8 @@ Brainfuck.
 
 90: blank input
 91: "Uninitialized" input data; this is only here for ease of storage in RLE format,
-because otherwise the vertical input tape is very unfriendly to Golly. It moves diagonally to
-the southeast until there’s something above it
+    because otherwise the vertical input tape is very unfriendly to Golly. It moves diagonally to
+    the southeast until there’s something above it
 92:  Uninitialized \x00 input, same as above
 93: Uninitialized input head, same as above
 
@@ -125,19 +125,19 @@ the southeast until there’s something above it
 
 
 + To use:
-Start with this template.
-x = 5, y = 4, rule = bf
-2.qJ$4.pR$rM$4.I!
-- Enter a BF program from left to right, using cellstates 1-8, starting in the dead cell immediately southeast of
-the bottommost live one.
-- Initialize data as diagonal, northwest-leaning unary stacks of state-66 cells, starting each stack in the row
-immediately above the topmost live cell.
-- Initialize input as vertically-stacked vertical stacks of state-84 cells, starting in and going south from the
-cell immediately below the westmost live one and with individual inputs delimited by state-85 cells.
-An input of \x00 can be represented using a single state-90 cell in lieu of the state-84 ones.
-- (Alternatively, should you wish to make your program friendlier to RLE encoding, you may initialize input as
-horizontal (west-pointing) stacks of state-91 cells, delimited by state-93 cells and using state 92 for \x00;
-the input tape will right itself automatically once the simulation starts.)
+  Start with this template.
+    x = 5, y = 4, rule = bf
+    2.qJ$4.pR$rM$4.I!
+  - Enter a BF program from left to right, using cellstates 1-8, starting in the dead cell immediately southeast of
+    the bottommost live one.
+  - Initialize data as diagonal, northwest-leaning unary stacks of state-66 cells, starting each stack in the row
+    immediately above the topmost live cell.
+  - Initialize input as vertically-stacked vertical stacks of state-84 cells, starting in and going south from the
+    cell immediately below the westmost live one and with individual inputs delimited by state-85 cells.
+    An input of \x00 can be represented using a single state-90 cell in lieu of the state-84 ones.
+  - (Alternatively, should you wish to make your program friendlier to RLE encoding, you may initialize input as
+    horizontal (west-pointing) stacks of state-91 cells, delimited by state-93 cells and using state 92 for \x00;
+    the input tape will right itself automatically once the simulation starts.)
 
 + An example:
 x = 19, y = 5, rule = bf

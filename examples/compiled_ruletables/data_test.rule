@@ -4,17 +4,17 @@
 ****        v0.6.0a         ****
 ********************************
 
-1: Data
+ 1: Data
 
-2: Output prompter
-3: Data turned output, will revert to data on next generation
-4: Data being output, will revert to vacuum on next generation
-5: Data being output that will not extend anymore
-6: Data being output that will not extend anymore
+ 2: Output prompter
+ 3: Data turned output, will revert to data on next generation
+ 4: Data being output, will revert to vacuum on next generation
+ 5: Data being output that will not extend anymore
+ 6: Data being output that will not extend anymore
 
-7: Incrementor
-8: ^same, moving thru data
-9: Decrementor
+ 7: Incrementor
+ 8: ^same, moving thru data
+ 9: Decrementor
 10: ^same, moving thru data
 
 x = 15, y = 15, rule = data_test

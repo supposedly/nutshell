@@ -21,7 +21,7 @@ def standard(meta, initial, fg, bg, resultant, rulestring, variables, table):
         r4r_nbhds[nb_count] = letters
     
     if r4r_nbhds:
-        table.add_sym_type('rotate4reflect')
+        table.use_sym_type('rotate4reflect')
     r4r = symutils.get_sym_type(table.neighborhood, 'rotate4reflect')
     
     get_fg, get_bg = _get_getter(table, fg, 'FG'), _get_getter(table, bg, 'BG')

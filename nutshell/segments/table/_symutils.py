@@ -54,7 +54,6 @@ class Napkin(tuple):
           nbhd,
           cls.__name__,
           cls.transformation_names,
-          transformations=cls.transformations,
           tilde=cls.tilde,
           permute_hash_indices=cls.permute_hash_indices
         )

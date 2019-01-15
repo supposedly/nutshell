@@ -194,10 +194,8 @@ class Preprocess(Transformer):
         return MetaTuple(meta, (self.kill_string(state, meta), str(permute[0]) if permute else None))
     
     def main(self, children, meta):
+        self._tbl.use_sym_type()
         trlen = self._tbl.trlen
-        if not self._tbl.default_sym_used and self.directives['symmetries'] == 'none':
-            self._tbl.default_sym_used = True
-            self._tbl.add_sym_type('none')
         
         initial, resultant = children.pop(0), children.pop(-1)
         try:
@@ -348,16 +346,16 @@ class Preprocess(Transformer):
     
     @inline
     def symmetried_aux(self, meta, symmetries, *auxiliaries):
-        self._tbl.add_sym_type(symmetries)
         symmetries = symutils.get_sym_type(self._tbl.neighborhood, symmetries)
+        self._tbl.use_sym_type(symmetries)
         for aux in auxiliaries:
             aux.symmetries = symmetries
         return auxiliaries
     
     @inline
     def stationary_symmetried_aux(self, meta, symmetries, *auxiliaries):
-        self._tbl.add_sym_type(symmetries)
         symmetries = symutils.get_sym_type(self._tbl.neighborhood, symmetries)
+        self._tbl.use_sym_type(symmetries)
         for aux in auxiliaries:
             aux.symmetries = symmetries
             aux.stationary = True

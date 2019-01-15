@@ -22,7 +22,7 @@ FOUR_NEIGHBOR = {
 
 
 # The modifier API really needs simplification + documentation. I'll take
-# care of both before merging to master.
+# care of both before merging to master
 MODIFIER odd_b0(meta, initial, fg, bg, resultant, rulestring, variables, table):
     max_neighbors = table.trlen
     nbhds = nutshell.rulestring_tr.parse_rulestring(rulestring, meta, table)

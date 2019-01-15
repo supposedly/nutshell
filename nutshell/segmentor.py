@@ -10,6 +10,7 @@ from .segments import (
   )
 
 NUTSHELL_ONLY_SEGMENTS = set()
+NO_SEGMENT = '_TOP'
 
 def seg(name, modifiers, cls=None, *, include_bare=True, delete=False):
     if delete:
@@ -21,7 +22,7 @@ def seg(name, modifiers, cls=None, *, include_bare=True, delete=False):
     return base + [(f'{name}:{modifier}', cls) for modifier in modifiers]
 
 CONVERTERS = [
-  *seg(None, ..., delete=True),
+  *seg(NO_SEGMENT, lambda *a, **kw: ..., delete=True),
   *seg('@DEFINE', DefineSegment, delete=True),
   *seg('@NUTSHELL', NutshellSegment),
   *seg('@TABLE', TableSegment),
@@ -36,8 +37,8 @@ def parse(fp):
     
     return: file, segmented into dict
     """
-    segments, lines = {}, {}
-    seg = None
+    segments, lines = {NO_SEGMENT: ['']}, {}
+    seg = NO_SEGMENT
     
     # Gather all @-headed segments
     for lno, line in enumerate(fp, 1):
@@ -49,10 +50,7 @@ def parse(fp):
             seg, *name = line.strip().split(None, 1)
             segments[seg], lines[seg] = name, lno
             continue
-        # May change in the future to allow things to be defined at the top
-        # of a nutshell
-        if seg is not None:
-            segments[seg].append(line)
+        segments[seg].append(line.rstrip('\r\n'))  # turns out the rstrip is really important for line numbers
     
     # Parse and operate on gathered segments
     for label, converter in CONVERTERS:

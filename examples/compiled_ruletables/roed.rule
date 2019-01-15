@@ -10,73 +10,73 @@ http://esolangs.org/wiki/Roie
 1: e
 
 2-5: pointer 0 (n-w)
-2: n
-3: e
-4: s
-5: w
+    2: n
+    3: e
+    4: s
+    5: w
 6-9: pointer 1 (n-w)
-6: n
-7: e
-8: s
-9: w
+    6: n
+    7: e
+    8: s
+    9: w
 
 10: o
 11-15: o releasing two 1s (n-w)
-11: north
-12: east
-13: south
-14: west
+    11: north
+    12: east
+    13: south
+    14: west
 16-19: o releasing two 0s (n-w)
-16: n
-17: e
-18: s
-19: w
+    16: n
+    17: e
+    18: s
+    19: w
 20-23: o releasing 0s, but diagonally... sorted by diagonal direction of 'mouth'
-20: ne
-21: se
-22: sw
-23: nw
+    20: ne
+    21: se
+    22: sw
+    23: nw
 24-27: o releasing 1s, diagonally
-24: ne
-25: se
-26: sw
-27: nw
+    24: ne
+    25: se
+    26: sw
+    27: nw
 
 28: r (solid)
 29-32: r that will send a pointer 0 out (n-w)
-29: n
-30: e
-31: s
-32: w
+    29: n
+    30: e
+    31: s
+    32: w
 33-34: r that will send a pointer 1 out (n-w)
-33: n
-34: e
-35: s
-36: w
+    33: n
+    34: e
+    35: s
+    36: w
 
 37: d
 38-41: transitory d to release a pointer 0 (n-w)
-38: n
-39: e
-40: s
-41: w
+    38: n
+    39: e
+    40: s
+    41: w
 42-45: transitory d to release a pointer 1 (n-w)
-42: n
-43: e
-44: s
-45: w
+    42: n
+    43: e
+    44: s
+    45: w
 
 46-49: d releasing a pointer 0 (n-w)
-46: n
-47: e
-48: s
-49: w
+    46: n
+    47: e
+    48: s
+    49: w
 42-53: d releasing a pointer 1 (n-w)
-50: n
-51: e
-52: s
-53: w
-
+    50: n
+    51: e
+    52: s
+    53: w
+    
 
 @TABLE
 neighborhood: Moore

@@ -55,11 +55,9 @@ class TableSegment:
                 self._n_states = 1 + max(self._constants.values())
         
         self.directives = {'neighborhood': 'Moore', 'symmetries': 'none', 'states': self._n_states}
-        self.sym_types = set()
         self.transitions = []
         self._nbhd = None
-        self._symmetries = None   # these go together
-        self.symmetries = 'none'  # these go together
+        self._symmetries = symutils.get_sym_type(nbhoods.Neighborhood('Moore'), 'none')
         self.gollyize_nbhd = None
         self.default_sym_used = False
         self.vars = Bidict()  # {VarName(name) | str(name) :: Variable(value)}
@@ -68,6 +66,9 @@ class TableSegment:
         self._prepped_macros = {}
         self.available_macros = macros.__dict__.copy()
         self.modifiers = inline_rulestring.funcs
+        
+        self.symmetries_used = {self._symmetries: False}
+        self.neighborhoods_used = {nbhoods.Neighborhood('Moore'): False}
         
         if _define is not None:
             self.available_macros.update(_define.macros_after)
@@ -101,6 +102,9 @@ class TableSegment:
             self.update_special_vars()
         self._data = transformer.transform(_parsed)
         
+        self.sym_types = {sym for sym, used in self.symmetries_used.items() if used}
+        self.neighborhoods = {nbhd for nbhd, used in self.neighborhoods_used.items() if used}
+        #self.directives['neighborhoods'] = ...
         MinSym, name = symutils.find_golly_sym_type(self.sym_types, self.neighborhood)
         if len(self.sym_types) <= 1 and self.symmetries.transformations == MinSym.transformations:
             self.final = [t.fix_vars() for t in self._data]
@@ -111,7 +115,12 @@ class TableSegment:
         self._apply_macros()
     
     def __getitem__(self, item):
-        return self._src[item]
+        try:
+            return self._src[item]
+        except IndexError:
+            print(self._src)
+            print(item)
+            raise
     
     def __iter__(self):
         vars_valid = any(i.rep > -1 for i in self.vars)
@@ -174,6 +183,8 @@ class TableSegment:
             self._nbhd = self.NEIGHBORHOODS[val]
         else:
             raise ValueError('Unknown or invalid neighborhood')
+        if self._nbhd not in self.neighborhoods_used:
+            self.neighborhoods_used[self._nbhd] = False
         self.symmetries = self._symmetries.with_neighborhood(self.neighborhood)
         if not self.neighborhood.supports_transformations(self.symmetries.transformation_names):
             raise NeighborhoodError(
@@ -181,24 +192,25 @@ class TableSegment:
               f'by neighborhood {self.neighborhood.cdirs}'
               )
         self._trlen = None
-
-    @property
-    def trlen(self):
-        if self._trlen is None:
-            self._trlen = len(self.neighborhood)
-        return self._trlen
     
     @property
     def symmetries(self):
         if self._symmetries is None:
             self._symmetries = symutils.get_sym_type(self.neighborhood, self.directives['symmetries'])
+            if self._symmetries not in self.symmetries_used:
+                self.symmetries_used[self._symmetries] = False
         return self._symmetries
     
     @symmetries.setter
     def symmetries(self, value):
         self.directives['symmetries'] = value
         self._symmetries = symutils.get_sym_type(self.neighborhood, value) if isinstance(value, str) else value
-        self.add_sym_type(self._symmetries)
+    
+    @property
+    def trlen(self):
+        if self._trlen is None:
+            self._trlen = len(self.neighborhood)
+        return self._trlen
     
     @property
     def n_states(self):
@@ -214,6 +226,11 @@ class TableSegment:
         else:
             self._n_states = self.directives['states'] = value
     
+    def use_sym_type(self, sym=None):
+        if isinstance(sym, str):
+            sym = symutils.get_sym_type(self.neighborhood, sym)
+        self.symmetries_used[self.symmetries if sym is None else sym] = True
+    
     def update_special_vars(self, value=None):
         if value == '?':
             self.directives['states'] = self.n_states
@@ -223,12 +240,6 @@ class TableSegment:
             self.n_states = int(value)
         self.vars[self.specials['any']] = StateList(range(self.n_states), context=None)
         self.vars[self.specials['live']] = StateList(range(1, self.n_states), context=None)
-    
-    def add_sym_type(self, sym):
-        if isinstance(sym, str):
-            self.sym_types.add(symutils.get_sym_type(self.neighborhood, sym))
-        else:
-            self.sym_types.add(sym)
     
     def set_macro(self, meta, name, args):
         self.current_macros.append((meta.lno, self._prep_macro(self.available_macros[name]), args.split()))

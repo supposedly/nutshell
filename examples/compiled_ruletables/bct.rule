@@ -117,7 +117,7 @@ any.0, 15, any.1, any.2, any.3, any.4, any.5, any.6, any.7, 5
 #### line 76: data, E 5, SE..NE any; 0 ####
 data.0, any.0, any.1, 5, any.2, any.3, any.4, any.5, any.6, 0
 # If a prgm-tape 1 is encountered, shift it downward
-# and append the command to its left (by copying+shifting down) onto the right end of the data tape,
+# and append the command to its left (by copying+shifting down) onto the right end of the data tape, 
 # if the leftmost bit is 1 -- otherwise just shift it down
 # ----
 # check the x in 1x
