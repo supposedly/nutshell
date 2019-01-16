@@ -1,5 +1,8 @@
 from collections import OrderedDict
 from itertools import takewhile, permutations
+
+from bidict import bidict
+
 from ._classes import Coord
 from ._errors import NeighborhoodError
 
@@ -20,20 +23,23 @@ ORDERED_NBHDS = {
 
 
 class Neighborhood:
-    GOLLY_NBHDS = {
+    GOLLY_NBHDS = bidict({
       'oneDimensional': ('W', 'E'),
       'vonNeumann': ('N', 'E', 'S', 'W'),
       'hexagonal': ('N', 'E', 'SE', 'S', 'W', 'NW'),
       'Moore': ('N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW')
-    }
+    })
     
     def __init__(self, cdirs):
+        _golly_nbhds = self.__class__.GOLLY_NBHDS
         if isinstance(cdirs, str):
-            cdirs = self.GOLLY_NBHDS[cdirs]
+            cdirs = _golly_nbhds[cdirs]
         self.cdirs = tuple(cdirs)
         self.coord_cdirs = tuple(map(Coord.from_name, cdirs))
         self._inv = dict(enumerate(cdirs, 1))
         self.idxes = {v: k for k, v in self._inv.items()}
+        self.is_golly_nbhd = self.cdirs in _golly_nbhds.inv
+        self._gollyizers = {}
     
     def __contains__(self, item):
         return item in self.idxes
@@ -78,7 +84,14 @@ class Neighborhood:
         return self._inv[idx]
     
     def gollyizer_for(self, tbl):
-        return get_gollyizer(tbl, self.cdirs)
+        _golly_nbhds_inv = self.__class__.GOLLY_NBHDS.inv
+        if tbl.neighborhood not in self._gollyizers:
+            self._gollyizers[tbl.neighborhood] = (
+              get_gollyizer(tbl, self.cdirs, golly_nbhd=_golly_nbhds_inv[tbl.neighborhood.cdirs])
+              if tbl.neighborhood.cdirs in _golly_nbhds_inv
+              else get_gollyizer(tbl, self.cdirs)
+            )
+        return self._gollyizers[tbl.neighborhood]
     
     def supports_transformations(self, transformations):
         for method, *args in transformations:
@@ -91,8 +104,7 @@ class Neighborhood:
                     self.reflect_across(*args)
                 except Exception:
                     return False
-            # if method == 'permute':
-            #     True
+            # 'permute' -> True
         return True
     
     def supports(self, sym_type):
@@ -158,22 +170,28 @@ class Neighborhood:
         return (self.cdirs,)
 
 
+def find_golly_neighborhood(nbhds):
+    common = {cdir for nbhd in nbhds for cdir in nbhd.cdirs}
+    for name, s in NBHD_SETS.items():
+        if common <= s:
+            return name
+    raise ValueError(f'Invalid (non-Moore-subset) common neighborhood {common}')
+
+
 def get_gollyizer(tbl, nbhd, *, golly_nbhd=None):
     nbhd_set = set(nbhd)
     if golly_nbhd is not None:
         golly_set = NBHD_SETS[golly_nbhd]
-        return (
-          fill.__get__(ORDERED_NBHDS[golly_nbhd])
-          if nbhd_set < golly_set
-          else lambda tbl, napkin, _anys: reorder(ORDERED_NBHDS[name], tbl, napkin)
-        )
+        if nbhd_set < golly_set:
+            return fill.__get__(ORDERED_NBHDS[golly_nbhd])
+        return lambda tbl, napkin, _anys: reorder(ORDERED_NBHDS[golly_nbhd], tbl, napkin)
     for name, s in NBHD_SETS.items():
         if nbhd_set <= s:
             tbl.directives['neighborhood'] = name
             if nbhd_set < s:
                 return fill.__get__(ORDERED_NBHDS[name])
             return lambda tbl, napkin, _anys: reorder(ORDERED_NBHDS[name], tbl, napkin)
-    raise ValueError('Invalid (non-Moore-subset) neighborhood {nbhd_set}}')
+    raise ValueError(f'Invalid (non-Moore-subset) neighborhood {nbhd_set}')
 
 
 def reorder(ordered_nbhd, tbl, napkin):

@@ -54,7 +54,7 @@ class VarName:
 
 
 class TransitionGroup:
-    def __init__(self, tbl, initial, napkin, resultant, *, context, extra=None, symmetries=None):
+    def __init__(self, tbl, initial, napkin, resultant, *, context, extra=None, symmetries=None, nbhd=None):
         if tbl.n_states < 2:
             raise Error(None, 'Table uses fewer than two cellstates. Set `states:` directive to 2 or higher to fix')
         self.ctx = context
@@ -62,6 +62,7 @@ class TransitionGroup:
         self.extra = extra
         self.tbl = tbl
         self.symmetries = symmetries or tbl.symmetries
+        self.nbhd = nbhd or tbl.neighborhood
         cdir_at = tbl.neighborhood.cdir_at
         self._tr_dict = {'0': initial, **{cdir_at(k): v for k, v in napkin.items()}}
         self._tr = [initial, *map(napkin.get, range(1, 1+len(napkin))), resultant]
@@ -103,14 +104,14 @@ class TransitionGroup:
                       ([*self[:idx], value, *self[1+idx:]] for value in individuals)
                       for new_tr in
                       TransitionGroup.from_seq(
-                        tr, self.tbl, context=self.ctx, extra=self.extra, symmetries=self.symmetries
+                        tr, self.tbl, context=self.ctx, extra=self.extra, symmetries=self.symmetries, nbhd=self.nbhd
                       ).expand()
                     )
                     if combine:
                         tr = self[:]
                         tr[idx], tr[orig_idx] = StateList(combine, e.split, context=tethered_var.ctx), e.val
                         trs.extend(TransitionGroup.from_seq(
-                          tr, self.tbl, context=self.ctx, extra=self.extra, symmetries=self.symmetries
+                          tr, self.tbl, context=self.ctx, extra=self.extra, symmetries=self.symmetries, nbhd=self.nbhd
                         ).expand())
                     break
                 except Reshape as e:
@@ -121,14 +122,14 @@ class TransitionGroup:
                       ([*self[:idx], individual, *self[1+idx:]] for individual in var)
                       for new_tr in
                       TransitionGroup.from_seq(
-                        tr, self.tbl, context=self.ctx, extra=self.extra, symmetries=self.symmetries
+                        tr, self.tbl, context=self.ctx, extra=self.extra, symmetries=self.symmetries, nbhd=self.nbhd
                       ).expand()
                     )
                     break
             else:
                 current.append(val)
         else:
-            return [Transition(current, self.tbl, context=self.ctx, extra=self.extra, symmetries=self.symmetries)]
+            return [Transition(current, self.tbl, context=self.ctx, extra=self.extra, symmetries=self.symmetries, nbhd=self.nbhd)]
         self._expandeds[reference] = trs
         return trs
     
@@ -136,7 +137,9 @@ class TransitionGroup:
         if auxiliaries is None:
             return []
         new = []
-        for i in (aux for aux in auxiliaries if not aux.stationary):
+        for i in auxiliaries:
+            if i.stationary:
+                continue
             try:
                 new.extend(i.within(self))
             except CoordOutOfBoundsError as e:
@@ -152,20 +155,26 @@ class TransitionGroup:
                 idx = e.cdir != '0' and self.tbl.neighborhood[e.cdir]
                 individuals, combine = var[:e.split], var[e.split:]
                 if individuals:
-                    aux = Auxiliary(self.tbl, i.initial_cdir, None, Mapping(e.cdir, e.map_to[:-2], context=i.ctx), context=i.ctx, symmetries=i.symmetries)
+                    aux = Auxiliary(
+                      self.tbl,
+                      i.initial_cdir,
+                      None,
+                      Mapping(e.cdir, e.map_to[:-2], context=i.ctx),
+                      context=i.ctx, symmetries=i.symmetries, nbhd=i.nbhd
+                    )
                     new.extend(
                       new_tr for tr in
                       ([*self[:idx], val, *self[1+idx:]] for val in individuals if val.value is not None)
                       for new_tr in
                       TransitionGroup.from_seq(
-                        tr, self.tbl, context=self.ctx, extra=self.extra, symmetries=self.symmetries
+                        tr, self.tbl, context=self.ctx, extra=self.extra, symmetries=self.symmetries, nbhd=self.nbhd
                       ).apply_aux([aux], False)
                       )
                 if combine and e.val is not None:
-                    aux = Auxiliary(self.tbl, i.initial_cdir, None, e.val, context=i.ctx)
+                    aux = Auxiliary(self.tbl, i.initial_cdir, None, e.val, context=i.ctx, symmetries=i.symmetries, nbhd=i.nbhd)
                     new.extend(TransitionGroup.from_seq(
                       [*self[:idx], StateList(combine, e.split, context=i.ctx), *self[1+idx:]],
-                      self.tbl, context=self.ctx, extra=self.extra, symmetries=self.symmetries
+                      self.tbl, context=self.ctx, extra=self.extra, symmetries=self.symmetries, nbhd=self.nbhd
                       ).apply_aux([aux], False))
             except Reshape as e:
                 var = self[e.cdir].within(self)
@@ -175,7 +184,7 @@ class TransitionGroup:
                   ([*self[:idx], val, *self[1+idx:]] for val in var)
                   for new_tr in
                   TransitionGroup.from_seq(
-                    tr, self.tbl, context=self.ctx, extra=self.extra, symmetries=self.symmetries
+                    tr, self.tbl, context=self.ctx, extra=self.extra, symmetries=self.symmetries, nbhd=self.nbhd
                   ).apply_aux([i], False)
                 )
         
@@ -192,7 +201,7 @@ class TransitionGroup:
                   for i in self.symmetries(napkin).expand()
                   for j in TransitionGroup.from_seq(
                     [next(d[name]) for name in [initial, *i, resultant]],
-                    tr.tbl, context=tr.ctx, extra=self.extra, symmetries=tr.symmetries
+                    tr.tbl, context=tr.ctx, extra=self.extra, symmetries=tr.symmetries, nbhd=self.nbhd
                     ).apply_aux(stationaries)
                   )
                 rep = len(stationaries)
@@ -212,7 +221,7 @@ class TransitionGroup:
 
 
 class Transition:
-    def __init__(self, tr, tbl, *, context, extra=None, symmetries=None):
+    def __init__(self, tr, tbl, *, context, extra=None, symmetries=None, nbhd=None):
         self.ctx = context
         self.extra = extra
         self.tr = tr
@@ -228,6 +237,7 @@ class Transition:
         cdir_at = tbl.neighborhood.cdir_at
         self._tr_dict = {'0': self.initial, **{cdir_at(k): v for k, v in enumerate(self.napkin, 1)}}
         self.symmetries = symmetries or tbl.symmetries
+        self.nbhd = nbhd or tbl.neighborhood
         self.tbl = tbl
     
     def __repr__(self):
@@ -270,9 +280,9 @@ class Transition:
                     raise SyntaxErr(v.ctx, 'Attempted binding to another binding')
                 ret[i] = ret[cdir]
         
-        if self.tbl.gollyize_nbhd is not None:
+        if not self.tbl.neighborhood_ok():
             return FinalTransition(
-              [ret[0], *self.tbl.gollyize_nbhd(self.tbl, ret[1:-1], 1 + seen.get('any', 0)), ret[-1]],
+              [ret[0], *self.nbhd.gollyizer_for(self.tbl)(self.tbl, ret[1:-1], 1 + seen.get('any', 0)), ret[-1]],
               context=self.ctx, extra=self.extra
               )
         return FinalTransition(ret, context=self.ctx, extra=self.extra)
@@ -331,9 +341,9 @@ class Transition:
                 variables[variables.inv[i]].update_rep(int(tag))
             else:
                 ret.append(i)
-        if self.tbl.gollyize_nbhd is not None:
+        if not self.tbl.neighborhood_ok():
             return FinalTransition(
-              [ret[0], *self.tbl.gollyize_nbhd(self.tbl, ret[1:-1], seen.get('any', {})), ret[-1]],
+              [ret[0], *self.nbhd.gollyizer_for(self.tbl)(self.tbl, ret[1:-1], seen.get('any', {})), ret[-1]],
               context=self.ctx, extra=self.extra
               )
         return FinalTransition(ret, context=self.ctx, extra=self.extra)
@@ -703,13 +713,14 @@ class VarValue:
 
 
 class Auxiliary:
-    def __init__(self, tbl, initial_cdir, delay, resultant, *, context, symmetries=None):
+    def __init__(self, tbl, initial_cdir, delay, resultant, *, context, symmetries=None, nbhd=None):
         self.ctx = context
         self.tbl = tbl
         self.initial_cdir = initial_cdir
         self.orig = Coord.from_name(initial_cdir).inv
         self.resultant = resultant
         self.symmetries = symmetries or tbl.symmetries
+        self.nbhd = nbhd or tbl.neighborhood
         self.stationary = False
         if delay is not None:
             raise UnsupportedFeature(
@@ -760,7 +771,7 @@ class Auxiliary:
     
     def from_int(self, tr):
         return TransitionGroup.from_seq(
-          self._make_tr(tr, self.resultant), self.tbl, context=self.ctx, symmetries=self.symmetries
+          self._make_tr(tr, self.resultant), self.tbl, context=self.ctx, symmetries=self.symmetries, nbhd=self.nbhd
         ).expand(tr)
     
     def from_binding(self, tr):
@@ -770,13 +781,13 @@ class Auxiliary:
         if isinstance(within, ResolvedBinding):
             within.cdir = Coord.from_name(within.cdir).move(*self.orig).name
         return TransitionGroup.from_seq(
-          self._make_tr(tr, within), self.tbl, context=self.ctx, symmetries=self.symmetries
+          self._make_tr(tr, within), self.tbl, context=self.ctx, symmetries=self.symmetries, nbhd=self.nbhd
         ).expand(tr)
     
     def from_mapping(self, tr):
         within = self.resultant.within(tr)  # always raises some exception unless already a VarValue
         return [] if within.value is None else TransitionGroup.from_seq(
-          self._make_tr(tr, self.resultant.within(tr).value), self.tbl, context=self.ctx, symmetries=self.symmetries
+          self._make_tr(tr, self.resultant.within(tr).value), self.tbl, context=self.ctx, symmetries=self.symmetries, nbhd=self.nbhd
         ).expand(tr)
 
 

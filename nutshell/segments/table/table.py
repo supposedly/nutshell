@@ -104,7 +104,7 @@ class TableSegment:
         
         self.sym_types = {sym for sym, used in self.symmetries_used.items() if used}
         self.neighborhoods = {nbhd for nbhd, used in self.neighborhoods_used.items() if used}
-        #self.directives['neighborhoods'] = ...
+        self.directives['neighborhood'] = self.neighborhood = nbhoods.find_golly_neighborhood(self.neighborhoods)
         MinSym, name = symutils.find_golly_sym_type(self.sym_types, self.neighborhood)
         if len(self.sym_types) <= 1 and self.symmetries.transformations == MinSym.transformations:
             self.final = [t.fix_vars() for t in self._data]
@@ -226,10 +226,16 @@ class TableSegment:
         else:
             self._n_states = self.directives['states'] = value
     
+    def neighborhood_ok(self):
+        return sum(self.neighborhoods_used.values()) > 1 or not next(iter(self.neighborhoods_used)).is_golly_nbhd
+    
     def use_sym_type(self, sym=None):
         if isinstance(sym, str):
             sym = symutils.get_sym_type(self.neighborhood, sym)
         self.symmetries_used[self.symmetries if sym is None else sym] = True
+    
+    def use_neighborhood(self, nbhd=None):
+        self.neighborhoods_used[self.neighborhood if nbhd is None else nbhd] = True
     
     def update_special_vars(self, value=None):
         if value == '?':

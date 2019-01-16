@@ -51,7 +51,6 @@ class Preprocess(Transformer):
         self._tbl = tbl
         self.directives = tbl.directives
         self.vars = tbl.vars
-        self._nbhd_assigned = False
     
     def kill_string(self, val, meta, li=False):
         if isinstance(val, str):
@@ -141,8 +140,6 @@ class Preprocess(Transformer):
         if name in ('n_states', 'states'):
             self._tbl.update_special_vars(val)
         elif name == 'neighborhood':
-            if self._nbhd_assigned:
-                raise Error(meta, '`neighborhood` directive cannot be reassigned')
             try:
                 self._tbl.neighborhood = val
             except ValueError as e:
@@ -155,7 +152,6 @@ class Preprocess(Transformer):
                   f"{nbhd_str}\n"
                   f'  does not support current symmetry type {self._tbl.symmetries.__name__!r}'
                   )
-            self._nbhd_assigned = True
         else:
             # directives are more like comments than they are source
             self._tbl.comments[meta[0]] = f'#### {name}: {cmt_val}'
@@ -195,6 +191,7 @@ class Preprocess(Transformer):
     
     def main(self, children, meta):
         self._tbl.use_sym_type()
+        self._tbl.use_neighborhood()
         trlen = self._tbl.trlen
         
         initial, resultant = children.pop(0), children.pop(-1)
