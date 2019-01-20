@@ -16,7 +16,7 @@ class Napkin(tuple):
     transformations = None
     tilde = None
     _RECENTS = {}
-
+    
     def __init__(self, _):
         self.cdir_map = dict(zip(self.nbhd, self))
         self._expanded = None
@@ -29,17 +29,21 @@ class Napkin(tuple):
         if cls.transformation_names is None:
             raise NotImplementedError('Please override class attribute `transformation_names` in Napkin subclass')
         if cls.transformations is None and cls.nbhd is not None:
-            if len(cls.transformation_names) > 1:
-                raise NotImplementedError('Please override class attribute `transformations` in Napkin subclass')
-            func, *args = cls.transformation_names[0]
-            cls.transformations = frozenset(getattr(cls.nbhd, func)(*args, as_cls=False))
+            transformations, nbhd = None, cls.nbhd
+            for name, *args in cls.transformation_names:
+                transformations = (
+                  getattr(nbhd, name)(*args)
+                  if transformations is None
+                  else [j for i in transformations for j in getattr(i, name)(*args)]
+                )
+            cls.transformations = frozenset(map(tuple, transformations))
         cls._RECENTS = {}
         if not cls.test_nbhd():
             raise NeighborhoodError(f'Symmetry type {cls.__name__!r} is not supported by its neighborhood {cls.nbhd.cdirs}')
     
     def __hash__(self):
         if self._hash is None:
-            self._hash = hash(tuple(sorted(self.expanded)))
+            self._hash = hash(self.expanded)
         return self._hash
     
     def __eq__(self, other):
@@ -91,14 +95,15 @@ class Napkin(tuple):
     
     @classmethod
     def combine(cls, other):
-        if cls.nbhd != other.nbhd:
-            raise TypeError(f'Cannot combine symmetries of different neighborhoods {cls.nbhd!r} and {other.nbhd!r}')
-        return new_sym_type(
-          cls.nbhd,
-          f'{cls.__name__}/{other.__name__}',
-          cls.transformation_names + other.transformation_names,
-          transformations=cls.transformations|other.transformations
-          )
+        raise NotImplementedError('Symmetry-combining is currently not supported')
+        #if cls.nbhd != other.nbhd:
+        #    raise TypeError(f'Cannot combine symmetries of different neighborhoods {cls.nbhd!r} and {other.nbhd!r}')
+        #return new_sym_type(
+        #  cls.nbhd,
+        #  f'{cls.__name__}/{other.__name__}',
+        #  cls.transformation_names + other.transformation_names,
+        #  transformations=cls.transformations|other.transformations
+        #  )
     
     @classmethod
     def test_nbhd(cls):
@@ -337,6 +342,13 @@ FUNCS = {
   'explicit_permute': partial(permute, explicit=True),
   'reflect': reflect,
   'rotate': rotate,
+}
+
+METHOD_NAME_MAP = {
+  'permutations': permute,
+  'rotations_by': rotate,
+  'reflections_across': reflect,
+  'identity': none
 }
 
 _permute = permute()

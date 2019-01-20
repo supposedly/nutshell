@@ -45,6 +45,7 @@ if __name__ == '__main__':
                 nutshell_rand.seed(RAND_SEED)
         else:
             for fname in walk:
+                print(fname)
                 if len(ARGV) < 3 or fname.split('.')[0] in ARGV[2:]:
                     with open('./examples/nutshells/' + fname) as fp:
                         try:

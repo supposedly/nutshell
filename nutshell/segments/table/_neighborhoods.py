@@ -22,6 +22,22 @@ ORDERED_NBHDS = {
 }
 
 
+class LazyProperty:
+    """
+    Allows definition of properties calculated once and once only.
+    From user Cyclone on StackOverflow, modified
+    """
+    def __init__(self, func):
+        self.func = func
+    
+    def __get__(self, obj, cls):
+        if obj is None:
+            return self
+        ret_value = self.func(obj)
+        setattr(obj, self.func.__name__, ret_value)
+        return ret_value
+
+
 class Neighborhood:
     GOLLY_NBHDS = bidict({
       'oneDimensional': ('W', 'E'),
@@ -31,15 +47,31 @@ class Neighborhood:
     })
     
     def __init__(self, cdirs):
-        _golly_nbhds = self.__class__.GOLLY_NBHDS
         if isinstance(cdirs, str):
-            cdirs = _golly_nbhds[cdirs]
+            cdirs = self.__class__.GOLLY_NBHDS[cdirs]
         self.cdirs = tuple(cdirs)
-        self.coord_cdirs = tuple(map(Coord.from_name, cdirs))
-        self._inv = dict(enumerate(cdirs, 1))
-        self.idxes = {v: k for k, v in self._inv.items()}
-        self.is_golly_nbhd = self.cdirs in _golly_nbhds.inv
-        self._gollyizers = {}
+        # lots of things moved to LazyProperty in order
+        # to GREATLY reduce instantiation time
+    
+    @LazyProperty
+    def coord_cdirs(self):
+        return tuple(map(Coord.from_name, self.cdirs))
+    
+    @LazyProperty
+    def _inv(self):
+        return dict(enumerate(self.cdirs, 1))
+    
+    @LazyProperty
+    def idxes(self):
+        return {v: k for k, v in self._inv.items()}
+    
+    @LazyProperty
+    def is_golly_nbhd(self):
+        return self.cdirs in self.__class__.GOLLY_NBHDS.inv
+    
+    @LazyProperty
+    def _gollyizers(self):
+        return {}
     
     def __contains__(self, item):
         return item in self.idxes
@@ -140,7 +172,7 @@ class Neighborhood:
             return Neighborhood(sorted(r, key=r.get))
         return tuple(sorted(r, key=r.get))
     
-    def reflections_across(self, endpoint, as_cls):
+    def reflections_across(self, endpoint, *, as_cls=True):
         if as_cls:
             return (self, self.reflect_across(endpoint))
         return [self.cdirs, self.reflect_across(endpoint, as_cls=as_cls)]
