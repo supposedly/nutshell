@@ -16,6 +16,13 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 - A `prune` macro
 - More modifiers, e.g. Langton's Ant and Deficient/genext -- also hex (although hex symmetries are scary)
 
+## [0.5.6] 2019-01-20
+### Fixed
+- The previous version's sole change had an unintended side effect: before it, with mixed r4r and permute transitions being
+  default, B08 and S08 were treated as permute transitions and only processed as such. With the removal of permute, however,
+  these were being ignored by the r4r-transition generator (because of their not having letters). Fixed by having it address
+  0 and 8 explicitly.
+
 ## [0.5.5] - 2018-12-24
 ### Changed
 - Permute in inline rulestrings was transpiling wrong, and it was annoying to have to `force-r4r` with Brew, so that's out --
