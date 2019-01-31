@@ -195,37 +195,18 @@ def find_golly_neighborhood(nbhds):
 
 
 def get_gollyizer(nbhd, other, *, golly_nbhd=None):
-    nbhd_set = set(nbhd.cdirs)
+    nbhd_set = set(nbhd)
     if golly_nbhd is not None:
         golly_set = NBHD_SETS[golly_nbhd]
-        if nbhd_set < golly_set:
-            return partial(fill, ORDERED_NBHDS[golly_nbhd], other)
-        return partial(reorder, ORDERED_NBHDS[golly_nbhd], other)
+        return partial(fix, ORDERED_NBHDS[golly_nbhd], nbhd)
     for name, s in NBHD_SETS.items():
         if nbhd_set <= s:
-            if nbhd_set < s:
-                return partial(fill, ORDERED_NBHDS[name], other)
-            return partial(reorder, ORDERED_NBHDS[name], other)
+            return partial(fix, ORDERED_NBHDS[name], nbhd)
     raise ValueError(f'Invalid (non-Moore-subset) neighborhood {nbhd_set}')
 
 
-def reorder(ordered_nbhd, nbhd, napkin):
-    cdir_at = nbhd.cdir_at
-    d = {cdir_at(k): v for k, v in enumerate(napkin, 1)}
-    return [d[cdir] for cdir in ordered_nbhd]
-
-
-def fill(ordered_nbhd, nbhd, napkin):
-    #if isinstance(anys, int):
-    #    anys = set(range(anys))
-    #available_tags = [i for i in range(10) if i not in anys]
-    ## (ew, but grabbing VarName object)
-    #tbl.vars.inv[tbl.vars['any']].update_rep(
-    #  max(anys) + len(ordered_nbhd) - len(tbl.neighborhood) - sum(takewhile(max(anys).__gt__, available_tags))
-    #  )
-    #tagged_names = (f'any.{i}' for i in available_tags)
+def fix(cdirs_to, nbhd_from, napkin):
     tagged_names = (f'any.{i}' for i in range(10))
-    cdir_at = nbhd.cdir_at
-    d = {cdir_at(k): v for k, v in enumerate(napkin, 1)}
-    # `or` because this needs lazy evaluation
-    return [d.get(cdir) or next(tagged_names) for cdir in ordered_nbhd]
+    print(cdirs_to)
+    print(nbhd_from)
+    return [napkin[nbhd_from[i]-1] if i in nbhd_from else next(tagged_names) for i in cdirs_to]

@@ -60,6 +60,7 @@ var any.4 = any.0
 var any.5 = any.0
 var any.6 = any.0
 var any.7 = any.0
+var any.8 = any.0
 var data.0 = {1,2}
 var data.1 = data.0
 var rdata.0 = {12,13}

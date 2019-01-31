@@ -23,6 +23,11 @@ var any.0 = {0,1,2,3,4}
 var any.1 = any.0
 var any.2 = any.0
 var any.3 = any.0
+var any.4 = any.0
+var any.5 = any.0
+var any.6 = any.0
+var any.7 = any.0
+var any.8 = any.0
 var live.0 = {1,2,3,4}
 
 # A waiting car starts moving on the next tick
