@@ -282,7 +282,7 @@ class Transition:
         
         if not self.tbl.neighborhood_ok():
             return FinalTransition(
-              [ret[0], *self.nbhd.gollyizer_for(self.tbl)(self.tbl, ret[1:-1], 1 + seen.get('any', 0)), ret[-1]],
+              [ret[0], *self.nbhd.converter_to(self.tbl.neighborhood)(ret[1:-1]), ret[-1]],
               context=self.ctx, extra=self.extra
               )
         return FinalTransition(ret, context=self.ctx, extra=self.extra)
@@ -316,6 +316,8 @@ class Transition:
                     varname.update_rep(seen[varname])
                     ret[cdir] = f'{varname}.{seen[varname]}'
                 ret[i] = ret[cdir]
+        if not self.tbl.neighborhood_ok():
+            return [ret[0], *self.nbhd.converter_to(self.tbl.neighborhood)(ret[1:-1]), ret[-1]]
         return ret
     
     def fix_final(self, tr):
@@ -341,16 +343,22 @@ class Transition:
                 variables[variables.inv[i]].update_rep(int(tag))
             else:
                 ret.append(i)
-        if not self.tbl.neighborhood_ok():
-            return FinalTransition(
-              [ret[0], *self.nbhd.gollyizer_for(self.tbl)(self.tbl, ret[1:-1], seen.get('any', {})), ret[-1]],
-              context=self.ctx, extra=self.extra
-              )
+        #if not self.tbl.neighborhood_ok():
+        #    return FinalTransition(
+        #      [ret[0], *self.nbhd.converter_to(self.tbl.neighborhood)(ret[1:-1], seen.get('any', {})), ret[-1]],
+        #      context=self.ctx, extra=self.extra
+        #      )
         return FinalTransition(ret, context=self.ctx, extra=self.extra)
     
     def in_symmetry(self, NewSymmetry):
         initial, *napkin, resultant = self.fix_partial()
-        return [self.fix_final([initial, *i, resultant]) for i in distinct(NewSymmetry(j) for j in self.symmetries(napkin).expanded)]
+        self.symmetries = self.symmetries.padded_to_neighborhood(self.tbl.neighborhood)
+        return [
+          self.fix_final([initial, *i, resultant])
+          for i in distinct(
+            NewSymmetry(j) for j in self.symmetries(napkin).expanded
+          )
+        ]
 
 
 class FinalTransition(list):

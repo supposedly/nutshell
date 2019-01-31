@@ -1,8 +1,10 @@
 from collections import OrderedDict
+from functools import partial
 from itertools import takewhile, permutations
 
 from bidict import bidict
 
+from nutshell.common.utils import LazyProperty
 from ._classes import Coord
 from ._errors import NeighborhoodError
 
@@ -22,22 +24,6 @@ ORDERED_NBHDS = {
 }
 
 
-class LazyProperty:
-    """
-    Allows definition of properties calculated once and once only.
-    From user Cyclone on StackOverflow, modified
-    """
-    def __init__(self, func):
-        self.func = func
-    
-    def __get__(self, obj, cls):
-        if obj is None:
-            return self
-        ret_value = self.func(obj)
-        setattr(obj, self.func.__name__, ret_value)
-        return ret_value
-
-
 class Neighborhood:
     GOLLY_NBHDS = bidict({
       'oneDimensional': ('W', 'E'),
@@ -50,8 +36,6 @@ class Neighborhood:
         if isinstance(cdirs, str):
             cdirs = self.__class__.GOLLY_NBHDS[cdirs]
         self.cdirs = tuple(cdirs)
-        # lots of things moved to LazyProperty in order
-        # to GREATLY reduce instantiation time
     
     @LazyProperty
     def coord_cdirs(self):
@@ -115,15 +99,15 @@ class Neighborhood:
             return self._inv[len(self) + idx]
         return self._inv[idx]
     
-    def gollyizer_for(self, tbl):
+    def converter_to(self, other):
         _golly_nbhds_inv = self.__class__.GOLLY_NBHDS.inv
-        if tbl.neighborhood not in self._gollyizers:
-            self._gollyizers[tbl.neighborhood] = (
-              get_gollyizer(tbl, self.cdirs, golly_nbhd=_golly_nbhds_inv[tbl.neighborhood.cdirs])
-              if tbl.neighborhood.cdirs in _golly_nbhds_inv
-              else get_gollyizer(tbl, self.cdirs)
+        if other not in self._gollyizers:
+            self._gollyizers[other] = (
+              get_gollyizer(self, other, golly_nbhd=_golly_nbhds_inv[other.cdirs])
+              if other.cdirs in _golly_nbhds_inv
+              else get_gollyizer(self, other)
             )
-        return self._gollyizers[tbl.neighborhood]
+        return self._gollyizers[other]
     
     def supports_transformations(self, transformations):
         for method, *args in transformations:
@@ -210,38 +194,38 @@ def find_golly_neighborhood(nbhds):
     raise ValueError(f'Invalid (non-Moore-subset) common neighborhood {common}')
 
 
-def get_gollyizer(tbl, nbhd, *, golly_nbhd=None):
-    nbhd_set = set(nbhd)
+def get_gollyizer(nbhd, other, *, golly_nbhd=None):
+    nbhd_set = set(nbhd.cdirs)
     if golly_nbhd is not None:
         golly_set = NBHD_SETS[golly_nbhd]
         if nbhd_set < golly_set:
-            return fill.__get__(ORDERED_NBHDS[golly_nbhd])
-        return lambda tbl, napkin, _anys: reorder(ORDERED_NBHDS[golly_nbhd], tbl, napkin)
+            return partial(fill, ORDERED_NBHDS[golly_nbhd], other)
+        return partial(reorder, ORDERED_NBHDS[golly_nbhd], other)
     for name, s in NBHD_SETS.items():
         if nbhd_set <= s:
-            tbl.directives['neighborhood'] = name
             if nbhd_set < s:
-                return fill.__get__(ORDERED_NBHDS[name])
-            return lambda tbl, napkin, _anys: reorder(ORDERED_NBHDS[name], tbl, napkin)
+                return partial(fill, ORDERED_NBHDS[name], other)
+            return partial(reorder, ORDERED_NBHDS[name], other)
     raise ValueError(f'Invalid (non-Moore-subset) neighborhood {nbhd_set}')
 
 
-def reorder(ordered_nbhd, tbl, napkin):
-    cdir_at = tbl.neighborhood.cdir_at
+def reorder(ordered_nbhd, nbhd, napkin):
+    cdir_at = nbhd.cdir_at
     d = {cdir_at(k): v for k, v in enumerate(napkin, 1)}
     return [d[cdir] for cdir in ordered_nbhd]
 
 
-def fill(ordered_nbhd, tbl, napkin, anys):  # anys == usages of `any`
-    if isinstance(anys, int):
-        anys = set(range(anys))
-    cdir_at = tbl.neighborhood.cdir_at
+def fill(ordered_nbhd, nbhd, napkin):
+    #if isinstance(anys, int):
+    #    anys = set(range(anys))
+    #available_tags = [i for i in range(10) if i not in anys]
+    ## (ew, but grabbing VarName object)
+    #tbl.vars.inv[tbl.vars['any']].update_rep(
+    #  max(anys) + len(ordered_nbhd) - len(tbl.neighborhood) - sum(takewhile(max(anys).__gt__, available_tags))
+    #  )
+    #tagged_names = (f'any.{i}' for i in available_tags)
+    tagged_names = (f'any.{i}' for i in range(10))
+    cdir_at = nbhd.cdir_at
     d = {cdir_at(k): v for k, v in enumerate(napkin, 1)}
-    available_tags = [i for i in range(10) if i not in anys]
-    # (ew, but grabbing VarName object)
-    tbl.vars.inv[tbl.vars['any']].update_rep(
-      max(anys) + len(ordered_nbhd) - len(tbl.neighborhood) - sum(takewhile(max(anys).__gt__, available_tags))
-      )
-    tagged_names = (f'any.{i}' for i in available_tags)
     # `or` because this needs lazy evaluation
     return [d.get(cdir) or next(tagged_names) for cdir in ordered_nbhd]

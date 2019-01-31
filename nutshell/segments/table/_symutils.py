@@ -54,10 +54,21 @@ class Napkin(tuple):
     
     @classmethod
     def with_neighborhood(cls, nbhd):
-        return new_sym_type(
+        return cls if nbhd == cls.nbhd else new_sym_type(
           nbhd,
           cls.__name__,
           cls.transformation_names,
+          tilde=cls.tilde,
+          permute_hash_indices=cls.permute_hash_indices
+        )
+    
+    @classmethod
+    def padded_to_neighborhood(cls, nbhd):
+        return cls if nbhd == cls.nbhd else new_sym_type(
+          nbhd,
+          cls.__name__ + '_Padded',
+          cls.transformation_names,  # hm
+          transformations=frozenset([tuple(t[cls.nbhd[i]-1] if i in cls.nbhd else i for i in nbhd) for t in cls.transformations]),
           tilde=cls.tilde,
           permute_hash_indices=cls.permute_hash_indices
         )
@@ -153,7 +164,7 @@ def find_golly_sym_type(symmetries, nbhd):
     dummy = range(len(nbhd))
     result = reduce(
       bitwise_and,
-      [cls(dummy).expanded for cls in symmetries]
+      [cls.padded_to_neighborhood(nbhd)(dummy).expanded for cls in symmetries]
       )
     if result not in _GOLLY_NAMES:
         # Pretty sure this is 100% wrong for the general case.

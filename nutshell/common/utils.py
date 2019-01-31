@@ -13,17 +13,16 @@ KILL_WS = str.maketrans('', '', whitespace)
 class LazyProperty:
     """
     Allows definition of properties calculated once and once only.
-    From user Cyclone on StackOverflow; modified slightly to look more
-    coherent for my own benefit.
+    From user Cyclone on StackOverflow & modified slightly
     """
-    def __init__(self, method):
-        self.method = method
+    def __init__(self, func):
+        self.func = func
     
     def __get__(self, obj, cls):
-        if not obj:
-            return None
-        ret = self.method(obj)
-        setattr(obj, self.method.__name__, ret)
+        if obj is None:
+            return self
+        ret = self.func(obj)
+        setattr(obj, self.func.__name__, ret)
         return ret
 
 

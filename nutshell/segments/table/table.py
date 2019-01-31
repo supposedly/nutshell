@@ -74,7 +74,7 @@ class TableSegment:
             self.available_macros.update(_define.macros_after)
             self.modifiers.update(_define.modifiers)
         
-        self.specials = {'any': VarName('any'), 'live': VarName('live')}
+        self.specials = {'any': VarName('any', 8), 'live': VarName('live')}
         self.new_varname = VarName.new_generator()
         
         if not tbl:
@@ -178,7 +178,7 @@ class TableSegment:
             if len(nbhd) != len(set(nbhd)):
                 raise ValueError('Duplicate compass directions in neighborhood')
             self._nbhd = nbhoods.Neighborhood(nbhd)
-            self.gollyize_nbhd = self._nbhd.gollyizer_for(self)
+            self.gollyize_nbhd = self._nbhd.converter_to(self.neighborhood)
         elif val in self.NEIGHBORHOODS:
             self._nbhd = self.NEIGHBORHOODS[val]
         else:
@@ -227,7 +227,7 @@ class TableSegment:
             self._n_states = self.directives['states'] = value
     
     def neighborhood_ok(self):
-        return sum(self.neighborhoods_used.values()) > 1 or not next(iter(self.neighborhoods_used)).is_golly_nbhd
+        return sum(self.neighborhoods_used.values()) == 1 and next(iter(self.neighborhoods_used)).is_golly_nbhd
     
     def use_sym_type(self, sym=None):
         if isinstance(sym, str):
