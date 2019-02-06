@@ -50,6 +50,10 @@ class Neighborhood:
         return {v: k for k, v in self._inv.items()}
     
     @LazyProperty
+    def numbers(self):
+        return self.idxes.values()
+    
+    @LazyProperty
     def is_golly_nbhd(self):
         return self.cdirs in self.__class__.GOLLY_NBHDS.inv
     

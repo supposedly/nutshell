@@ -27,24 +27,43 @@ def standard(meta, initial, fg, bg, resultant, rulestring, variables, table):
     get_fg, get_bg = _get_getter(table, fg, 'FG'), _get_getter(table, bg, 'BG')
     get_initial, get_resultant = _get_getter(table, initial, None), _get_getter(table, resultant, None)
     counter = count(1)
-    ret = [
+    ret = []
+    if '0' in r4r_nbhds:
+        ret.append(TransitionGroup(
+          table,
+          get_initial('0', None, meta),
+          dict.fromkeys(table.neighborhood.numbers, get_bg('0', None, meta)),
+          get_resultant('0', None, meta),
+          context=meta, extra=next(counter),
+          symmetries=r4r
+        ))
+    ret += [
         TransitionGroup(
-        table,
-        get_initial(nb_count, letter, meta),
-        {
+          table,
+          get_initial(nb_count, letter, meta),
+          {
             num: get_fg(nb_count, letter, meta)
             # XXX: probably suboptimal performance b/c [dot attr access] -> [getitem] -> [getitem]
             if cdir in hensel.R4R_NBHDS[nb_count][letter]
             else get_bg(nb_count, letter, meta)
             for cdir, num in table.neighborhood.items()
-        },
-        get_resultant(nb_count, letter, meta),
-        context=meta, extra=next(counter),
-        symmetries=r4r
+          },
+          get_resultant(nb_count, letter, meta),
+          context=meta, extra=next(counter),
+          symmetries=r4r
         )
         for nb_count, letters in r4r_nbhds.items()
         for letter in letters
     ]
+    if '8' in r4r_nbhds:
+        ret.append(TransitionGroup(
+          table,
+          get_initial('8', None, meta),
+          dict.fromkeys(table.neighborhood.numbers, get_fg('8', None, meta)),
+          get_resultant('8', None, meta),
+          context=meta, extra=next(counter),
+          symmetries=r4r
+        ))
     return ret
 
 
