@@ -28,7 +28,7 @@ PACKAGES = f[
   'nutshell': f[
     'tools': f['icons'],
     'common',
-    'segment_types': f[
+    'segments': f[
       'colors',
       'icons',
       'nutshell',
