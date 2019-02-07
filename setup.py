@@ -30,6 +30,7 @@ PACKAGES = f[
     'common',
     'segments': f[
       'colors',
+      'define',
       'icons',
       'nutshell',
       'table': f['lark_assets', 'inline_rulestring']
