@@ -4,7 +4,6 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 
 ## [0.6.0] - In progress
 ### Planned
-- Neighborhood-switching, a la symmetry-switching
 - More modifiers, e.g. Langton's Ant and Deficient/genext -- also hex
 - Extensions to macros and inline-rulestring modifiers:
   - Macros that do their thing before statelists are re-resolved into names (to allow a macro to add new statelists)
@@ -14,6 +13,10 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
     of a Nutshell (rather than needing to be in their own, separate file, which means that when I distribute a rule I either
     have to share the extra file along with it or I have to add the macro/modifier to the stdlib)
 - A `prune` macro
+### Added
+- Neighborhood-switching, a la symmetry-switching
+  - I am not convinced that this isn't buggy as of yet
+
 ### Changed
 - Completely overhauled symmetries and neighborhoods such that:
   - Transformations like reflection and rotation are handled from the *neighborhood* rather than the symmetry type

@@ -211,6 +211,4 @@ def get_gollyizer(nbhd, other, *, golly_nbhd=None):
 
 def fix(cdirs_to, nbhd_from, napkin):
     tagged_names = (f'any.{i}' for i in range(10))
-    print(cdirs_to)
-    print(nbhd_from)
     return [napkin[nbhd_from[i]-1] if i in nbhd_from else next(tagged_names) for i in cdirs_to]
