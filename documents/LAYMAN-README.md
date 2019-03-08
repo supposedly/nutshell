@@ -10,6 +10,11 @@ So you've likely heard of Conway's Game of Life at some point or other, yes? In 
 Conway's Game of Life operates within a "range-1 Moore neighborhood", which simply describes the eight cells surrounding a given square on a regular
 2D grid.
 
+```
+o o o
+o . o
+o o o
+```
 Life, then, is a *cellular automaton* where a cell "survives" to the next generation if it has either two or three living neighbors,
 and where a "dead" (unoccupied) cell is "born" (becomes occupied) if it has precisely three live neighbors. There is a simple notation for this
 type of CA devised long ago that just tells us the amount of neighbors a dead cell requires to be born and the amount of neighbors a live
@@ -24,9 +29,9 @@ Well, occasionally, a concept or rule paradigm becomes popular enough that it ge
 Such is the case with "Generations", a cellular-automaton algorithm that behaves like a normal B/S rule except that it requires each
 "died" cell to remain stationary and interactionless for a set number of generations before truly dying; its notation flips the B/S
 conditions and adds a third "C" parameter, said number of pre-death stationary generations, to the end. (Conway's Game of Life with
-nine extra death generations, for instance, would be notated as 23/3/10 -- survival on 2 or 3, birth on 3, and 10 pre-death states.)
+nine extra death generations, for instance, would be notated as 23/3/10 -- survival on 2 or 3, birth on 3, and 9 pre-death states.)
 There are also "non-totalistic rules" or specifically "isotropic non-totalistic rules", where the term "non-totalistic" refers to the
-fact that they consider the *positions* of individual neighboring cells rather than merely the *total* quantity thereof;
+fact that they consider the *positions* of individual neighboring cells (ignoring rotations/reflections) rather than merely the *total* quantity thereof;
 these are expressed with an alphabetic extension to the B/S notation, described [here](http://www.ibiblio.org/lifepatterns/neighbors2.html).
 
 Still, even those aren't everything. What about all the other deterministic types of rules?  
