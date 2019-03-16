@@ -98,4 +98,4 @@ def preserve_comments():
 @transpile.flag(short='f', default=None)
 def find(transition):
     """Locate first transition in `infile` that matches"""
-    return tuple(s if s == '*' else int(s) for s in map(str.strip, transition.split(',')))
+    return tuple(s if s in '*?' else int(s) for s in map(str.strip, transition.split(',')))
