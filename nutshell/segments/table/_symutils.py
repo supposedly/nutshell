@@ -164,7 +164,7 @@ def find_golly_sym_type(symmetries, nbhd):
     dummy = range(len(nbhd))
     result = reduce(
       bitwise_and,
-      [cls.padded_to_neighborhood(nbhd)(dummy).expanded for cls in symmetries]
+      [cls.with_neighborhood(nbhd)(dummy).expanded for cls in symmetries]
       )
     if result not in _GOLLY_NAMES:
         # Pretty sure this is 100% wrong for the general case.
