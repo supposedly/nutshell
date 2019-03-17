@@ -84,7 +84,10 @@ after or before the keyword `transpile`/`t` with no difference):
                      you typo'd).  
                      Transition should be given in the standard Golly form `C,N,...,C'`&nbsp;-- that is, state of the
                      current center cell, then its neighborhood, and finally the state it transitions into
-                     on the next tick. Use `*` as an "any state" wildcard. Old example [here](https://user-images.githubusercontent.com/32081933/39951382-2b37fca0-553e-11e8-87b5-69685dfe4881.png)!
+                     on the next tick.  
+                     Use `*` and `?` as "any state" wildcards, difference being that `?`
+                     will tell you what state(s) can be used in its position.  
+                     Old example [here](https://user-images.githubusercontent.com/32081933/39951382-2b37fca0-553e-11e8-87b5-69685dfe4881.png)!
 
 ## Glossary of Nutshell-specific terms
 - **variable**: Either a literal statelist or a name referring to one. 

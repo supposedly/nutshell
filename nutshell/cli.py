@@ -16,8 +16,12 @@ transpile = cli.command(
   aliases=['t'], OR='not nothing'
   )
 transpile.main_grp = Group(XOR='find|normal')
-# to be imported and then added to
-icon = cli.command('icon', 'Tools related to the @ICONS section', aliases=['i'], OR='not nothing')
+
+icon = cli.command(
+  'icon',
+  'Tools related to the @ICONS section',
+  aliases=['i'], OR='not nothing'
+)
 
 
 @cli.flag(short='V')

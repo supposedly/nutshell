@@ -16,6 +16,13 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 - A `prune` macro
 - More modifiers, e.g. Langton's Ant and Deficient/genext -- also hex (although hex symmetries are scary)
 
+## [0.5.7] 2019-03-16
+### Fixed
+- Wildcards in `-f` searches can now be used transition-medially (they'd throw an error previously)
+### Added
+- `?` wildcard in `-f`, which functions like earlier `*` but also indicates what can be used in its place  
+  (this is technically deserving of a minor-version bump, but we're still major-version 0 so it's Wild West rules)
+
 ## [0.5.6] 2019-01-20
 ### Fixed
 - The previous version's sole change had an unintended side effect: before it, with mixed r4r and permute transitions being

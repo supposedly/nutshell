@@ -1,4 +1,4 @@
-__version__ = '0.5.6'
+__version__ = '0.5.7'
 from .common import *
 from .segment_types.table import _napkins as napkin
 from .segment_types.table._napkins import Napkin, OrthNapkin, HexNapkin
