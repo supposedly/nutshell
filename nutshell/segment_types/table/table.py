@@ -272,25 +272,28 @@ class TableSegment:
               )
     
     def match(self, tr):
+        tr = list(map(_SearchTerm, tr))  # XXX: hopefully can remove _SearchTerm w/ new symmetries
         printq('Complete!\n\nSearching for match...')
         start, *in_napkin, end = tr
         if len(in_napkin) != self.trlen:
             raise Error(None, f'Bad length for match (expected {2+self.trlen} states, got {2+len(in_napkin)})')
         in_trs = [(start, *napkin, end) for napkin in self.symmetries(in_napkin).expand()]
-        question_indices = []
+        question_indices = [i for i, v in enumerate(tr) if v.request_idx]
         for tr in self._data:
             for in_tr in in_trs:
+                # to know whether to abort on no match, or to continue in
+                # hopes that the wildcard is valid elsewhere
+                tripped_wildcard = False
                 for cur_len, (in_state, tr_state) in enumerate(zip(in_tr, tr), -1):
-                    if in_state == '?':
-                        question_indices.append(cur_len + 1)
-                    if in_state in {'?', '*'}:
+                    if in_state.is_wildcard:
+                        tripped_wildcard = True
                         continue
                     if (
-                      in_state not in tr_state
+                      in_state.value not in tr_state
                       if isinstance(tr_state, Iterable)
-                      else in_state != getattr(tr_state, 'value', tr_state)
+                      else in_state.value != getattr(tr_state, 'value', tr_state)
                     ):
-                        if cur_len == self.trlen:
+                        if not tripped_wildcard and cur_len == self.trlen:
                             lno, start, end = tr.ctx
                             return (
                               'No match\n\n'
@@ -302,12 +305,14 @@ class TableSegment:
                 else:
                     lno, start, end = tr.ctx
                     fixed_tr = tr.fix_vars()
+                    separator = '\n\n\n' if question_indices else ''
+                    _NEWLINE = '\n'  # for fstring...
                     return (
                       'Found!\n\n'
                       f'Line {self.start+lno}:\n  {self[lno-1]}\n'
                       f'''{"" if start == 1 else f"  {' '*(start-1)}{'^'*(end-start)}"}\n'''  # TODO FIXME: deuglify
-                      f"Compiled line:\n  {', '.join(map(str, tr.fix_vars()))}\n\n\n"
-                      f'''{''.join(
+                      f"Compiled line:\n  {', '.join(map(str, tr.fix_vars()))}"
+                      f'''{separator}{_NEWLINE.join(
                         f"* TERM #{n} ('{fixed_tr[n]}') is one of {tr[n].untether()}"
                         if isinstance(tr[n], StateList)
                         else f'* TERM #{n} is {tr[n]}'
@@ -318,3 +323,24 @@ class TableSegment:
         if start == end:
             return 'No match\n\nThis transition is the result of unspecified default behavior'
         return 'No match'
+
+
+class _SearchTerm:
+    """
+    This class will only exist as long as I use "sorted()" to
+    expand napkin symmetries, because it exists only to be comparable
+    to int
+    """
+    def __init__(self, value):
+        self.value = value
+        self.is_wildcard = value == '*' or value == '?'
+        self.request_idx = value == '?'
+    
+    def __lt__(self, other):
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+        if self.is_wildcard:
+            return True
+        if other.is_wildcard:
+            return False
+        return self.value.__lt__(other.value)
