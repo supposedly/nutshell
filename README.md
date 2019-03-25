@@ -96,8 +96,10 @@ after or before the keyword `transpile`/`t` with no difference):
   This is referred to as a "variable" in Golly, but in Nutshell it's more important to distinguish it from the prior terms. 
 - **directive**: A declaration following the form `name: value` that describes something about a ruletable.
 - **term**: One individual element of a transition napkin.
-- **napkin** (or transition napkin): Refers to the cells in another cell's neighborhood *including* each one's state. Coined by
-  Conwaylife forum contributor 83bismuth38. (In contrast, the term "neighborhood" refers only to the positions of these cells)
+- **napkin** (or transition napkin): Refers to the cells in another cell's neighborhood *including* each one's state.
+  In contrast, the term "neighborhood" refers only to the positions of these cells. (Originally coined by Conwaylife
+  forum member 83bismuth38, with the long form "bowling napkin", to refer to a table that visualizes all possible transitions
+  in a given neighborhood; a misconstrual of this coinage led to the term's Nutshell sense.)
 
 ## What's new
 ### Directives
