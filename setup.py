@@ -44,7 +44,7 @@ setuptools.setup(
   version=VERSION,
   packages=PACKAGES,
   include_package_data=True,
-  url='https://github.com/eltrhn/nutshell',
+  url='https://github.com/supposedly/nutshell',
   description="Transpiler from a powerful alternative cellular-automaton-specification language to Golly's",
   install_requires=['bidict', 'ergo>=0.5.1'],  #, 'lark-parser'],
   python_requires='>=3.6',
