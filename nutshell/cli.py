@@ -1,4 +1,4 @@
-from ergo import CLI, Group
+from kizbra import CLI, Group
 
 from nutshell import __version__
 
