@@ -1,4 +1,4 @@
-from kizbra import CLI, Group
+from jeffrey import CLI, Group
 
 from nutshell import __version__
 

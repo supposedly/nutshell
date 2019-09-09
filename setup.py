@@ -46,7 +46,7 @@ setuptools.setup(
   include_package_data=True,
   url='https://github.com/supposedly/nutshell',
   description="Transpiler from a powerful alternative cellular-automaton-specification language to Golly's",
-  install_requires=['bidict', 'kizbra>=0.5.1'],  #, 'lark-parser'],
+  install_requires=['bidict', 'jeffrey>=0.5.1'],  #, 'lark-parser'],
   python_requires='>=3.6',
   entry_points={
     'console_scripts': [
