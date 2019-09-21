@@ -1,4 +1,4 @@
-from jeffrey import CLI, Group
+from joffrey import CLI, Group
 
 from nutshell import __version__
 
@@ -27,6 +27,7 @@ icon = cli.command(
 @cli.flag(short='V')
 def version():
     raise SystemExit(__version__)
+
 
 @cli.clump(XOR='verbose|quiet')
 @cli.flag('verbosity', namespace={'count': 0}, default=0)

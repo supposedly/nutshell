@@ -1,3 +1,3 @@
 bidict
-jeffrey>=0.5.1
+joffrey>=0.5.1
 #lark-parser
