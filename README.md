@@ -47,7 +47,7 @@ of this makes any sense to you and you aren't sure how you got here, check out t
 ## Setup
 1. [Download & install Python 3.6](https://www.python.org/downloads/release/python-365/) or higher (support for < 3.6 hopefully coming soon)
 2. Either:
-    1. Execute the terminal command `pip install -U git+git://github.com/eltrhn/nutshell.git` (or whichever of the
+    1. Execute the terminal command `pip install -U git+git://github.com/supposedly/nutshell.git` (or whichever of the
        pip command's variations works for you; you may need to try `python -m pip install`, `python3 -m pip install`,
        on Windows `py -m pip install`, ...) to install via pip directly,
     2. **OR** `git clone` this project, then `cd` to its directory and execute `pip install -U .` (using the correct one of
@@ -814,7 +814,7 @@ rule _[tlife](http://conwaylife.com/forums/viewtopic.php?f=11&t=1831)_:
 symmetries: permute
 any, any; 0
 ```
-[Its output file](https://gist.github.com/eltrhn/078db47f6b05199b8fbe349ef5f91fed) is a touch too big to paste, but it:
+[Its output file](https://gist.github.com/supposedly/078db47f6b05199b8fbe349ef5f91fed) is a touch too big to paste, but it:
 1. Interprets `0, <3 / 1 / 0>; 1` as _"a state-`0` cell surrounded by `3` state-`1` cells (and otherwise state-`0` cells)
    will turn into state `1`,"_ then expands this into the permute-symmetry transition `0, 1, 1, 1, 0, 0, 0, 0, 0, 1`.
 2. Interprets `1, <2-i34q / 1 / 0>; 1` as _"a state-`1` cell surrounded by a configuration matching `2-i`, `3`, or `4q`
@@ -825,7 +825,7 @@ any, any; 0
 Each of the inline-rulestring lines comes with an implicit "transition-local" switch to `rotate4reflect` symmetry
 (if using a Hensel-exclusive rulestring with letters and whatnot) or to `permute` symmetry (if using a totalistic rulestring),
 but **other transitions are not affected**! This means that, in the Life table, the transition `any, N..NW any; 0` is actually
-still under `symmetries: none` and will thus cause the whole table to be normalized into the same; the tlife table
+still under `symmetries: none` and will thus cause the whole table to be normalized thereinto; the tlife table, on the other hand,
 has `symmetries: permute` to prevent this. In general, an inline-rulestring transition can be read as being preceded by a switch to
 either `symmetries: rotate4reflect` or `symmetries: permute` (whichever is appropriate) and being followed by a switch back to the
 previous symmetries.
@@ -848,16 +848,16 @@ symmetries: permute
 (Head, Tail), any; [0: (Tail, Wire)]
 Wire, <12 / Head / (0, Tail, Wire)>; Head
 ```
-...which takes advantage of some things described below, viz. the [`@NUTSHELL`](#the-nutshell-segment) &
+...which takes advantage of some things described below, namely the [`@NUTSHELL`](#the-nutshell-segment) &
 [`@COLORS`](#the-colors-segment) segments.
 
 [References](#references) can be used here as well, but they look a little bit different: rather than referring
-to a compass direction, they must refer to either `0` , `BG`, or `FG`&nbsp;-- respectively, the input, background,
-or foreground state(s).  
+to a compass direction, they must refer to either `0` , `BG`, or `FG`. Respectively, those are the input, background,
+and foreground state(s).  
 For instance, the resultant state of `0, <23 / (0, 1) / (1, 2, 3)>; [FG: (3, 2, 1)]` is a mapping from the variable
-`(1, 2, 3)`; if it were instead `[BG]`, then it would be a binding to the variable `(0, 1)`. (References are valid
-within the `<>` section as well, as is the "inline binding" syntax.)  
-Lastly, the same inline-binding syntax that allows `[expression] ~ 5` or `N..NW [expression]` to be shorthand for,
+`(1, 2, 3)`. If it were instead `[BG]`, then it would be a binding to the variable `(0, 1)`. Note that references are
+valid within the `<>` section as well, as is the "inline binding" syntax.  
+Lastly, the same inline-binding syntax that allows `[expression] ~ 5` and `N..NW [expression]` to be shorthand for,
 respectively, `expression, [1] ~ 4` and `N [expression], NE..NW [N]` is usable here:
 ```rb
 # Nutshell
@@ -878,11 +878,11 @@ states, but if one *must*, then compass directions can be used to refer to the c
 [canonical orientation](http://www.ibiblio.org/lifepatterns/neighbors2.html).  
 Note, this is only an issue with a rotate4reflect-requiring Hensel-notation rulestring, as in `0, <2-i34q / (1, 2) / 0>; [FG]`.
 It is **not** an issue with a permute-symmetry rulestring as in `0, <23 / (1, 2) / 0>; [FG]`, and it even is a non-issue with
-Hensel rulestrings **if** the bound-to term is guaranteed to be the same cellstate everywhere: `<0, 2-i34q / [(1, 2)] / 0>; [FG]`.
+Hensel rulestrings **if** the bound-to term is guaranteed to be the same cellstate everywhere: `0, <2-i34q / [(1, 2)] / 0>; [FG]`.
 
 #### Modifiers
-The rulestrings do not strictly have to be Hensel rulestrings -- that is just the default. Placing a modifier after the
-rulestring will cause it to be interpreted differently. Currently-available modifiers:
+The rulestrings do not strictly have to be Hensel rulestrings -- that's just the default. Placing a "modifier" name
+after the rulestring will cause it to be interpreted differently. Currently-available modifiers:
 - `hensel`, which is an alias for the default behavior.
 - `!hensel`, which turns the rulestring into its *complement*. `<012345-i6 !hensel / 1 / 0>` is `<5i78 / 1 / 0>`
 - `force-r4r`, which makes `<3 force-r4r / 1 / 0>` expand into a series of B3 rotate4reflect transitions *rather than*
@@ -892,7 +892,9 @@ rulestring will cause it to be interpreted differently. Currently-available modi
 [`examples/BeeZero`](examples/nutshells/BeeZero.ruel) for usage.
 
 These are user-creatable in the exact same manner as symmetries, although the API for this has not yet been
-made user-friendly.
+made user-friendly. A currently-indefinitely-postponed future release will remove `force-r4r` and `b0-odd` from the
+"standard library", so to speak, and instead allow modifiers to be defined in a Python-code segment within a Nutshell
+file itself. This will make it easier to transport Nutshell files along with their requisite modifiers.
 
 ### Custom neighborhoods
 The `neighborhood` directive can be given a comma-delimited list of compass directions rather than a name, which makes
@@ -964,7 +966,7 @@ any.0, 2, 2, 2, _b0.0, _b0.1, _b0.2, _b0.3, _b0.4, 2
 any.0, 3, 3, 3, _c0.0, _c0.1, _c0.2, _c0.3, _c0.4, 3
 3, 3, 3, _c0.0, _c0.1, _c0.2, _c0.3, _c0.4, _c0.5, 3
 ```
-Notice: these are the exact same transitions, only intertwined, and this crucial difference prevents the Nutshell version
+Notice that these are the exact same transitions, only intertwined, and this crucial difference prevents the Nutshell version
 from behaving as it should.
 
 Nutshell 0.4.0 introduced *macros*, Python functions invoked from Nutshell that can modify spans of resultant transitions.
@@ -1041,6 +1043,10 @@ The current "standard library" of macros currently consists of two:
 
 See [documents/PYTHON-EXTENSIONS.md](documents/PYTHON-EXTENSIONS.md) for details regarding implementation of custom macros.
 
+As with modifiers, a currently-indefinitely-postponed future release of Nutshell will remove `weave` from the standard library
+(as its only application is in Brew) and instead allow ruletable-specific macros to be defined within their Nutshell file
+itself. Additionally, a `prune` macro will be added that takes a pattern and removes individual output transitions that match
+it.
 
 ## Non-table-related changes
 - The preferred file extension is `.ruel`, both a holdover from when this project was named `rueltabel` and a simple-but-recognizable
@@ -1071,7 +1077,7 @@ description of each state. Take the following example:
 ...
 ```
 
-Note the following few things:
+Notice the following few things:
 - There is no curly-bracketed {NAME} on the first line, but it does have a number + colon at the start.
 - The second and fourth lines have both a number + colon at the start *and* a curly-bracketed {NAME}.
 - The third and fifth lines have an initial colon and a bracketed {NAME}, but no number before the colon.
