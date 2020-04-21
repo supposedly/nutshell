@@ -70,7 +70,7 @@ Supported flags, though there's more info in `--help` (note that `-v` and `-q` c
 after or before the keyword `transpile`/`t` with no difference):
   - `-v`: Verbose. Can be repeated up to four times, causing more info to be displayed each time.
   - `-q`: Quiet. Opposite of the above, but only has one level.
-  - `-s`: Source. Writes each Nusthell `@TABLE` line, as a comment, above the line(s) it compiles
+  - `-s`: Source. Writes each Nutshell `@TABLE` line, as a comment, above the line(s) it compiles
           to in the final ruletable output. (If the compiled line is from an auxiliary-transition
           specifier, the specifier is printed instead along with its line number as normal.)
   - `-c`: Preserve comments. Causes comments in the Nutshell's `@TABLE` to be copied into the final
