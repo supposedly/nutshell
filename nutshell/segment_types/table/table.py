@@ -266,7 +266,7 @@ class TableSegment:
             return int(cdir != '0') and self.neighborhood.inv[int(cdir)] if cdir.isdigit() else str(cdir)
         except KeyError:
             pre = 'Transition index' if cdir.isdigit() else 'Compass direction'
-            raise ReferenceErr(
+            raise UndefinedErr(
               meta,
               f"{pre} {cdir} does not exist in neighborhood {self.directives['neighborhood']!r}"
               )
