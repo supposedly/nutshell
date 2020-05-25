@@ -27,7 +27,7 @@ def generate_cardinals(d):
 
 
 class Bidict(bidict.bidict):
-    on_dup = bidict.OnDup(val=bidit.DROP_NEW, kv=bidict.DROP_NEW)
+    on_dup = bidict.OnDup(val=bidict.DROP_NEW, kv=bidict.DROP_NEW)
 
 
 class TableSegment:
