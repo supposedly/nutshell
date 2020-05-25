@@ -14,6 +14,7 @@ class NutshellException(Exception):
         self.shift = shift
         if isinstance(lno, tuple):
             self.lno, *self.span = lno
+        self.lno += 1
         if isinstance(segment, list):
             code = [
               f'{self.pre}, line {shift+self.lno}:',

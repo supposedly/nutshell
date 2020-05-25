@@ -44,10 +44,10 @@ SYMMETRY_NAME: /(?<![\w\.])(?!(?:[NS][EW]?|[EW])(?![\w\.]))[\w\.]+/
 _NORMAL_ARROW: _WS? "->" _WS?
 _HOIST_ARROW: _WS? "=>" _WS?
 
-auxiliary: cdir_delay ":" STATE                                               -> aux_bare
-  | cdir_delay "[" _aux_expr_no_int "]"                                       -> aux_map_self
-  | cdir_delay "[" (COMPASS_DIR | INT) "]"                            -> aux_bind_self
-  | cdir_delay "[" (COMPASS_DIR | INT) ":" _WS? _aux_expr_no_int "]"  -> aux_map_other
+auxiliary: cdir_delay ":" STATE                                           -> aux_bare
+  | cdir_delay ":" "[" _aux_expr_no_int "]"                               -> aux_map_self
+  | cdir_delay ":" "[" (COMPASS_DIR | INT) "]"                            -> aux_bind_self
+  | cdir_delay ":" "[" (COMPASS_DIR | INT) ":" _WS? _aux_expr_no_int "]"  -> aux_map_other
 
 // I'm not sure why I need to specify the INT explicitly and w/ strings
 // there; if I include the digits in the COMPASS_DIR regex or actually any regex,

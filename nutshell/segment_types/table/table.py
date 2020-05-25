@@ -90,7 +90,7 @@ class TableSegment:
               )
         except lark_standalone.UnexpectedToken as e:
             raise SyntaxErr(
-              (e.line, e.column, 1+e.column),
+              (e.line, e.column, 1 + e.column),
               f"Unexpected token {{span!r}} (expected {'/'.join(e.expected)})",
               shift=self.start
               )
