@@ -16,6 +16,15 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 - A `prune` macro
 - More modifiers, e.g. Langton's Ant and Deficient/genext -- also hex (although hex symmetries are scary)
 
+## [0.5.9] 2020-05-25
+### Fixed
+- Updated some deprecated uses of the `bidict` module
+### Changed
+- Updated to lark 0.8.5
+
+## [0.5.8] ??
+I did not document this version.
+
 ## [0.5.7] 2019-03-16
 ### Fixed
 - Wildcards in `-f` searches can now be used transition-medially (they'd throw an error previously)
