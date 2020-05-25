@@ -3,3 +3,6 @@ __pycache__/*
 .vscode
 /*.rule
 /*.ruel
+/.coverage
+/htmlcov
+/.env
