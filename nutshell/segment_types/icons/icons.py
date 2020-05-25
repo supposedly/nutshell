@@ -15,7 +15,7 @@ TWO_STATE = str.maketrans('bo', '.A')
 
 class IShouldntHaveToDoThisBidict(bidict.bidict):
     """Why is this not an __init__ parameter"""
-    on_dup_val = bidict.DROP_OLD
+    on_dup = bidict.ON_DUP_DROP_OLD
 
 
 class Icon:
