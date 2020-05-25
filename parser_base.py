@@ -400,7 +400,7 @@ class Transformer(_Decoratable):
             except (GrammarError, Discard):
                 raise
             except Exception as e:
-                raise VisitError(tree.data, tree, e)
+                raise# VisitError(tree.data, tree, e)
 
     def _call_userfunc_token(self, token):
         try:
