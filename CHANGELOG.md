@@ -2,7 +2,7 @@
 
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 
-## [0.6.0] - In progress?
+## [0.7.0] - In progress?
 ### Planned
 - A complete overhaul of symmetries and neighborhoods such that:
   - Such transformations as reflection and rotation are handled from the *neighborhood* rather than the symmetry type
@@ -16,13 +16,18 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 - A `prune` macro
 - More modifiers, e.g. Langton's Ant and Deficient/genext -- also hex (although hex symmetries are scary)
 
+## [0.6.0] 2020-05-25
+### Added
+- Arithmetic expressions in `@TABLE`, wrapped in `{}`
+- Constants are now creatable in `@TABLE`, good for generic rules
+### Removed
+- Officially removed the `{}` syntax for variables. Only use `()` now
+
 ## [0.5.9] 2020-05-25
 ### Fixed
-- Updated some deprecated uses of the `bidict` module
+- Updated some deprecated uses of the `bidict` module that would have been breaking soon
 ### Changed
 - Updated to lark 0.8.5
-### Added
-- Added arithmetic
 
 ## [0.5.8] ??
 I did not document this version.
