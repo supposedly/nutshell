@@ -16,6 +16,11 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 - A `prune` macro
 - More modifiers, e.g. Langton's Ant and Deficient/genext -- also hex (although hex symmetries are scary)
 
+## [0.6.1] 2020-06-25
+### Fixed
+- Empty statelists created by operations no longer throw an ugly Python error. They're now processed without issue.
+
+
 ## [0.6.0] 2020-05-25
 ### Added
 - Arithmetic expressions in `@TABLE`, wrapped in `{}`

@@ -637,7 +637,7 @@ class TetheredVar(StateList):  # Tethered == bound to a transition
         # isinstance check is because StateList.__rmul__ returns self.__class__([other]*len(blah)) and that
         # results in ints rather than varvalues
         # should probably fix to a more-robust solution
-        self._set = {i.value for i in self._tuple} if isinstance(self._tuple[0], VarValue) else set(self._tuple)
+        self._set = {i.value for i in self._tuple} if isinstance(self._tuple[0] if self._tuple else None, VarValue) else set(self._tuple)
         self.start = start
         self._d = {}
     
