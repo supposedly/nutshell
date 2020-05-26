@@ -55,13 +55,13 @@ class Preprocess(Transformer):
         self.consts = {}
         self._nbhd_assigned = False
     
-    def kill_string(self, val, meta, li=False, var=True):
+    def kill_string(self, val, meta, li=False, var_and_special=True):
         if isinstance(val, str):
-            if val in SPECIALS:
+            if val in SPECIALS and var_and_special:
                 return str(val)
             if val.isdigit():
                 return [int(val)] if li else int(val)
-            if val in self.vars and var:
+            if val in self.vars and var_and_special:
                 return self.vars[val]
             if val in self.consts:
                 return self.consts[val]
@@ -179,7 +179,7 @@ class Preprocess(Transformer):
     
     @inline
     def const_decl(self, meta, name, val):
-        self.consts[name] = val
+        self.consts[name] = self.kill_string(val, meta)
         raise Discard
     
     def permute_shorthand(self, children, meta):
@@ -482,26 +482,26 @@ class Preprocess(Transformer):
     
     @inline
     def math_mul(self, meta, a, b):
-        return self.kill_string(a, meta, var=False) * self.kill_string(b, meta, var=False)
+        return self.kill_string(a, meta, var_and_special=False) * self.kill_string(b, meta, var_and_special=False)
     
     @inline
     def math_div(self, meta, a, b):
-        dividend = self.kill_string(b, meta, var=False)
+        dividend = self.kill_string(b, meta, var_and_special=False)
         if dividend == 0:
             raise ArithmeticErr(meta, f'Cannot divide by 0')
-        return self.kill_string(a, meta, var=False) // dividend
+        return self.kill_string(a, meta, var_and_special=False) // dividend
     
     @inline
     def math_add(self, meta, a, b):
-        return self.kill_string(a, meta, var=False) + self.kill_string(b, meta, var=False)
+        return self.kill_string(a, meta, var_and_special=False) + self.kill_string(b, meta, var_and_special=False)
     
     @inline
     def math_sub(self, meta, a, b):
-        return self.kill_string(a, meta, var=False) - self.kill_string(b, meta, var=False)
+        return self.kill_string(a, meta, var_and_special=False) - self.kill_string(b, meta, var_and_special=False)
     
     @inline
     def math_nop(self, meta, operand):
-        return self.kill_string(operand, meta, var=False)
+        return self.kill_string(operand, meta, var_and_special=False)
     
     @inline
     def math(self, meta, result):
