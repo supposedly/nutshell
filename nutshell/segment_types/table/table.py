@@ -1,5 +1,5 @@
 import re
-from collections import Iterable
+from collections.abc import Iterable
 from functools import partial
 from itertools import chain, cycle, islice, zip_longest
 from inspect import signature, Parameter
