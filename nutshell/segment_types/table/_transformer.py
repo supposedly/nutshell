@@ -376,23 +376,6 @@ class Preprocess(Transformer):
         return Auxiliary(self._tbl, cdir_to, delay, Mapping(cdir_from, self.kill_string(val, meta), context=(meta[0], meta[1]+len(cdir_to), meta[2])), context=meta)
     
     @inline
-    def aux_old_bind_self(self, meta, cdir_info, cdir_from):
-        cdir_from = self._tbl.check_cdir(cdir_from, fix(meta), return_int=False, enforce_int=True)
-        cdir_to, delay = cdir_info['cdir'], cdir_info['delay']
-        return Auxiliary.old((cdir_to, cdir_to, cdir_from), self._tbl, cdir_to, delay, Binding(cdir_from, context=(meta[0], meta[1]+len(cdir_to), meta[2])), context=meta)
-    
-    @inline
-    def aux_old_map_self(self, meta, cdir_info, val):
-        cdir_to, delay = cdir_info['cdir'], cdir_info['delay']
-        return Auxiliary.old((f'({", ".join(map(str, val))})', cdir_to, None), self._tbl, cdir_to, delay, Mapping(cdir_to, self.kill_string(val, meta), context=(meta[0], meta[1]+len(cdir_to), meta[2])), context=meta)
-    
-    @inline
-    def aux_old_map_other(self, meta, cdir_info, cdir_from, val):
-        cdir_to, delay = cdir_info['cdir'], cdir_info['delay']
-        cdir_from = self._tbl.check_cdir(cdir_from, (meta[0], meta[1] + cdir_info['meta'][1] + 1, len(cdir_from)), return_int=False, enforce_int=True)
-        return Auxiliary.old((f'({", ".join(map(str, val))})', cdir_to, cdir_from), self._tbl, cdir_to, delay, Mapping(cdir_from, self.kill_string(val, meta), context=(meta[0], meta[1]+len(cdir_to), meta[2])), context=meta)
-    
-    @inline
     def range(self, meta, start, stop):
         return StateList(range(int(start), 1+int(stop)))
     
