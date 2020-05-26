@@ -704,8 +704,7 @@ class VarValue:
 
 
 class Auxiliary:
-    def __init__(self, tbl, initial_cdir, delay, resultant, *, context, symmetries=None, old_syntax=False):
-        self._old = old_syntax
+    def __init__(self, tbl, initial_cdir, delay, resultant, *, context, symmetries=None):
         self.ctx = context
         self.tbl = tbl
         self.initial_cdir = initial_cdir
@@ -718,6 +717,16 @@ class Auxiliary:
               self.ctx,
               f'Delayed auxiliaries (as in "{initial_cdir}+{delay}") are not supported as of yet'
               )
+        if isinstance(resultant, Mapping):
+            if resultant.cdir != '0' and not self.orig.toward(resultant.cdir).valid():
+                nbhd = tbl.directives['neighborhood']
+                raise CoordOutOfBounds(
+                  self.ctx,
+                  f'Auxiliary-transition specifier implies invalid {nbhd} transformation '
+                  f'{self.orig.toward(resultant.cdir).tuple}; the cells in directions '
+                  f"{initial_cdir} & {resultant.cdir} are not in each other's range-1 "
+                  f'{nbhd} neighborhood and cannot be mapped to one another.'
+                  )
         self.hoist = False
         self.within = {
           int: self.from_int,
@@ -728,36 +737,9 @@ class Auxiliary:
     def __repr__(self):
         return f'Aux[{self.initial_cdir}: {self.resultant}]'
 
-    @classmethod
-    def old(cls, warning_info, tbl, *args, **kwargs):
-        orig_text, initial_cdir, second_cdir = warning_info
-        second_text = also = ''
-        if second_cdir is not None:
-            second_text = f'{second_cdir}: '
-            new_coord = Coord.from_name(initial_cdir, tbl).inv.toward(second_cdir)
-            also = (
-              f' You will also have to update your second compass direction, {second_cdir}, '
-              f'to make it relative to the first one, {initial_cdir} -- not to the origin. '
-              'In this case, '
-            )
-            also += (
-              f'that means you will have to change it to {new_coord.name}, giving {initial_cdir}:[{new_coord.name}: {orig_text}].'
-                if new_coord.valid() else
-              f"your second coordinate isn't valid in the first place because it's not in the first coordinate's"
-              f"range-1 {tbl.directives['neighborhood']} neighborhood. Fix that first.'
-            )
-        current = f'{initial_cdir}[{second_text}{orig_text}]'
-        new = f'{initial_cdir}:[{second_text}{orig_text}]'
-        raise UnsupportedFeature(
-          kwargs['context'],
-          f"You're using the old auxiliary syntax, {current}. ""
-          f'Please use the new syntax, {new}.{also}'
-        )
-        # cls(*args, **kwargs, old_syntax=True)
-
     def _make_tr(self, tr, resultant):
         new_tr = [tr[self.initial_cdir], *[self.tbl.vars['any']]*self.tbl.trlen, resultant]
-        orig = self.initial_cdir
+        orig = self.orig
         # Adjacent cells to original cell (diagonal to current)
         with suppress(KeyError):
             new_tr[orig.idx] = tr[0]
