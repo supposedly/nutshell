@@ -21,6 +21,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 - Updated some deprecated uses of the `bidict` module
 ### Changed
 - Updated to lark 0.8.5
+### Added
+- Added arithmetic
 
 ## [0.5.8] ??
 I did not document this version.

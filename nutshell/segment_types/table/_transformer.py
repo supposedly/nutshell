@@ -472,6 +472,32 @@ class Preprocess(Transformer):
         return self.subt(('any', subtrhnd), meta)
     
     @inline
+    def math_mul(self, meta, a, b):
+        return self.kill_string(a, meta) * self.kill_string(b, meta)
+    
+    @inline
+    def math_div(self, meta, a, b):
+        dividend = self.kill_string(b, meta)
+        if dividend == 0:
+            raise ArithmeticErr(meta, f'Cannot divide by 0')
+        return self.kill_string(a, meta) // dividend
+    
+    @inline
+    def math_add(self, meta, a, b):
+        return self.kill_string(a, meta) + self.kill_string(b, meta)
+    
+    @inline
+    def math_sub(self, meta, a, b):
+        return self.kill_string(a, meta) - self.kill_string(b, meta)
+    
+    @inline
+    def math(self, meta, result):
+        print('?')
+        if result < 0:
+            raise ArithmeticErr(meta, f'Arithmetic must result in a positive number, not {result}')
+        return result
+    
+    @inline
     def inline_binding(self, meta, val):
         return InlineBinding(self.kill_string(val, meta), self._tbl, context=meta)
     

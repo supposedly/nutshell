@@ -46,6 +46,10 @@ class SyntaxErr(NutshellException):
     pass
 
 
+class ArithmeticErr(NutshellException):
+    pass
+
+
 class UnsupportedFeature(NutshellException):
     pass
 

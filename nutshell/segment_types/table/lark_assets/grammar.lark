@@ -63,8 +63,8 @@ ref_var: _VAR_OPEN (_ref_expr ("," _WS? _ref_expr)* ["," _WS? EXTEND_LAST] | ran
 aux_var: _VAR_OPEN (_aux_expr ("," _WS? _aux_expr)* ["," _WS? EXTEND_LAST] | range) _VAR_CLOSE        -> var
 
 
-_expr: _expr_no_int | STATE
-_expr_norec_int: _expr_no_rec | STATE  //No recursion, permitting ints
+_expr: _expr_no_int | STATE | math
+_expr_norec_int: _expr_no_rec | STATE | math  //No recursion, permitting ints
 _expr_no_int: NAME | range | operation | var
 _expr_no_rec: NAME | range | var  //No recursion, no ints
 
@@ -84,8 +84,8 @@ operation: STATE _MULT INT    -> noref_repeat_int
   | _NEGATE_ALL _expr         -> noref_all_except
 
 
-_tr_expr: _tr_expr_no_int | STATE | reference
-_tr_expr_norec_int: _tr_expr_no_rec | STATE | reference
+_tr_expr: _tr_expr_no_int | STATE | reference | math
+_tr_expr_norec_int: _tr_expr_no_rec | STATE | reference | math
 _tr_expr_no_int: NAME | range | tr_operation | tr_var
 _tr_expr_no_rec: NAME | range | tr_var
 
@@ -102,8 +102,8 @@ tr_operation: (STATE | reference) _MULT INT    -> repeat_int
   | _NEGATE_ALL _tr_expr                       -> all_except
 
 
-_ref_expr: _ref_expr_no_int | STATE | reference
-_ref_expr_norec_int: _ref_expr_no_rec | STATE | reference
+_ref_expr: _ref_expr_no_int | STATE | reference | math
+_ref_expr_norec_int: _ref_expr_no_rec | STATE | reference | math
 _ref_expr_no_int: NAME | range | ref_operation | ref_var
 _ref_expr_no_rec: NAME | range| ref_var
 
@@ -120,8 +120,8 @@ ref_operation: (STATE | reference) _MULT INT    -> repeat_int
   | _NEGATE_ALL _ref_expr                       -> all_except
 
 
-_aux_expr: _aux_expr_no_int | STATE | aux_reference
-_aux_expr_norec_int: _aux_expr_no_rec | STATE | aux_reference
+_aux_expr: _aux_expr_no_int | STATE | aux_reference | math
+_aux_expr_norec_int: _aux_expr_no_rec | STATE | aux_reference | math
 _aux_expr_no_int: NAME | LEAVE_ALONE | leave_alone_mult | range | aux_operation | aux_var
 _aux_expr_no_rec: NAME | LEAVE_ALONE | leave_alone_mult | range | aux_var
 
@@ -145,8 +145,15 @@ reference: "[" (COMPASS_DIR | INT) "]"                     -> binding
   | "[" (COMPASS_DIR | INT) ":" _WS? _ref_expr_no_int "]"  -> mapping
 
 
-range: STATE _WS? ".." _WS? STATE
-  | STATE _WS? "+" _WS? INT _WS? ".." _WS? STATE  -> range_step  //step+lower..upper
+range: (math | STATE) _WS? ".." _WS? (math | STATE)
+  | (math | STATE) _WS? "+" _WS? INT _WS? ".." _WS? (math | STATE)  -> range_step  //step+lower..upper
+
+math: "{" math_operation "}"
+math_operation: _math_expr _WS? "*" _WS? _math_expr -> math_mul
+  | _math_expr _WS? "/" _WS? _math_expr             -> math_div
+  | _math_expr _WS? "+" _WS? _math_expr             -> math_add
+  | _math_expr _WS? "-" _WS? _math_expr             -> math_sub
+_math_expr: math | INT
 
 _VAR_OPEN: /[({]/
 _VAR_CLOSE: /[)}]/
