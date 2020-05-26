@@ -52,6 +52,7 @@ class Preprocess(Transformer):
         self._tbl = tbl
         self.directives = tbl.directives
         self.vars = tbl.vars
+        self.consts = {}
         self._nbhd_assigned = False
     
     def kill_string(self, val, meta, li=False):
@@ -60,13 +61,14 @@ class Preprocess(Transformer):
                 return str(val)
             if val.isdigit():
                 return [int(val)] if li else int(val)
-            try:
+            if val in self.vars:
                 return self.vars[val]
-            except KeyError:
-                raise UndefinedErr(
-                  fix(meta),
-                  f'Undefined variable {val}'
-                  )
+            if val in self.consts:
+                return self.consts[val]
+            raise UndefinedErr(
+              fix(meta),
+              f'Undefined variable {val}'
+              )
         return val
     
     def kill_strings(self, val, meta):
@@ -115,8 +117,8 @@ class Preprocess(Transformer):
         return list(chain(main.apply_aux(aux_first), main.expand(), main.apply_aux(aux_second)))
     
     @inline
-    def print_var(self, meta, val):
-        print(f"'{self._tbl[meta[0]-1].lstrip('!')}' => {tuple(self.kill_string(val, meta))}")
+    def print_val(self, meta, val):
+        print(f"'{self._tbl[meta[0]-1].lstrip('!')}' => {self.kill_string(val, meta)}")
         raise Discard
     
     @inline
@@ -171,6 +173,11 @@ class Preprocess(Transformer):
     @inline
     def var_decl(self, meta, name, var):
         self.vars[VarName(name)] = self.noref_var(var, meta)
+        raise Discard
+    
+    @inline
+    def const_decl(self, meta, name, val):
+        self.consts[name] = val
         raise Discard
     
     def permute_shorthand(self, children, meta):
@@ -492,7 +499,6 @@ class Preprocess(Transformer):
     
     @inline
     def math(self, meta, result):
-        print('?')
         if result < 0:
             raise ArithmeticErr(meta, f'Arithmetic must result in a positive number, not {result}')
         return result
