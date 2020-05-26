@@ -55,13 +55,13 @@ class Preprocess(Transformer):
         self.consts = {}
         self._nbhd_assigned = False
     
-    def kill_string(self, val, meta, li=False):
+    def kill_string(self, val, meta, li=False, var=True):
         if isinstance(val, str):
             if val in SPECIALS:
                 return str(val)
             if val.isdigit():
                 return [int(val)] if li else int(val)
-            if val in self.vars:
+            if val in self.vars and var:
                 return self.vars[val]
             if val in self.consts:
                 return self.consts[val]
@@ -134,6 +134,8 @@ class Preprocess(Transformer):
     
     @inline
     def directive(self, meta, name, val):
+        if not isinstance(val, str):
+            val = str(val)
         cmt_val = val
         if '#' in val:  # since comments are not handled otherwise
             val = val[:val.index('#')].rstrip()
@@ -480,22 +482,26 @@ class Preprocess(Transformer):
     
     @inline
     def math_mul(self, meta, a, b):
-        return self.kill_string(a, meta) * self.kill_string(b, meta)
+        return self.kill_string(a, meta, var=False) * self.kill_string(b, meta, var=False)
     
     @inline
     def math_div(self, meta, a, b):
-        dividend = self.kill_string(b, meta)
+        dividend = self.kill_string(b, meta, var=False)
         if dividend == 0:
             raise ArithmeticErr(meta, f'Cannot divide by 0')
-        return self.kill_string(a, meta) // dividend
+        return self.kill_string(a, meta, var=False) // dividend
     
     @inline
     def math_add(self, meta, a, b):
-        return self.kill_string(a, meta) + self.kill_string(b, meta)
+        return self.kill_string(a, meta, var=False) + self.kill_string(b, meta, var=False)
     
     @inline
     def math_sub(self, meta, a, b):
-        return self.kill_string(a, meta) - self.kill_string(b, meta)
+        return self.kill_string(a, meta, var=False) - self.kill_string(b, meta, var=False)
+    
+    @inline
+    def math_nop(self, meta, operand):
+        return self.kill_string(operand, meta, var=False)
     
     @inline
     def math(self, meta, result):

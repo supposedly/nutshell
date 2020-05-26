@@ -1,11 +1,11 @@
 table: (_WS? (line end_bs? | comment) _NL?)+
 
-line: NAME ":" _WS? /.+/      -> directive
-  | NAME _WS? "=" _WS? _expr  -> var_decl
-  | "!" _expr_no_int          -> print_val
-  | transition _aux?          -> transition
-  | rulestring_tr _aux?       -> rulestring_transition
-  | "$" NAME _WS? "=" _WS? math  -> const_decl
+line: NAME ":" _WS? (math | /[^{].*/)  -> directive
+  | NAME _WS? "=" _WS? _expr           -> var_decl
+  | "!" (_expr_no_int | math)          -> print_val
+  | transition _aux?                   -> transition
+  | rulestring_tr _aux?                -> rulestring_transition
+  | "$" NAME _WS? "=" _WS? math        -> const_decl
 
 rulestring_tr: _tr_expr _sep rulestring_napkin _sep (STATE | reference)
 rulestring_napkin: _HENSEL_OPEN /[^\s\/]+/ _HENSEL_SEP _rs_expr _HENSEL_SEP _rs_expr _HENSEL_CLOSE  -> rulestring_napkin
@@ -149,12 +149,13 @@ reference: "[" (COMPASS_DIR | INT) "]"                     -> binding
 range: (math | STATE) _WS? ".." _WS? (math | STATE)
   | (math | STATE) _WS? "+" _WS? INT _WS? ".." _WS? (math | STATE)  -> range_step  //step+lower..upper
 
-math: "{" math_operation "}"
+math: "{" _WS? math_operation _WS? "}"
 math_operation: _math_expr _WS? "*" _WS? _math_expr -> math_mul
   | _math_expr _WS? "/" _WS? _math_expr             -> math_div
   | _math_expr _WS? "+" _WS? _math_expr             -> math_add
   | _math_expr _WS? "-" _WS? _math_expr             -> math_sub
-_math_expr: math | INT
+  | _math_expr                                      -> math_nop
+_math_expr: math | INT | NAME
 
 _VAR_OPEN: /[(]/
 _VAR_CLOSE: /[)]/
