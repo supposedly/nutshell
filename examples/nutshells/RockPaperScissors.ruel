@@ -6,24 +6,24 @@ From "RockScissorsPaperLife" by Dave Greene.
 symmetries: permute
 
 # Dead cells for State 1
-deadA = {0, 2, 3}
+deadA = (0, 2, 3)
 # Dead cells for State 2
-deadB = {0, 1, 3}
+deadB = (0, 1, 3)
 # Dead cells for State 3
-deadC = {0, 1, 2}
+deadC = (0, 1, 2)
 
 # Birth in competitive circumstances
-{0, 1}, 1 ~ 3, 3 ~ 3, deadC; 3
-{0, 2}, 2 ~ 3, 1 ~ 3, deadA; 1
-{0, 3}, 3 ~ 3, 2 ~ 3, deadB; 2
+(0, 1), 1 ~ 3, 3 ~ 3, deadC; 3
+(0, 2), 2 ~ 3, 1 ~ 3, deadA; 1
+(0, 3), 3 ~ 3, 2 ~ 3, deadB; 2
 
 # Birth
-{0, 1}, 3 ~ 3, deadC; 3
-{0, 2}, 1 ~ 3, deadA; 1
-{0, 3}, 2 ~ 3, deadB; 2
+(0, 1), 3 ~ 3, deadC; 3
+(0, 2), 1 ~ 3, deadA; 1
+(0, 3), 2 ~ 3, deadB; 2
 
 # the RockScissorsPaper rules
-{1..3}, [0: {3, 1, 2}], any ~ 7; 0
+(1..3), [0: (3, 1, 2)], any ~ 7; 0
 
 # Three-neighbor survival
 # these can't be moved into the Birth transitions above, because

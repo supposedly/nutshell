@@ -1,7 +1,7 @@
 @RULE RockPaperScissors
 ********************************
 **** COMPILED FROM NUTSHELL ****
-****         v0.5.9         ****
+****         v0.6.1         ****
 ********************************
 
 From "RockScissorsPaperLife" by Dave Greene.
@@ -48,21 +48,21 @@ var _c0.0 = {0,3}
 # Dead cells for State 2
 # Dead cells for State 3
 # Birth in competitive circumstances
-#### line 16: {0, 1}, 1 ~ 3, 3 ~ 3, deadC; 3 ####
+#### line 16: (0, 1), 1 ~ 3, 3 ~ 3, deadC; 3 ####
 _a0.0, 1, 1, 1, 3, 3, 3, deadC.0, deadC.1, 3
-#### line 17: {0, 2}, 2 ~ 3, 1 ~ 3, deadA; 1 ####
+#### line 17: (0, 2), 2 ~ 3, 1 ~ 3, deadA; 1 ####
 _b0.0, 2, 2, 2, 1, 1, 1, deadA.0, deadA.1, 1
-#### line 18: {0, 3}, 3 ~ 3, 2 ~ 3, deadB; 2 ####
+#### line 18: (0, 3), 3 ~ 3, 2 ~ 3, deadB; 2 ####
 _c0.0, 3, 3, 3, 2, 2, 2, deadB.0, deadB.1, 2
 # Birth
-#### line 21: {0, 1}, 3 ~ 3, deadC; 3 ####
+#### line 21: (0, 1), 3 ~ 3, deadC; 3 ####
 _a0.0, 3, 3, 3, deadC.0, deadC.1, deadC.2, deadC.3, deadC.4, 3
-#### line 22: {0, 2}, 1 ~ 3, deadA; 1 ####
+#### line 22: (0, 2), 1 ~ 3, deadA; 1 ####
 _b0.0, 1, 1, 1, deadA.0, deadA.1, deadA.2, deadA.3, deadA.4, 1
-#### line 23: {0, 3}, 2 ~ 3, deadB; 2 ####
+#### line 23: (0, 3), 2 ~ 3, deadB; 2 ####
 _c0.0, 2, 2, 2, deadB.0, deadB.1, deadB.2, deadB.3, deadB.4, 2
 # the RockScissorsPaper rules
-#### line 26: {1..3}, [0: {3, 1, 2}], any ~ 7; 0 ####
+#### line 26: (1..3), [0: (3, 1, 2)], any ~ 7; 0 ####
 1, 3, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 0
 2, 1, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 0
 3, 2, any.0, any.1, any.2, any.3, any.4, any.5, any.6, 0

@@ -1,0 +1,46 @@
+@NUTSHELL NaiveXEmulated
+
+A generic ruletable to emulate Naive rules.
+
+: {Propagate} A cell that always moves northwest, spawning ScanOff cells, to allow infinite patterns.
+: {Bound} A boundary cell that continually respawns ScanOff cells if one is nearby it.
+: {ScanOff} Cell that propagates to the east and south to ScanOff a pattern, marking one emulated tick.
+: {On}+2.. The Naive rule's On states.
+: {ScanOn}+2.. An On cell that is currently being read by a ScanOff cell.
+
+@TABLE
+# Supposing a Generations rulestring B.../S.../DeathStates or .../.../DeathStates, set {DeathStates} below
++DeathStates = {2}
+
+# Don't touch this
++MaxState = {{ScanOff + {2 * {DeathStates - 1}}}}
+states: {1 + MaxState}
+
+# Or this
+allOn = 2+On..{MaxState}
+allScanOn = 2+ScanOn..{MaxState}
+deathStates = (allScanOn - ScanOn, allOn - On)
+
+# Birth; REPLACE THE 3 BELOW
+ScanOff, <3 / (On, ScanOn) / (0, ScanOff, deathStates)>; On
+
+# Survival; REPLACE THE 23 BELOW
+ScanOn, <23 / (On, ScanOn) / (0, ScanOff, deathStates)>; On
+
+# Death otherwise
+allScanOn, N..NW any; [0: ((allOn << 1) - On, 0)]
+
+# Scanner-cell logic
+Bound, N..NW any; Bound
+Propagate, N..NW any; 0 -> NW:Propagate  E:ScanOff  SW:ScanOff
+(ScanOff, allScanOn), N..NW (allOn, --allOn); 0 -> E[(allScanOn, ScanOff, ...)]  SW:ScanOff
+0, N Bound, SE ScanOff; ScanOff
+
+
+@COLORS
+303030: 0
+FFF..FF00FF: allOn
+000: ScanOff
+A0A0A0..5F005F: allScanOn
+0F0: Propagate
+F00: Bound

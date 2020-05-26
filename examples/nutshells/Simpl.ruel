@@ -21,8 +21,8 @@ Bx/Sx | off | on
 @TABLE
 symmetries: permute
 
-on = {11..20}
-off = {0..10}
+on = (11..20)
+off = (0..10)
 
 (2, 11), off; 11
 (3, 12), on ~ 1, off; 12

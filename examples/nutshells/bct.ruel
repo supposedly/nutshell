@@ -37,12 +37,12 @@ EBEBEB: 1 12 16  # lighter gray
 00FFFF: 5 14 15  # cyan
 
 @TABLE
-data = {1, 2}
-rdata = {12, 13}
-ddata = {16, 17}
-vacdata = {0..2}
-vacrdata = {0, 12, 13}
-vacddata = {0, 16, 17}
+data = (1, 2)
+rdata = (12, 13)
+ddata = (16, 17)
+vacdata = (0..2)
+vacrdata = (0, 12, 13)
+vacddata = (0, 16, 17)
 
 
 ## If a shifter is encountered, reflect + shift data tape down 2 cells
