@@ -16,6 +16,12 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 - A `prune` macro
 - More modifiers, e.g. Langton's Ant and Deficient/genext -- also hex (although hex symmetries are scary)
 
+## [0.6.2] 2020-11-06
+### Added
+- Allow #xy to be short for #xyxyxy in color declarations
+### Fixed
+- Typo in newtons.ruel example
+
 ## [0.6.1] 2020-06-25
 ### Fixed
 - Empty statelists created by operations no longer throw an ugly Python error. They're now processed without issue.
@@ -35,7 +41,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 - Updated to lark 0.8.5
 
 ## [0.5.8] ??
-I did not document this version.
+### ??
+- Dunno
 
 ## [0.5.7] 2019-03-16
 ### Fixed

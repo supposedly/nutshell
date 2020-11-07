@@ -47,9 +47,11 @@ class ColorMixin:  # XXX: this feels weird being a class? ...but it's also a mix
     
     @staticmethod
     def expand(color):
-        if len(color) == 6:
-            return color
-        return ''.join([f'{c}{c}' for c in color])  # fwiw, measurably faster than c * 2
+        if len(color) == 3:
+            return ''.join([f'{c}{c}' for c in color])  # fwiw, fstring measurably faster than c * 2
+        if len(color) == 2:
+            return f'{color}{color}{color}'  # this shorthand requested by cyan
+        return color  # assume len == 6
     
     @classmethod
     def unpack(cls, color, lno=None):
