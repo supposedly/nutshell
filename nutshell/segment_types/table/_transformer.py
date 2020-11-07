@@ -294,7 +294,10 @@ class Preprocess(Transformer):
                     if idx != crange[0]:
                         if idx == 1:
                             idx = offset_initial = crange[0]
-                        else:
+                        elif crange[0] < idx and (
+                          not offset_initial or
+                          offset_initial and pure_idx > self._tbl.trlen
+                          ):
                             nbhd = self._tbl.neighborhood.inv
                             raise SyntaxErr(
                               (loc.ctx.lno, loc.ctx.start, len(a) + loc.ctx.start),
@@ -331,8 +334,10 @@ class Preprocess(Transformer):
                     if cdir != idx:
                         if idx == 1 and not offset_initial:
                             offset_initial = cdir
-                        elif cdir < idx and (not offset_initial or
-                        offset_initial and pure_idx > self._tbl.trlen):
+                        elif cdir < idx and (
+                          not offset_initial or
+                          offset_initial and pure_idx > self._tbl.trlen
+                        ):
                             raise SyntaxErr(
                               loc.ctx,
                               'Out-of-sequence compass direction '

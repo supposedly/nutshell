@@ -16,6 +16,13 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 - A `prune` macro
 - More modifiers, e.g. Langton's Ant and Deficient/genext -- also hex (although hex symmetries are scary)
 
+## [0.6.3] 2020-11-07
+### Fixed
+- In a transition where every state is labeled with a direction (so that missing states can be filled in with `any`),
+  a state labeled with a compass-direction range will no longer throw an error if this range doesn't start immediately
+  after where the previous state ended. (It was inconsistent: something like `0, N blah, SW bluh; 3` was allowed,
+  but not `0, N blah, SW..Nw bluh; 3`)
+
 ## [0.6.2] 2020-11-06
 ### Added
 - `blahblah, something cdir..cdir, blahblah` is now allowed as an alternative to `cdir..cdir something`
