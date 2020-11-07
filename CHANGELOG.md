@@ -18,7 +18,8 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)'s.
 
 ## [0.6.2] 2020-11-06
 ### Added
-- Allow #xy to be short for #xyxyxy in color declarations
+- `blahblah, something cdir..cdir, blahblah` is now allowed as an alternative to `cdir..cdir something`
+- #xy as shorthand for #xyxyxy (a shade of gray) in colors
 ### Fixed
 - Typo in newtons.ruel example
 

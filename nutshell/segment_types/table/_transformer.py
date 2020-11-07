@@ -27,6 +27,7 @@ def inline(func):
     @wraps(func)
     def wrapper(self, children, meta):
         return func(self, fix(meta), *children)
+    wrapper.inline = func
     return wrapper
 
 
@@ -90,19 +91,20 @@ class Preprocess(Transformer):
     def unravel_permute(self, tree, meta):
         if isinstance(tree, tuple):
             return tree
-        first, *rest = tree.children
-        if not rest:
-            return (self.kill_string(first, meta), None)
+        if tree.location is None:
+            return tree.value, None
+        
         # We can now assume first is a tree, I think
-        if first.data in ('cdir', 'crange'):
-            raise SyntaxErr(
-              fix(first.meta),
-              f"Cannot specify compass directions under {self.directives['symmetries']} symmetries"
-              )
+        # ^ Update 2 years later: what is that supposed to mean
+
+        #if cdir or range:
+        raise SyntaxErr(
+          fix(tree.loc.ctx),
+          f"Cannot specify compass directions under {self.directives['symmetries']} symmetries"
+          )
         # Nothing left to return here... right? Because permute_shorthand trees
         # will already have been transformed (by self.permute_shorthand) and
         # returned by the first conditional in this method
-        raise Exception('unexpected branch')
     
     #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
     
@@ -182,22 +184,59 @@ class Preprocess(Transformer):
         self.consts[name] = self.kill_string(val, meta)
         raise Discard
     
+    def inline_binding_error(self, children, meta):
+        raise SyntaxErr(
+          fix(meta),
+          f"Cannot use inline-binding shorthand on only one term (without spreading it over multiple terms)"
+          )
+    
     def permute_shorthand(self, children, meta):
         state, *permute = children
-        if not hasattr(self._tbl.symmetries, 'special'):
-            if permute:
-                raise SyntaxErr(
-                  fix(meta),
-                  f"Cannot use tilde-based shorthand under {self.directives['symmetries']} symmetries.\n  "
-                  '(Try a range of compass directions instead)'
-                  )
-            # XXX: this is suspect (cryptic message and i'm not sure it's raised in the right situation)
+        if permute and not hasattr(self._tbl.symmetries, 'special'):
             raise SyntaxErr(
               fix(meta),
-              f"Cannot use inline-binding shorthand on only one term (without spreading it over multiple terms)"
+              f"Cannot use tilde-based shorthand under {self.directives['symmetries']} symmetries.\n  "
+              '(Try a range of compass directions instead)'
               )
         return MetaTuple(meta, (self.kill_string(state, meta), str(permute[0]) if permute else None))
     
+    @inline
+    def tr_state_prefixed(self, meta, location, value):
+        return TransitionState(
+          self.kill_string(value, meta),
+          location,
+          context=meta
+          )
+
+    @inline
+    def tr_state_heavpoot(self, meta, value, location):
+        return self.tr_state_prefixed.inline(self, meta, location, value)
+
+    @inline
+    def tr_state_bare(self, meta, value):
+        return self.tr_state_prefixed.inline(self, meta, None, value)
+    
+    @inline
+    def cdir(self, meta, direction):
+        return TransitionCDir(
+          value=self._tbl.check_cdir(direction, meta),
+          original=direction,
+          context=meta
+          )
+    
+    def crange(self, children, meta):
+        start, end = children
+        val = range(
+          self._tbl.check_cdir(start, (meta.line, meta.column, len(start) + meta.column)),
+          1 + self._tbl.check_cdir(end, (meta.line, meta.end_column - len(end), meta.end_column))
+          )
+        return TransitionCRange(
+          self._tbl,
+          value=val,
+          original=(start, end),
+          context=fix(meta)
+          )
+
     def main(self, children, meta):
         if not self._tbl.default_sym_used and self.directives['symmetries'] == 'none':
             self._tbl.default_sym_used = True
@@ -230,49 +269,27 @@ class Preprocess(Transformer):
             all_cdir = True  # whether all terms are tagged with a compass-direction prefix
             
             for tr_state in children:
-                m = fix(tr_state.meta)
-                first, *rest = tr_state.children
-                first_data = getattr(first, 'data', None)
-                rest = self.kill_strings(rest, m)
+                loc = tr_state.location
                 
-                if first_data == 'cdir':
-                    cdir = self._tbl.check_cdir(first.children[0], fix(first.meta))
-                    if cdir in napkin:
-                        raise SyntaxErr(
-                          fix(first.meta),
-                          f'Duplicate compass direction {first.children[0]}'
-                          )
-                    napkin[cdir], = rest
-                    if cdir != idx:
-                        if idx == 1 and not offset_initial:
-                            offset_initial = cdir
-                        elif cdir < idx and (not offset_initial or
-                        offset_initial and pure_idx > self._tbl.trlen):
-                            raise SyntaxErr(
-                              fix(first.meta),
-                              'Out-of-sequence compass direction '
-                              f'(expected {self._tbl.neighborhood.inv[idx] + (" or further" if all_cdir else "")}, got {first.children[0]})'
-                              )
-                        pure_idx += abs(cdir - idx)
-                        idx = cdir
+                if loc is None:
+                    all_cdir = False
+                    napkin[idx] = tr_state.value
                     idx = add_mod(idx, 1)
                     pure_idx += 1
-                elif first_data == 'crange':
-                    a, b = first.children
-                    int_a = self._tbl.check_cdir(a, (first.meta.line, first.meta.column, len(a) + first.meta.column))
-                    int_b = self._tbl.check_cdir(b, (first.meta.line, first.meta.end_column - len(b), first.meta.end_column))
-                    crange = range(int_a, 1+int_b)
-                    
+                elif loc.is_range:
+                    crange = loc.value
+                    a, b = loc.orig
+
                     if len(crange) == 1 or not crange and not offset_initial:
                         if idx != 1:
                             raise SyntaxErr(
-                              fix(first.meta),
+                              loc.ctx,
                               f'Invalid compass-direction range ({b} does not follow {a} going clockwise)'
                               )
                         offset_initial = 1
                     
                     if not crange and offset_initial:
-                        crange = (*range(self._tbl.neighborhood[a], 1+self._tbl.trlen), *range(1, 1+self._tbl.neighborhood[b]))
+                        crange = loc.offset_range
                     
                     if idx != crange[0]:
                         if idx == 1:
@@ -280,33 +297,49 @@ class Preprocess(Transformer):
                         else:
                             nbhd = self._tbl.neighborhood.inv
                             raise SyntaxErr(
-                              (first.meta.line, first.meta.column, len(a) + first.meta.column),
+                              (loc.ctx.lno, loc.ctx.start, len(a) + loc.ctx.start),
                               'Out-of-sequence compass direction '
                               f'(expected {nbhd[idx]}, got {nbhd[crange[0]]})'
                               )
                     
-                    rest, = rest
-                    if isinstance(rest, InlineBinding):
-                        rest.set(idx)
-                        napkin[crange[0]] = rest.give()
+                    if isinstance(tr_state.value, InlineBinding):
+                        tr_state.value.set(idx)
+                        napkin[crange[0]] = tr_state.value.give()
                         crange = range(1+crange[0], 1+crange[-1])
                         idx = add_mod(idx, 1)
                         pure_idx += 1
-                        rest = rest.give()
+                        tr_state.value = tr_state.value.give()
                     
                     for i in crange:
                         if i in napkin:
                             raise Error(
-                              fix(first.meta),
+                              loc.ctx,
                               'Compass-direction range contains duplicate '
                               '(i.e. contains at least one compass direction used elsewhere in this transition)'
                               )
-                        napkin[i] = rest
+                        napkin[i] = tr_state.value
                         idx = add_mod(idx, 1)
                         pure_idx += 1
                 else:
-                    all_cdir = False
-                    napkin[idx], = self.kill_strings(tr_state.children, m)
+                    cdir = loc.value
+                    if cdir in napkin:
+                        raise SyntaxErr(
+                          loc.ctx,
+                          f'Duplicate compass direction {loc.orig}'
+                          )
+                    napkin[cdir] = tr_state.value
+                    if cdir != idx:
+                        if idx == 1 and not offset_initial:
+                            offset_initial = cdir
+                        elif cdir < idx and (not offset_initial or
+                        offset_initial and pure_idx > self._tbl.trlen):
+                            raise SyntaxErr(
+                              loc.ctx,
+                              'Out-of-sequence compass direction '
+                              f'(expected {self._tbl.neighborhood.inv[idx] + (" or further" if all_cdir else "")}, got {loc.orig})'
+                              )
+                        pure_idx += abs(cdir - idx)
+                        idx = cdir
                     idx = add_mod(idx, 1)
                     pure_idx += 1
             if all_cdir:
@@ -316,7 +349,7 @@ class Preprocess(Transformer):
                   ))
             if len(napkin) != self._tbl.trlen:
                 raise Error(
-                  (meta.line, children[0].meta.column, children[-1].meta.end_column),
+                  (meta.line, children[0].ctx.start, children[-1].ctx.start),
                   f"Bad transition length for {self.directives['neighborhood']} neighborhood "
                   f'(expected {2+self._tbl.trlen} terms, got {2+len(napkin)})'
                   )

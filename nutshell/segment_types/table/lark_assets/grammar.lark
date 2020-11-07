@@ -18,15 +18,16 @@ _HENSEL_SEP: _WS? "/" _WS?
 
 
 transition: _tr_expr (_sep tr_state)+ _sep _tr_expr -> main  //Can't have (STATE | reference) here in LALR
-tr_state: [prefix _WS] _tr_expr
-  | crange _WS (_tr_expr | inline_binding)
-  | inline_binding                                   -> permute_shorthand
-  | (_tr_expr | inline_binding) _PERMUTE /[^,;]+/    -> permute_shorthand  //Doesn't make sense to allow cdir *and* permute_shorthand in the same tr_state
+tr_state: location _WS (inline_binding | _tr_expr)  -> tr_state_prefixed
+  | (inline_binding | _tr_expr) _WS location        -> tr_state_heavpoot
+  | _tr_expr                                        -> tr_state_bare
+  | inline_binding                                  -> inline_binding_error  //This should probably be somewhere else but i put it here 2 years ago so o well
+  | (inline_binding | _tr_expr) _PERMUTE /[^,;]+/   -> permute_shorthand  //Doesn't make sense to allow cdir *and* permute_shorthand in the same tr_state
 
 inline_binding: "[" _tr_expr_no_int "]"
-prefix: COMPASS_DIR               -> cdir
-  | crange
-crange: COMPASS_DIR ".." COMPASS_DIR
+location: COMPASS_DIR -> cdir
+  | _crange           -> crange
+_crange: COMPASS_DIR ".." COMPASS_DIR
 
 _PERMUTE: _WS? "~" _WS?
 _sep: ("," | ";") _WS?  //If this is a terminal rather than a rule it interferes with "," in var-related rules below
@@ -45,7 +46,7 @@ SYMMETRY_NAME: /(?<![\w\.])(?!(?:[NS][EW]?|[EW])(?![\w\.]))[\w\.]+/
 _NORMAL_ARROW: _WS? "->" _WS?
 _HOIST_ARROW: _WS? "=>" _WS?
 
-auxiliary: cdir_delay ":" STATE                                           -> aux_bare
+auxiliary: cdir_delay ":" STATE                                            -> aux_bare
   | cdir_delay ":"? "[" (COMPASS_DIR | INT) "]"                            -> aux_bind_self
   | cdir_delay ":"? "[" _aux_expr_no_int "]"                               -> aux_map_self
   | cdir_delay ":"? "[" (COMPASS_DIR | INT) ":" _WS? _aux_expr_no_int "]"  -> aux_map_other

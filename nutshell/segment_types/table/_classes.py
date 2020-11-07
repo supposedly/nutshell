@@ -54,6 +54,37 @@ class VarName:
         return _anonymous
 
 
+class TransitionState:
+    def __init__(self, value, location=None, *, context):
+        self.ctx = context
+        self.value = value
+        self.location = location
+
+
+class TRStateLocation:
+    def __init__(self, is_range, value, original, *, context):
+        self.is_range = is_range
+        self.value = value
+        self.orig = original
+        self.ctx = context
+
+
+class TransitionCDir(TRStateLocation):
+    def __init__(self, value, original, *, context):
+        super().__init__(False, value, original, context=context)
+
+
+class TransitionCRange(TRStateLocation):
+    def __init__(self, tbl, value, original, *, context):
+        super().__init__(True, value, original, context=context)
+        self.offset_range = None
+        if not value:
+            a, b = original
+            self.offset_range = (
+              *range(tbl.neighborhood[a], 1 + tbl.trlen),
+              *range(1, 1+tbl.neighborhood[b])
+              )
+
 class TransitionGroup:
     def __init__(self, tbl, initial, napkin, resultant, *, context, extra=None, symmetries=None):
         if tbl.n_states < 2:
