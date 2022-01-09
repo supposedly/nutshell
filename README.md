@@ -4,8 +4,7 @@
 [![Online compiler](https://img.shields.io/badge/compile-a%20Nutshell%20online-brightgreen.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAYAAAA71pVKAAAABmJLR0QABgAMABkbch97AAAACXBIWXMAAC4jAAAuIwF4pT92AAAAB3RJTUUH4gkOBRobRhT0twAAABl0RVh0Q29tbWVudABDcmVhdGVkIHdpdGggR0lNUFeBDhcAAABTSURBVCjPY/z//z8DuYAFixg+0xiROUwMFAAWXBLsvFJw9s/Pz0jTjAMge4mRImczYgnt/0R6gZGFiBDGCagX2sjOo7nNVAltcgKMkSoBxkiOZgAGwxRNuTqWVQAAAABJRU5ErkJggg==)](https://nutshell.pythonanywhere.com)
 <sup>|</sup>
 [![Discord](https://img.shields.io/badge/chat-on%20Discord-7289da.svg?logo=discord&logoWidth=17&logoColor=white)](https://discord.gg/BV6zxM9)  
-A transpiler from a reimagined Golly ruletable language to the traditional format. See [`examples/`](/examples) for examples, and if none
-of this makes any sense to you and you aren't sure how you got here, check out the [layman's README](documents/LAYMAN-README.md).
+A transpiler from a reimagined Golly ruletable language to the traditional format. See [`examples/`](/examples) for examples.
 
 ## Contents
 * [Setup](#setup)
