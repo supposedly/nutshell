@@ -1,4 +1,5 @@
-from collections import Iterable, defaultdict
+from collections.abc import Iterable
+from collections import defaultdict
 from contextlib import suppress
 from functools import partial
 from itertools import count, cycle
