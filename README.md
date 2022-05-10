@@ -65,7 +65,7 @@ $ nutshell-ca transpile [infile] [outdir] [-v | -q | -s | -c | -p | -t | -f]
 (alternatively, `nutshell-ca t ...')
 ```
 The output file will be written to `outdir` with a .rule extension and the same filename as `infile`.  
-Supported flags, though there's more info in `--help` (note that `-v` and `-q` can come either
+Supported flags, although there's more info in `--help` (note that `-v` and `-q` can come either
 after or before the keyword `transpile`/`t` with no difference):
   - `-v`: Verbose. Can be repeated up to four times, causing more info to be displayed each time.
   - `-q`: Quiet. Opposite of the above, but only has one level.
@@ -76,8 +76,8 @@ after or before the keyword `transpile`/`t` with no difference):
           output as faithfully as possible (i.e. as closely as possible to their original positions).
   - `-t [HEADER]`: Change the "COMPILED FROM NUTSHELL" header that is added by default to transpiled
                    rules. (If `-t` is given no argument the header will be removed)
-  - `-f TRANSITION`: Find a certain transition defined within a table section; requires, of course, that
-                     the rule have a `@TABLE` segment to search within. If a certain cell isn't behaving
+  - `-f TRANSITION`: Find a certain transition defined within a table section; requires the rule to have
+                     a `@TABLE` segment to search within, of course. If a certain cell isn't behaving
                      the way it's supposed to, you can `-f` the transition it's undergoing, and nutshell
                      will find the offending transition for you (rather than you having to guess at what
                      you typo'd).  
@@ -92,13 +92,13 @@ after or before the keyword `transpile`/`t` with no difference):
 - **variable**: Either a literal statelist or a name referring to one. 
 - **expression**: Anything that resolves to a statelist: statelists themselves, varnames, and/or operations.
 - **statelist** (or state-list, state list): An ordered sequence of cellstates or expressions, written literally.
-  This is referred to as a "variable" in Golly, but in Nutshell it's more important to distinguish it from the prior terms. 
+  This is referred to as a "variable" in Golly, but in Nutshell it's more important to distinguish it from the previous couple terms. 
 - **directive**: A declaration following the form `name: value` that describes something about a ruletable.
 - **term**: One individual element of a transition napkin.
 - **napkin** (or transition napkin): Refers to the cells in another cell's neighborhood *including* each one's state.
   In contrast, the term "neighborhood" refers only to the positions of these cells. (Originally coined by Conwaylife
   forum member 83bismuth38, with the long form "bowling napkin", to refer to a table that visualizes all possible transitions
-  in a given neighborhood; a misconstrual of this coinage led to the term's Nutshell sense.)
+  in a given neighborhood; term's Nutshell sense comes from misconstruing the original coinage.)
 
 ## What's new
 ### Directives
@@ -109,13 +109,13 @@ initialized to before `@TABLE` is parsed):
 - `symmetries: none`
 - `states: ?`
 
-Two things to note regarding the final item: first, that the `n_states` directive <!-- (though still usable by that name) -->
+Two things to note regarding the final item: first, that the `n_states` directive <!-- (although it's still usable by that name) -->
 has been changed to `states`, and second that it accepts a value of `?`, which tells Nutshell to infer the amount
-of cellstates in a rule by checking the maximum cellstate value referred to -- be it in a statelist, constant declaration,
-or a literal number in a transition napkin. This means that the writer needn't bother keeping track of how many cellstates
+of cellstates in a rule by checking the maximum cellstate value referred to -- whether it's in a statelist, a constant-declaration,
+or a literal number in a transition napkin. This means that the writer doesn't need to bother keeping track of how many cellstates
 a rule uses, and because `?` is `states`'s default value, it also means that a rule doesn't have to specify `states:` at all.
 
-Additionally, all directives ignore whitespace in their values&nbsp;-- so one may write, say, `symmetries: rotate 4` or
+Additionally, all directives ignore whitespace in their values&nbsp;-- so you can write, say, `symmetries: rotate 4` or
 `neighborhood: von Neumann`. The `symmetries` directive can take a Python import path for *custom symmetry types*, and
 the `neighborhood` directive a series of compass directions for a *custom neighborhood*; these will be elaborated upon later on.
 ```rb
@@ -153,7 +153,7 @@ neighborhood: von Neumann
 ```
 
 Individual cellstates of a transition may be prefixed with a compass direction for clarity, and a *range* of compass directions
-can be indicated using double..dots; this can displace repetition of a given cellstate.
+can be indicated using double..dots; this can be used in place of repetition of a given cellstate.
 ```rb
 # Nutshell
 neighborhood: von Neumann
@@ -166,7 +166,8 @@ neighborhood: von Neumann
 ```
 
 Additionally, if **all** given terms of a transition have a compass-direction tag, any omitted ones will be filled in with the variable
-`any` (introduced below). Note that, to ensure intent, this is **only** valid if there is not a single term given without a compass direction.
+`any` (which will introduced below). Note that, to ensure intent, this is **only** valid if there isn't a single term given without a
+compass direction.
 
 ```rb
 # Nutshell
@@ -181,7 +182,7 @@ neighborhood: vonNeumann
 0, 1, any.0, 2, any.1, 3
 ```
 
-Transitions, whose terms are listed in clockwise order,
+Transitions, whose terms are always listed in clockwise order,
 by default use the Golly-canonical ordering&nbsp;-- usually `C, N, ..., C'`
 (center cellstate, northern cellstate, ..., new center)&nbsp;--
 but they are allowed to start on a different compass direction if explicitly specified.
@@ -197,7 +198,7 @@ neighborhood: von Neumann
 ```
 
 Under certain symmetries, however, compass directions have no meaning&nbsp;-- these symmetry types utilize a different,
-tilde-based shorthand. Nutshell's implementation of Golly's `permute` symmetry uses it like so:
+tilde-based shorthand. Nutshell's implementation of Golly's `permute` symmetry uses it like this:
 ```rb
 # Nutshell
 symmetries: permute
@@ -214,7 +215,7 @@ any, any; 0          # Ditto above (8 "any"s)
 0, 1, 1, 1, 1, 2, 2, 2, 2, 9
 any.0, any.1, any.2, any.3, any.4, any.5, any.6, any.7, any.8, 0
 ```
-If the "unspecified" terms cannot be distributed perfectly into the table's neighborhood, precedence will be given to those
+If the "unspecified" terms can't be distributed perfectly into the table's neighborhood, precedence will be given to those
 that appear earlier; `2, 1, 0` under Moore, for instance, will expand into `2,2,2,1,1,1,0,0`, but `0, 1, 2` will expand into
 `0,0,0,1,1,1,2,2`.
 
@@ -233,8 +234,8 @@ var variable.1 = variable.0
 
 0, variable.0, variable.1, 0, 1, 2, 0, 2, 0, 1
 ```
-That's not to say, however, that there is no concept of binding variables in Nutshell! Rather, it's that the variable
-names themselves are not intrinsically bound by anything. Nutshell's idea of binding is explained later on.
+That's not to say, however, that there is no concept of binding variables in Nutshell! It's just that you don't bind by name.
+Nutshell's actual idea of binding is explained later on.
 
 Also allowed is the use of state-list literals directly in transitions as 'on-the-spot' variables; no need to define them prior.
 ```rb
@@ -263,7 +264,7 @@ var a.0 = {1, 2, 3, 4}
 var b.0 = {0, 1, 2, 3, 4}
 ```
 
-As in Golly, variables do not nest; placing a variable or state-list inside another simply unpacks it thereinto.
+As in Golly, variables don't nest; placing a variable or state-list inside another just unpacks it into the latter.
 
 #### Variable names
 Varnames are alphanumeric (and case-sensitive) with three exceptions:
@@ -283,7 +284,7 @@ single-element statelists, like `(any-3)*2`.
 
 An exclamation mark followed by an expression (as a whole line) will cause the expression's result to be printed: `!(1, 2, 3)-(3, 4)`
 will print `(1, 2)`, for instance, and `!any` will print the contents of variable `any`. This can help in debugging complex,
-multi-operation variable expressions if need be.
+multi-operation variable expressions if needed.
 
 #### n * m ("Multiplication")
 Not commutative. Has the highest precedence.
@@ -342,8 +343,9 @@ var b.0 = {2, 3, 1}
 Be aware that ordering is unlikely to be reflected / preserved in Golly output, because variables are converted
 into Python [set objects](https://en.wikipedia.org/wiki/Set_%28abstract_data_type%29) just before being written
 to the Golly rulefile; this means that it's just as likely for the above to result in `var a.0 = {1, 2, 3}` and
-`var b.0 = {1, 2 3}`. The Nutshell-enforced ordering can always be observed, however, in the result of an operation
-(like mapping) that spreads a variable out over multiple transitions.
+`var b.0 = {1, 2 3}`. The Nutshell-enforced ordering is always preserved during the transpilation process itself,
+though, and it's visible in the result of an operation (like mapping) that spreads a variable out over multiple
+transitions.
 
 #### -n, --n ("Negation")
 These are shorthand for, respectively, `live-n` and `any-n`. Has higher precedence than "subtraction".
@@ -384,7 +386,7 @@ var a.0 = {3, 4, 5, 6}
 var b.0 = {0, 2, 3, 4, 5, 10}
 var c.0 = {1, 4, 6, 8, 10}
 ```
-Ranges differ from the expressions described above in that they cannot be used "bare"&nbsp;-- you always have to surround them with
+Ranges differ from the expressions described above in that they can't be used "bare"&nbsp;-- you always have to surround them with
 parentheses or curly brackets as shown in `a = (3..6)` as they're only allowed within a statelist.
 
 ### References
@@ -394,9 +396,9 @@ regex group matches the exact same text rather than applying the group's pattern
 In other words, with `var a={1,2}`, the sequence `a,a` can match `1,1` and `2,2` but **not** `1,2` or `2,1`, because the name `a` is
 *bound* to the first cellstate it matches.
 
-This behavior is intentional, but it comes with a side-effect: if the writer *should* wish for the above sequence to match `1,2` or
-`2,1` without any of the binding, then they must define two separate variables, `var a={1,2}` and `var b=a`, writing the sequence as
-`a,b`.
+This behavior is intentional, but it comes with a side-effect: if the writer *does* wish for the above sequence to match `1,2` or
+`2,1` without any of the binding, then they have to go and define two separate variables, `var a={1,2}` and `var b=a`, writing the
+sequence as `a,b`.
 
 This doesn't seem bad at all on a small scale. It's convenient to be able to do it both ways, after all. However, in nearly any
 large project, this forces each variable definition to be duplicated up to nine times (depending on the neighborhood, of
@@ -404,7 +406,7 @@ course) which gets messy and tedious to keep track of, making it an easy source 
 
 Nutshell's key innovation (and the only supra-syntactical thing, in fact, that it mandates be done differently than in Golly's `@TABLE`)
 is in noting that the *name* of a variable doesn't need to hold any particular meaning, only its value within
-a given transition. Thus, rather than binding to a variable's name, we can simply use... some other way of referring to nothing
+a given transition. So, rather than binding to a variable's name, we can just use... some other way of referring to nothing
 except the value it holds at a given point.
 
 #### Bindings
@@ -427,12 +429,12 @@ _random_name.0, 0, 0, 0, 0, 0, 0, 0, 0, _random_name.0
 ```
 
 Note that in symmetry types where compass directions have no meaning&nbsp;-- the same symmetry types mentioned in
-[Transitions](#transitions), in fact, that use `~` as a shorthand rather than specifying
+[Transitions](#transitions) that use `~` as a shorthand rather than specifying
 compass-direction ranges&nbsp;-- Nutshell enforces the use of numbers, not compass directions, to bind to.
 For instance, under `permute` symmetry, the Golly transition `0, some_var, 0, 0, 0, 0, 0, 0, 0, some_var` is
 replicated as `0, some_var ~ 1, 0; [1]` and not `0, some_var ~ 1, 0; [N]`.
 
-Multiple successive bindings to a previous term, as long as it is an expression, can be compressed like so:
+Multiple successive bindings to a previous term, as long as it's an expression, can be compressed like so:
 ```rb
 # Nutshell
 neighborhood: von Neumann
@@ -530,8 +532,8 @@ var _random_name_D.1 = _random_name_D.0
 
 ### Auxiliary transitions
 In general, the motion of a *moving* cell can only be described in Golly through two disconnected steps: first, a cell dies,
-and an independent, dead cell is born in the next tick with the other's cellstate. This, though logical in the context of
-a cellular automaton, is hard to describe as intuitive to the human writer; Nutshell for this reason provides a way of
+and an independent, dead cell is born in the next tick with the other's cellstate. Although it's logical in the context of
+a cellular automaton, this can be unintuitive to the rule's human writer; for that reason, Nutshell provides a way of
 describing *auxiliary* transitions affecting other cells in the neighborhood than the central one, sharing as
 much of the same napkin as possible.
 
